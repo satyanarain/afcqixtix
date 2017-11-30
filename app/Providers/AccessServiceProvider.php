@@ -34,9 +34,19 @@ class AccessServiceProvider extends ServiceProvider
         );
         
         $this->app->bind(
+            \App\Repositories\Permission\PermissionRepositoryContract::class,
+            \App\Repositories\Permission\PermissionRepository::class
+        );
+       
+        $this->app->bind(
             \App\Repositories\Role\RoleRepositoryContract::class,
             \App\Repositories\Role\RoleRepository::class
         );
+        
+        
+        
+        
+        
         $this->app->bind(
             \App\Repositories\Department\DepartmentRepositoryContract::class,
             \App\Repositories\Department\DepartmentRepository::class

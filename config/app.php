@@ -181,14 +181,8 @@ return [
         Fenos\Notifynder\NotifynderServiceProvider::class,
         App\Providers\AccessServiceProvider::class,
         App\Providers\BroadcastServiceProvider::class,
-      Zizaco\Entrust\EntrustServiceProvider::class,
-        //App\Providers\ViewComposerServiceProvider::class,
-       // App\Providers\HelperServiceProvider::class,
-
-        //Eboost\Unoconv\UnoconvServiceProvider::class,
-      //  RobbieP\CloudConvertLaravel\CloudConvertLaravelServiceProvider::class,
-        
-    ],
+         Zizaco\Entrust\EntrustServiceProvider::class,
+      ],
 
     /*
     |--------------------------------------------------------------------------

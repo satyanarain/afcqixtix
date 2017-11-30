@@ -1,10 +1,10 @@
 <?php
-namespace App\Repositories\Role;
+namespace App\Repositories\Permission;
 
 use App\Models\Role;
 use App\Models\Permission;
 
-class RoleRepository implements RoleRepositoryContract
+class PermissionRepository implements PermissionRepositoryContract
 {
 
     public function listAllRoles()
@@ -14,7 +14,7 @@ class RoleRepository implements RoleRepositoryContract
 
     public function allPermissions()
     {
-        return Permission::all();
+        return Permissions::all();
     }
 
     public function allRoles()
@@ -27,7 +27,8 @@ class RoleRepository implements RoleRepositoryContract
         $allowed_permissions = [];
 
         if ($requestData->input('permissions') != null) {
-            foreach ($requestData->input('permissions') as $permissionId => $permission) {
+            foreach ($requestData->input('permissions')
+            as $permissionId => $permission) {
                 if ($permission === '1') {
                     $allowed_permissions[] = (int)$permissionId;
                 }
@@ -44,22 +45,23 @@ class RoleRepository implements RoleRepositoryContract
 
     public function create($requestData)
     {
-        $roleName = $requestData->name;
-        $roleDescription = $requestData->description;
-        Role::create([
-            'name' => strtolower($roleName),
-            'display_name' => ucfirst($roleName),
-             'description' => $roleDescription
+     
+        $permissionName = $requestData->name;
+        $permissionDescription = $requestData->description;
+        Permission::create([
+            'name' => strtolower($permissionName),
+            'display_name' => ucfirst($permissionName),
+             'description' => $permissionDescription
              ]);
     }
 
     public function destroy($id)
     {
-        $role = Role::findorFail($id);
-        if ($role->id !== 1) {
-            $role->delete();
+        $permission = Permission::findorFail($id);
+        if ($permission->id !== 1) {
+            $permission->delete();
         } else {
-            Session()->flash('flash_message_warning', 'Can not delete Administrator role');
+            Session()->flash('flash_message_warning', 'Can not delete Administrator permission');
         }
     }
 }

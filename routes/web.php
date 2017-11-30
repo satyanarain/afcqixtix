@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -10,13 +9,11 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 //Route::get('/', function () {
 //    return view('welcome');
 //});
 
 Auth::routes();
- 
 //Route::auth();
 Route::get('login', ['as' => 'login', 'uses' => 'Auth\LoginController@showLoginForm']);
 Route::post('login', ['as' => 'login.post', 'uses' => 'Auth\LoginController@login']);
@@ -33,10 +30,8 @@ Route::group(['middleware' => ['auth']], function () {
  Route::get('showdashboard', 'PagesController@showDashboard')->name('showdashboard');
     Route::get('notifications/getall', 'NotificationsController@getAll')->name('notifications.get');
     Route::post('notifications/markread', 'NotificationsController@markRead')->name('notifications.markread');
-     Route::get('notifications/markall', 'NotificationsController@markAll')->name('notifications.markall'); 
- 
- 
-     Route::get('users/data', 'UsersController@anyData')->name('users.data');
+    Route::get('notifications/markall', 'NotificationsController@markAll')->name('notifications.markall'); 
+    Route::get('users/data', 'UsersController@anyData')->name('users.data');
     Route::get('users/taskdata/{id}', 'UsersController@taskData')->name('users.taskdata');
     Route::get('users/closedtaskdata/{id}', 'UsersController@closedTaskData')->name('users.closedtaskdata');
     Route::get('users/clientdata/{id}', 'UsersController@clientData')->name('users.clientdata');
@@ -56,6 +51,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('users/printtraveldetails/{id}', 'UsersController@printTravelDetails')->name('users.printtraveldetails');
     /* ROLES */
     Route::resource('roles', 'RolesController');
+    Route::resource('permissions', 'PermissionsController');
+    Route::patch('settings/permissionsUpdate', 'SettingsController@permissionsUpdate');
+    Route::resource('settings', 'SettingsController');
     
 });
 //Route::get('login', ['as' => 'login', 'uses' => 'Auth\LoginController@showLoginForm']);

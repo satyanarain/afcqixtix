@@ -1,3 +1,4 @@
+
 <?php
 namespace App\Http\Controllers;
 
@@ -10,7 +11,8 @@ use Excel;
 use Schema;
 use Response;
 use App\Models\User;
-
+use App\Models\Travel;
+use App\Models\TravelDocument;
 use App\Models\Country;
 use App\Models\Tasks;
 use App\Models\Vendor;
@@ -19,15 +21,20 @@ use App\Http\Requests;
 use App\Models\Client;
 use App\Models\Associate;
 use App\Models\Role;
-
+use App\Models\GroupCompany;
+use App\Models\CountryCallingCode;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use PHPZen\LaravelRbac\Traits\Rbac;
 use Illuminate\Support\Facades\Input;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Requests\User\StoreUserRequest;
+use App\Http\Requests\User\UpdateUserBankDetailRequest;
+use App\Http\Requests\Travel\StoreTravelRequest;
+use App\Http\Requests\Travel\UpdateTravelRequest;
 use App\Repositories\User\UserRepositoryContract;
 use App\Repositories\Role\RoleRepositoryContract;
+use App\Repositories\Department\DepartmentRepositoryContract;
 use App\Repositories\Setting\SettingRepositoryContract;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -62,6 +69,7 @@ class UsersController extends Controller
     {
         $profilemenu = "profilemenu";
         $profilemenuusers = "profilemenuusers";
+
         return view('users.index', compact('profilemenu', 'profilemenuusers'));
     }
 
@@ -75,6 +83,7 @@ class UsersController extends Controller
         ->where('group_company_id', 'like', '%'.session('companyId').'%')
         ->get();
 
+        //echo json_encode($users);exit();
         return Datatables::of($users)
         ->addColumn('namelink', function ($users) {
                 return $users->name;
@@ -90,6 +99,16 @@ class UsersController extends Controller
         })
         ->add_column('status', function($users){ if ($users->status == 0) return 'Pending Activation'; elseif ($users->status == 1) return 'Active'; elseif ($users->status == 2) return 'In-active';})
         ->make(true);
+    }
+
+    public function getCompaniesUserHasAccessIn(){
+        $user = User::findOrFail(Auth::id());
+        $company_ids = $user->group_company_id;
+        $company_ids = explode(',', $company_ids);
+
+        $companies = GroupCompany::whereIn('id', $company_ids)->get();
+
+        return $companies->toJson();
     }
 
     public function changeProfileImage(Request $request){
@@ -141,8 +160,12 @@ class UsersController extends Controller
         return view('users.create')
                 ->withRoles($roles)
                 ->withDepartments($this->departments->listAllDepartments())
-                ->withCountries(Country::orderBy('country_name', 'asc')->pluck('country_name', 'id'));
-            
+                ->withCountries(Country::orderBy('country_name', 'asc')->pluck('country_name', 'id'))
+                //->withClients(Client::where(['company_id', '=', session('companyId')])->orderBy('client_name', 'asc')->pluck('client_name', 'id'))
+                  ->withClients(Client::where([['company_id', '=', session('companyId')]])->orderBy('client_name', 'asc')->pluck('client_name', 'id'))
+                ->withAssociates(Associate::orderBy('name', 'asc')->pluck('name', 'id'))
+                ->withGroupCompanies(GroupCompany::orderBy('name', 'asc')->where('id', '<>', 99)->pluck('name', 'id'))
+                ->withTelephoneCodes($newmod);
         
     }
 
