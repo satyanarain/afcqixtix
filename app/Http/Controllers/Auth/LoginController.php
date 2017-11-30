@@ -36,6 +36,7 @@ class LoginController extends Controller
      *
      * @return void
      */
+    //protected $redirectTo = '/dashboard';
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
@@ -43,45 +44,11 @@ class LoginController extends Controller
      public function login(Request $request)
     {
     $this->validate($request, ['email' => 'required|email', 'password' => 'required']);
-    $email=$request['email'];
-    echo "<pre>";
- 
-   $test= Auth::attempt(['email' => $request['email'], 'password' => $request['password']]);
    
       if(!Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
         return redirect()->back()->with('fail', 'Either username or password is incorrect!');
-        }else
-        { 
-
-         $sql = DB::table('users')->select('*')->where('email','=',$email)->first();
-          $id=$sql->id;
-         $name=$sql->name;
-         $seen = date('Y:m:d H:i:s');
-         DB::update("update users set logged_user = 1 where email = ?", [$email]);
-//
-//        $sql = DB::table('chatters')->select('*')->where('user_id','=',$id)->first();
-//
-//       if(count($sql)==0)
-//       {
-//         $chatter= Chatter::create(['user_id'=>$id,'name'=>$name,'seen'=>$seen]);
-//         $chatter->save();
-//       }
-          return redirect('/dashboard');
-         }
-
+        } else {
+         return redirect('/dashboard');
+        }
    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-}
+  }
