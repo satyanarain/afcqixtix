@@ -1,13 +1,7 @@
 @extends('layouts.master')
 @section('header')
-<h1>
-    Data Tables
-    <small>advanced tables</small>
-</h1>
-<ol class="breadcrumb">
-    <li><a href="{{route('dashboard')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li class="active">Roles and permissions settings</li>
-</ol>
+@php  headingBold(); @endphp
+@php  BreadCrumb(); @endphp
 @stop
 @section('content')
 <div class="row">
@@ -15,11 +9,9 @@
 
         <div class="box">
             <div class="box-header">
-                <h3 class="box-title">Roles and permissions settings</h3>
-               
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
+               @php  headingMain(); @endphp
+             </div>
+          <div class="box-body">
                 <table class="table table-responsive table-hover table_wrapper" id="clients-table">
                     <thead>
                         <tr>

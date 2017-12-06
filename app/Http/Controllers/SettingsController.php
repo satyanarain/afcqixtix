@@ -35,12 +35,7 @@ class SettingsController extends Controller
     }
     public function index()
     {
-        
-        
-//        print_r($this->roles->allRoles());
-//        
-//        exit();
-        $settingmenu ="settingmenu";
+       $settingmenu ="settingmenu";
         $settingmenuoverall = "settingmenuoverall";
         return view('settings.index', compact('settingmenu', 'settingmenuoverall'))
         ->withSettings($this->settings->getSetting())

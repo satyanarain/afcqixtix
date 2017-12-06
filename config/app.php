@@ -163,6 +163,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        
         Collective\Html\HtmlServiceProvider::class,
        // 'Collective\Html\HtmlServiceProvider',
         /*
@@ -182,6 +183,7 @@ return [
         App\Providers\AccessServiceProvider::class,
         App\Providers\BroadcastServiceProvider::class,
          Zizaco\Entrust\EntrustServiceProvider::class,
+         App\Providers\HelperServiceProvider::class,
       ],
 
     /*

@@ -8,7 +8,7 @@ use Notifynder;
 use App\Models\User;
 use App\Models\Settings;
 use App\Http\Controllers\Controller;
-use App\Repositories\User\UserRepositoryContract;
+//use App\Repositories\User\UserRepositoryContract;
 
  use App\Repositories\Setting\SettingRepositoryContract;
 
@@ -18,7 +18,7 @@ class PagesController extends Controller
 
 
     public function __construct(
-        UserRepositoryContract $users,
+      //  UserRepositoryContract $users,
         SettingRepositoryContract $settings
 
     ) {

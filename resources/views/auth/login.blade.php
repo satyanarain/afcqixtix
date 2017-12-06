@@ -4596,14 +4596,10 @@ border-radius: 4px;
     </head>
     <body >
         <div class="container" >
-            
-
-            <section>               
-                
-     <!-- hidden anchor to stop jump http://www.css3create.com/Astuce-Empecher-le-scroll-avec-l-utilisation-de-target#wrap4  -->
-                    <a class="hiddenanchor" id="toregister"></a>
-                    <a class="hiddenanchor" id="tologin"></a>
-                  <div class="row">
+             <section>               
+               <a class="hiddenanchor" id="toregister"></a>
+               <a class="hiddenanchor" id="tologin"></a>
+               <div class="row">
             <div class="col-sm-6 col-md-4 col-md-offset-4">
 
                         <div class="account-wall">

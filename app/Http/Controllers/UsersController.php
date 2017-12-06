@@ -10,24 +10,23 @@ use Excel;
 use Schema;
 use Response;
 use App\Models\User;
-
 use App\Models\Country;
-use App\Models\Tasks;
-use App\Models\Vendor;
-use App\Models\Companie;
 use App\Http\Requests;
 use App\Models\Client;
 use App\Models\Associate;
 use App\Models\Role;
-
+use App\Models\GroupCompany;
+use App\Models\CountryCallingCode;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use PHPZen\LaravelRbac\Traits\Rbac;
 use Illuminate\Support\Facades\Input;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Requests\User\StoreUserRequest;
+use App\Http\Requests\User\UpdateUserBankDetailRequest;
 use App\Repositories\User\UserRepositoryContract;
 use App\Repositories\Role\RoleRepositoryContract;
+
 use App\Repositories\Setting\SettingRepositoryContract;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -43,14 +42,12 @@ class UsersController extends Controller
     public function __construct(
         UserRepositoryContract $users,
         RoleRepositoryContract $roles,
-        DepartmentRepositoryContract $departments,
         SettingRepositoryContract $settings
     ) {
         $this->users = $users;
         $this->roles = $roles;
-        $this->departments = $departments;
         $this->settings = $settings;
-        $this->middleware('user.create', ['only' => ['create']]);
+      //  $this->middleware('user.create', ['only' => ['create']]);
     }
 
     /**
@@ -60,36 +57,24 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $profilemenu = "profilemenu";
-        $profilemenuusers = "profilemenuusers";
-        return view('users.index', compact('profilemenu', 'profilemenuusers'));
+     return view('users.index')->withUsers();
+   
     }
-
-    public function anyData()
+    public function create()
     {
-        $canUpdateUser = auth()->user()->can('update-user');
-        $users = DB::table('role_user')
-        ->select(['users.id', 'users.name', 'users.middle_name', 'users.last_name', 'users.email', 'users.contact_number', 'users.calling_code_contact', 'users.status', 'roles.display_name'])
-        ->join('roles', 'role_user.role_id', '=', 'roles.id')
-        ->join('users', 'role_user.user_id', '=', 'users.id')
-        ->where('group_company_id', 'like', '%'.session('companyId').'%')
-        ->get();
+    
+       $user = User::findOrFail(Auth::id());
+        return view('users.create')->withRoles($roles)->withCountries(Country::orderBy('country_name', 'asc')->pluck('country_name', 'id'));
+        
+    }
+ public function getCompaniesUserHasAccessIn(){
+        $user = User::findOrFail(Auth::id());
+        $company_ids = $user->group_company_id;
+        $company_ids = explode(',', $company_ids);
 
-        return Datatables::of($users)
-        ->addColumn('namelink', function ($users) {
-                return $users->name;
-        })
+        $companies = GroupCompany::whereIn('id', $company_ids)->get();
 
-        ->add_column('edit', '
-                <a style="background-color:#f7831a" href="{{ route(\'users.edit\', $id) }}" class="btn btn-success" ><span class="glyphicon glyphicon-pencil"></span> Edit</a>')
-        ->add_column('view', function ($users) {
-                return '<a style="background-color:#3A485C" class="btn btn-success" href="users/'.$users->id.'"><span class="glyphicon glyphicon-search"></span>View</a>';
-        })
-        ->add_column('contact', function ($users) {
-                return '('.$users->calling_code_contact.') '.$users->contact_number;
-        })
-        ->add_column('status', function($users){ if ($users->status == 0) return 'Pending Activation'; elseif ($users->status == 1) return 'Active'; elseif ($users->status == 2) return 'In-active';})
-        ->make(true);
+        return $companies->toJson();
     }
 
     public function changeProfileImage(Request $request){
@@ -120,40 +105,23 @@ class UsersController extends Controller
      *
      * @return Response
      */
-    public function create()
-    {
-        $user = User::findOrFail(Auth::id());
-        $codes = DB::table('countries_calling_code')->orderBy('country_name', 'desc')->pluck(DB::raw('CONCAT(country_name, " (", calling_code, ") ") AS calling_code_text'), 'calling_code');
-        foreach ($codes as $key => $value) {
-            $mod[$value] = $key; 
-        }
-        ksort($mod);
-        foreach ($mod as $key => $value) {
-            $newmod[$value] = $key; 
-        }
-        //echo json_encode($newmod);exit();
-        if($user->hasRole('group_admin')){
-            $roles = Role::orderBy('display_name', 'asc')->pluck('display_name', 'id');
-        }else if($user->hasRole('administrator')){
-            $roles = Role::orderBy('display_name', 'asc')->where('id', '<>', 9)
-                        ->pluck('display_name', 'id');
-        }
-        return view('users.create')
-                ->withRoles($roles)
-                ->withDepartments($this->departments->listAllDepartments())
-                ->withCountries(Country::orderBy('country_name', 'asc')->pluck('country_name', 'id'));
-            
-        
-    }
-
+ 
     /**
      * Store a newly created resource in storage.
      * @param User $user
      * @return Response
      */
-    public function store(StoreUserRequest $userRequest)
+    public function store(Request $userRequest)
     {
+      
+        
+        
         $getInsertedId = $this->users->create($userRequest);
+        
+         echo "=======================================" ;
+        //exit();
+        
+        
         // exit();
         return redirect()->route('users.index');         
     }
@@ -165,60 +133,10 @@ class UsersController extends Controller
      */
    public function show($id)
    {
-        $userprofile="userprofile";
-
-        $costcenters=DB::table('users')
-        ->leftjoin('costcenters','costcenters.user_id','=','users.id')
-        ->leftjoin('associates','associates.id','=','users.associate_id')
-        ->join('services','services.id','=','costcenters.service_id')
-        ->join('subservices','subservices.id','=','costcenters.subservice_id')
-        ->leftjoin('nestedservices','nestedservices.id','=','costcenters.recordaltype_id')
-        ->leftjoin('trademarktype','trademarktype.id','=','costcenters.trademarktype_id')
-        ->leftjoin('trademarksubtype','trademarksubtype.id','=','costcenters.trademarksubtype_id')
-        ->join('countries','countries.id','=','costcenters.country')
-        ->select('services.servicename','subservices.subservice_name','nestedservices.nestedservicename','trademarktype.type_name','trademarksubtype.sub_type_name','associates.currency','countries.country_name')
-        ->where('costcenters.user_id',$id)
-        ->get();
-    
-         
-        //return view('users.cost_center',compact('costcenters'));
-
-        $travel = Travel::join('countries', 'travel.country', '=', 'countries.id')
-        ->select(['travel.*', 'countries.country_name'])
-        ->where('user_id', '=', $id)->get();
-        //echo json_encode($travel);exit();
-          $country = User::join('countries','countries.id','=','users.country')
-         ->select('country_name')->where('users.id',$id)->first();
-         
-         $groupcompany = User::join('group_companies','group_companies.id','=','users.group_company_id')
-        ->select('group_companies.name as groupcompany_name')->where('users.id',$id)->first();
-
-        $usertype = User::join('roles','roles.id','=','users.user_type')
-        ->select('roles.display_name')->where('users.id',$id)->first();
-
-        $clients = User::leftjoin('clients','clients.id','=','users.client_id')
-        ->select('*')->where('users.id',$id)->first();
-        $client = User::leftjoin('clients','clients.id','=','users.client_id')
-        ->select('*')->where('users.id',$id)->first();
-        $clientname = $clients->client_name;
- 
-        $associate = User::join('associates','associates.id','=','users.associate_id')
-        ->select('associates.name as associate_name')->where('users.id',$id)->first();
-
-        return view('users.show',compact('userprofile'))
-        ->withUser($this->users->find($id))
-        ->withCompanyname($this->settings->getCompanyName())
-        ->withTravels($travel)
-        ->withCostcenters($costcenters)
-         ->withCountries($country)
-        ->withGroupcompanies($groupcompany)
-        ->withUsertypes($usertype)        
-
-        ->withAssociates($associate)
-        ->withClientname($clientname)
-        ->withClient($client);
        
-    }
+
+       
+     }
 
     /**
      * Show the form for editing the specified resource.
@@ -285,13 +203,7 @@ class UsersController extends Controller
     public function createdPassword($token){
         return view('users.activate', ['token' => $token]);
     }
-
-
-
-
-
-
-    public function setPassword(Request $request){
+ public function setPassword(Request $request){
         //var_dump($request);
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
@@ -340,17 +252,10 @@ class UsersController extends Controller
             return "Link has been expired. Please contact to admin.";
         }
     }
-
-
-
-
-
-    public function checkIfEmailIsRegistered(Request $request){
+  public function checkIfEmailIsRegistered(Request $request){
         $check_if_email_is_registered = User::where([
             ['email', '=', $request->email]
         ])->first();
-
-
         return $check_if_email_is_registered;
     }
 
@@ -384,10 +289,7 @@ class UsersController extends Controller
 
         $input['travel_from_date'] = date('Y-m-d', strtotime($request->travel_from_date));
         $input['travel_to_date'] = date('Y-m-d', strtotime($request->travel_to_date));
-
-
-
-        $document_types = $request->document_types;
+       $document_types = $request->document_types;
         //echo json_encode($document_types);exit();
         $travel = Travel::create($input);
 

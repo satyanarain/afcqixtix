@@ -1,3 +1,8 @@
+<?php
+$segments_var = '';
+$segments_var = Request::segments();
+$segments_var[0];
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -36,26 +41,44 @@
         <link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" type="text/css" >
         <link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" type="text/css" >
         <link href="{{ URL::asset('plugins/datatables/dataTables.bootstrap.css') }}" rel="stylesheet" type="text/css" >
-       <script src="https://cdn.datatables.net/responsive/2.1.1/js/responsive.bootstrap.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.1.1/js/responsive.bootstrap.min.js"></script>
         <script type="text/javascript" src="{{ URL::asset('js/Chart.min.js') }}"></script>
         <script src="{{ URL::asset('plugins/chartjs/Chart.min.js') }}"></script>
-<!--        <script src="/js/notify.min.js"></script>-->
-<!--        <script src="/js/jquery.multiselect.js"></script>-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.debug.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/2.3.0/jspdf.plugin.autotable.js"></script>
          <link rel="stylesheet" href="{{URL::asset('css/AdminLTE.min.css')}}">
          
-         
+         <script>    
+      $('body').on('focus',".datepicker_recurring_start", function(){
+          alert("ytrtr");
+          $(this).datepicker({
+              dateFormat: 'dd-mm-yy',
+              changeYear: true
+          });
+      }); 
+
+    $('body').on('focus',".make-date", function(){
+        $('.make-date').datepicker({
+            dateFormat: 'dd-mm-yy',
+            changeYear: true
+        });
+    });
+
+
+ window.Laravel = <?php echo json_encode([
+
+            'csrfToken' => csrf_token(),
+            ]); 
+?>
+</script>
     </head>
     <body class="hold-transition skin-blue sidebar-mini">
         <div class="wrapper">
         <header class="main-header">    
             <!-- Logo -->
             <a href="index2.html" class="logo">
-                <!-- mini logo for sidebar mini 50x50 pixels -->
-                <span class="logo-mini"><b>A</b>LT</span>
-                <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg"><b>Admin</b>LTE</span>
+             
+                <span class="logo-lg"><b>ITMS</span>
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top">
@@ -263,41 +286,35 @@
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
 
-                                <img src="<?php echo \URL::to('') . '/img/user2-160x160.jpg' ?>" class="user-image" alt="User Image">
-                                <span class="hidden-xs">Alexander Pierce</span>
+                      @if(Auth::user()->image_path)
+                           <img src="<?php echo \URL::to('') . '/img/'.Auth::user()->image_path; ?>" class="user-image">
+                       @else
+                           <img src="<?php echo \URL::to('') . '/img/user2-160x160.jpg'?>" class="user-image">
+                      @endif
+                         <span class="hidden-xs">{{{ isset(Auth::user()->salutation) ? Auth::user()->salutation : '' }}} {{{ isset(Auth::user()->name) ? Auth::user()->name : '' }}}!</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- User image -->
                                 <li class="user-header">
-                                    <img src="<?php echo \URL::to('') . '/img/user2-160x160.jpg' ?>" class="img-circle" alt="User Image">
-
+                                  
+                             @if(Auth::user()->image_path)
+                             <img src="<?php echo \URL::to('') . '/img/'.Auth::user()->image_path; ?>" class="img-circle">
+                           @else
+                           <img src="<?php echo \URL::to('') . '/img/user2-160x160.jpg'?>" class="img-circle">
+                      @endif
+                      
                                     <p>
-                                        Alexander Pierce - Web Developer
+                                       {{{ isset(Auth::user()->salutation) ? Auth::user()->salutation : '' }}} {{{ isset(Auth::user()->name) ? Auth::user()->name : '' }}}!
                                         <small>Member since Nov. 2012</small>
                                     </p>
                                 </li>
-                                <!-- Menu Body -->
-                                <li class="user-body">
-                                    <div class="row">
-                                        <div class="col-xs-4 text-center">
-                                            <a href="#">Followers</a>
-                                        </div>
-                                        <div class="col-xs-4 text-center">
-                                            <a href="#">Sales</a>
-                                        </div>
-                                        <div class="col-xs-4 text-center">
-                                            <a href="#">Friends</a>
-                                        </div>
-                                    </div>
-                                    <!-- /.row -->
-                                </li>
-                                <!-- Menu Footer-->
+
                                 <li class="user-footer">
                                     <div class="pull-left">
                                         <a href="#" class="btn btn-default btn-flat">Profile</a>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                                       <a href="{{ url('/logout') }}" class="btn btn-default btn-flat"><span class="glyphicon glyphicon-log-out"></span> Sign out</a>
                                     </div>
                                 </li>
                             </ul>
@@ -340,40 +357,37 @@
                     <li class="active treeview">
                        <a href="{{route('dashboard')}}">
                             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
-                            
                         </a>
-                        
-                    </li>
-
-                    <li  class="treeview">
+                     </li>
+                 <li @if($segments_var[0]=='users') class="treeview active" @else class="treeview" @endif>
                         <a href="#">
-                            <i class="fa fa-dashboard"></i> <span>Profiles</span>
+                            <i class="fa fa-user"></i> <span>Profiles</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
-                        <ul class="treeview-menu">
-                            <li class="active"><a href="{{route('users.index')}}">
-                                    <i class="fa fa-circle-o"></i> @lang('User') 
+                        <ul @if($segments_var[0]=='users') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
+                            <li @if($segments_var[0]=='users') class="active" @endif><a href="{{route('users.index')}}">
+                                    <i class="fa fa-users"></i> @lang('User') 
                                 </a></li>
-                            <li><a href="index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
+                            
                         </ul>
                     </li>
                     
-                    <li class="treeview">
+                    <li  @if($segments_var[0]=='roles' || $segments_var[0]=='permissions' || $segments_var[0]=='settings') class="treeview active" @else class="treeview" @endif>
                         <a href="#">
-                            <i class="fa fa-dashboard"></i> <span>@lang('menu.settings.title')</span>
+                            <i class="fa fa-cog" aria-hidden="true"></i> <span>@lang('menu.settings.title')</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
-                        <ul class="treeview-menu">
-                            <li class="active"><a href="{{route('roles.index')}}">
-                                    <i class="fa fa-circle-o"></i>@lang('menu.settings.roles')</a>
+                        <ul @if($segments_var[0]=='roles' || $segments_var[0]=='permissions' || $segments_var[0]=='settings') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
+                            <li @if($segments_var[0]=='roles') class="active" @endif><a href="{{route('roles.index')}}">
+                             <i class="fa fa-tasks" ></i>@lang('menu.settings.roles')</a>
                             </li>
-                            <li><a href="{{route('permissions.index')}}"><i class="fa fa-circle-o"></i>@lang('menu.settings.permissions')</a>
+                            <li @if($segments_var[0]=='permissions') class="active" @endif><a href="{{route('permissions.index')}}"><i class="fa fa-key"></i>@lang('menu.settings.permissions')</a>
                             </li>
-                            <li><a href="{{route('settings.index')}}"><i class="fa fa-circle-o"></i>@lang('menu.settings.overall')</a></li>
+                            <li @if($segments_var[0]=='settings') class="active" @endif><a href="{{route('settings.index')}}"><i class="fa fa-cog"></i>@lang('menu.settings.overall')</a></li>
                         </ul>
                     </li>
                     </ul>
@@ -422,7 +436,7 @@
     reserved.
 </footer>
 </div>
-<script src="{{ asset(elixir('plugins/jQuery/jquery-2.2.3.min.js')) }}"></script>
+
 <!-- jQuery UI 1.11.4 -->
 <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
@@ -430,7 +444,7 @@
 $.widget.bridge('uibutton', $.ui.button);
 </script>
 <!-- Bootstrap 3.3.6 -->
-<script src="{{ asset(elixir('js/bootstrap.min.js')) }}"></script>
+
 <!-- Morris.js charts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 <script src="{{ asset(elixir('plugins/morris/morris.min.js')) }}"></script>
@@ -439,13 +453,9 @@ $.widget.bridge('uibutton', $.ui.button);
 <!-- jvectormap -->
 <script src="{{ asset(elixir('plugins/jvectormap/jquery-jvectormap-1.2.2.min.js')) }}"></script>
 <script src="{{ asset(elixir('plugins/jvectormap/jquery-jvectormap-world-mill-en.js')) }}"></script>
-<!-- jQuery Knob Chart -->
-<script src="{{ asset(elixir('plugins/jQuery/jquery-2.2.3.min.js')) }}plugins/knob/jquery.knob.js"></script>
-<!-- daterangepicker -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
-<script src="{{ asset(elixir('plugins/daterangepicker/daterangepicker.js')) }}"></script>
-<!-- datepicker -->
-<script src="{{ asset(elixir('plugins/datepicker/bootstrap-datepicker.js')) }}"></script>
+<!--<script src="{{ asset(elixir('plugins/daterangepicker/daterangepicker.js')) }}"></script>-->
+    <script src="{{ asset(elixir('plugins/datepicker/bootstrap-datepicker.js')) }}"></script>
 <!-- Bootstrap WYSIHTML5 -->
 <script src="{{ asset(elixir('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')) }}"></script>
 <!-- Slimscroll -->
@@ -458,12 +468,26 @@ $.widget.bridge('uibutton', $.ui.button);
 <script src="{{ asset(elixir('js/pages/dashboard2.js')) }}"></script>
 <script src="{{ asset(elixir('plugins/datatables/jquery.dataTables.min.js')) }}"></script>
 <script src="{{ asset(elixir('plugins/datatables/dataTables.bootstrap.min.js')) }}"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+
 <script src="{{ asset(elixir('js/demo.js')) }}"></script>
+
+
+<script>
+
+ 
+    //Date picker
+    $('#datepicker').datepicker({
+        dateFormat: 'dd-mm-yy',
+              changeYear: true,
+                autoclose: true
+    });
+
+</script>
+
+
 @stack('scripts')
 </body>
 </html>
-
-
-
-
 

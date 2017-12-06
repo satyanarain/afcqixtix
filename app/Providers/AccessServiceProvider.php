@@ -23,10 +23,7 @@ class AccessServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(
-            \App\Repositories\User\UserRepositoryContract::class,
-            \App\Repositories\User\UserRepository::class
-        );
+       
         
         $this->app->bind(
             \App\Repositories\Associate\AssociateRepositoryContract::class,
@@ -43,11 +40,12 @@ class AccessServiceProvider extends ServiceProvider
             \App\Repositories\Role\RoleRepository::class
         );
         
-        
-        
-        
-        
         $this->app->bind(
+            \App\Repositories\User\UserRepositoryContract::class,
+            \App\Repositories\User\UserRepository::class
+        );
+        
+          $this->app->bind(
             \App\Repositories\Department\DepartmentRepositoryContract::class,
             \App\Repositories\Department\DepartmentRepository::class
         );

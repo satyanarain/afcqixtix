@@ -43,11 +43,16 @@ class LoginController extends Controller
     }
      public function login(Request $request)
     {
+     
     $this->validate($request, ['email' => 'required|email', 'password' => 'required']);
    
       if(!Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
         return redirect()->back()->with('fail', 'Either username or password is incorrect!');
         } else {
+            
+            
+            
+            
          return redirect('/dashboard');
         }
    }

@@ -60,25 +60,18 @@ class UserRepository implements UserRepositoryContract
 
     public function create($requestData)
     {
-      
-        $settings = Settings::first();
-        //$password =  bcrypt($requestData->password);
-        $role = $requestData->user_type;
-        $set_password_token = str_random(40);
-
-        $group_company_ids = $requestData->group_company_id;
-        $no_of_companies = count($group_company_ids);
-        if($no_of_companies > 0){
-            $group_company_ids = implode(',', $group_company_ids);
-        }
         
-        //var_dump($group_company_ids);exit();
-        //echo $group_company; exit();
-        //$department = $requestData->departments;
-        $companyname = $settings->company;
         
-        $input = $requestData->all();
-       $dob = $requestData->dob;
+        print_r($_POST);
+        
+      //  exit();
+        
+        
+        
+       $settings = Settings::first();
+      $set_password_token = str_random(40);
+         $input = $requestData->all();
+        $dob = $requestData->dob;
        if($dob!='')
         {
         $input['dob'] = date('Y-m-d', strtotime($dob));
@@ -102,52 +95,7 @@ class UserRepository implements UserRepositoryContract
             $input['image_path'] = $filename;
         }
 
-        if ($requestData->hasFile('business_card')) {
-            if (!is_dir(public_path(). '/images/'. $companyname)) {
-                mkdir(public_path(). '/images/'. $companyname, 0777, true);
-            }
-            $settings = Settings::findOrFail(1);
-            $file =  $requestData->file('business_card');
-
-            $destinationPath = public_path(). '/images/'. $companyname;
-            $filename = str_random(8) . '_' . $file->getClientOriginalName() ;
-
-            $file->move($destinationPath, $filename);
-            
-            $input['business_card'] = $filename;
-        }
-
-
-        if ($requestData->hasFile('national_id_document')) {
-            if (!is_dir(public_path(). '/images/'. $companyname)) {
-                mkdir(public_path(). '/images/'. $companyname, 0777, true);
-            }
-            $settings = Settings::findOrFail(1);
-            $file =  $requestData->file('national_id_document');
-
-            $destinationPath = public_path(). '/images/'. $companyname;
-            $filename = str_random(8) . '_' . $file->getClientOriginalName() ;
-
-            $file->move($destinationPath, $filename);
-            
-            $input['national_id_document'] = $filename;
-        }
-
-        if ($requestData->hasFile('passport_document')) {
-            if (!is_dir(public_path(). '/images/'. $companyname)) {
-                mkdir(public_path(). '/images/'. $companyname, 0777, true);
-            }
-            $settings = Settings::findOrFail(1);
-            $file =  $requestData->file('passport_document');
-
-            $destinationPath = public_path(). '/images/'. $companyname;
-            $filename = str_random(8) . '_' . $file->getClientOriginalName() ;
-
-            $file->move($destinationPath, $filename);
-            
-            $input['passport_document'] = $filename;
-        }
-
+        
 
         $input['set_password_token'] = $set_password_token;
 
@@ -176,7 +124,7 @@ class UserRepository implements UserRepositoryContract
         Mail::to($requestData->email)        
         ->send(new UserCreated($set_password_token));
 
-        Session::flash('flash_message', 'User successfully added!'); //Snippet in Master.blade.php
+        Session::flash('flash_message', "$user->name User Created Successfully."); //Snippet in Master.blade.php
         return $user;
     }
 
@@ -315,7 +263,7 @@ class UserRepository implements UserRepositoryContract
             //$user->department()->sync([$department]);
         }
 
-        Session::flash('flash_message', 'User successfully updated!');
+        Session::flash('flash_message', "$user->name User Updated Successfully.");
 
         return $user;
     }

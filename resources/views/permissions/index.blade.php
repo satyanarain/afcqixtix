@@ -1,13 +1,7 @@
 @extends('layouts.master')
 @section('header')
-<h1>
-    Data Tables
-    <small>advanced tables</small>
-</h1>
-<ol class="breadcrumb">
-    <li><a href="{{route('dashboard')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li class="active">Permissions</li>
-</ol>
+@php  headingBold(); @endphp
+@php  BreadCrumb(); @endphp
 @stop
 @section('content')
 
@@ -16,7 +10,7 @@
 
         <div class="box">
             <div class="box-header">
-                <h3 class="box-title">All Permissions</h3>
+               @php  headingMain(); @endphp
                 <a href="{{ route('permissions.create')}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>   @lang('common.titles.add')</button></a>
             </div>
             <!-- /.box-header -->

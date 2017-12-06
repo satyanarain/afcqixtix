@@ -23,33 +23,18 @@ Route::get('/logout', 'Auth\LoginController@logout');
 Route::get('password/create/{token}', 'UsersController@createdPassword')->name('password.create');
 Route::post('password/create', 'UsersController@setPassword');
  
-    
+     Route::get('notifications/markall', 'NotificationsController@markAll')->name('notifications.markall'); 
+  
 Route::group(['middleware' => ['auth']], function () {
  Route::get('/', 'PagesController@dashboard');
  Route::get('dashboard', 'PagesController@dashboard')->name('dashboard');
  Route::get('showdashboard', 'PagesController@showDashboard')->name('showdashboard');
     Route::get('notifications/getall', 'NotificationsController@getAll')->name('notifications.get');
     Route::post('notifications/markread', 'NotificationsController@markRead')->name('notifications.markread');
-    Route::get('notifications/markall', 'NotificationsController@markAll')->name('notifications.markall'); 
-    Route::get('users/data', 'UsersController@anyData')->name('users.data');
-    Route::get('users/taskdata/{id}', 'UsersController@taskData')->name('users.taskdata');
-    Route::get('users/closedtaskdata/{id}', 'UsersController@closedTaskData')->name('users.closedtaskdata');
-    Route::get('users/clientdata/{id}', 'UsersController@clientData')->name('users.clientdata');
-    Route::get('users/travelprofile/{id}', 'UsersController@showTravelModal')->name('users.createtravelprofile')->middleware('user.addtravel');
-    Route::post('users/savetraveldetail/{id}', 'UsersController@saveTravelDetail')->name('users.savetraveldetail');
-    Route::get('users/edittravelprofile/{id}', 'UsersController@showEditTravelModal')->name('users.edittravelprofile');
-    Route::get('users/{user_id}/showtravelprofile/{travel_id}', 'UsersController@showTravelDetail')->name('users.showtravelprofile');
-    Route::get('users/{user_id}/deletetravelprofile/{travel_id}', 'UsersController@deleteTravelDetail')->name('users.deletetravelprofile');
-    Route::patch('users/updatetravelprofile/{id}', 'UsersController@updateTravelDetail')->name('users.updatetravelprofile');
-    Route::post('users/changeprofileimage', 'UsersController@changeProfileImage')->middleware('user.changeprofileimage')->name('changeprofileimage');
-    Route::get('users/editbankdetail/{id}', 'UsersController@editBankDetail')->name('users.editbankdetail')->middleware('user.editbankdetail');
-    Route::patch('users/updatebankdetail/{id}', 'UsersController@updateBankDetail')->name('users.updatebankdetail');
-    Route::post('users/changename', 'UsersController@changeName')->name('users.changename');
-    Route::post('users/changecontact', 'UsersController@changeContact')->name('users.changecontact');
-    Route::post('users/changeaddress', 'UsersController@changeAddress')->name('users.changeaddress');
+     Route::get('users/data', 'UsersController@anyData')->name('users.data');
+ Route::post('users/store', 'UsersController@store');
     Route::resource('users', 'UsersController');
-    Route::get('users/printtraveldetails/{id}', 'UsersController@printTravelDetails')->name('users.printtraveldetails');
-    /* ROLES */
+     /* ROLES */
     Route::resource('roles', 'RolesController');
     Route::resource('permissions', 'PermissionsController');
     Route::patch('settings/permissionsUpdate', 'SettingsController@permissionsUpdate');

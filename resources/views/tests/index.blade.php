@@ -1,6 +1,9 @@
 @extends('layouts.master')
 @section('header')
-@php  headingBold(); @endphp
+<h1>
+    Data Tables
+    <small>advanced tables</small>
+</h1>
 @php  BreadCrumb(); @endphp
 @stop
 @section('content')
@@ -10,8 +13,8 @@
 
         <div class="box">
             <div class="box-header">
-                @php  headingMain(); @endphp
-                <a href="{{ route('roles.create')}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>@lang('common.titles.add')</button></a>
+                <h3 class="box-title">All Roles</h3>
+                <a href="{{ route('roles.create')}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>   @lang('common.titles.add')</button></a>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
