@@ -19,7 +19,7 @@ class PermissionsController extends Controller
     public function __construct(PermissionRepositoryContract $permissions)
         {
         $this->permissions = $permissions;
-            $this->middleware('user.is.admin', ['only' => ['index', 'create', 'destroy']]);
+            //$this->middleware('user.is.admin', ['only' => ['index', 'create', 'destroy']]);
         }
         
         

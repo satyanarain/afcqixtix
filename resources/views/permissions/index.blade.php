@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('header')
-@php  headingBold(); @endphp
-@php  BreadCrumb(); @endphp
+<h1>{{headingBold()}}</h1>
+{{BreadCrumb()}}
 @stop
 @section('content')
 
@@ -10,7 +10,7 @@
 
         <div class="box">
             <div class="box-header">
-               @php  headingMain(); @endphp
+            <h3 class="box-title">{{headingMain()}}</h3>
                 <a href="{{ route('permissions.create')}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>   @lang('common.titles.add')</button></a>
             </div>
             <!-- /.box-header -->

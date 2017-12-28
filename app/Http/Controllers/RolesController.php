@@ -10,11 +10,11 @@ use App\Repositories\Role\RoleRepositoryContract;
 class RolesController extends Controller
 {
    protected $roles;
-   public function __construct(RoleRepositoryContract $roles)
-    {
-        $this->roles = $roles;
-        $this->middleware('user.is.admin', ['only' => ['index', 'create', 'destroy']]);
-    }
+  public function __construct(RoleRepositoryContract $roles)
+   {
+       $this->roles = $roles;
+     //  $this->middleware('user.is.admin', ['only' => ['index', 'create', 'destroy']]);
+   }
     public function index()
     {
      $settingmenu ="settingmenu";

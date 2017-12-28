@@ -28,13 +28,21 @@ class Kernel extends HttpKernel
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-         //   \App\Http\Middleware\VerifyCsrfToken::class,
+          
             \App\Http\Middleware\LogLastUserActivity::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             ],
+       
          'user.create' => [ \App\Http\Middleware\User\CanUserCreate::class ],
          'user.update' => [ \App\Http\Middleware\User\CanUserUpdate::class ],
-        'user.is.admin' => [ \App\Http\Middleware\RedirectIfNotAdmin::class ],
+         'user.update' => [ \App\Http\Middleware\User\UpdateChangePasswordRequest::class ],
+         'user.is.admin' => [ \App\Http\Middleware\RedirectIfNotAdmin::class ],
+        
+         /*
+        'client.create' => [ \App\Http\Middleware\Client\CanClientCreate::class ],
+        'client.update' => [ \App\Http\Middleware\Client\CanClientUpdate::class ],
+       */
+        
         'api' => [
             'throttle:60,1',
             'bindings',

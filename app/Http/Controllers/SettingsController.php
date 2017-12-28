@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers;
 
+namespace App\Http\Controllers;
+
 use DB;
 use Auth;
 use Session;
@@ -31,7 +33,7 @@ class SettingsController extends Controller
     ) {
         $this->settings = $settings;
         $this->roles = $roles;
-        $this->middleware('user.is.admin', ['only' => ['index']]);
+     // $this->middleware('user.is.admin', ['only' => ['index']]);
     }
     public function index()
     {

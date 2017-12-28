@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('header')
-@php  headingBold(); @endphp
-@php  BreadCrumb(); @endphp
+<h1>{{headingBold()}}</h1>
+{{BreadCrumb()}}
 @stop
 @section('content')
 <div class="row">
@@ -9,7 +9,7 @@
 
         <div class="box">
             <div class="box-header">
-               @php  headingMain(); @endphp
+                <h3 class="box-title">{{headingMain()}}</h3>
              </div>
           <div class="box-body">
                 <table class="table table-responsive table-hover table_wrapper" id="clients-table">

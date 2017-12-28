@@ -45,15 +45,12 @@ class LoginController extends Controller
     {
      
     $this->validate($request, ['email' => 'required|email', 'password' => 'required']);
-   
+
       if(!Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
-        return redirect()->back()->with('fail', 'Either username or password is incorrect!');
+         return redirect()->back()->with('fail', 'Either username or password is incorrect!');
         } else {
-            
-            
-            
-            
-         return redirect('/dashboard');
+          
+         return redirect('dashboard');
         }
    }
   }

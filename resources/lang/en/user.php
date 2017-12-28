@@ -8,12 +8,18 @@ return [
     ],
     'headers' => [
         'name' => 'Name',
-        'mail' => 'Email',
+        'userid' => 'Login ID(Email)',
+        'currentpassword' => 'Current Password',
+        'newppassword' => 'New Password',
+        'confirmpassword' => 'Confirm Password',
+        'email' => 'Email',
         'address' => 'Address',
-        'contact_number' => 'Mobile',
+        'mobile' => 'Mobile',
         'country' => 'Country',
+        'view' => 'View',
+        'edit' => 'Edit',
         'city' => 'City',
-        'dob' => 'Date of Birth',
+        'date_of_birth' => 'Date of Birth',
         'image_path' => 'Profile Picture'
     ],
 ];

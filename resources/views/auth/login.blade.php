@@ -4590,10 +4590,9 @@ border-radius: 4px;
 
     <!-- Styles -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-        <link href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-        
-    </head>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+     </head>
     <body >
         <div class="container" >
              <section>               
@@ -4601,19 +4600,16 @@ border-radius: 4px;
                <a class="hiddenanchor" id="tologin"></a>
                <div class="row">
             <div class="col-sm-6 col-md-4 col-md-offset-4">
-
-                        <div class="account-wall">
+                  <div class="account-wall">
                                <img class="profile-img" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=120"
                         alt="">
                          <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
                         {!! csrf_field() !!}
-                               
-<!--                                <h1 style="margin: 0px;">Log in</h1> -->
-                                      @if(Session::has('success'))
-                                      <div class="alert alert-success">{{Session::get('success')}}</div>
-                                      @elseif(Session::has('fail'))
-                                      <div class="alert alert-danger">{{Session::get('fail')}}</div>
-                                      @endif
+                           @if(Session::has('success'))
+                            <div class="alert alert-success">{{Session::get('success')}}</div>
+                             @elseif(Session::has('fail'))
+                              <div class="alert alert-danger">{{Session::get('fail')}}</div>
+                              @endif
 
                                 <p> 
                                     <label for="username" class="uname" style="float:left"> E-Mail Address</label>

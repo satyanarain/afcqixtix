@@ -4,14 +4,14 @@ $segments_var = Request::segments();
 $segments_var[0];
 ?>
 <!DOCTYPE html>
-<html lang="en">
-    <head>
+<html lang="{{ app()->getLocale() }}" ng-app="LaravelCRUD">
+ <head>
         @if(Session::has('download.in.the.next.request'))
         <meta http-equiv="refresh" content="5;url={{ Session::get('download.in.the.next.request') }}">
         @endif
         <meta charset="UTF-8">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>AFC</title>
+         <title>AFC</title>
         <link rel="icon" type="image/png" sizes="16x16" href="{{url('images/favicon-16x16.png')}}">
         <script src="{{ asset(elixir('js/jquery-2.2.3.min.js')) }}"></script>
         <link rel="stylesheet" href="{{ asset(elixir('css/bootstrap.min.css')) }}">
@@ -19,7 +19,6 @@ $segments_var[0];
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
         <!-- Ionicons -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
-       
         <link rel="stylesheet" href="{{ asset(elixir('css/skins/_all-skins.min.css')) }}">
         <!-- iCheck -->
         <link rel="stylesheet" href="{{ asset(elixir('plugins/iCheck/flat/blue.css')) }}">
@@ -33,38 +32,13 @@ $segments_var[0];
         <link rel="stylesheet" href="{{ asset(elixir('plugins/daterangepicker/daterangepicker.css')) }}">
         <!-- bootstrap wysihtml5 - text editor -->
         <link rel="stylesheet" href="{{ asset(elixir('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')) }}">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/css/select2.min.css" rel="stylesheet" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
-        <link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" type="text/css" >
-        <link href="https://cdn.datatables.net/fixedheader/3.1.2/css/fixedHeader.bootstrap.min.css" rel="stylesheet" type="text/css" >
-        <link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" type="text/css" >
-        <link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" type="text/css" >
-        <link href="{{ URL::asset('plugins/datatables/dataTables.bootstrap.css') }}" rel="stylesheet" type="text/css" >
-        <script src="https://cdn.datatables.net/responsive/2.1.1/js/responsive.bootstrap.min.js"></script>
-        <script type="text/javascript" src="{{ URL::asset('js/Chart.min.js') }}"></script>
         <script src="{{ URL::asset('plugins/chartjs/Chart.min.js') }}"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.debug.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/2.3.0/jspdf.plugin.autotable.js"></script>
-         <link rel="stylesheet" href="{{URL::asset('css/AdminLTE.min.css')}}">
+        <link rel="stylesheet" href="{{URL::asset('plugins/datatables/dataTables.bootstrap.css')}}">
          
-         <script>    
-      $('body').on('focus',".datepicker_recurring_start", function(){
-          alert("ytrtr");
-          $(this).datepicker({
-              dateFormat: 'dd-mm-yy',
-              changeYear: true
-          });
-      }); 
-
-    $('body').on('focus',".make-date", function(){
-        $('.make-date').datepicker({
-            dateFormat: 'dd-mm-yy',
-            changeYear: true
-        });
-    });
-
-
+        <link rel="stylesheet" href="{{URL::asset('css/AdminLTE.min.css')}}">
+      <link rel="stylesheet" href="{{URL::asset('css/custom.css')}}">
+    <script>    
+     
  window.Laravel = <?php echo json_encode([
 
             'csrfToken' => csrf_token(),
@@ -73,8 +47,39 @@ $segments_var[0];
 </script>
     </head>
     <body class="hold-transition skin-blue sidebar-mini">
-        <div class="wrapper">
-        <header class="main-header">    
+     <div id="map1">
+     <div id="map">
+     <div class="loading_bar">
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+     </div>
+    
+ </div>
+ </div>
+<style>
+    #map {
+    position:absolute;
+    width: 100%;
+    height: 100%;
+    background: #ccc;
+    display: block;
+    z-index: 100000;
+    text-align: center;
+     opacity: 0.5;
+    filter: alpha(opacity=50);
+}
+</style>
+  
+<div class="wrapper">
+   
+        <header class="main-header">   
+             
             <!-- Logo -->
             <a href="index2.html" class="logo">
              
@@ -287,7 +292,8 @@ $segments_var[0];
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
 
                       @if(Auth::user()->image_path)
-                           <img src="<?php echo \URL::to('') . '/img/'.Auth::user()->image_path; ?>" class="user-image">
+
+                      {{Html::image('/images/photo/'.Auth::user()->image_path,'',array('class'=>"user-image"))}}
                        @else
                            <img src="<?php echo \URL::to('') . '/img/user2-160x160.jpg'?>" class="user-image">
                       @endif
@@ -296,22 +302,17 @@ $segments_var[0];
                             <ul class="dropdown-menu">
                                 <!-- User image -->
                                 <li class="user-header">
-                                  
-                             @if(Auth::user()->image_path)
-                             <img src="<?php echo \URL::to('') . '/img/'.Auth::user()->image_path; ?>" class="img-circle">
-                           @else
-                           <img src="<?php echo \URL::to('') . '/img/user2-160x160.jpg'?>" class="img-circle">
-                      @endif
-                      
+                                  {{  dispalyImage('/images/photo/',Auth::user()->image_path,'img-circle',$alt='')}}
+                                    
                                     <p>
                                        {{{ isset(Auth::user()->salutation) ? Auth::user()->salutation : '' }}} {{{ isset(Auth::user()->name) ? Auth::user()->name : '' }}}!
-                                        <small>Member since Nov. 2012</small>
+                                        <small>Member since {{ date('F jS, Y', strtotime(Auth::user()->created_at))}}</small>
                                     </p>
                                 </li>
 
                                 <li class="user-footer">
                                     <div class="pull-left">
-                                        <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                        <a href="{{ url('/users/'.Auth::user()->id) }}" class="btn btn-default btn-flat">Profile</a>
                                     </div>
                                     <div class="pull-right">
                                        <a href="{{ url('/logout') }}" class="btn btn-default btn-flat"><span class="glyphicon glyphicon-log-out"></span> Sign out</a>
@@ -331,17 +332,24 @@ $segments_var[0];
             <!-- sidebar: style can be found in sidebar.less -->
             <section class="sidebar">
                 <!-- Sidebar user panel -->
-                <div class="user-panel">
+<!--                <div class="user-panel">
+                    
                     <div class="pull-left image">
-                        <img src="<?php echo \URL::to('') . '/img/user2-160x160.jpg' ?>" class="img-circle" alt="User Image">
+                        @if(Auth::user()->image_path!=''))
+                        {{Html::image('/images/photo/'.Auth::user()->image_path,'',array('class'=>"img-circle"))}}
+                         @else
+                          {{Html::image('/images/photo/no_image.png','',array('class'=>"img-circle"))}} 
+                        @endif
                     </div>
+                    
                     <div class="pull-left info">
-                        <p>Alexander Pierce</p>
+                        <p>{{Auth::user()->name}}</p>
                         <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                     </div>
-                </div>
+                       
+                  </div>-->
                 <!-- search form -->
-                <form action="#" method="get" class="sidebar-form">
+<!--                <form action="#" method="get" class="sidebar-form">
                     <div class="input-group">
                         <input type="text" name="q" class="form-control" placeholder="Search...">
                         <span class="input-group-btn">
@@ -349,7 +357,7 @@ $segments_var[0];
                             </button>
                         </span>
                     </div>
-                </form>
+                </form>-->
                 <!-- /.search form -->
                 <!-- sidebar menu: : style can be found in sidebar.less -->
                 <ul class="sidebar-menu">
@@ -358,23 +366,56 @@ $segments_var[0];
                        <a href="{{route('dashboard')}}">
                             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                         </a>
-                     </li>
-                 <li @if($segments_var[0]=='users') class="treeview active" @else class="treeview" @endif>
+                    </li>
+                  <li @if($segments_var[0]=='users') class="treeview active" @else class="treeview" @endif>
                         <a href="#">
                             <i class="fa fa-user"></i> <span>Profiles</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
-                        <ul @if($segments_var[0]=='users') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
+                        <ul @if($segments_var[0]=='users' || $segments_var[0]=='changepasswords') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
                             <li @if($segments_var[0]=='users') class="active" @endif><a href="{{route('users.index')}}">
-                                    <i class="fa fa-users"></i> @lang('User') 
+                                    <i class="fa fa-users"></i> @lang('menu.users.user') 
                                 </a></li>
-                            
-                        </ul>
+                            <li @if($segments_var[0]=='changepasswords') class="active" @endif><a href="{{route('changepasswords.create')}}">
+                                    <i class="fa fa-key"></i> @lang('menu.users.changepassword') 
+                                </a></li>   
+                         </ul>
+                    </li>
+                  <li @if($segments_var[0]=='depots') class="treeview active" @else class="treeview" @endif>
+                        <a href="#">
+                            <i class="fa fa-bus"></i> <span>Masters</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul @if($segments_var[0]=='services' || $segments_var[0]=='depots' || $segments_var[0]=='bus_types' ||$segments_var[0]=='vehicles') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
+                            <li @if($segments_var[0]=='depots') class="active" @endif><a href="{{route('depots.index')}}">
+                                    <i class="fa fa-bus"></i> @lang('menu.depots.user') 
+                                    
+                            </a>
+                           </li>
+                            <li @if($segments_var[0]=='bus_types') class="active" @endif><a href="{{route('bus_types.index')}}">
+                                    <i class="fa fa-bus"></i> @lang('menu.bus_types.title') 
+                            </a>
+                           </li>
+                            <li @if($segments_var[0]=='services') class="active" @endif><a href="{{route('services.index')}}">
+                                    <i class="fa fa-bus"></i> @lang('menu.services.title') 
+                            </a>
+                            </li>
+                            <li @if($segments_var[0]=='vehicles') class="active" @endif><a href="{{route('vehicles.index')}}">
+                                    <i class="fa fa-bus"></i> @lang('menu.vehicles.title') 
+                            </a>
+                            </li>
+                             
+                         </ul>
                     </li>
                     
-                    <li  @if($segments_var[0]=='roles' || $segments_var[0]=='permissions' || $segments_var[0]=='settings') class="treeview active" @else class="treeview" @endif>
+                    
+                    
+                     @if(Entrust::hasRole('administrator'))
+                     <li  @if($segments_var[0]=='roles' || $segments_var[0]=='permissions' || $segments_var[0]=='settings') class="treeview active" @else class="treeview" @endif>
                         <a href="#">
                             <i class="fa fa-cog" aria-hidden="true"></i> <span>@lang('menu.settings.title')</span>
                             <span class="pull-right-container">
@@ -390,6 +431,7 @@ $segments_var[0];
                             <li @if($segments_var[0]=='settings') class="active" @endif><a href="{{route('settings.index')}}"><i class="fa fa-cog"></i>@lang('menu.settings.overall')</a></li>
                         </ul>
                     </li>
+                    @endif
                     </ul>
             </section>
             <!-- /.sidebar -->
@@ -411,6 +453,7 @@ $segments_var[0];
                     @yield('content')
                 </section>
             </div>
+    
             @if(Session::has('flash_message_warning'))
             <div class="notification-warning navbar-fixed-bottom ">
                 <div class="notification-icon ion-close-circled"></div>
@@ -437,15 +480,17 @@ $segments_var[0];
 </footer>
 </div>
 
+
 <!-- jQuery UI 1.11.4 -->
-<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script src="{{ asset(elixir('plugins/jQuery/jquery-2.2.3.min.js')) }}"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+
 <script>
 $.widget.bridge('uibutton', $.ui.button);
 </script>
-<!-- Bootstrap 3.3.6 -->
-
-<!-- Morris.js charts -->
+<script src="{{ asset(elixir('js/bootstrap.min.js')) }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 <script src="{{ asset(elixir('plugins/morris/morris.min.js')) }}"></script>
 <!-- Sparkline -->
@@ -454,9 +499,6 @@ $.widget.bridge('uibutton', $.ui.button);
 <script src="{{ asset(elixir('plugins/jvectormap/jquery-jvectormap-1.2.2.min.js')) }}"></script>
 <script src="{{ asset(elixir('plugins/jvectormap/jquery-jvectormap-world-mill-en.js')) }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
-<!--<script src="{{ asset(elixir('plugins/daterangepicker/daterangepicker.js')) }}"></script>-->
-    <script src="{{ asset(elixir('plugins/datepicker/bootstrap-datepicker.js')) }}"></script>
-<!-- Bootstrap WYSIHTML5 -->
 <script src="{{ asset(elixir('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')) }}"></script>
 <!-- Slimscroll -->
 <script src="{{ asset(elixir('plugins/slimScroll/jquery.slimscroll.min.js')) }}"></script>
@@ -468,26 +510,28 @@ $.widget.bridge('uibutton', $.ui.button);
 <script src="{{ asset(elixir('js/pages/dashboard2.js')) }}"></script>
 <script src="{{ asset(elixir('plugins/datatables/jquery.dataTables.min.js')) }}"></script>
 <script src="{{ asset(elixir('plugins/datatables/dataTables.bootstrap.min.js')) }}"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
-
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
 <script src="{{ asset(elixir('js/demo.js')) }}"></script>
-
-
 <script>
-
- 
-    //Date picker
-    $('#datepicker').datepicker({
-        dateFormat: 'dd-mm-yy',
-              changeYear: true,
-                autoclose: true
-    });
-
+    
+ $('body').on('focus',".multiple_date", function(){
+         $(this).datepicker({
+              dateFormat: 'dd-mm-yy',
+              changeYear: true
+          });
+      }); 
+  $('#map1').append('<div style="" id="map"><div class="loading_bar"></div></div>');
+$(window).on('load', function(){
+  setTimeout(removeLoader, 200); //wait for page load PLUS two seconds.
+});
+function removeLoader(){
+    $( "#map" ).fadeOut(100, function() {
+      // fadeOut complete. Remove the loading div
+      $( "#map" ).remove(); //makes page more lightweight 
+      $( "#map1" ).hide(); //makes page more lightweight 
+  });  
+}  
 </script>
-
-
 @stack('scripts')
 </body>
 </html>
-

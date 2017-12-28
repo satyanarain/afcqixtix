@@ -23,13 +23,7 @@ class AccessServiceProvider extends ServiceProvider
      */
     public function register()
     {
-       
-        
-        $this->app->bind(
-            \App\Repositories\Associate\AssociateRepositoryContract::class,
-            \App\Repositories\Associate\AssociateRepository::class
-        );
-        
+     
         $this->app->bind(
             \App\Repositories\Permission\PermissionRepositoryContract::class,
             \App\Repositories\Permission\PermissionRepository::class
@@ -45,107 +39,63 @@ class AccessServiceProvider extends ServiceProvider
             \App\Repositories\User\UserRepository::class
         );
         
-          $this->app->bind(
-            \App\Repositories\Department\DepartmentRepositoryContract::class,
-            \App\Repositories\Department\DepartmentRepository::class
-        );
         $this->app->bind(
             \App\Repositories\Setting\SettingRepositoryContract::class,
             \App\Repositories\Setting\SettingRepository::class
         );
-        $this->app->bind(
-            \App\Repositories\Task\TaskRepositoryContract::class,
-            \App\Repositories\Task\TaskRepository::class
-        );
-//        $this->app->bind(
-//            \App\Repositories\Client\ClientRepositoryContract::class,
-//            \App\Repositories\Client\ClientRepository::class
-//        );
-        
-        
+      
             $this->app->bind(
-            \App\Repositories\Client\ClientRepositoryContract::class,
-            \App\Repositories\Client\ClientRepository::class
+            \App\Repositories\Depot\DepotRepositoryContract::class,
+            \App\Repositories\Depot\DepotRepository::class
         );
-        /***************************************************************/
-//        $this->app->bind(
-//            \App\Repositories\Trademark\TrademarkRepositoryContract::class,
-//            \App\Repositories\Trademark\TrademarkRepository::class
-//        );
-//        
-//        
-           $this->app->bind(
-            \App\Repositories\Domainname\DomainnameRepositoryContract::class,
-            \App\Repositories\Domainname\DomainnameRepository::class
-        );
-        
-           $this->app->bind(
-            \App\Repositories\Globalsearch\GlobalsearchRepositoryContract::class,
-            \App\Repositories\Globalsearch\GlobalsearchRepository::class
-        );
-        
-        $this->app->bind(
-            \App\Repositories\Clientdocument\ClientdocumentRepositoryContract::class,
-            \App\Repositories\Clientdocument\ClientdocumentRepository::class
-        );
-        
-         $this->app->bind(
-            \App\Repositories\Geographicalindication\GeographicalindicationRepositoryContract::class,
-            \App\Repositories\Geographicalindication\GeographicalindicationRepository::class
-        );
-         
-        
-                  $this->app->bind(
-            \App\Repositories\Domainname\DomainnameRepositoryContract::class,
-            \App\Repositories\Domainname\DomainnameRepository::class
-        );
-            
-        $this->app->bind(
-            \App\Repositories\Copyright\CopyrightRepositoryContract::class,
-            \App\Repositories\Copyright\CopyrightRepository::class
-        );
-        
-        $this->app->bind(
-            \App\Repositories\Customrecordal\CustomrecordalRepositoryContract::class,
-            \App\Repositories\Customrecordal\CustomrecordalRepository::class
-        );
-        
-        
-        $this->app->bind(
-            \App\Repositories\Company\CompanyRepositoryContract::class,
-            \App\Repositories\Company\CompanyRepository::class
+            $this->app->bind(
+            \App\Repositories\BusType\BusTypeRepositoryContract::class,
+            \App\Repositories\BusType\BusTypeRepository::class
         );
         $this->app->bind(
-            \App\Repositories\Trademark\TrademarkRepositoryContract::class,
-            \App\Repositories\Trademark\TrademarkRepository::class
+            \App\Repositories\Service\ServiceRepositoryContract::class,
+            \App\Repositories\Service\ServiceRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Vehicle\VehicleRepositoryContract::class,
+            \App\Repositories\Vehicle\VehicleRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Shift\ShiftRepositoryContract::class,
+            \App\Repositories\Shift\ShiftRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Stop\StopRepositoryContract::class,
+            \App\Repositories\Stop\StopRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Route\RouteRepositoryContract::class,
+            \App\Repositories\Route\RouteRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Duty\DutyRepositoryContract::class,
+            \App\Repositories\Duty\DutyRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Torget\TorgetRepositoryContract::class,
+            \App\Repositories\Torget\TorgetRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Trip\TripRepositoryContract::class,
+            \App\Repositories\Trip\TripRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Fare\FareRepositoryContract::class,
+            \App\Repositories\Fare\FareRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\ConcessionFareSlab\ConcessionFareSlabRepositoryContract::class,
+            \App\Repositories\ConcessionFareSlab\ConcessionFareSlabRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Concession\ConcessionRepositoryContract::class,
+            \App\Repositories\Concession\ConcessionRepository::class
         );
         
-        
-          $this->app->bind(
-            \App\Repositories\Companydocument\CompanydocumentRepositoryContract::class,
-            \App\Repositories\Companydocument\CompanydocumentRepository::class
-        );
-        $this->app->bind(
-            \App\Repositories\Vendor\VendorRepositoryContract::class,
-            \App\Repositories\Vendor\VendorRepository::class
-        );
-        
-        $this->app->bind(
-            \App\Repositories\Import\ImportTrademarkRepositoryContract::class,
-            \App\Repositories\Import\ImportTrademarkRepository::class
-        );
-        $this->app->bind(
-            \App\Repositories\Import\ImportClientRepositoryContract::class,
-            \App\Repositories\Import\ImportClientRepository::class
-        );
-        
-        $this->app->bind(
-            \App\Repositories\Lead\LeadRepositoryContract::class,
-            \App\Repositories\Lead\LeadRepository::class
-        );
-        $this->app->bind(
-            \App\Repositories\Invoice\InvoiceRepositoryContract::class,
-            \App\Repositories\Invoice\InvoiceRepository::class
-        );
     }
 }
