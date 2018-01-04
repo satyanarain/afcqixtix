@@ -26,11 +26,10 @@ class StoreShiftRequest extends Request
     {
         
             return [
-                  'shift' => 'required',
+                    'shift' => 'required',
                    'abbreviation' => 'required',
-                   'start_date' => 'required',
-                   'start_date' => 'required',
-                   'end_date' => 'required',
+                   'start_time' => 'required',
+                   'end_time' => 'required',
                    'order_number' => 'required',
                    'system_id' => 'required'
               ];

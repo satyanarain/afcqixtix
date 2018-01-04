@@ -9,22 +9,8 @@ return [
      * Profile menu translation
      */
     'profile' => 'My Profile',
-
-    /**
-     * Client menu translation
-     */
-    /*'clients' => [
-        'title' => 'Clients',
-        'all' => 'All Clients',
-        'new' => 'New Client',
-    ],
-    *//**
-     *Trademark menu translation
-     */    
-  
     'services' => [
-
-  'title' => 'Services',
+    'title' => 'Services',
  
  	 ],
     
@@ -100,7 +86,7 @@ return [
      
      ],
     'payout_reasons' =>  [
-        'title' => 'Payout Reasonss',
+        'title' => 'Payout Reasons',
      
      ],
     'denominations' =>  [

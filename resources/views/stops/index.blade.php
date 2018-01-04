@@ -13,6 +13,7 @@
                 <a href="{{ route('stops.create')}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>   @lang('common.titles.add')</button></a>
            @endif
             </div>
+             @include('partials.message')
             <!-- /.box-header -->
             <div class="box-body">
                 <table id="example1" class="table table-bordered table-striped">
@@ -61,7 +62,7 @@
     $(function () {
         $("#example1").DataTable({
       "paging": true,
-      "lengthChange": false,
+      "lengthChange": true,
       "searching": true,
       "ordering": true,
       "info": true,

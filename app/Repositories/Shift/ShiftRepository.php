@@ -25,20 +25,16 @@ class ShiftRepository implements ShiftRepositoryContract {
         return Shift::all();
     }
 
-    public function create($requestData) {
+public function create($requestData) {
         $input = $requestData->all();
-         $input['start_date']=$this->changeDateFromDMYToYMD($requestData->start_date);
-        $input['end_date']=$this->changeDateFromDMYToYMD($requestData->end_date);
-         $shift = Shift::create($input);
+        $shift = Shift::create($input);
         Session::flash('flash_message', "$shift->name Shift Created Successfully."); //Snippet in Master.blade.php
         return $shift;
     }
 
-    public function update($id, $requestData) {
+public function update($id, $requestData) {
        $shift = Shift::findorFail($id);
        $input = $requestData->all();
-       $input['start_date']=$this->changeDateFromDMYToYMD($requestData->start_date);
-       $input['end_date']=$this->changeDateFromDMYToYMD($requestData->end_date);
        $shift->fill($input)->save();
        Session::flash('flash_message', "$shift->name Shift Updated Successfully.");
        return $shift;

@@ -12,23 +12,17 @@
                   <span id="user-name-span">{{ $duties->route }}</span> 
 <!--                  <span id="edit-user-name" class="glyphicon glyphicon-pencil"></span>-->
               </h3>
-
-
-              <p class="text-muted text-center"></p>
+               <p class="text-muted text-center"></p>
               <table width=90% class="table table-responsive">
-                <tr>
-                    <td style="text-align:left;padding-left:10%;padding-top:3%;"><b>Route</b></td>
-                    <td style="text-align:left;padding-left:15%;padding-top:3%; ">{{ $duties->route }}</td>
-                  </tr>
-                    <tr>
+                   <tr>
                     <td style="text-align:left;padding-left:10%;padding-top:3%;"><b>Duty Number</b></td>
-                    <td style="text-align:left;padding-left:15%;padding-top:3%;>
+                    <td style="text-align:left;padding-left:15%;padding-top:3%;">
                       {{ $duties->duty_number }}
                     </td>
                   </tr>
                    <tr>
                     <td style="text-align:left;padding-left:10%;padding-top:3%;"><b>Description</b></td>
-                    <td class=""><span></span>{{ $duties->description }}
+                    <td style="text-align:left;padding-left:15%;padding-top:3%;"><span></span>{{ $duties->description }}
                          </span></td>
                    </tr>
                   <tr>

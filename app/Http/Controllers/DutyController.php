@@ -36,7 +36,7 @@ class DutyController extends Controller {
      */
     public function index() {
 
-        $duties = DB::table('duties')->select('*','duties.id as id')
+        $duties = DB::table('duties')->select('*','duties.id as id','duties.start_time as start_time','shifts.shift as shift')
                 ->leftjoin('shifts', 'duties.shift_id', '=', 'shifts.id')
                 ->leftjoin('routes', 'duties.route_id', '=', 'routes.id')
                 ->get();

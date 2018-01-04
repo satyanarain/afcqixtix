@@ -31,10 +31,10 @@
                         <tr class="nor_f">
                             <td>{{$user->name}}</td>
                             <td>{{$user->email}}</td>
-                           <td> <a style="background-color:#3A485C" class="btn btn-success" href="{{ route('users.show', $user->id) }}"><span class="glyphicon glyphicon-search"></span>View</a></td>
+                           <td> <a style="background-color:#3A485C" class="btn btn-primary" href="{{ route('users.show', $user->id) }}"><span class="glyphicon glyphicon-search"></span>View</a></td>
                               @if(Entrust::hasRole('administrator'))
                             <td>
-                                <a style="background-color:#f7831a" href="{{ route('users.edit', $user->id) }}" class="btn btn-success" ><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+                                <a class="btn btn-primary-edit" href="{{ route('users.edit', $user->id) }}" ><span class="glyphicon glyphicon-pencil"></span> Edit</a>
                             </td>
                             @endif
                           
@@ -50,5 +50,16 @@
     <!-- /.col -->
 </div>
 <!-- /.row -->
-
+<script>
+    $(function () {
+        $("#example1").DataTable({
+      "paging": true,
+      "lengthChange": true,
+      "searching": true,
+      "ordering": ['id', "desc"],
+      "info": true,
+      "autoWidth": false
+    });
+    });
+ </script>
 @stop
