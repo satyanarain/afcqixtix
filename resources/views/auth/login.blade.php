@@ -1,4 +1,19 @@
+
+
 <style>
+    .formBac {
+    background-image: url(http://localhost:8000/images/form-bac.jpg);
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: center center;
+    background-size: cover !important;
+    -moz-background-size: cover !important;
+    -webkit-background-size: cover !important;
+    -o-background-size: cover;
+}
+.login-page, .register-page {
+    background: #d2d6de;
+}
 @font-face {
     font-family: 'Raleway', sans-serif;
 }
@@ -4340,14 +4355,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     -o-animation-name: rollOut;
     animation-name: rollOut;
 }
-
-
-
-
-
-
 /* extended by Codrops */
-
 @-webkit-keyframes scaleOut {
     0% {
         opacity: 1;
@@ -4514,12 +4522,7 @@ background-image: none;
 border: 1px solid #ccc;
 border-radius: 4px;
  }
-
-
- .form-control 
-
-
-
+.form-control 
 .form-signin input[type="text"]
 {
     margin-bottom: -1px;
@@ -4590,36 +4593,27 @@ border-radius: 4px;
 
     <!-- Styles -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-        <link href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-        
-    </head>
-    <body >
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+     </head>
+    <body class="formBac" style="height: auto;">
         <div class="container" >
-            
-
-            <section>               
-                
-     <!-- hidden anchor to stop jump http://www.css3create.com/Astuce-Empecher-le-scroll-avec-l-utilisation-de-target#wrap4  -->
-                    <a class="hiddenanchor" id="toregister"></a>
-                    <a class="hiddenanchor" id="tologin"></a>
-                  <div class="row">
-            <div class="col-sm-6 col-md-4 col-md-offset-4">
-
-                        <div class="account-wall">
+             <section>               
+               <a class="hiddenanchor" id="toregister"></a>
+               <a class="hiddenanchor" id="tologin"></a>
+               <div class="row">
+               <div class="col-sm-6 col-md-4 col-md-offset-4">
+                  <div class="account-wall">
                                <img class="profile-img" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=120"
                         alt="">
                          <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
                         {!! csrf_field() !!}
-                               
-<!--                                <h1 style="margin: 0px;">Log in</h1> -->
-                                      @if(Session::has('success'))
-                                      <div class="alert alert-success">{{Session::get('success')}}</div>
-                                      @elseif(Session::has('fail'))
-                                      <div class="alert alert-danger">{{Session::get('fail')}}</div>
-                                      @endif
-
-                                <p> 
+                           @if(Session::has('success'))
+                            <div class="alert alert-success">{{Session::get('success')}}</div>
+                             @elseif(Session::has('fail'))
+                              <div class="alert alert-danger">{{Session::get('fail')}}</div>
+                              @endif
+                                 <p> 
                                     <label for="username" class="uname" style="float:left"> E-Mail Address</label>
                                     <input id="username" name="email" class="form-control" required="required" type="text" placeholder="Email" style="height:46"/>
                                 </p>
@@ -4639,10 +4633,8 @@ border-radius: 4px;
                                 </p>
                             </form>
                         </div>
-
-                    </div>
-              
-            </section>
+                   </div>
+              </section>
         </div>
     </body>
 </html>

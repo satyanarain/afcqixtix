@@ -1,18 +1,7 @@
 @extends('layouts.master')
 @section('header')
-<h1>
-    Data Tables
-    <small>advanced tables</small>
-</h1>
-
-
-
-
-
-<ol class="breadcrumb">
-    <li><a href="{{route('dashboard')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li class="active">Roles</li>
-</ol>
+<h1>{{headingBold()}}</h1>
+{{BreadCrumb()}}
 @stop
 @section('content')
 
@@ -21,8 +10,8 @@
 
         <div class="box">
             <div class="box-header">
-                <h3 class="box-title">All Roles</h3>
-                <a href="{{ route('roles.create')}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>   @lang('common.titles.add')</button></a>
+              <h3 class="box-title">{{headingMain()}}</h3>
+                <a href="{{ route('roles.create')}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>@lang('common.titles.add')</button></a>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -62,6 +51,7 @@
     </div>
     <!-- /.col -->
 </div>
+
 <!-- /.row -->
 
 <script>

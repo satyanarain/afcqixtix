@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers;
 
+namespace App\Http\Controllers;
+
 use DB;
 use Auth;
 use Session;
@@ -31,14 +33,11 @@ class SettingsController extends Controller
     ) {
         $this->settings = $settings;
         $this->roles = $roles;
-        $this->middleware('user.is.admin', ['only' => ['index']]);
+     // $this->middleware('user.is.admin', ['only' => ['index']]);
     }
     public function index()
-    {
-        
-        $settingmenu ="settingmenu";
-        $settingmenuoverall = "settingmenuoverall";
-        return view('settings.index', compact('settingmenu', 'settingmenuoverall'))
+    {        
+        return view('settings.index')
         ->withSettings($this->settings->getSetting())
         ->withPermission($this->roles->allPermissions())
         ->withRoles($this->roles->allRoles());

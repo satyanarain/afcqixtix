@@ -1,25 +1,37 @@
 @extends('layouts.master')
-@section('heading')
-<ol class="breadcrumb">
-    <li><a href="{{route('showdashboard', \Auth::id())}}">Home</a></li>
-    <li class="current">Profiles</li>  
-    <li class="current"><a href="{{ route('users.index')}}">User</a></li>
-    <li class="current">Create</li>  
-</ol>
-<div class="well well-sm">
-    @lang('user.titles.create')<br/> <div class="mondaory-field-new">     Fields marked (<span class="required"></span>) are mandatory</div>
-</div>
+@section('header')
+<h1>{{headingBold()}}</h1>
+{{BreadCrumb()}}
 @stop
-
 @section('content')
-{!! Form::open([
-        'route' => 'users.store',
-        'files'=>true,
-        'enctype' => 'multipart/form-data'
+<div class="row">
+    <div class="col-xs-12">
+   
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">{{headingMain()}}</h3>
+               @if(Entrust::hasRole('administrator'))
+                <a href="{{ route('users.create')}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>   @lang('common.titles.add')</button></a>
+            @endif
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                {!! Form::open([
+                'route' => 'users.store',
+                'files'=>true,
+                'enctype' => 'multipart/form-data'
 
-        ]) !!}
-@include('users.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
+                ]) !!}
+                @include('users.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 
-{!! Form::close() !!}
+                {!! Form::close() !!}
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+    <!-- /.col -->
+</div>
 
 @stop
+

@@ -6547,6 +6547,10 @@ button.close {
 .affix {
   position: fixed;
 }
+.nor_f{
+  font-weight:normal;  
+}
+
 @-ms-viewport {
   width: device-width;
 }

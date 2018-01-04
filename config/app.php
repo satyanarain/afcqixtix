@@ -163,6 +163,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        
         Collective\Html\HtmlServiceProvider::class,
        // 'Collective\Html\HtmlServiceProvider',
         /*
@@ -182,6 +183,7 @@ return [
         App\Providers\AccessServiceProvider::class,
         App\Providers\BroadcastServiceProvider::class,
          Zizaco\Entrust\EntrustServiceProvider::class,
+         App\Providers\HelperServiceProvider::class,
       ],
 
     /*
@@ -231,6 +233,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Notifynder' => Fenos\Notifynder\Facades\Notifynder::class,
+        
         'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
         'Form' => Collective\Html\FormFacade::class,
         'HTML' => Collective\Html\HtmlFacade::class,

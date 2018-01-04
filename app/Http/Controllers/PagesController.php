@@ -8,17 +8,17 @@ use Notifynder;
 use App\Models\User;
 use App\Models\Settings;
 use App\Http\Controllers\Controller;
-use App\Repositories\User\UserRepositoryContract;
+//use App\Repositories\User\UserRepositoryContract;
 
  use App\Repositories\Setting\SettingRepositoryContract;
-
+error_reporting(0);
 class PagesController extends Controller
 {
     protected $users;
 
 
     public function __construct(
-        UserRepositoryContract $users,
+      //  UserRepositoryContract $users,
         SettingRepositoryContract $settings
 
     ) {
@@ -28,6 +28,7 @@ class PagesController extends Controller
 
   public function dashboard()
     {
+    
       /* 
       Logic for showing the intermediate screen
       if user is having access in more than one countries then show the intermediate screen other wise show the dash board directly
@@ -50,14 +51,9 @@ class PagesController extends Controller
   }
 
   public function showDashboard(){
-
-        $showdashboard = "showdashboard";
-
-
-    
-        return view('pages.dashboard', compact(
+         $showdashboard = "showdashboard";
+         return view('pages.dashboard', compact(
             'totalTimeSpent',
-           
             'notification_count',
             'showdashboard'
         ));

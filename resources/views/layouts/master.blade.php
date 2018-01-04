@@ -1,12 +1,17 @@
+<?php
+$segments_var = '';
+$segments_var = Request::segments();
+$segments_var[0];
+?>
 <!DOCTYPE html>
-<html lang="en">
-    <head>
+<html lang="{{ app()->getLocale() }}" ng-app="LaravelCRUD">
+ <head>
         @if(Session::has('download.in.the.next.request'))
         <meta http-equiv="refresh" content="5;url={{ Session::get('download.in.the.next.request') }}">
         @endif
         <meta charset="UTF-8">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>AFC</title>
+         <title>AFC</title>
         <link rel="icon" type="image/png" sizes="16x16" href="{{url('images/favicon-16x16.png')}}">
         <script src="{{ asset(elixir('js/jquery-2.2.3.min.js')) }}"></script>
         <link rel="stylesheet" href="{{ asset(elixir('css/bootstrap.min.css')) }}">
@@ -14,7 +19,6 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
         <!-- Ionicons -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
-       
         <link rel="stylesheet" href="{{ asset(elixir('css/skins/_all-skins.min.css')) }}">
         <!-- iCheck -->
         <link rel="stylesheet" href="{{ asset(elixir('plugins/iCheck/flat/blue.css')) }}">
@@ -28,34 +32,58 @@
         <link rel="stylesheet" href="{{ asset(elixir('plugins/daterangepicker/daterangepicker.css')) }}">
         <!-- bootstrap wysihtml5 - text editor -->
         <link rel="stylesheet" href="{{ asset(elixir('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')) }}">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/css/select2.min.css" rel="stylesheet" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
-        <link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" type="text/css" >
-        <link href="https://cdn.datatables.net/fixedheader/3.1.2/css/fixedHeader.bootstrap.min.css" rel="stylesheet" type="text/css" >
-        <link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" type="text/css" >
-        <link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" type="text/css" >
-        <link href="{{ URL::asset('plugins/datatables/dataTables.bootstrap.css') }}" rel="stylesheet" type="text/css" >
-       <script src="https://cdn.datatables.net/responsive/2.1.1/js/responsive.bootstrap.min.js"></script>
-        <script type="text/javascript" src="{{ URL::asset('js/Chart.min.js') }}"></script>
         <script src="{{ URL::asset('plugins/chartjs/Chart.min.js') }}"></script>
-<!--        <script src="/js/notify.min.js"></script>-->
-<!--        <script src="/js/jquery.multiselect.js"></script>-->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.debug.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/2.3.0/jspdf.plugin.autotable.js"></script>
-         <link rel="stylesheet" href="{{URL::asset('css/AdminLTE.min.css')}}">
+        <link rel="stylesheet" href="{{URL::asset('plugins/datatables/dataTables.bootstrap.css')}}">
          
-         
+        <link rel="stylesheet" href="{{URL::asset('css/AdminLTE.min.css')}}">
+      <link rel="stylesheet" href="{{URL::asset('css/custom.css')}}">
+    <script>    
+     
+ window.Laravel = <?php echo json_encode([
+
+            'csrfToken' => csrf_token(),
+            ]); 
+?>
+</script>
     </head>
     <body class="hold-transition skin-blue sidebar-mini">
-        <div class="wrapper">
-        <header class="main-header">    
+     <div id="map1">
+     <div id="map">
+     <div class="loading_bar">
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+     </div>
+    
+ </div>
+ </div>
+<style>
+    #map {
+    position:absolute;
+    width: 100%;
+    height: 100%;
+    background: #ccc;
+    display: block;
+    z-index: 100000;
+    text-align: center;
+     opacity: 0.5;
+    filter: alpha(opacity=50);
+}
+</style>
+  
+<div class="wrapper">
+   
+        <header class="main-header">   
+             
             <!-- Logo -->
             <a href="index2.html" class="logo">
-                <!-- mini logo for sidebar mini 50x50 pixels -->
-                <span class="logo-mini"><b>A</b>LT</span>
-                <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg"><b>Admin</b>LTE</span>
+             
+                <span class="logo-lg"><b>ITMS</span>
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top">
@@ -263,41 +291,31 @@
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
 
-                                <img src="<?php echo \URL::to('') . '/img/user2-160x160.jpg' ?>" class="user-image" alt="User Image">
-                                <span class="hidden-xs">Alexander Pierce</span>
+                      @if(Auth::user()->image_path)
+
+                      {{Html::image('/images/photo/'.Auth::user()->image_path,'',array('class'=>"user-image"))}}
+                       @else
+                           <img src="<?php echo \URL::to('') . '/img/user2-160x160.jpg'?>" class="user-image">
+                      @endif
+                         <span class="hidden-xs">{{{ isset(Auth::user()->salutation) ? Auth::user()->salutation : '' }}} {{{ isset(Auth::user()->name) ? Auth::user()->name : '' }}}!</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- User image -->
                                 <li class="user-header">
-                                    <img src="<?php echo \URL::to('') . '/img/user2-160x160.jpg' ?>" class="img-circle" alt="User Image">
-
+                                  {{  dispalyImage('/images/photo/',Auth::user()->image_path,'img-circle',$alt='')}}
+                                    
                                     <p>
-                                        Alexander Pierce - Web Developer
-                                        <small>Member since Nov. 2012</small>
+                                       {{{ isset(Auth::user()->salutation) ? Auth::user()->salutation : '' }}} {{{ isset(Auth::user()->name) ? Auth::user()->name : '' }}}!
+                                        <small>Member since {{ date('F jS, Y', strtotime(Auth::user()->created_at))}}</small>
                                     </p>
                                 </li>
-                                <!-- Menu Body -->
-                                <li class="user-body">
-                                    <div class="row">
-                                        <div class="col-xs-4 text-center">
-                                            <a href="#">Followers</a>
-                                        </div>
-                                        <div class="col-xs-4 text-center">
-                                            <a href="#">Sales</a>
-                                        </div>
-                                        <div class="col-xs-4 text-center">
-                                            <a href="#">Friends</a>
-                                        </div>
-                                    </div>
-                                    <!-- /.row -->
-                                </li>
-                                <!-- Menu Footer-->
+
                                 <li class="user-footer">
                                     <div class="pull-left">
-                                        <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                        <a href="{{ url('/users/'.Auth::user()->id) }}" class="btn btn-default btn-flat">Profile</a>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                                       <a href="{{ url('/logout') }}" class="btn btn-default btn-flat"><span class="glyphicon glyphicon-log-out"></span> Sign out</a>
                                     </div>
                                 </li>
                             </ul>
@@ -311,71 +329,128 @@
             </nav>
         </header>
    <aside class="main-sidebar">
-            <!-- sidebar: style can be found in sidebar.less -->
-            <section class="sidebar">
-                <!-- Sidebar user panel -->
-                <div class="user-panel">
-                    <div class="pull-left image">
-                        <img src="<?php echo \URL::to('') . '/img/user2-160x160.jpg' ?>" class="img-circle" alt="User Image">
-                    </div>
-                    <div class="pull-left info">
-                        <p>Alexander Pierce</p>
-                        <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
-                    </div>
-                </div>
-                <!-- search form -->
-                <form action="#" method="get" class="sidebar-form">
-                    <div class="input-group">
-                        <input type="text" name="q" class="form-control" placeholder="Search...">
-                        <span class="input-group-btn">
-                            <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
-                            </button>
-                        </span>
-                    </div>
-                </form>
-                <!-- /.search form -->
-                <!-- sidebar menu: : style can be found in sidebar.less -->
-                <ul class="sidebar-menu">
+     <section class="sidebar">
+           <ul class="sidebar-menu">
                     <li class="header">MAIN NAVIGATION</li>
                     <li class="active treeview">
                        <a href="{{route('dashboard')}}">
                             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
-                            
                         </a>
-                        
                     </li>
-
-                    <li  class="treeview">
+                  <li @if($segments_var[0]=='users') class="treeview active" @else class="treeview" @endif>
                         <a href="#">
-                            <i class="fa fa-dashboard"></i> <span>Profiles</span>
+                            <i class="fa fa-user"></i> <span>Profiles</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
-                        <ul class="treeview-menu">
-                            <li class="active"><a href="{{route('users.index')}}">
-                                    <i class="fa fa-circle-o"></i> @lang('User') 
+                        <ul @if($segments_var[0]=='users' || $segments_var[0]=='changepasswords') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
+                            <li @if($segments_var[0]=='users') class="active" @endif><a href="{{route('users.index')}}">
+                                    <i class="fa fa-users"></i> @lang('menu.users.user') 
                                 </a></li>
-                            <li><a href="index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
-                        </ul>
+                            <li @if($segments_var[0]=='changepasswords') class="active" @endif><a href="{{route('changepasswords.create')}}">
+                                    <i class="fa fa-key"></i> @lang('menu.users.changepassword') 
+                                </a></li>   
+                         </ul>
                     </li>
-                    
-                    <li class="treeview">
+                  <li @if($segments_var[0]=='depots') class="treeview active" @else class="treeview" @endif>
                         <a href="#">
-                            <i class="fa fa-dashboard"></i> <span>@lang('menu.settings.title')</span>
+                            <i class="fa fa-bus"></i> <span>Masters</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
-                        <ul class="treeview-menu">
-                            <li class="active"><a href="{{route('roles.index')}}">
-                                    <i class="fa fa-circle-o"></i>@lang('menu.settings.roles')</a>
+                        @php
+$array= array('depots','bus_types','services','vehicles','shifts','stops','routes','duties','targets','trips','fares','concession_fare_slabs'
+,'concessions','trip_cancellation_reason','inspector_remarks','payout_reasons','denominations','pass_types','crew_details','')
+                       @endphp
+                        <ul @if(in_array($segments_var[0],$array)) class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
+                            <li @if($segments_var[0]=='depots') class="active" @endif><a href="{{route('depots.index')}}">
+                                    <i class="fa fa-bus"></i> @lang('menu.depots.title') 
+                             </a>
+                           </li>
+                            <li @if($segments_var[0]=='bus_types') class="active" @endif><a href="{{route('bus_types.index')}}">
+                                    <i class="fa fa-bus"></i> @lang('menu.bus_types.title') 
+                            </a>
+                           </li>
+                            <li @if($segments_var[0]=='services') class="active" @endif><a href="{{route('services.index')}}">
+                                    <i class="glyphicon glyphicon-cog"></i> @lang('menu.services.title') 
+                            </a>
                             </li>
-                            <li><a href="{{route('permissions.index')}}"><i class="fa fa-circle-o"></i>@lang('menu.settings.permissions')</a>
+                            <li @if($segments_var[0]=='vehicles') class="active" @endif><a href="{{route('vehicles.index')}}">
+                                    <i class="fa fa-bus"></i> @lang('menu.vehicles.title') 
+                            </a>
                             </li>
-                            <li><a href="{{route('settings.index')}}"><i class="fa fa-circle-o"></i>@lang('menu.settings.overall')</a></li>
+                            <li @if($segments_var[0]=='shifts') class="active" @endif><a href="{{route('shifts.index')}}">
+                                    <i class="fa fa-calendar"></i> @lang('menu.shifts.title') 
+                            </a>
+                            <li @if($segments_var[0]=='stops') class="active" @endif><a href="{{route('stops.index')}}">
+                                    <i class="fa fa-user"></i> @lang('menu.stops.title') 
+                            </a>
+                            <li @if($segments_var[0]=='routes') class="active" @endif><a href="{{route('routes.index')}}">
+                                    <i class="fa fa-map-marker"></i> @lang('menu.routes.title') 
+                            </a>
+                             </li>
+                            <li @if($segments_var[0]=='duties') class="active" @endif><a href="{{route('duties.index')}}">
+                                    <i class="fa fa-file"></i> @lang('menu.duties.title') 
+                            </a>
+                            </li>
+                            
+                            <li @if($segments_var[0]=='targets') class="active" @endif><a href="{{route('targets.index')}}">
+                                    <i class="fa fa-bullseye"></i> @lang('menu.targets.title') 
+                            </a>
+                                 
+                            <li @if($segments_var[0]=='fares') class="active" @endif><a href="{{route('fares.index')}}">
+                                    <i class="fa fa-plane"></i> @lang('menu.fares.title') </a>
+                           </li>
+                           <li @if($segments_var[0]=='concession_fare_slabs') class="active" @endif><a href="{{route('concession_fare_slabs.index')}}">
+                                    <i class="fa fa-plane"></i> @lang('menu.concession_fare_slabs.title') </a>
+                           </li>
+                           <li @if($segments_var[0]=='concessions') class="active" @endif><a href="{{route('concessions.index')}}">
+                                    <i class="fa fa-map-marker"></i> @lang('menu.concessions.title') </a>
+                           </li>
+                           <li @if($segments_var[0]=='trip_cancellation_reason') class="active" @endif><a href="{{route('trip_cancellation_reason.index')}}">
+                                    <i class="fa fa-plane"></i> @lang('menu.trip_cancellation_reason.title') </a>
+                           </li>
+                           <li @if($segments_var[0]=='inspector_remarks') class="active" @endif><a href="{{route('inspector_remarks.index')}}">
+                                    <i class="fa fa-user"></i> @lang('menu.inspector_remarks.title') </a>
+                           </li>
+                           <li @if($segments_var[0]=='inspector_remarks') class="active" @endif><a href="{{route('inspector_remarks.index')}}">
+                                    <i class="fa fa-user"></i> @lang('menu.inspector_remarks.title') </a>
+                           </li>
+                           <li @if($segments_var[0]=='fa fa-money') class="active" @endif><a href="{{route('payout_reasons.index')}}">
+                                    <i class="fa fa-cc-mastercard"></i> @lang('menu.payout_reasons.title') </a>
+                           </li>
+                           <li @if($segments_var[0]=='denominations') class="active" @endif><a href="{{route('denominations.index')}}">
+                                    <i class="fa fa-plus"></i> @lang('menu.denominations.title') </a>
+                           </li>
+                           <li @if($segments_var[0]=='pass_types') class="active" @endif><a href="{{route('pass_types.index')}}">
+                                    <i class="fa fa-lock"></i> @lang('menu.pass_types.title') </a>
+                           </li>
+                           <li @if($segments_var[0]=='crew_details') class="active" @endif><a href="{{route('crew_details.index')}}">
+                                    <i class="fa fa-eye"></i> @lang('menu.crew_details.title') </a>
+                           </li>
+                             
+                         </ul>
+                    </li>
+                      @if(Entrust::hasRole('administrator'))
+                     <li  @if($segments_var[0]=='roles' || $segments_var[0]=='permissions' || $segments_var[0]=='settings') class="treeview active" @else class="treeview" @endif>
+                        <a href="#">
+                            <i class="fa fa-cog" aria-hidden="true"></i> <span>@lang('menu.settings.title')</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul @if($segments_var[0]=='roles' || $segments_var[0]=='permissions' || $segments_var[0]=='settings') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
+                            <li @if($segments_var[0]=='roles') class="active" @endif><a href="{{route('roles.index')}}">
+                             <i class="fa fa-tasks" ></i>@lang('menu.settings.roles')</a>
+                            </li>
+                            <li @if($segments_var[0]=='permissions') class="active" @endif><a href="{{route('permissions.index')}}"><i class="fa fa-key"></i>@lang('menu.settings.permissions')</a>
+                            </li>
+                            <li @if($segments_var[0]=='settings') class="active" @endif><a href="{{route('settings.index')}}"><i class="fa fa-cog"></i>@lang('menu.settings.overall')</a></li>
                         </ul>
                     </li>
+                    @endif
                     </ul>
             </section>
             <!-- /.sidebar -->
@@ -397,6 +472,7 @@
                     @yield('content')
                 </section>
             </div>
+    
             @if(Session::has('flash_message_warning'))
             <div class="notification-warning navbar-fixed-bottom ">
                 <div class="notification-icon ion-close-circled"></div>
@@ -422,16 +498,18 @@
     reserved.
 </footer>
 </div>
-<script src="{{ asset(elixir('plugins/jQuery/jquery-2.2.3.min.js')) }}"></script>
+
+
 <!-- jQuery UI 1.11.4 -->
-<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script src="{{ asset(elixir('plugins/jQuery/jquery-2.2.3.min.js')) }}"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+
 <script>
 $.widget.bridge('uibutton', $.ui.button);
 </script>
-<!-- Bootstrap 3.3.6 -->
 <script src="{{ asset(elixir('js/bootstrap.min.js')) }}"></script>
-<!-- Morris.js charts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 <script src="{{ asset(elixir('plugins/morris/morris.min.js')) }}"></script>
 <!-- Sparkline -->
@@ -439,14 +517,7 @@ $.widget.bridge('uibutton', $.ui.button);
 <!-- jvectormap -->
 <script src="{{ asset(elixir('plugins/jvectormap/jquery-jvectormap-1.2.2.min.js')) }}"></script>
 <script src="{{ asset(elixir('plugins/jvectormap/jquery-jvectormap-world-mill-en.js')) }}"></script>
-<!-- jQuery Knob Chart -->
-<script src="{{ asset(elixir('plugins/jQuery/jquery-2.2.3.min.js')) }}plugins/knob/jquery.knob.js"></script>
-<!-- daterangepicker -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
-<script src="{{ asset(elixir('plugins/daterangepicker/daterangepicker.js')) }}"></script>
-<!-- datepicker -->
-<script src="{{ asset(elixir('plugins/datepicker/bootstrap-datepicker.js')) }}"></script>
-<!-- Bootstrap WYSIHTML5 -->
 <script src="{{ asset(elixir('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')) }}"></script>
 <!-- Slimscroll -->
 <script src="{{ asset(elixir('plugins/slimScroll/jquery.slimscroll.min.js')) }}"></script>
@@ -458,12 +529,29 @@ $.widget.bridge('uibutton', $.ui.button);
 <script src="{{ asset(elixir('js/pages/dashboard2.js')) }}"></script>
 <script src="{{ asset(elixir('plugins/datatables/jquery.dataTables.min.js')) }}"></script>
 <script src="{{ asset(elixir('plugins/datatables/dataTables.bootstrap.min.js')) }}"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
 <script src="{{ asset(elixir('js/demo.js')) }}"></script>
+<script>
+    
+ $('body').on('focus',".multiple_date", function(){
+         $(this).datepicker({
+              dateFormat: 'dd-mm-yy',
+              changeYear: true
+          });
+      }); 
+  $('#map1').append('<div style="" id="map"><div class="loading_bar"></div></div>');
+$(window).on('load', function(){
+  setTimeout(removeLoader, 200); //wait for page load PLUS two seconds.
+});
+function removeLoader(){
+    $( "#map" ).fadeOut(100, function() {
+      // fadeOut complete. Remove the loading div
+      $( "#map" ).remove(); //makes page more lightweight 
+      $( "#map1" ).hide(); //makes page more lightweight 
+  });  
+}  
+</script>
+
 @stack('scripts')
 </body>
 </html>
-
-
-
-
-

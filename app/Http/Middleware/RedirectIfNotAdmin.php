@@ -17,12 +17,8 @@ class RedirectIfNotAdmin
     {
         if (auth()->user()->hasRole('administrator')) {
             return $next($request);            
-        }elseif (auth()->user()->hasRole('group_admin')) {
-            return $next($request);
-        }else{
+        }
             Session()->flash('flash_message_warning', 'Only Allowed for admins');
             return redirect()->back();
-        }
-        
-    }
+      }
 }

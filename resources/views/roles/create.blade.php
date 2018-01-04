@@ -1,21 +1,15 @@
 @extends('layouts.master')
 @section('header')
-<h1>
-    Data Tables
-    <small>advanced tables</small>
-</h1>
-<ol class="breadcrumb">
-    <li><a href="{{route('dashboard')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="{{route('roles.index')}}">Roles</a></li>
-    <li class="active">Create Role</li>
-</ol>
+<h1>{{headingBold()}}</h1>
+{{BreadCrumb()}}
 @stop
 @section('content')
 <div class="row">
     <div class="col-xs-12">
+   
         <div class="box">
             <div class="box-header">
-                <h3 class="box-title">All Roles</h3>
+                <h3 class="box-title">{{headingMain()}}</h3>
                 <a href="{{ route('roles.create')}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>   @lang('common.titles.add')</button></a>
             </div>
             <!-- /.box-header -->
@@ -44,6 +38,5 @@
     <!-- /.col -->
 </div>
 <!-- /.row -->
-</div>
 
 @stop
