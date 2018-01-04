@@ -18,7 +18,8 @@ class DatabaseSeeder extends Seeder {
 		Model::unguard();
 
 		$this->call('UsersTableSeeder');
-		$this->call('EntrustTableSeeder');
+		//$this->call('EntrustTableSeeder');
+		//$this->call('RoleTableSeeder');
 
 		DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 	}

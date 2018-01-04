@@ -22,6 +22,7 @@ class ServiceRepository implements ServiceRepositoryContract {
 
     public function create($requestData) {
         $input = $requestData->all();
+        $input['user_id'] = Auth::id();
         $service = Service::create($input);
         Session::flash('flash_message', "$service->name Service Created Successfully."); //Snippet in Master.blade.php
         return $service;
@@ -30,6 +31,7 @@ class ServiceRepository implements ServiceRepositoryContract {
     public function update($id, $requestData) {
        $service = Service::findorFail($id);
        $input = $requestData->all();
+       $input['user_id'] = Auth::id();
        $service->fill($input)->save();
        Session::flash('flash_message', "$service->name Service Updated Successfully.");
        return $service;
