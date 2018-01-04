@@ -1,14 +1,15 @@
 <?php
 namespace App\Http\Controllers\Auth;
+
+use DB;
+use Auth;
 use App\Http\Requests;
+use App\Models\Chatter;
+use Illuminate\Http\Request;
+use Illuminate\Http\Respons;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Http\Request;
-use App\Models\Chatter;
-use Illuminate\Http\Respons;
-//use \Carbon\Carbon; 
-use Auth;
-use DB;
+
 class LoginController extends Controller
 {
     /*
@@ -41,16 +42,19 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
-     public function login(Request $request)
+    
+    public function login(Request $request)
     {
-     
-    $this->validate($request, ['email' => 'required|email', 'password' => 'required']);
-
-      if(!Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
-         return redirect()->back()->with('fail', 'Either username or password is incorrect!');
-        } else {
-          
-         return redirect('dashboard');
+        $this->validate($request, ['email' => 'required|email', 'password' => 'required']);
+        Auth::attempt(['email' => $request['email'], 'password' => $request['password']]);
+   
+        if(!Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
+            return redirect()->back()->with('fail', 'Either username or password is incorrect!');
+        }else
+        { 
+            return redirect('/dashboard');
         }
+
    }
-  }
+    
+}

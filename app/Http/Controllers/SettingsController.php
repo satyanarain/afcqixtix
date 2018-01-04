@@ -36,10 +36,8 @@ class SettingsController extends Controller
      // $this->middleware('user.is.admin', ['only' => ['index']]);
     }
     public function index()
-    {
-       $settingmenu ="settingmenu";
-        $settingmenuoverall = "settingmenuoverall";
-        return view('settings.index', compact('settingmenu', 'settingmenuoverall'))
+    {        
+        return view('settings.index')
         ->withSettings($this->settings->getSetting())
         ->withPermission($this->roles->allPermissions())
         ->withRoles($this->roles->allRoles());
