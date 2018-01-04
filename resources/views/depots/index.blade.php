@@ -14,32 +14,17 @@
                 <a href="{{ route('depots.create')}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>   @lang('common.titles.add')</button></a>
                 @endif
             </div>
-            <div class="box-header">        
-                @if ($message = Session::get('flash_message'))
-                <div class="alert alert-success alert-block">
-                    <button type="button" class="close" data-dismiss="alert">×</button>	
-                    <strong>{{ $message }}</strong>
-                </div>
-                @endif
-
-                @if ($message = Session::get('flash_message_warning'))
-                <div class="alert alert-warning alert-block">
-                    <button type="button" class="close" data-dismiss="alert">×</button>	
-                    <strong>{{ $message }}</strong>
-                </div>
-                @endif
-            </div>
+           @include('partials.message')
             <!-- /.box-header -->
             <div class="box-body">
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                          <tr>
-                            <th>@lang('Name')</th>
+                            <th>@lang('Depot Name')</th>
                             <th>@lang('Short Name')</th>
                             <th>@lang('Depot Location')</th>
                             <th>@lang('View')</th>
-                          
-                             @if(Entrust::hasRole('administrator'))
+                            @if(Entrust::hasRole('administrator'))
                             <th>@lang('user.headers.edit')</th>
                             @endif
                         </tr>

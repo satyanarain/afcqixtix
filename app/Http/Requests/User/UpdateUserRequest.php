@@ -26,7 +26,6 @@ class UpdateUserRequest extends Request
         
             return [
                   'name' => 'required'
-                  
              ];
         
     }
