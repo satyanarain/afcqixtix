@@ -6,12 +6,28 @@
 @section('content')
 <div class="row">
     <div class="col-xs-12">
-      <div class="box">
+        <div class="box">
+
             <div class="box-header">
-               <h3 class="box-title">{{headingMain()}}</h3>
-             @if(Entrust::hasRole('administrator'))
+                <h3 class="box-title">{{headingMain()}}</h3>
+                @if(Entrust::hasRole('administrator'))
                 <a href="{{ route('depots.create')}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>   @lang('common.titles.add')</button></a>
-           @endif
+                @endif
+            </div>
+            <div class="box-header">        
+                @if ($message = Session::get('flash_message'))
+                <div class="alert alert-success alert-block">
+                    <button type="button" class="close" data-dismiss="alert">×</button>	
+                    <strong>{{ $message }}</strong>
+                </div>
+                @endif
+
+                @if ($message = Session::get('flash_message_warning'))
+                <div class="alert alert-warning alert-block">
+                    <button type="button" class="close" data-dismiss="alert">×</button>	
+                    <strong>{{ $message }}</strong>
+                </div>
+                @endif
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -59,9 +75,10 @@
 
 <script>
     $(function () {
-        $("#example1").DataTable({
+        // $("#example1").DataTable();
+     $("#example1").DataTable({
       "paging": true,
-      "lengthChange": false,
+      "lengthChange": true,
       "searching": true,
       "ordering": true,
       "info": true,

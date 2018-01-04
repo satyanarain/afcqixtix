@@ -1,13 +1,12 @@
 @extends('layouts.master')
 @section('header')
-<h1>{{headingBold()}}</h1>
+<h1>Duty Management {{--headingBold()--}}</h1>
 {{BreadCrumb()}}
 @stop
 @section('content')
 <div class="row">
     <div class="col-xs-12">
-   
-        <div class="box">
+     <div class="box">
             <div class="box-header">
                 <h3 class="box-title">{{headingMain()}}</h3>
                @if(Entrust::hasRole('administrator'))
