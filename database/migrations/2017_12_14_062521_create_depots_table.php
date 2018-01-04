@@ -14,14 +14,14 @@ class CreateDepotsTable extends Migration
     public function up()
     {
         Schema::create('depots', function (Blueprint $table) {
-             $table->increments('id');
-             $table->string('name');
-              $table->integer('user_id')->unsigned();
-         $table->foreign('user_id')->references('id')->on('users');
-             $table->string('short_name');
-             $table->string('depot_location');
-             $table->string('default_service');
-             $table->timestamps();
+            $table->increments('id');
+            $table->string('name');
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->string('short_name');
+            $table->string('depot_location');
+            $table->string('default_service');
+            $table->timestamps();
         });
     }
 

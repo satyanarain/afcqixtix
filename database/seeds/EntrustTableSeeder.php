@@ -8,8 +8,7 @@ use Illuminate\Database\Seeder;
 class EntrustTableSeeder extends Seeder {
 
 	public function run()
-	{
-
+	{ 
 		DB::table('role_user')->truncate();
 		DB::table('permission_role')->truncate();
 		DB::table('roles')->truncate();

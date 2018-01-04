@@ -15,8 +15,5 @@ class RoleTableSeeder extends Seeder
     $role_manager->name = 'manager';
     $role_manager->description = 'A Manager User';
     $role_manager->save();
-    $this->call(RoleTableSeeder::class);
-  // User seeder will use the roles above created.
-  $this->call(UserTableSeeder::class);
-    }
+  }
 }
