@@ -15,10 +15,11 @@ class CreateStopsTable extends Migration
     {
         Schema::create('stops', function (Blueprint $table) {
             $table->increments('id');
+            $table->foregn('user_id')->references('id')->on('users');
             $table->string('stop');
-            $table->integer('stops_id');
+            $table->string('stop_id');
             $table->string('abbreviation');
-            $table->integer('order_number');
+            $table->string('short_name');
             $table->timestamps();
         });
     }

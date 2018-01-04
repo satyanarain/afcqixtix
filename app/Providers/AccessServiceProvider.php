@@ -48,6 +48,10 @@ class AccessServiceProvider extends ServiceProvider
             \App\Repositories\Depot\DepotRepositoryContract::class,
             \App\Repositories\Depot\DepotRepository::class
         );
+       $this->app->bind(
+            \App\Repositories\Stop\StopRepositoryContract::class,
+            \App\Repositories\Stop\StopRepository::class
+        );
             $this->app->bind(
             \App\Repositories\BusType\BusTypeRepositoryContract::class,
             \App\Repositories\BusType\BusTypeRepository::class
@@ -64,6 +68,42 @@ class AccessServiceProvider extends ServiceProvider
             \App\Repositories\Shift\ShiftRepositoryContract::class,
             \App\Repositories\Shift\ShiftRepository::class
         );
+        
+        
+        $this->app->bind(
+            \App\Repositories\Route\RouteRepositoryContract::class,
+            \App\Repositories\Route\RouteRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Duty\DutyRepositoryContract::class,
+            \App\Repositories\Duty\DutyRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Target\TargetRepositoryContract::class,
+            \App\Repositories\Target\TargetRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Fare\FareRepositoryContract::class,
+            \App\Repositories\Fare\FareRepository::class
+        );
+        
+        $this->app->bind(
+            \App\Repositories\ConcessionFareSlab\ConcessionFareSlabRepositoryContract::class,
+            \App\Repositories\ConcessionFareSlab\ConcessionFareSlabRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Concession\ConcessionRepositoryContract::class,
+            \App\Repositories\Concession\ConcessionRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\TripConcessionReason\TripConcessionReasonRepositoryContract::class,
+            \App\Repositories\TripConcessionReason\TripConcessionReasonRepository::class
+        );
+        
+        
+        
+        
+        /*
         $this->app->bind(
             \App\Repositories\Stop\StopRepositoryContract::class,
             \App\Repositories\Stop\StopRepository::class
@@ -96,6 +136,6 @@ class AccessServiceProvider extends ServiceProvider
             \App\Repositories\Concession\ConcessionRepositoryContract::class,
             \App\Repositories\Concession\ConcessionRepository::class
         );
-        
+        */
     }
 }

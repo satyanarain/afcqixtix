@@ -24,6 +24,7 @@ class CreateUsersTable extends Migration
             $table->bigInteger('mobile');
             $table->date('date_of_birth');
             $table->string('image_path');
+            
             $table->string('set_password_token')->nullable();
             $table->rememberToken();
             $table->timestamps();

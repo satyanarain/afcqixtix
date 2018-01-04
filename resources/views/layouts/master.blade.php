@@ -329,38 +329,8 @@ $segments_var[0];
             </nav>
         </header>
    <aside class="main-sidebar">
-            <!-- sidebar: style can be found in sidebar.less -->
-            <section class="sidebar">
-                <!-- Sidebar user panel -->
-<!--                <div class="user-panel">
-                    
-                    <div class="pull-left image">
-                        @if(Auth::user()->image_path!=''))
-                        {{Html::image('/images/photo/'.Auth::user()->image_path,'',array('class'=>"img-circle"))}}
-                         @else
-                          {{Html::image('/images/photo/no_image.png','',array('class'=>"img-circle"))}} 
-                        @endif
-                    </div>
-                    
-                    <div class="pull-left info">
-                        <p>{{Auth::user()->name}}</p>
-                        <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
-                    </div>
-                       
-                  </div>-->
-                <!-- search form -->
-<!--                <form action="#" method="get" class="sidebar-form">
-                    <div class="input-group">
-                        <input type="text" name="q" class="form-control" placeholder="Search...">
-                        <span class="input-group-btn">
-                            <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
-                            </button>
-                        </span>
-                    </div>
-                </form>-->
-                <!-- /.search form -->
-                <!-- sidebar menu: : style can be found in sidebar.less -->
-                <ul class="sidebar-menu">
+     <section class="sidebar">
+           <ul class="sidebar-menu">
                     <li class="header">MAIN NAVIGATION</li>
                     <li class="active treeview">
                        <a href="{{route('dashboard')}}">
@@ -390,31 +360,80 @@ $segments_var[0];
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
-                        <ul @if($segments_var[0]=='services' || $segments_var[0]=='depots' || $segments_var[0]=='bus_types' ||$segments_var[0]=='vehicles') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
+                        @php
+$array= array('depots','bus_types','services','vehicles','shifts','stops','routes','duties','targets','trips','fares','concession_fare_slabs'
+,'concessions','trip_cancellation_reason','inspector_remarks','payout_reasons','denominations','pass_types','crew_details','')
+                       @endphp
+                        <ul @if(in_array($segments_var[0],$array)) class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
                             <li @if($segments_var[0]=='depots') class="active" @endif><a href="{{route('depots.index')}}">
-                                    <i class="fa fa-bus"></i> @lang('menu.depots.user') 
-                                    
-                            </a>
+                                    <i class="fa fa-bus"></i> @lang('menu.depots.title') 
+                             </a>
                            </li>
                             <li @if($segments_var[0]=='bus_types') class="active" @endif><a href="{{route('bus_types.index')}}">
                                     <i class="fa fa-bus"></i> @lang('menu.bus_types.title') 
                             </a>
                            </li>
                             <li @if($segments_var[0]=='services') class="active" @endif><a href="{{route('services.index')}}">
-                                    <i class="fa fa-bus"></i> @lang('menu.services.title') 
+                                    <i class="glyphicon glyphicon-cog"></i> @lang('menu.services.title') 
                             </a>
                             </li>
                             <li @if($segments_var[0]=='vehicles') class="active" @endif><a href="{{route('vehicles.index')}}">
                                     <i class="fa fa-bus"></i> @lang('menu.vehicles.title') 
                             </a>
                             </li>
+                            <li @if($segments_var[0]=='shifts') class="active" @endif><a href="{{route('shifts.index')}}">
+                                    <i class="fa fa-calendar"></i> @lang('menu.shifts.title') 
+                            </a>
+                            <li @if($segments_var[0]=='stops') class="active" @endif><a href="{{route('stops.index')}}">
+                                    <i class="fa fa-user"></i> @lang('menu.stops.title') 
+                            </a>
+                            <li @if($segments_var[0]=='routes') class="active" @endif><a href="{{route('routes.index')}}">
+                                    <i class="fa fa-map-marker"></i> @lang('menu.routes.title') 
+                            </a>
+                             </li>
+                            <li @if($segments_var[0]=='duties') class="active" @endif><a href="{{route('duties.index')}}">
+                                    <i class="fa fa-file"></i> @lang('menu.duties.title') 
+                            </a>
+                            </li>
+                            
+                            <li @if($segments_var[0]=='targets') class="active" @endif><a href="{{route('targets.index')}}">
+                                    <i class="fa fa-bullseye"></i> @lang('menu.targets.title') 
+                            </a>
+                                 
+                            <li @if($segments_var[0]=='fares') class="active" @endif><a href="{{route('fares.index')}}">
+                                    <i class="fa fa-plane"></i> @lang('menu.fares.title') </a>
+                           </li>
+                           <li @if($segments_var[0]=='concession_fare_slabs') class="active" @endif><a href="{{route('concession_fare_slabs.index')}}">
+                                    <i class="fa fa-plane"></i> @lang('menu.concession_fare_slabs.title') </a>
+                           </li>
+                           <li @if($segments_var[0]=='concessions') class="active" @endif><a href="{{route('concessions.index')}}">
+                                    <i class="fa fa-map-marker"></i> @lang('menu.concessions.title') </a>
+                           </li>
+                           <li @if($segments_var[0]=='trip_cancellation_reason') class="active" @endif><a href="{{route('trip_cancellation_reason.index')}}">
+                                    <i class="fa fa-plane"></i> @lang('menu.trip_cancellation_reason.title') </a>
+                           </li>
+                           <li @if($segments_var[0]=='inspector_remarks') class="active" @endif><a href="{{route('inspector_remarks.index')}}">
+                                    <i class="fa fa-user"></i> @lang('menu.inspector_remarks.title') </a>
+                           </li>
+                           <li @if($segments_var[0]=='inspector_remarks') class="active" @endif><a href="{{route('inspector_remarks.index')}}">
+                                    <i class="fa fa-user"></i> @lang('menu.inspector_remarks.title') </a>
+                           </li>
+                           <li @if($segments_var[0]=='fa fa-money') class="active" @endif><a href="{{route('payout_reasons.index')}}">
+                                    <i class="fa fa-cc-mastercard"></i> @lang('menu.payout_reasons.title') </a>
+                           </li>
+                           <li @if($segments_var[0]=='denominations') class="active" @endif><a href="{{route('denominations.index')}}">
+                                    <i class="fa fa-plus"></i> @lang('menu.denominations.title') </a>
+                           </li>
+                           <li @if($segments_var[0]=='pass_types') class="active" @endif><a href="{{route('pass_types.index')}}">
+                                    <i class="fa fa-lock"></i> @lang('menu.pass_types.title') </a>
+                           </li>
+                           <li @if($segments_var[0]=='crew_details') class="active" @endif><a href="{{route('crew_details.index')}}">
+                                    <i class="fa fa-eye"></i> @lang('menu.crew_details.title') </a>
+                           </li>
                              
                          </ul>
                     </li>
-                    
-                    
-                    
-                     @if(Entrust::hasRole('administrator'))
+                      @if(Entrust::hasRole('administrator'))
                      <li  @if($segments_var[0]=='roles' || $segments_var[0]=='permissions' || $segments_var[0]=='settings') class="treeview active" @else class="treeview" @endif>
                         <a href="#">
                             <i class="fa fa-cog" aria-hidden="true"></i> <span>@lang('menu.settings.title')</span>
@@ -532,6 +551,7 @@ function removeLoader(){
   });  
 }  
 </script>
+
 @stack('scripts')
 </body>
 </html>

@@ -37,11 +37,9 @@ return [
     ],
     'depots' =>  [
         'title' => 'Depot'
-       
-      
-    ],
+      ],
     'bus_types' =>  [
-        'title' => 'Bus Types'
+        'title' => 'Bus Type'
      ],
    'settings' =>  [
         'title' => 'Settings',
@@ -59,7 +57,7 @@ return [
      ],
     
     'stops' =>  [
-        'title' => 'Stops',
+        'title' => 'Stop',
      
      ],
     
@@ -88,16 +86,33 @@ return [
      
      ],
     
-    
-    
-    
-    
-    'vehicles' =>  [
-        'title' => 'Vehicle',
+    'targets' =>  [
+        'title' => 'Target',
      
      ],
-    'vehicles' =>  [
-        'title' => 'Vehicle',
+   
+    'trip_cancellation_reason' =>  [
+        'title' => 'Trip Cancession Reason',
+     
+     ],
+    'inspector_remarks' =>  [
+        'title' => 'Inspector Remarks',
+     
+     ],
+    'payout_reasons' =>  [
+        'title' => 'Payout Reasonss',
+     
+     ],
+    'denominations' =>  [
+        'title' => 'Denominations',
+     
+     ],
+    'pass_types' =>  [
+        'title' => 'Pass Type',
+     
+     ],
+    'crew_details' =>  [
+        'title' => 'Crew Details',
      
      ],
      

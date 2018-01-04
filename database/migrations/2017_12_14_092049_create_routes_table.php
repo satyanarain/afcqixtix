@@ -17,9 +17,9 @@ class CreateRoutesTable extends Migration
             $table->increments('id');
             $table->integer('route');
             $table->string('path');
-            $table->string('direction');
+            $table->boolean('direction');
             $table->string('default_path');
-            $table->text('stops');
+            //$table->text('stops');
             $table->integer('stop_id')->unsigned();
             $table->foreign('stop_id')->references('id')->on('stops');
             $table->integer('stage_number');

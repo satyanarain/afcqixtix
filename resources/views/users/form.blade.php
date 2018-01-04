@@ -1,7 +1,7 @@
 <div class="form-group">
         {!! Form::label('name', Lang::get('user.headers.name'), ['class' => 'control-label required']) !!}
         {!! Form::text('name', null, ['class' => 'form-control','required' => 'required']) !!}
-    </div>
+</div>
 @if($user->email!='')
 <div class="form-group">
     {!! Form::label('email', Lang::get('user.headers.email'), ['class' => 'control-label required']) !!}
@@ -9,7 +9,7 @@
 </div>
 @else
 <div class="form-group">
-{!! Form::label('email', Lang::get('user.headers.email'), ['class' => 'control-label']) !!}
+{!! Form::label('email', Lang::get('user.headers.email'), ['class' => 'control-label required']) !!}
     {!! Form::email('email', null, ['class' => 'form-control','required' => 'required']) !!}
 </div>
 @endif

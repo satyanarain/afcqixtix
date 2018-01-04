@@ -1,36 +1,29 @@
 <?php
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
-class Service extends Model
+class Stop extends Model
 {
   /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'services';
+    protected $table = 'stops';
     protected $guarded = [];
-    
-    
-    
-//        public function bustypes()
-//    {
-//       
-//        return $this->belongsTo('App\Models\BusType', 'bus_type_id');
-//    }
-//    public function bustypes(){
-//         return $this->belongsTo('BusYype');
-//    }
+
     public function bustypes()
     {
         return $this->belongsTo('App\Models\BusType');
     }
-    
-    
-//     public function busTypes()
-//    {
-//        return $this->hasOne('App\Models\BusType')->orderBy('id','desc');
-//    }
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User');
+    }
+    public function route()
+    {
+        return $this->hasMany('App\Models\Route','stop_id');
+    }
+    // return $this->hasMany('Article', 'category_id'); return $this->hasMany('Article', 'category_id');
     /**
      * The attributes that are mass assignable.
      *

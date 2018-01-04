@@ -57,7 +57,69 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('vehicles/data', 'VehicleController@anyData')->name('services.data');
     Route::post('vehicles/store', 'VehicleController@store');
     Route::resource('vehicles', 'VehicleController');
-
+    
+    Route::get('shifts/data', 'ShiftController@anyData')->name('shifts.data');
+    Route::post('shifts/store', 'ShiftController@store');
+    Route::resource('shifts', 'ShiftController');
+    
+    Route::get('stops/data', 'StopController@anyData')->name('stops.data');
+    Route::post('stops/store', 'StopController@store');
+    Route::resource('stops', 'StopController');
+    
+    Route::get('routes/data', 'RouteController@anyData')->name('routes.data');
+    Route::post('routes/store', 'RouteController@store');
+    Route::resource('routes', 'RouteController');
+    
+    Route::get('duties/data', 'DutyController@anyData')->name('duties.data');
+    Route::post('duties/store', 'DutyController@store');
+    Route::resource('duties', 'DutyController');
+    
+    Route::get('targets/data', 'TargetController@anyData')->name('targets.data');
+    Route::post('targets/store', 'TargetController@store');
+    Route::resource('targets', 'TargetController');
+    
+    Route::get('trips/data', 'TripController@anyData')->name('trips.data');
+    Route::post('trips/store', 'TripController@store');
+    Route::resource('trips', 'TripController');
+    
+    Route::get('fares/data', 'FareController@anyData')->name('fares.data');
+    Route::post('fares/store', 'FareController@store');
+    Route::resource('fares', 'FareController');
+    
+    Route::get('concession_fare_slabs/data', 'ConcessionFareSlabController@anyData')->name('concession_fare_slabs.data');
+    Route::post('concession_fare_slabs/store', 'ConcessionFareSlabController@store');
+    Route::resource('concession_fare_slabs', 'ConcessionFareSlabController');
+    
+    Route::get('concessions/data', 'ConcessionController@anyData')->name('concessions.data');
+    Route::post('concessions/store', 'ConcessionController@store');
+    Route::resource('concessions', 'ConcessionController');
+    
+    Route::get('trip_cancellation_reason/data', 'TripCancellationReasonController@anyData')->name('trip_cancellation_reason.data');
+    Route::post('trip_cancellation_reason/store', 'TripCancellationReasonController@store');
+    Route::resource('trip_cancellation_reason', 'TripCancellationReasonController');
+    
+     Route::get('inspector_remarks/data', 'InspectorRemarkController@anyData')->name('inspector_remarks.data');
+    Route::post('inspector_remarks/store', 'InspectorRemarkControllerController@store');
+    Route::resource('inspector_remarks', 'InspectorRemarkControllerController');
+    
+    Route::get('payout_reasons/data', 'PayoutReasonsController@anyData')->name('payout_reasons.data');
+    Route::post('payout_reasons/store', 'PayoutReasonsControllerController@store');
+    Route::resource('payout_reasons', 'PayoutReasonsControllerController');
+    
+    Route::get('denominations/data', 'DenominationController@anyData')->name('payout_reasons.data');
+    Route::post('denominations/store', 'DenominationControllerController@store');
+    Route::resource('denominations', 'DenominationControllerController');
+   
+    
+    Route::get('pass_types/data', 'PassTypeController@anyData')->name('pass_types.data');
+    Route::post('pass_types/store', 'PassTypeControllerController@store');
+    Route::resource('pass_types', 'PassTypeControllerController');
+    
+    Route::get('crew_details/data', 'CrewDetailController@anyData')->name('crew_details.data');
+    Route::post('crew_details/store', 'CrewDetailControllerController@store');
+    Route::resource('crew_details', 'CrewDetailControllerController');
+    
+    
     /* ROLES */
     Route::resource('roles', 'RolesController');
     Route::resource('permissions', 'PermissionsController');
@@ -66,4 +128,7 @@ Route::group(['middleware' => ['auth']], function () {
 //     Route::get('password/reset/{token}', 'Auth\PasswordController@getReset');
     Route::post('changepasswords/update', 'ChangepasswordsController@updatePassword');
     Route::resource('changepasswords', 'ChangepasswordsController');
+    
+    
+    
 });

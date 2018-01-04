@@ -1,4 +1,3 @@
-
 https://glyphsearch.com/?query=BUS
  {!!Form::label('registration_term', 'Registration Term')!!}
  {!!Form::select("registration_term", ['7' => "7 Years", '10' => '10 Years', '14' => '14 Years', '15' => '15 Years'], isset($trademark->registration_term) ? $trademark->registration_term : 'null', ['class' => "form-control",onChange=>'reNewwalYear(this.value)','placeholder'=>'Select Registration Term'])!!}
@@ -20,8 +19,6 @@ https://glyphsearch.com/?query=BUS
     ErrorLog ${APACHE_LOG_DIR}/error.log
     CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
-
-
 ///////////////////////////////////////////////////Command "make:" is ambiguous./////////////////////////////////////
 it means you have not correct commad it may be space        
 ///////////////////////////////////////////////////

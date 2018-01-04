@@ -1,14 +1,14 @@
 <?php
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
-class Service extends Model
+class Duty extends Model
 {
   /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'services';
+    protected $table = 'duties';
     protected $guarded = [];
     
     
@@ -24,6 +24,14 @@ class Service extends Model
     public function bustypes()
     {
         return $this->belongsTo('App\Models\BusType');
+    }
+    public function route()
+    {
+        return $this->belongsTo('App\Models\Route');
+    }
+    public function shift()
+    {
+        return $this->belongsTo('App\Models\Shift');
     }
     
     
