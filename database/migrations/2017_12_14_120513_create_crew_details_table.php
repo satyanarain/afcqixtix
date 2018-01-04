@@ -15,6 +15,8 @@ class CreateCrewDetailsTable extends Migration
     {
         Schema::create('crew_details', function (Blueprint $table) {
             $table->increments('id');
+             $table->integer('user_id')->unsigned();
+         $table->foreign('user_id')->references('id')->on('users');
             $table->integer('depot_id')->unsigned();
             $table->foreign('depot_id')->references('id')->on('depots');
             $table->integer('role_id')->unsigned();

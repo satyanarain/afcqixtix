@@ -15,6 +15,8 @@ class CreateDepartmentsTable extends Migration
     {
         Schema::create('departments', function (Blueprint $table) {
             $table->increments('id');
+             $table->integer('user_id')->unsigned();
+         $table->foreign('user_id')->references('id')->on('users');
             $table->string('denomination');
             $table->text('description');
             $table->float('prince');

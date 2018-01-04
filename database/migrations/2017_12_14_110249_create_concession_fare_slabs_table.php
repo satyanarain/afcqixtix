@@ -15,6 +15,8 @@ class CreateConcessionFareSlabsTable extends Migration
     {
         Schema::create('concession_fare_slabs', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users');
             $table->integer('service_id')->unsigned();
             $table->foreign('service_id')->references('id')->on('services');
              $table->string('percentage');
