@@ -15,9 +15,11 @@ class CreateVehiclesTable extends Migration
     {
         Schema::create('vehicles', function (Blueprint $table) {
             $table->increments('id');
-             $table->integer('user_id')->unsigned();
-         $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('depot_id')->references('id')->on('depot');
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->integer('depot_id')->unsigned();
+            $table->foreign('depot_id')->references('id')->on('depots');
+            $table->integer('bus_type_id')->unsigned();
             $table->foreign('bus_type_id')->references('id')->on('bus_types');
             $table->integer('vehicle_registration_number');
             $table->string('bus_type');
