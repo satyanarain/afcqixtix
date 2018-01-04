@@ -15,6 +15,8 @@ class CreateTripCollectionReasonsTable extends Migration
     {
         Schema::create('trip_collection_reasons', function (Blueprint $table) {
             $table->increments('id');
+             $table->integer('user_id')->unsigned();
+         $table->foreign('user_id')->references('id')->on('users');
             $table->text('trip_cancel_reason');
             $table->text('short_reason');
             $table->text('reason_description');
