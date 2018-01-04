@@ -14,7 +14,7 @@ class CreateBustypesTable extends Migration
     public function up()
     {
         Schema::create('bustypes', function (Blueprint $table) {
-             $table->increments('id');
+            $table->increments('id');
             $table->string('abbreviation');
             $table->integer('order_number');
             $table->timestamps();
