@@ -22,7 +22,6 @@ class CreateVehiclesTable extends Migration
             $table->integer('bus_type_id')->unsigned();
             $table->foreign('bus_type_id')->references('id')->on('bus_types');
             $table->integer('vehicle_registration_number');
-            $table->string('bus_type');
             $table->timestamps();
         });
     }

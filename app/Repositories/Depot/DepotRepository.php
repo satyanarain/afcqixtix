@@ -26,6 +26,7 @@ class DepotRepository implements DepotRepositoryContract {
 
     public function create($requestData) {
         $input = $requestData->all();
+        $input['user_id'] = Auth::id();
         $depot = Depot::create($input);
         Session::flash('flash_message', "$depot->name Depot Created Successfully."); //Snippet in Master.blade.php
         return $depot;
@@ -34,6 +35,7 @@ class DepotRepository implements DepotRepositoryContract {
     public function update($id, $requestData) {
        $depot = Depot::findorFail($id);
        $input = $requestData->all();
+       $input['user_id'] = Auth::id();
        $depot->fill($input)->save();
        Session::flash('flash_message', "$depot->name Depot Updated Successfully.");
        return $depot;

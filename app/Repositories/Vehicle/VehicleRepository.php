@@ -22,7 +22,8 @@ class VehicleRepository implements VehicleRepositoryContract {
 
     public function create($requestData) {
         $input = $requestData->all();
-          $vehicle = Vehicle::create($input);
+        $input['user_id'] = Auth::id();
+        $vehicle = Vehicle::create($input);
         Session::flash('flash_message', "Vehicle Created Successfully."); //Snippet in Master.blade.php
         return $vehicle;
     }
@@ -30,6 +31,7 @@ class VehicleRepository implements VehicleRepositoryContract {
     public function update($id, $requestData) {
        $vehicle = Vehicle::findorFail($id);
        $input = $requestData->all();
+       $input['user_id'] = Auth::id();
        $vehicle->fill($input)->save();
        Session::flash('flash_message', "Vehicle Updated Successfully.");
        return $vehicle;
