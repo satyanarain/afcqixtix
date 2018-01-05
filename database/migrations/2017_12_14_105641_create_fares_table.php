@@ -15,11 +15,15 @@ class CreateFaresTable extends Migration
     {
         Schema::create('fares', function (Blueprint $table) {
             $table->increments('id');
-             $table->integer('user_id')->unsigned();
-         $table->foreign('user_id')->references('id')->on('users');
-            $table->string('service_name');
-             $table->integer('service_id')->unsigned();
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->integer('service_id')->unsigned();
             $table->foreign('service_id')->references('id')->on('services');
+            $table->integer('number_of_units');
+            $table->integer('stage');
+            $table->float('adult_ticket_amount');
+            $table->float('child_ticket_amount');
+            $table->float('luggage_ticket_amount');
             $table->timestamps();
         });
     }
