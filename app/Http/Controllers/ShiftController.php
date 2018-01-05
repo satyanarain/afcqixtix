@@ -80,7 +80,7 @@ class ShiftController extends Controller
     public function edit($id)
     {
        $shifts=Shift::findOrFail($id);
-      return view('shifts.edit')->withShift($shifts);
+      return view('shifts.edit')->withShifts($shifts);
     }
 
     /**

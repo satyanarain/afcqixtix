@@ -12,7 +12,7 @@
     {!! Form::text('abbreviation', null, ['class' => 'form-control']) !!}
 </div>
 <div class="form-group">
-    {!! Form::label('short_name', Lang::get('Shot Name'), ['class' => 'control-label required']) !!}
+    {!! Form::label('short_name', Lang::get('Short Name'), ['class' => 'control-label required']) !!}
     {!! Form::text('short_name', null, ['class' => 'form-control']) !!}
 </div>
 

@@ -65,7 +65,9 @@
       "paging": true,
       "lengthChange": true,
       "searching": true,
-      "ordering": true,
+    // "order": [[ 9, "asc" ], [ 10, "asc" ]],
+       "order":[["id", "desc"]],
+      "ordering":true,
       "info": true,
       "autoWidth": false
     });

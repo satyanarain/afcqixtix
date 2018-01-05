@@ -83,7 +83,7 @@ $segments_var[0];
             <!-- Logo -->
             <a href="index2.html" class="logo">
              
-                <span class="logo-lg"><b>ITMS</span>
+                <span class="logo-lg"><b>AFC</span>
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top">
@@ -415,9 +415,7 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                            <li @if($segments_var[0]=='inspector_remarks') class="active" @endif><a href="{{route('inspector_remarks.index')}}">
                                     <i class="fa fa-user"></i> @lang('menu.inspector_remarks.title') </a>
                            </li>
-                           <li @if($segments_var[0]=='inspector_remarks') class="active" @endif><a href="{{route('inspector_remarks.index')}}">
-                                    <i class="fa fa-user"></i> @lang('menu.inspector_remarks.title') </a>
-                           </li>
+                           
                            <li @if($segments_var[0]=='fa fa-money') class="active" @endif><a href="{{route('payout_reasons.index')}}">
                                     <i class="fa fa-cc-mastercard"></i> @lang('menu.payout_reasons.title') </a>
                            </li>
@@ -472,24 +470,7 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                     @yield('content')
                 </section>
             </div>
-    
-            @if(Session::has('flash_message_warning'))
-            <div class="notification-warning navbar-fixed-bottom ">
-                <div class="notification-icon ion-close-circled"></div>
-                <div class="notification-text">
-                    <span>{{ Session::get('flash_message_warning') }} </span>
-                </div>
-            </div>
-            @endif
-            @if(Session::has('flash_message'))
-            <div class="notification-success navbar-fixed-bottom ">
-                <div class="notification-icon ion-checkmark-round"></div>
-                <div class="notification-text">
-                    <span>{{ Session::get('flash_message') }} </span>
-                </div>
-            </div>
-            @endif        
-  </section>
+   </section>
 <footer class="main-footer">
     <div class="pull-right hidden-xs">
         <b>Version</b> 2.3.7

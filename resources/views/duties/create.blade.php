@@ -9,10 +9,7 @@
      <div class="box">
             <div class="box-header">
                 <h3 class="box-title">{{headingMain()}}</h3>
-               @if(Entrust::hasRole('administrator'))
-                <a href="{{ route('duties.create')}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>   @lang('common.titles.add')</button></a>
-            @endif
-            </div>
+              </div>
             <!-- /.box-header -->
             <div class="box-body">
                 {!! Form::open([

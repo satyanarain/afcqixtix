@@ -8,26 +8,16 @@
 </div>
 
 <div class="form-group">
-     {!! Form::label('start_date', Lang::get('Start Date'), ['class' => 'control-label required']) !!}
-
-    <div class="input-group date">
-        <div class="input-group-addon">
-            <i class="fa fa-calendar"></i>
-        </div>
-        {!! Form::text('start_date', start_date, ['class' => 'multiple_date','readonly'=>'readonly']) !!}
-      </div>
+     {!! Form::label('start_time', Lang::get('Start Time'), ['class' => 'control-label required']) !!}
+    {!! Form::text('start_time', null, ['class' => 'form-control']) !!}
+     
     <!-- /.input group -->
 </div>
 
 <div class="form-group">
-    {!! Form::label('end_date', Lang::get('End Date'), ['class' => 'control-label required']) !!}
+    {!! Form::label('end_time', Lang::get('End Time'), ['class' => 'control-label required']) !!}
+     {!! Form::text('end_time',null , ['class' => 'form-control']) !!}
 
-    <div class="input-group date">
-        <div class="input-group-addon">
-            <i class="fa fa-calendar"></i>
-        </div>
-        {!! Form::text('end_date', end_date, ['class' => 'multiple_date','readonly'=>'readonly']) !!}
-      </div>
     <!-- /.input group -->
 </div>
 

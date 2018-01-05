@@ -24,11 +24,11 @@
                           </tr>
                           <tr>
                               <td style="text-align:left;padding-left:10%;padding-top:3%;"><b>Start Date</b></td>
-                              <td style="text-align:left;padding-left:15%;padding-top:3%; "><span></span>{{ $shifts->start_date }}</span></td>
+                              <td style="text-align:left;padding-left:15%;padding-top:3%; "><span></span>{{ $shifts->start_time }}</span></td>
                           </tr>
                           <tr>
                               <td style="text-align:left;padding-left:10%;padding-top:3%;"><b>End Date</b></td>
-                              <td style="text-align:left;padding-left:15%;padding-top:3%; "><span></span>{{ $shifts->end_date }}</span></td>
+                              <td style="text-align:left;padding-left:15%;padding-top:3%; "><span></span>{{ $shifts->end_time }}</span></td>
                           </tr>
                           <tr>
                               <td style="text-align:left;padding-left:10%;padding-top:3%;"><b>Order Number</b></td>
