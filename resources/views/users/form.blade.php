@@ -2,17 +2,21 @@
         {!! Form::label('name', Lang::get('user.headers.name'), ['class' => 'control-label required']) !!}
         {!! Form::text('name', null, ['class' => 'form-control','required' => 'required']) !!}
 </div>
-@if($user->email!='')
+@if($user->user_name!='')
 <div class="form-group">
-    {!! Form::label('email', Lang::get('user.headers.email'), ['class' => 'control-label required']) !!}
-    {!! Form::email('email', null, ['class' => 'form-control','readonly'=>'readonly']) !!}
+        {!! Form::label('user_name', Lang::get('User Name'), ['class' => 'control-label required']) !!}
+        {!! Form::text('user_name', null, ['class' => 'form-control','readably'=>'readably']) !!}
 </div>
 @else
+<div class="form-group">
+        {!! Form::label('user_name', Lang::get('User Name'), ['class' => 'control-label required']) !!}
+        {!! Form::text('user_name', null, ['class' => 'form-control','required' => 'required']) !!}
+</div>
+@endif
 <div class="form-group">
 {!! Form::label('email', Lang::get('user.headers.email'), ['class' => 'control-label required']) !!}
     {!! Form::email('email', null, ['class' => 'form-control','required' => 'required']) !!}
 </div>
-@endif
 <div class="form-group">
     {!! Form::label('address', Lang::get('user.headers.address'), ['class' => 'control-label']) !!}
     {!! Form::text('address', null, ['class' => 'form-control']) !!}
@@ -20,7 +24,7 @@
 <div class="form-group">
     @php $countries=displayList('countries','country_name');@endphp
      {!! Form::label('country', Lang::get('user.headers.country'), ['class' => 'control-label required']) !!}
-      {!! Form::select('country', $countries,isset($user->country) ? $user->country : selected,
+     {!! Form::select('country', $countries,isset($user->country) ? $user->country : selected,
     ['class' => 'form-control', 'placeholder'=>'Select Country','required' => 'required']) !!}
 </div>
 <div class="form-group">

@@ -17,11 +17,11 @@
               <p class="text-muted text-center"></p>
               <table width=90% class="table table-responsive">
                 <tr>
-                    <td style="text-align:left;padding-left:10%;padding-top:3%;"><b>Path</b></td>
-                    <td style="text-align:left;padding-left:15%;padding-top:3%; ">{{ $routes->path }}</td>
+                    <td><b>Path</b></td>
+                    <td>{{ $routes->path }}</td>
                   </tr>
                     <tr>
-                    <td style="text-align:left;padding-left:10%;padding-top:3%;"><b>Direction</b></td>
+                    <td><b>Direction</b></td>
                     <td style="text-align:left;padding-left:15%;padding-top:3%; ">
                         @if($routes->direction==1)
                         {{ "Up" }}
@@ -31,23 +31,23 @@
                     </td>
                   </tr>
                    <tr>
-                    <td style="text-align:left;padding-left:10%;padding-top:3%;"><b>Default Path</b></td>
+                    <td><b>Default Path</b></td>
                     <td style="text-align:left;padding-left:15%;padding-top:3%; "><span></span>{{ $routes->default_path }}</span></td>
                    </tr>
                   <tr>
-                    <td style="text-align:left;padding-left:10%;padding-top:3%;"><b>Stage Number</b></td>
+                    <td><b>Stage Number</b></td>
                     <td style="text-align:left;padding-left:15%;padding-top:3%; "><span></span>{{ $routes->stage_number }}</span></td>
                    </tr>
                    <tr>
-                    <td style="text-align:left;padding-left:10%;padding-top:3%;"><b>Distance</b></td>
+                    <td><b>Distance</b></td>
                     <td style="text-align:left;padding-left:15%;padding-top:3%; "><span></span>{{ $routes->distance }}</span></td>
                    </tr>
                    <tr>
-                    <td style="text-align:left;padding-left:10%;padding-top:3%;"><b>Hot Key</b></td>
+                    <td><b>Hot Key</b></td>
                     <td style="text-align:left;padding-left:15%;padding-top:3%; "><span></span>{{ $routes->hot_key }}</span></td>
                    </tr>
                    <tr>
-                    <td style="text-align:left;padding-left:10%;padding-top:3%;"><b>Is this via stop of the path? </b></td>
+                    <td><b>Is this via stop of the path? </b></td>
                     <td style="text-align:left;padding-left:15%;padding-top:3%; "><span></span> 
                          @if($routes->is_this_by==1)
                         {{ "Yes" }}

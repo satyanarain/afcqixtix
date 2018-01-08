@@ -9,36 +9,21 @@
             @include('partials.include')
               <input type="hidden" id="user_id" value="{{ $depot->id }}">
               <h3 class="profile-username text-center cursor-pointer" id="user_name"><span id="user-name-span">{{ $depot->name }}</span> <span id="edit-user-name" class="glyphicon glyphicon-pencil"></span></h3>
-
-
               <p class="text-muted text-center">{{ $depot->display_name }}</p>
-
-      
-  
                <table width=90% class="table table-responsive">
-                
                   <tr>
-                                                       <td style="text-align:left;padding-left:10%;padding-top:3%;"><b>Short Name</b></td>
-                                                       <td style="text-align:left;padding-left:15%;padding-top:3%; "><span></span>{{ $depot->short_name }}</span></td>
-                                                     </tr>
-                                                  
-                    <tr>
-                    <td style="text-align:left;padding-left:10%;padding-top:3%;"><b>Depot Location</b></td>
-                    <td style="text-align:left;padding-left:15%;padding-top:3%; ">{{ $depot->depot_location }}</td>
+                       <td>Short Name</td>
+                       <td class="table_normal">{{ $depot->short_name }}</span></td>
+                   </tr>
+                   <tr>
+                    <td>Depot Location</td>
+                    <td class="table_normal">{{ $depot->depot_location }}</td>
                   </tr>
-                    
-                   
-<!--                  <tr>
-                    <td style="text-align:left;padding-left:10%;padding-top:3%;"></td>
-                    <td style="text-align:left;padding-left:10%;padding-top:3%;">
-                      <button type="button" class="btn btn-info btn-sm pull-right" data-toggle="modal" data-target="#myModal">Profile Details</button>
-
-                    </td>
-                  </tr>-->
-                  
-                </table>
-           
-                
+                   <tr>
+                    <td>Default Service</td>
+                    <td class="table_normal">{{ $depot->default_service }}</td>
+                  </tr>
+              </table>
               </ul>
 
             </div>
@@ -103,3 +88,5 @@
       <!-- /.row -->
 
     </section>
+
+

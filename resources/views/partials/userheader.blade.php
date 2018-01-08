@@ -5,95 +5,74 @@
 
           <!-- Profile Image -->
           <div class="box box-primary" style="min-width:10%;">
-            <div class="box-body box-profile" style="padding:8px 0 1px 1px;">
-              <div>
-              @include('partials.include')
-              <input type="hidden" id="user_id" value="{{ $user->id }}">
-              <h3 class="profile-username text-center cursor-pointer" id="user_name"><span id="user-name-span">{{ $user->name }}</span> <span id="edit-user-name" class="glyphicon glyphicon-pencil"></span></h3>
+              <div class="box-body box-profile" style="padding:8px 0 1px 1px;">
+                  <div>
+                      @include('partials.include')
+                      <input type="hidden" id="user_id" value="{{ $user->id }}">
+                      <table width=90% class="table table-responsive">
+                          <tr>
+                              <td>Name</td>
+                              <td class="table_normal">{{ $user->name }}</td>
+                          </tr>
+                           <tr>
+                              <td>User Name</td>
+                              <td class="table_normal">{{ $user->user_name }}</td>
+                          </tr>
+                          <tr>
+                             <tr>
+                              <td>Email</td>
+                              <td class="table_normal">{{ $user->email }}</td>
+                          </tr>
+                          </tr>
+                      </table>
 
 
-              <p class="text-muted text-center">{{ $user->display_name }}</p>
-
-      
-  
-               <table width=90% class="table table-responsive">
-                
-                  <tr>
-                                                       <td style="text-align:left;padding-left:10%;padding-top:3%;"><b>Moble</b></td>
-                                                       <td style="text-align:left;padding-left:15%;padding-top:3%; "><span></span>{{ $user->mobile }}</span></td>
-                                                     </tr>
-                                                  
-                    <tr>
-                    <td style="text-align:left;padding-left:10%;padding-top:3%;"><b>Email</b></td>
-                    <td style="text-align:left;padding-left:15%;padding-top:3%; ">{{ $user->email }}</td>
-                  </tr>
-                    
-                   
-<!--                  <tr>
-                    <td style="text-align:left;padding-left:10%;padding-top:3%;"></td>
-                    <td style="text-align:left;padding-left:10%;padding-top:3%;">
-                      <button type="button" class="btn btn-info btn-sm pull-right" data-toggle="modal" data-target="#myModal">Profile Details</button>
-
-                    </td>
-                  </tr>-->
-                  
-                </table>
-           
-                
-              </ul>
-
-            </div>
-            <!-- /.box-body -->
+                      </ul>
+                  </div>
+                  <!-- /.box-body -->
+                </div>
+              <!-- /.box -->
 
           </div>
-          <!-- /.box -->
-
         </div>
         <!-- /.col -->
         <div class="col-md-9">
           <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
-            
-            @if($user->user_type == 1 || $user->user_type == 4 || $user->user_type == 9)
-              	<li class="active"><a href="#travel_detail" data-toggle="tab">Travel Profile</a></li>
-              	<li><a href="#bank_detail" data-toggle="tab">Bank Details</a></li>
-            @endif
-            {{--@if(Entrust::hasRole('administrator'))
-            	<li class="active"><a href="#travel_detail" data-toggle="tab">Travel Profile</a></li>
-              	<li><a href="#bank_detail" data-toggle="tab">Bank Details</a></li>
-            @endif
-            @if(Entrust::hasRole('associate_user'))
-              	<!-- <li class="active"><a href="#travel_detail" data-toggle="tab">Travel Profile</a></li> -->
-              	<!-- <li><a href="#bank_detail" data-toggle="tab">Bank Details</a></li> -->
-            @endif
-            @if(Entrust::hasRole('client_user'))
-              	<!-- <li class="active"><a href="#travel_detail" data-toggle="tab">Travel Profile</a></li>
-              	<li><a href="#bank_detail" data-toggle="tab">Bank Details</a></li> -->
-            @endif
-            
-            @if(Entrust::hasRole('kipg_general_user'))
-              	<li class="active"><a href="#travel_detail" data-toggle="tab">Travel Profile</a></li>
-              	<li><a href="#bank_detail" data-toggle="tab">Bank Details</a></li>
-            @endif--}}
-            
+     
+              	<li class="active"><a href="#travel_detail" data-toggle="tab">User Details</a></li>
+              	
             </ul>
             <div class="tab-content">
-	        	@if($user->user_type == 1 || $user->user_type == 4 || $user->user_type == 9)
-		        	   <div class="active tab-pane" id="travel_detail">
-	                  	@include('users.travel')    
-	              	</div>
-	              	<div class="tab-pane" id="bank_detail">
-	                  	@include('users.bank_detail')
-	                </div>
-            @endif
-            {{--@if(Entrust::hasRole('kipg_general_user'))
-              	<div class="active tab-pane" id="travel_detail">
-                  	@include('users.travel')    
-              	</div>
-              	<div class="tab-pane" id="bank_detail">
-                		@include('users.bank_detail')
-              	</div>
-            @endif--}}
+	   <table width=90% class="table table-responsive">
+                          <tr>
+                              <td>Address</td>
+                              <td class="table_normal">{{ displayView($user->address) }}</td>
+                          </tr>
+                           <tr>
+                              <td>Country</td>
+                              <td class="table_normal">
+                                {{  
+                                  displayIdBaseName('countries', $user->country, 'country_name')
+                               }}
+                              </td>
+                          </tr>
+                          <tr>
+                             <tr>
+                              <td>City</td>
+                              <td class="table_normal">{{ displayView($user->city) }}</td>
+                          </tr>
+                          <tr>
+                             <tr>
+                              <td>Mobile</td>
+                              <td class="table_normal">{{ displayView($user->mobile) }}</td>
+                          </tr>
+                          <tr>
+                             <tr>
+                              <td>Date Of Borth</td>
+                              <td class="table_normal">{{ dateView($user->dob) }}</td>
+                          </tr>
+                        </table>
             </div>
             <!-- /.tab-content -->
           </div>

@@ -18,27 +18,26 @@
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
+                            <th class="display_none"></th>
                             <th>@lang('user.headers.name')</th>
+                            <th>@lang('User Name')</th>
                             <th>@lang('user.headers.email')</th>
-                            <th>@lang('user.headers.view')</th>
-                             @if(Entrust::hasRole('administrator'))
-                            <th>@lang('user.headers.edit')</th>
-                            @endif
+                           
+                             <th>@lang('Action')</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($users as $user)
                         <tr class="nor_f">
+                            <th class="display_none"></th>
                             <td>{{$user->name}}</td>
+                            <td>{{$user->user_name}}</td>
                             <td>{{$user->email}}</td>
-                           <td> <a style="background-color:#3A485C" class="btn btn-primary" href="{{ route('users.show', $user->id) }}"><span class="glyphicon glyphicon-search"></span>View</a></td>
-                              @if(Entrust::hasRole('administrator'))
                             <td>
-                                <a class="btn btn-primary-edit" href="{{ route('users.edit', $user->id) }}" ><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+                                <a  href="{{ route('users.edit', $user->id) }}" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span></a>
+                                <a  class="btn btn-small btn-primary" href="{{ route('users.show', $user->id) }}" ><span class="glyphicon glyphicon-search"></span></a>
                             </td>
-                            @endif
-                          
-                        </tr>
+                         </tr>
                         @endforeach
                         </tbody>
                     </table>
@@ -50,16 +49,5 @@
     <!-- /.col -->
 </div>
 <!-- /.row -->
-<script>
-    $(function () {
-        $("#example1").DataTable({
-      "paging": true,
-      "lengthChange": true,
-      "searching": true,
-      "ordering": ['id', "desc"],
-      "info": true,
-      "autoWidth": false
-    });
-    });
- </script>
+@include('partials.table_script')
 @stop

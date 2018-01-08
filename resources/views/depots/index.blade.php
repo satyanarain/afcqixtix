@@ -20,32 +20,28 @@
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                          <tr>
+                            <th class="display_none"></th>
                             <th>@lang('Depot Name')</th>
                             <th>@lang('Short Name')</th>
                             <th>@lang('Depot Location')</th>
-                            <th>@lang('View')</th>
-                            @if(Entrust::hasRole('administrator'))
-                            <th>@lang('user.headers.edit')</th>
-                            @endif
+                            <th>@lang('Action')</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($depots as $value)
-                        <tr class="nor_f    ">
+                        <tr class="nor_f">
+                            <td class="display_none"></td>
                             <td>{{$value->name}}</td>
                             <td>{{$value->short_name}}
                             </td>
                             <td>{{$value->depot_location}}
                             </td>
-                           <td> <a  class="btn btn-primary" href="{{ route('depots.show', $value->id) }}"><span class="glyphicon glyphicon-search"></span>View</a>
-                          </td>
-                              @if(Entrust::hasRole('administrator'))
                             <td>
-                                <a  href="{{ route('depots.edit', $value->id) }}" class="btn btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+                                <a  href="{{ route('depots.edit', $value->id) }}" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span>Edit</a>
+                                <button  class="btn btn-small btn-primary"  data-toggle="modal" data-target="#{{$value->id}}"><span class="glyphicon glyphicon-search"></span>View</button>
                             </td>
-                            @endif
-                            
-                        </tr>
+                           </tr>
                         @endforeach
                         </tbody>
                     </table>
@@ -58,19 +54,44 @@
 </div>
 <!-- /.row -->
 
-<script>
-    $(function () {
-        // $("#example1").DataTable();
-     $("#example1").DataTable({
-      "paging": true,
-      "lengthChange": true,
-      "searching": true,
-    // "order": [[ 9, "asc" ], [ 10, "asc" ]],
-       "order":[["id", "desc"]],
-      "ordering":true,
-      "info": true,
-      "autoWidth": false
-    });
-    });
- </script>  
+@include('partials.table_script')
 @stop
+
+@foreach($depots as $value)
+<div class="modal fade" id="{{$value->id}}" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header" style="padding:10px 50px; background-color:#3c8dbc; color:#fff;font-weight:bold;font-size:30px;">
+                <button type="button" class="close" data-dismiss="modal"><font class="white">&times;</font></button>
+                <h4 style=" color:#fff;font-weight:bold;font-size:20px;"><span class="fa fa-bus"></span> Depot Details</h4>
+            </div>
+            <div class="modal-body" style="padding:40px 50px;" >
+                <table width=90% class="table table-responsive" style="font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif; font-size:15px;">
+                    <tr>
+                        <td><b>Depot Name</b></td>
+                        <td class="table_normal">{{ $value->name }}</span></td>
+                    </tr>
+                    <tr>
+                        <td><b>Short Name</b></td>
+                        <td class="table_normal">{{ $value->short_name }}</span></td>
+                    </tr>
+                    <tr>
+                        <td><b>Depot Location</b></td>
+                        <td class="table_normal">{{ $value->depot_location }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Default Service</b></td>
+                        <td class="table_normal">{{ $value->default_service }}</td>
+                    </tr>
+                </table>  
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+@endforeach
