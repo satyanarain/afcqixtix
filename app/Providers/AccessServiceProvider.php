@@ -61,6 +61,10 @@ class AccessServiceProvider extends ServiceProvider
             \App\Repositories\Service\ServiceRepository::class
         );
         $this->app->bind(
+            \App\Repositories\Fare\FareRepositoryContract::class,
+            \App\Repositories\Fare\FareRepository::class
+        );
+        $this->app->bind(
             \App\Repositories\Vehicle\VehicleRepositoryContract::class,
             \App\Repositories\Vehicle\VehicleRepository::class
         );

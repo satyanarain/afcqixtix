@@ -82,9 +82,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('trips/store', 'TripController@store');
     Route::resource('trips', 'TripController');
     
-    Route::get('fares/data', 'FareController@anyData')->name('fares.data');
-    Route::post('fares/store', 'FareController@store');
-    Route::resource('fares', 'FareController');
+    Route::post('fares/data', 'FaresController@anyData')->name('fares.data');
+    Route::resource('fares', 'FaresController');
     
     Route::get('concession_fare_slabs/data', 'ConcessionFareSlabController@anyData')->name('concession_fare_slabs.data');
     Route::post('concession_fare_slabs/store', 'ConcessionFareSlabController@store');
