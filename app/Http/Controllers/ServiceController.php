@@ -35,14 +35,13 @@ class ServiceController extends Controller
      */
     public function index()
     {
-    $services = DB::table('services')->select('services.id as id','services.name as name','services.short_name as short_name','bus_types.bus_type')->leftjoin('bus_types', 'bus_types.id', '=', 'services.bus_type_id')->get();
+    $services = DB::table('services')->select('services.id as id','services.name as name','services.order_number as order_number','services.short_name as short_name','bus_types.bus_type')->leftjoin('bus_types', 'bus_types.id', '=', 'services.bus_type_id')->get();
     return view('services.index')->withServices($services);
    
     }
     public function create()
     {
-     //$services = Service::findOrFail();
-     return view('services.create');
+      return view('services.create');
     }
  
     /**
@@ -67,13 +66,12 @@ class ServiceController extends Controller
      * @param  int  $id
      * @return Response
      */
-   public function show($id)
-   {
-  $services = DB::table('services')->select('services.id','services.name as name','services.short_name as short_name','services.id as id','bus_types.id as id','bus_types.bus_type')->leftjoin('bus_types', 'bus_types.id', '=', 'services.bus_type_id')
-  ->where('services.id',$id)        
-          ->first();
-    return view('services.show')->withServices($services);
-     }
+//   public function show($id)
+//   {
+//  $services = DB::table('services')->select('*','services.name as name','services.order_number as order_number','services.short_name as short_name','services.id as id','bus_types.bus_type')->leftjoin('bus_types', 'bus_types.id', '=', 'services.bus_type_id')
+//  ->where('services.id',$id)->first();
+//    return view('services.show')->withServices($services);
+//     }
 
     /**
      * Show the form for editing the specified resource.

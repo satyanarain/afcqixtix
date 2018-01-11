@@ -18,7 +18,9 @@ use App\Http\Requests\Depot\StoreDepotRequest;
 use App\Repositories\Depot\DepotRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
+//use Illuminate\Support\Facades\Validator;
 class DepotsController extends Controller
 {
     protected $depots;

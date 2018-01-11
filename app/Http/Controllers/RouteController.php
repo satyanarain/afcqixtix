@@ -36,7 +36,7 @@ class RouteController extends Controller {
      */
     public function index() {
 
-        $routes = DB::table('routes')->select('routes.stop_id', 'routes.path', 'routes.route', 'routes.stop_id', 'routes.id', 'stops.stop')->leftjoin('stops', 'routes.stop_id', '=', 'stops.id')->get();
+        $routes = DB::table('routes')->select('*','routes.stop_id', 'routes.path', 'routes.route', 'routes.stop_id', 'routes.id', 'stops.stop')->leftjoin('stops', 'routes.stop_id', '=', 'stops.id')->get();
         return view('routes.index')->withRoutes($routes);
     }
 

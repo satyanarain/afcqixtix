@@ -9,9 +9,7 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{headingMain()}}</h3>
-             @if(Entrust::hasRole('administrator'))
-                <a href="{{ route('users.create')}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>   @lang('common.titles.add')</button></a>
-           @endif
+         {{ createButton('create','Add') }}
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -22,8 +20,7 @@
                             <th>@lang('user.headers.name')</th>
                             <th>@lang('User Name')</th>
                             <th>@lang('user.headers.email')</th>
-                           
-                             <th>@lang('Action')</th>
+                             {{  actionHeading('Action', $newaction='') }}
                         </tr>
                     </thead>
                     <tbody>
@@ -34,8 +31,8 @@
                             <td>{{$user->user_name}}</td>
                             <td>{{$user->email}}</td>
                             <td>
-                                <a  href="{{ route('users.edit', $user->id) }}" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span></a>
-                                <a  class="btn btn-small btn-primary" href="{{ route('users.show', $user->id) }}" ><span class="glyphicon glyphicon-search"></span></a>
+                                <a  href="{{ route('users.edit', $user->id) }}" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil">Edit</span></a>
+                                <a  class="btn btn-small btn-primary" href="{{ route('users.show', $user->id) }}" ><span class="glyphicon glyphicon-search"></span>View</a>
                             </td>
                          </tr>
                         @endforeach
@@ -49,5 +46,6 @@
     <!-- /.col -->
 </div>
 <!-- /.row -->
-@include('partials.table_script')
+@include('partials.routesheader')
+@include('partials.table_script') 
 @stop

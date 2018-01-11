@@ -9,9 +9,7 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{headingMain()}}</h3>
-             @if(Entrust::hasRole('administrator'))
-                <a href="{{ route('routes.create')}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>   @lang('common.titles.add')</button></a>
-           @endif
+                  {{ createButton('create','Add') }}
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -21,10 +19,7 @@
                             <th>@lang('Route')</th>
                             <th>@lang('Path')</th>
                             <th>@lang('Stop')</th>
-                            <th>@lang('View')</th>
-                            @if(Entrust::hasRole('administrator'))
-                            <th>@lang('user.headers.edit')</th>
-                            @endif
+                           {{  actionHeading('Action', $newaction='') }}
                         </tr>
                     </thead>
                     <tbody>
@@ -35,15 +30,9 @@
                             </td>
                             <td>{{$value->stop}}
                             </td>
-                           <td> <a  class="btn btn-primary" href="{{ route('routes.show', $value->id) }}"><span class="glyphicon glyphicon-search"></span>View</a>
-                          </td>
-                              @if(Entrust::hasRole('administrator'))
-                            <td>
-                                <a  href="{{ route('routes.edit', $value->id) }}" class="btn btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span> Edit</a>
-                            </td>
-                            @endif
-                            
-                        </tr>
+                           
+                         {{ actionEdit('edit',$value->id)}}
+                         </tr>
                         @endforeach
                         </tbody>
                     </table>
@@ -55,17 +44,6 @@
     <!-- /.col -->
 </div>
 <!-- /.row -->
-
-<script>
-    $(function () {
-        $("#example1").DataTable({
-      "paging": true,
-      "lengthChange": true,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false
-    });
-    });
- </script>  
+@include('partials.routesheader')
+@include('partials.table_script') 
 @stop

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Input;
 use DB;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\DepotCreated;
+
 class DepotRepository implements DepotRepositoryContract {
   public function find($id) {
         return Depot::join('depots', 'users.user_type', '=', 'roles.id')->first();

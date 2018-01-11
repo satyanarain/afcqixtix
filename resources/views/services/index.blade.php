@@ -6,49 +6,36 @@
 @section('content')
 <div class="row">
     <div class="col-xs-12">
-      <div class="box">
+        <div class="box">
             <div class="box-header">
-               <h3 class="box-title">{{headingMain()}}</h3>
-
-                @if(Entrust::hasRole('administrator'))
-                  <a href="{{ route('services.create')}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>   @lang('common.titles.add')</button></a>
-                @endif
+                <h3 class="box-title">{{headingMain()}}</h3>
+                {{ createButton('create','Add') }}
             </div>
             @include('partials.message')
             <!-- /.box-header -->
             <div class="box-body">
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
-                         <tr>
-                            <th>@lang('Name')</th>
+                        <tr>
+                            <th>@lang('Service Name')</th>
                             <th>@lang('Short Name')</th>
                             <th>@lang('Bus Type')</th>
-                            <th>@lang('View')</th>
-                            @if(Entrust::hasRole('administrator'))
-                            <th>@lang('user.headers.edit')</th>
-                            @endif
+                           {{  actionHeading('Action', $newaction='') }}
                         </tr>
                     </thead>
                     <tbody>
-                      @foreach($services as $value)
+                        @foreach($services as $value)
                         <tr class="nor_f">
                             <td>{{$value->name}}</td>
                             <td>{{$value->short_name}}
                             </td>
                             <td>{{$value->bus_type}}
                             </td>
-                           <td> <a  class="btn btn-primary" href="{{ route('services.show', $value->id) }}"><span class="glyphicon glyphicon-search"></span>View</a>
-                          </td>
-                              @if(Entrust::hasRole('administrator'))
-                            <td>
-                                <a  href="{{ route('services.edit', $value->id) }}" class="btn btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span> Edit</a>
-                            </td>
-                            @endif
-                            
+                             {{ actionEdit('edit',$value->id)}}
                         </tr>
                         @endforeach
-                        </tbody>
-                    </table>
+                    </tbody>
+                </table>
             </div>
             <!-- /.box-body -->
         </div>
@@ -58,16 +45,6 @@
 </div>
 <!-- /.row -->
 
-<script>
-    $(function () {
-        $("#example1").DataTable({
-          "paging": true,
-          "lengthChange": true,
-          "searching": true,
-          "ordering": true,
-          "info": true,
-          "autoWidth": false
-        });
-    });
-</script>  
+@include('partials.servicesheader')
+@include('partials.table_script')  
 @stop

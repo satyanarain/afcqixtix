@@ -9,9 +9,7 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{headingMain()}}</h3>
-             @if(Entrust::hasRole('administrator'))
-                <a href="{{ route('vehicles.create')}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>   @lang('common.titles.add')</button></a>
-           @endif
+            {{ createButton('create','Add') }}
             </div>
             @include('partials.message')
             <!-- /.box-header -->
@@ -22,11 +20,7 @@
                             <th>@lang('Depot Name')</th>
                             <th>@lang('Vehicles Registration Number')</th>
                             <th>@lang('Bus Type')</th>
-                             
-                            <th>@lang('View')</th>
-                            @if(Entrust::hasRole('administrator'))
-                            <th>@lang('user.headers.edit')</th>
-                            @endif
+                             {{  actionHeading('Action', $newaction='') }}
                         </tr>
                     </thead>
                     <tbody>
@@ -37,14 +31,7 @@
                             </td>
                             <td>{{$value->bus_type}}
                             </td>
-                           <td> <a  class="btn btn-primary" href="{{ route('vehicles.show', $value->id) }}"><span class="glyphicon glyphicon-search"></span>View</a>
-                          </td>
-                              @if(Entrust::hasRole('administrator'))
-                            <td>
-                                <a  href="{{ route('vehicles.edit', $value->id) }}" class="btn btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span> Edit</a>
-                            </td>
-                            @endif
-                            
+                          {{ actionEdit('edit',$value->id)}}
                         </tr>
                         @endforeach
                         </tbody>
@@ -57,17 +44,6 @@
     <!-- /.col -->
 </div>
 <!-- /.row -->
-
-<script>
-    $(function () {
-        $("#example1").DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false
-    });
-    });
- </script>  
+@include('partials.vehiclesheader')
+@include('partials.table_script') 
 @stop

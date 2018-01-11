@@ -9,9 +9,7 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{headingMain()}}</h3>
-             @if(Entrust::hasRole('administrator'))
-                <a href="{{ route('duties.create')}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>   @lang('common.titles.add')</button></a>
-           @endif
+            {{ createButton('create','Add') }}
             </div>
           @include('partials.message')
             <!-- /.box-header -->
@@ -23,10 +21,7 @@
                             <th>@lang('Duty Number')</th>
                            <th>@lang('Start Time')</th>
                             <th>@lang('Shift')</th>
-                            <th>@lang('View')</th>
-                            @if(Entrust::hasRole('administrator'))
-                            <th>@lang('user.headers.edit')</th>
-                            @endif
+                           {{  actionHeading('Action', $newaction='') }}
                         </tr>
                     </thead>
                     <tbody>
@@ -37,20 +32,10 @@
                             </td>
                             <td>{{$value->start_time}}
                             </td>
-                            
                             <td>{{$value->shift}}
                             </td>
-                            
-                            
-                           <td> <a  class="btn btn-primary" href="{{ route('duties.show', $value->id) }}"><span class="glyphicon glyphicon-search"></span>View</a>
-                          </td>
-                              @if(Entrust::hasRole('administrator'))
-                            <td>
-                                <a  href="{{ route('duties.edit', $value->id) }}" class="btn btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span> Edit</a>
-                            </td>
-                            @endif
-                            
-                        </tr>
+                            {{ actionEdit('edit',$value->id)}}
+                         </tr>
                         @endforeach
                         </tbody>
                     </table>
@@ -62,17 +47,6 @@
     <!-- /.col -->
 </div>
 <!-- /.row -->
-
-<script>
-    $(function () {
-        $("#example1").DataTable({
-      "paging": true,
-      "lengthChange": true,
-      "searching": true,
-      "ordering": ['id', "desc"],
-      "info": true,
-      "autoWidth": false
-    });
-    });
- </script>  
+@include('partials.dutiesheader')
+@include('partials.table_script')
 @stop

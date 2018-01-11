@@ -2,10 +2,14 @@
 $segments_var = '';
 $segments_var = Request::segments();
 $segments_var[0];
-?>
+
+$testerere= Config::get('app.locales');
+  $testerere[0];
+App::setLocale($testerere[0]);
+ ?>
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}" ng-app="LaravelCRUD">
- <head>
+<html lang="{{ app()->getLocale() }}" ng-app="AFC">
+         <head>
         @if(Session::has('download.in.the.next.request'))
         <meta http-equiv="refresh" content="5;url={{ Session::get('download.in.the.next.request') }}">
         @endif
@@ -62,19 +66,7 @@ $segments_var[0];
     
  </div>
  </div>
-<style>
-    #map {
-    position:absolute;
-    width: 100%;
-    height: 100%;
-    background: #ccc;
-    display: block;
-    z-index: 100000;
-    text-align: center;
-     opacity: 0.5;
-    filter: alpha(opacity=50);
-}
-</style>
+
   
 <div class="wrapper">
    
@@ -385,7 +377,7 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                                     <i class="fa fa-calendar"></i> @lang('menu.shifts.title') 
                             </a>
                             <li @if($segments_var[0]=='stops') class="active" @endif><a href="{{route('stops.index')}}">
-                                    <i class="fa fa-user"></i> @lang('menu.stops.title') 
+                                    <i class="fa fa-bus"></i> @lang('menu.stops.title') 
                             </a>
                             <li @if($segments_var[0]=='routes') class="active" @endif><a href="{{route('routes.index')}}">
                                     <i class="fa fa-map-marker"></i> @lang('menu.routes.title') 
@@ -440,12 +432,12 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                             </span>
                         </a>
                         <ul @if($segments_var[0]=='roles' || $segments_var[0]=='permissions' || $segments_var[0]=='settings') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
-                            <li @if($segments_var[0]=='roles') class="active" @endif><a href="{{route('roles.index')}}">
+<!--                            <li @if($segments_var[0]=='roles') class="active" @endif><a href="{{route('roles.index')}}">
                              <i class="fa fa-tasks" ></i>@lang('menu.settings.roles')</a>
-                            </li>
+                            </li>-->
                             <li @if($segments_var[0]=='permissions') class="active" @endif><a href="{{route('permissions.index')}}"><i class="fa fa-key"></i>@lang('menu.settings.permissions')</a>
                             </li>
-                            <li @if($segments_var[0]=='settings') class="active" @endif><a href="{{route('settings.index')}}"><i class="fa fa-cog"></i>@lang('menu.settings.overall')</a></li>
+<!--                            <li @if($segments_var[0]=='settings') class="active" @endif><a href="{{route('settings.index')}}"><i class="fa fa-cog"></i>@lang('menu.settings.overall')</a></li>-->
                         </ul>
                     </li>
                     @endif

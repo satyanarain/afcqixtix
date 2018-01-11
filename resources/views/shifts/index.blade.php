@@ -9,9 +9,7 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{headingMain()}}</h3>
-             @if(Entrust::hasRole('administrator'))
-                <a href="{{ route('shifts.create')}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>   @lang('common.titles.add')</button></a>
-           @endif
+             {{ createButton('create','Add') }}
             </div>
           @include('partials.message')
             <!-- /.box-header -->
@@ -23,10 +21,7 @@
                             <th>@lang('Abbreviation')</th>
                             <th>@lang('Start Time')</th>
                             <th>@lang('End Time')</th>
-                            <th>@lang('View')</th>
-                            @if(Entrust::hasRole('administrator'))
-                            <th>@lang('user.headers.edit')</th>
-                            @endif
+                           {{  actionHeading('Action', $newaction='') }}
                         </tr>
                     </thead>
                     <tbody>
@@ -38,14 +33,7 @@
                             </td>
                             <td>{{displayView($value->end_time)}}
                             </td>
-                            <td> <a  class="btn btn-primary" href="{{ route('shifts.show', $value->id) }}"><span class="glyphicon glyphicon-search"></span>View</a>
-                          </td>
-                              @if(Entrust::hasRole('administrator'))
-                            <td>
-                                <a  href="{{ route('shifts.edit', $value->id) }}" class="btn btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span> Edit</a>
-                            </td>
-                            @endif
-                            
+                            {{ actionEdit('edit',$value->id)}}
                         </tr>
                         @endforeach
                         </tbody>
@@ -58,17 +46,6 @@
     <!-- /.col -->
 </div>
 <!-- /.row -->
-
-<script>
-    $(function () {
-        $("#example1").DataTable({
-      "paging": true,
-      "lengthChange": true,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false
-    });
-    });
- </script>  
+@include('partials.shiftsheader')
+@include('partials.table_script')  
 @stop

@@ -121,8 +121,11 @@ Route::group(['middleware' => ['auth']], function () {
     
     /* ROLES */
     Route::resource('roles', 'RolesController');
+   
     Route::resource('permissions', 'PermissionsController');
+      Route::post('permissions/savemenuall', 'PermissionsController@saveMenuAll');
     Route::patch('settings/permissionsUpdate', 'SettingsController@permissionsUpdate');
+   
     Route::resource('settings', 'SettingsController');
 //     Route::get('password/reset/{token}', 'Auth\PasswordController@getReset');
     Route::post('changepasswords/update', 'ChangepasswordsController@updatePassword');

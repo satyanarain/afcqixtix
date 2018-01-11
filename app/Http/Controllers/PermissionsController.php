@@ -21,13 +21,11 @@ class PermissionsController extends Controller
         $this->permissions = $permissions;
             //$this->middleware('user.is.admin', ['only' => ['index', 'create', 'destroy']]);
         }
-        
-        
-        
+   
         public function index()
         {
-            $permissions = Permission::all();
-            return view('permissions.index',compact('permissions'));
+           $users = User::all();
+            return view('permissions.index',compact('users'));
         }
         /**
          * Show the form for creating a new resource.
@@ -39,6 +37,34 @@ class PermissionsController extends Controller
             $permissions = Permission::get(); //Get all permissions
             return view('permissions.create',compact('permissions'));
         }
+        public function saveMenuAll(Request $request)
+        {
+        $userid=$request->user_id;   
+        $checkid=Permission::where('user_id',$userid)->first() ;
+        $checkid->user_id;
+        $checkid->id;
+         
+        if($checkid->id!='')  
+        {
+        $permission = Permission::find($checkid->id);
+        $depots = implode(',',$request->depots);
+        $permission->depots=$depots;
+        $bus_types = implode(',',$request->bus_types);
+        $permission->bus_types=$bus_types;
+        $permission->save();
+        echo "Menu Updated Successfully!";
+        exit();
+        } else {
+         $input = $request->all();
+        $depots = implode(',',$request->depots);
+        $input['depots']=$depots;
+        $bus_types = implode(',',$request->bus_types);
+        $input['bus_types']=$bus_types;
+        Permission::create($input);
+        echo "Menu Created Successfully!";
+        exit();
+         }
+        }
         /**
          * Store a newly created resource in storage.
          *
@@ -47,20 +73,7 @@ class PermissionsController extends Controller
          */
         public function store(StorePermissionRequest $request)
         {
-            
-            $this->permissions->create($request);
-//            $this->validate($request, [
-//                'name'=>'required|max:40',
-//            ]);
-//            $permission = new Permission();
-//            $permission->name = $request->name;
-//            $permission->save();
-//            if ($request->permissions <> '') { 
-//                foreach ($request->permissions as $key=>$value) {
-//                    $role = Permission::find($value); 
-//                    $role->permissions()->attach($permission);
-//                }
-//            }
+             $this->permissions->create($request);
             return redirect()->route('permissions.index')->with('success','Permission added successfully');
         }
        

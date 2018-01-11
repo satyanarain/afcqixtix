@@ -26,11 +26,11 @@ class StoreUserRequest extends Request
     {
         
             return [
-//                 'name' => 'required',
-//                 'user_name' => 'required|user_name|unique:users,user_name',
-//                 'email' => 'required',
-//                 'country' => 'required',
-//                 'mobile' => 'required'
+                 'name' => 'required',
+                // 'user_name' => 'required|user_name|unique:users,user_name',
+                 'email' => 'required',
+                 'country' => 'required',
+                 'mobile' => 'required'
              ];
         
     }

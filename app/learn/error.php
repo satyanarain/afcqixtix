@@ -3,3 +3,4 @@
 folder
 
 return $this->hasOne('App\Phone', 'foreign_key', 'local_key');
+

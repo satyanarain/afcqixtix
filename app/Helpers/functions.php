@@ -45,12 +45,13 @@ function changeDateFromYMDToDMY($dateToConvert = "") {
 function BreadCrumb() {
     $segments = '';
     $segments = Request::segments();
+    $segments_value = str_replace("_", " ", $segments[0]);
     ?>
     <ol class="breadcrumb">
         <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
     <?php
     if ($segments[0] != '') {
-        $segments_value = str_replace("_", " ", $segments[0]);
+        
         ?>
             <li><a href="<?php echo route($segments[0] . '.index') ?>"><?php echo ucwords($segments_value); ?></a></li>
         <?php } ?>
@@ -60,9 +61,9 @@ function BreadCrumb() {
                 ?>
                 <?php if ($segments[2] == 'edit') {
                     ?>
-                    <li class="active"><?php echo substr(ucwords($segments[0]), 0, -1) ?> Update</li>
+                    <li class="active"><?php echo substr(ucwords($segments_value), 0, -1) ?> Update</li>
                 <?php } else { ?>
-                    <li class="active"><?php echo substr(ucwords($segments[0]), 0, -1) ?> Profile</li>
+                    <li class="active"><?php echo substr(ucwords($segments_value), 0, -1) ?> Profile</li>
                 <?php } ?>   
             <?php
             } else {
@@ -81,12 +82,7 @@ function BreadCrumb() {
             $segments = '';
             $segments = Request::segments();
             $segments_value = str_replace("_", " ", $segments[0]);
-             
-            
-            
-            // $segments_value1=  str_replace('ies','y', $segments_value) ; 
-         
-             echo substr(ucwords($segments_value), 0, -1);
+            echo substr(ucwords($segments_value), 0, -1);
             
             ?> Management
     <?php
@@ -97,12 +93,14 @@ function headingMain() {
     $segments = Request::segments();
     if (count($segments) >= 2) {
         if (is_numeric($segments[1])) {
-
-            echo substr(ucwords($segments[0]), 0, -1) . " Update";
+            $segments_value = str_replace("_", " ", $segments[0]);
+        echo substr(ucwords($segments_value), 0, -1) . " Update";
         } else {
-            echo ucwords($segments[1]) . " " . substr(ucwords($segments[0]), 0, -1);
+            $segments_value = str_replace("_", " ", $segments[0]);
+            echo ucwords($segments[1]) . " " . substr(ucwords($segments_value), 0, -1);
         }
     } else {
+        
         $segments_value = str_replace("_", " ", $segments[0]);
         echo "All " . ucwords($segments_value);
     }
@@ -130,3 +128,33 @@ function dispalyImage($imagepath = '', $imagename, $class = '', $alt = '', $styl
         <?php
     }
 }
+
+function actionEdit($action = '', $id='') {
+            $segments = '';
+            $segments = Request::segments();
+            ?>
+                               <td>
+                                    <a  href="<?php echo route($segments[0].".".$action, $id) ?>" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button  class="btn btn-small btn-primary"  data-toggle="modal" data-target="#<?php echo $id ?>"><span class="glyphicon glyphicon-search"></span>&nbsp;View</button>
+                               </td>
+
+    <?php
+}
+
+
+function actionHeading($action = '', $newaction='') {
+            ?>
+                               <th><?php echo htmlentities("Action"); ?></th>
+
+    <?php
+}
+function createButton($action = '', $title='') {
+            $segments = '';
+            $segments = Request::segments();
+           ?>
+                <a href="<?php  echo route($segments[0].".".$action) ?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;<?php echo $title ?></button></a>
+    <?php      
+}
+
+
+ 

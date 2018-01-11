@@ -14,8 +14,7 @@
 
 <div class="form-group">
       {!! Form::label('default_service', Lang::get('Default Service'), ['class' => 'control-label required']) !!}
-      {!! Form::select('default_service',  ['Service1' => "Service1", 'Service2' => 'Service2'],isset($depot->default_service) ? $depot->default_service : selected,
+      {!! Form::select('default_service',  ['A-G-Holidays' => "A-G-Holidays", 'Apple-Travels' => 'Apple-Travels'],isset($depot->default_service) ? $depot->default_service : selected,
     ['class' => 'form-control', 'placeholder'=>'Select Default Service','required' => 'required']) !!}
 </div> 
-
- {!! Form::submit(Lang::get('common.titles.save'), ['class' => 'btn btn-success']) !!}
+{!! Form::submit(Lang::get('common.titles.save'), ['class' => 'btn btn-success']) !!}

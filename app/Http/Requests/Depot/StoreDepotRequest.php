@@ -14,7 +14,7 @@ class StoreDepotRequest extends Request
     public function authorize()
     {
         return true;
-        //return auth()->user()->can('user-create');
+       //return auth()->user()->can('user-create');
     }
 
     /**
@@ -26,7 +26,9 @@ class StoreDepotRequest extends Request
     {
         
             return [
-                  'name' => 'required',
+                 //'name'=>'required',
+                  'name' => 'required|unique:depots,name',
+                  // 'name' => 'required|name|unique:depots',
                    'short_name' => 'required',
                    'depot_location' => 'required',
                    'default_service' => 'required'
@@ -34,3 +36,31 @@ class StoreDepotRequest extends Request
         
     }
 }
+//namespace App\Http\Requests;
+//
+//use Illuminate\Foundation\Http\FormRequest;
+//
+//class test extends FormRequest
+//{
+//    /**
+//     * Determine if the user is authorized to make this request.
+//     *
+//     * @return bool
+//     */
+//    public function authorize()
+//    {
+//        return false;
+//    }
+//
+//    /**
+//     * Get the validation rules that apply to the request.
+//     *
+//     * @return array
+//     */
+//    public function rules()
+//    {
+//        return [
+//            //
+//        ];
+//    }
+//}

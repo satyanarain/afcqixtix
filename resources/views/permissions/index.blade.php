@@ -18,32 +18,21 @@
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th>@lang('permission.headers.name')</th>
-                            <th>@lang('permission.headers.description')</th>
-                            <th>@lang('permission.headers.action')</th>
+                            <th>Name</th>
+                            <th>User Name</th>
+                           <th>Menu</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($permissions as $permission)
-                        <tr>
-                            <td>{{$permission->display_name}}</td>
-                            <td>{{Str_limit($permission->description, 50)}}</td>
-
-                            <td>   {!! Form::open([
-                                'method' => 'DELETE',
-                                'route' => ['permissions.destroy', $permission->id]
-                                ]); !!}
-                                @if($permission->id !== 1)
-                                {!! Form::submit(Lang::get('permission.headers.delete'), ['class' => 'btn btn-danger', 'onclick' => 'return confirm("Are you sure?")']); !!}
-                                @endif
-                                {!! Form::close(); !!}
-                            </td>
-                        </tr>
-                        @endforeach
-
-                    </tbody>
-
-                </table>
+                        @foreach($users as $value)
+                          <tr>
+                            <td>{{$value->name}}</td>
+                            <td>{{$value->user_name}}</td>
+                            <td> <button  class="btn btn-small btn-primary"  data-toggle="modal" data-target="#<?php echo $value->id ?>"><span class="glyphicon glyphicon-search"></span>&nbsp;Menu</button></td>
+                         </tr>
+                          @endforeach
+                      </tbody>
+                    </table>
             </div>
             <!-- /.box-body -->
         </div>
@@ -53,10 +42,6 @@
 </div>
 <!-- /.row -->
 
-<script>
-    $(function () {
-        $("#example1").DataTable();
-
-    });
-</script>  
+@include('partials.menuheader')
+@include('partials.table_script') 
 @stop

@@ -1,126 +1,66 @@
-<section class="content">
-
-      <div class="row">
-        <div class="col-md-3">
-
-          <!-- Profile Image -->
-          <div class="box box-primary" style="min-width:10%;">
-            <div class="box-body box-profile" style="padding:8px 0 1px 1px;">
-            @include('partials.include')
-              <input type="hidden" id="user_id" value="{{ $routes->id }}">
-              <h3 class="profile-username text-center cursor-pointer" id="user_name">
-                  <span id="user-name-span">{{ $routes->route }}</span> 
-<!--                  <span id="edit-user-name" class="glyphicon glyphicon-pencil"></span>-->
-              </h3>
-
-
-              <p class="text-muted text-center"></p>
-              <table width=90% class="table table-responsive">
-                <tr>
-                    <td><b>Path</b></td>
-                    <td>{{ $routes->path }}</td>
-                  </tr>
+@foreach($routes as $value)
+<div class="modal fade" id="{{$value->id}}" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header-view">
+                <button type="button" class="close" data-dismiss="modal"><font class="white">&times;</font></button>
+               <h4 class="viewdetails_details"><span class="fa fa-bus"></span>&nbsp;Depot Details</h4>
+            </div>
+            <div class="modal-body-view">
+                <table class="table table-responsive.view">
                     <tr>
-                    <td><b>Direction</b></td>
-                    <td style="text-align:left;padding-left:15%;padding-top:3%; ">
-                        @if($routes->direction==1)
+                        <td><b>Path</b></td>
+                        <td class="table_normal">{{ $value->path }}</span></td>
+                    </tr>
+                    <tr>
+                        <td><b>Direction</b></td>
+                        <td class="table_normal">    @if($value->direction==1)
                         {{ "Up" }}
                         @else
                         {{ "Down" }}
-                        @endif
-                    </td>
-                  </tr>
-                   <tr>
-                    <td><b>Default Path</b></td>
-                    <td style="text-align:left;padding-left:15%;padding-top:3%; "><span></span>{{ $routes->default_path }}</span></td>
-                   </tr>
-                  <tr>
-                    <td><b>Stage Number</b></td>
-                    <td style="text-align:left;padding-left:15%;padding-top:3%; "><span></span>{{ $routes->stage_number }}</span></td>
-                   </tr>
-                   <tr>
-                    <td><b>Distance</b></td>
-                    <td style="text-align:left;padding-left:15%;padding-top:3%; "><span></span>{{ $routes->distance }}</span></td>
-                   </tr>
-                   <tr>
-                    <td><b>Hot Key</b></td>
-                    <td style="text-align:left;padding-left:15%;padding-top:3%; "><span></span>{{ $routes->hot_key }}</span></td>
-                   </tr>
-                   <tr>
-                    <td><b>Is this via stop of the path? </b></td>
-                    <td style="text-align:left;padding-left:15%;padding-top:3%; "><span></span> 
-                         @if($routes->is_this_by==1)
+                        @endif</span></td>
+                    </tr>
+                    <tr>
+                        <td><b>Default Path</b></td>
+                        <td class="table_normal">{{ $value->default_path }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Stage Number</b></td>
+                        <td class="table_normal">{{ $value->stage_number }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Stage Number</b></td>
+                        <td class="table_normal">{{ $value->stage_number }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Distance</b></td>
+                        <td class="table_normal">{{ $value->distance }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Hot key</b></td>
+                        <td class="table_normal">{{ $value->hot_key }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Is this via stop of the path?</b></td>
+                        <td class="table_normal">
+                         @if($value->is_this_by==1)
                         {{ "Yes" }}
                         @else
                         {{ "No" }}
                         @endif
                         
-                       </span></td>
-                   </tr>
-                  </table>
-           
-                
-              </ul>
+                        </td>
+                    </tr>
+                </table>  
 
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
             </div>
-            <!-- /.box-body -->
-
-          </div>
-          <!-- /.box -->
-
         </div>
-        <!-- /.col -->
-        <div class="col-md-9">
-          <div class="nav-tabs-custom">
-            <ul class="nav nav-tabs">
-            
-            @if($routes->user_type == 1 || $routes->user_type == 4 || $routes->user_type == 9)
-              	<li class="active"><a href="#travel_detail" data-toggle="tab">Travel Profile</a></li>
-              	<li><a href="#bank_detail" data-toggle="tab">Bank Details</a></li>
-            @endif
-            {{--@if(Entrust::hasRole('administrator'))
-            	<li class="active"><a href="#travel_detail" data-toggle="tab">Travel Profile</a></li>
-              	<li><a href="#bank_detail" data-toggle="tab">Bank Details</a></li>
-            @endif
-            @if(Entrust::hasRole('associate_user'))
-              	<!-- <li class="active"><a href="#travel_detail" data-toggle="tab">Travel Profile</a></li> -->
-              	<!-- <li><a href="#bank_detail" data-toggle="tab">Bank Details</a></li> -->
-            @endif
-            @if(Entrust::hasRole('client_user'))
-              	<!-- <li class="active"><a href="#travel_detail" data-toggle="tab">Travel Profile</a></li>
-              	<li><a href="#bank_detail" data-toggle="tab">Bank Details</a></li> -->
-            @endif
-            
-            @if(Entrust::hasRole('kipg_general_user'))
-              	<li class="active"><a href="#travel_detail" data-toggle="tab">Travel Profile</a></li>
-              	<li><a href="#bank_detail" data-toggle="tab">Bank Details</a></li>
-            @endif--}}
-            
-            </ul>
-            <div class="tab-content">
-	        	@if($routes->user_type == 1 || $routes->user_type == 4 || $routes->user_type == 9)
-		        	   <div class="active tab-pane" id="travel_detail">
-	                  	@include('users.travel')    
-	              	</div>
-	              	<div class="tab-pane" id="bank_detail">
-	                  	@include('users.bank_detail')
-	                </div>
-            @endif
-            {{--@if(Entrust::hasRole('kipg_general_user'))
-              	<div class="active tab-pane" id="travel_detail">
-                  	@include('users.travel')    
-              	</div>
-              	<div class="tab-pane" id="bank_detail">
-                		@include('users.bank_detail')
-              	</div>
-            @endif--}}
-            </div>
-            <!-- /.tab-content -->
-          </div>
-          <!-- /.nav-tabs-custom -->
-        </div>
-        <!-- /.col -->
-      </div>
-      <!-- /.row -->
 
-    </section>
+    </div>
+</div>
+@endforeach
+
