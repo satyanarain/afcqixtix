@@ -156,5 +156,13 @@ function createButton($action = '', $title='') {
     <?php      
 }
 
-
- 
+function pagePermissionView($result)
+{
+    $segments = '';
+    $segments = Request::segments();
+ $userid_menu=Auth::id();
+$menu_dis=$segments[0];
+$sql = App\Models\Permission::where('user_id','=',$userid_menu)->first();  
+return $result= $sql[$menu_dis];
+    
+}

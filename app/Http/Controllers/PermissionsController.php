@@ -10,106 +10,108 @@ use App\Http\Requests\Permission\StorePermissionRequest;
 use App\Repositories\Permission\PermissionRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-
+use DB;
 class PermissionsController extends Controller
 {
-    protected  $permissions;
 
+    protected $permissions;
 
-    public function __construct(PermissionRepositoryContract $permissions)
-        {
+    public function __construct(PermissionRepositoryContract $permissions) {
         $this->permissions = $permissions;
-            //$this->middleware('user.is.admin', ['only' => ['index', 'create', 'destroy']]);
-        }
-   
-        public function index()
-        {
-           $users = User::all();
-            return view('permissions.index',compact('users'));
-        }
-        /**
-         * Show the form for creating a new resource.
-         *
-         * @return \Illuminate\Http\Response
-         */
-        public function create()
-        {
-            $permissions = Permission::get(); //Get all permissions
-            return view('permissions.create',compact('permissions'));
-        }
-        public function saveMenuAll(Request $request)
-        {
-        $userid=$request->user_id;   
-        $checkid=Permission::where('user_id',$userid)->first() ;
+        //$this->middleware('user.is.admin', ['only' => ['index', 'create', 'destroy']]);
+    }
+
+    public function index() {
+//        $users = Permission::all()
+//        ->leftjoin('user','permissions.user_id','user.id')->get();
+//        
+          $users = DB::table('users')->select('*')
+                ->leftjoin('permissions','permissions.user_id','users.id')
+               ->get();
+        
+        
+        return view('permissions.index', compact('users'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create() {
+        $permissions = Permission::get(); //Get all permissions
+        return view('permissions.create', compact('permissions'));
+    }
+
+    public function saveMenuAll(Request $request) {
+        $userid = $request->user_id;
+        $checkid = Permission::where('user_id', $userid)->first();
         $checkid->user_id;
         $checkid->id;
-         
-        if($checkid->id!='')  
-        {
-        $permission = Permission::find($checkid->id);
-        $depots = implode(',',$request->depots);
-        $permission->depots=$depots;
-        $bus_types = implode(',',$request->bus_types);
-        $permission->bus_types=$bus_types;
-        $permission->save();
-        echo "Menu Updated Successfully!";
-        exit();
-        } else {
-         $input = $request->all();
-        $depots = implode(',',$request->depots);
-        $input['depots']=$depots;
-        $bus_types = implode(',',$request->bus_types);
-        $input['bus_types']=$bus_types;
-        Permission::create($input);
-        echo "Menu Created Successfully!";
-        exit();
-         }
-        }
-        /**
-         * Store a newly created resource in storage.
-         *
-         * @param  \Illuminate\Http\Request  $request
-         * @return \Illuminate\Http\Response
-         */
-        public function store(StorePermissionRequest $request)
-        {
-             $this->permissions->create($request);
-            return redirect()->route('permissions.index')->with('success','Permission added successfully');
-        }
-       
-        public function edit(Permission $permission)
-        {
-            return view('permissions.edit', compact('permission'));
-        }
-        /**
-         * Update the specified resource in storage.
-         *
-         * @param  \Illuminate\Http\Request  $request
-         * @param  \App\Permission  $permission
-         * @return \Illuminate\Http\Response
-         */
-        public function update(Request $request, Permission $permission)
-        {
-            $this->validate($request, [
-                'name'=>'required',
-            ]);
-            $permission->name=$request->name;
+
+        if ($checkid->id != '') {
+            $permission = Permission::find($checkid->id);
+            $depots = implode(',', $request->depots);
+            $permission->depots = $depots;
+            $bus_types = implode(',', $request->bus_types);
+            $permission->bus_types = $bus_types;
             $permission->save();
-            return redirect()->route('permissions.index')
-                ->with('success',
-                 'Permission'. $permission->name.' updated!');
-        }
-        /**
-         * Remove the specified resource from storage.
-         *
-         * @param  \App\Permission  $permission
-         * @return \Illuminate\Http\Response
-         */
-        public function destroy(Permission $permission)
-        {
-            $permission->delete();
-            return redirect()->route('permissions.index')
-                ->with('success',
-                 'Permission deleted successfully!');
+            echo "Menu Updated Successfully!";
+            exit();
+        } else {
+            $input = $request->all();
+            $depots = implode(',', $request->depots);
+            $input['depots'] = $depots;
+            $bus_types = implode(',', $request->bus_types);
+            $input['bus_types'] = $bus_types;
+            Permission::create($input);
+            echo "Menu Created Successfully!";
+            exit();
         }
     }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(StorePermissionRequest $request) {
+        $this->permissions->create($request);
+        return redirect()->route('permissions.index')->with('success', 'Permission added successfully');
+    }
+
+    public function edit(Permission $permission) {
+        return view('permissions.edit', compact('permission'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Permission  $permission
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Permission $permission) {
+        $this->validate($request, [
+            'name' => 'required',
+        ]);
+        $permission->name = $request->name;
+        $permission->save();
+        return redirect()->route('permissions.index')
+                        ->with('success', 'Permission' . $permission->name . ' updated!');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Permission  $permission
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Permission $permission) {
+        $permission->delete();
+        return redirect()->route('permissions.index')
+                        ->with('success', 'Permission deleted successfully!');
+    }
+
+}

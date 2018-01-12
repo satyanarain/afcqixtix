@@ -240,3 +240,7 @@ padding:30px 30px 30px 30px;
      opacity: 0.5;
     filter: alpha(opacity=50);
 }
+.table_normal_100{
+ width:100%;
+ font-weight:normal;   
+}
