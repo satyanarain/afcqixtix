@@ -11,7 +11,7 @@
         <div class="box">
             <div class="box-header">
             <h3 class="box-title">{{headingMain()}}</h3>
-                <a href="{{ route('permissions.create')}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>   @lang('common.titles.add')</button></a>
+<!--                <a href="{{ route('permissions.create')}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>   @lang('common.titles.add')</button></a>-->
             </div>
             <!-- /.box-header -->
             <div class="box-body">

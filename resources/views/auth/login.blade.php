@@ -1,5 +1,3 @@
-
-
 <style>
     .formBac {
     background-image: url(http://localhost:8000/images/form-bac.jpg);
@@ -4573,7 +4571,7 @@ border-radius: 4px;
 
 
 </style>
-@extends('layouts.app1')
+
 <!DOCTYPE html>
 <!--[if lt IE 7 ]> <html lang="en" class="no-js ie6 lt8"> <![endif]-->
 <!--[if IE 7 ]>    <html lang="en" class="no-js ie7 lt8"> <![endif]-->
@@ -4615,7 +4613,7 @@ border-radius: 4px;
                               @endif
                                  <p> 
                                     <label for="username" class="uname" style="float:left"> E-Mail Address</label>
-                                    <input id="username" name="email" class="form-control" required="required" type="text" placeholder="Email" style="height:46"/>
+                                    <input id="username" name="user_name" class="form-control" required="required" type="text" placeholder="Email" style="height:46"/>
                                 </p>
                                 <p> 
                                     <label for="password" class="youpasswd" style="float:left"> Password</label>

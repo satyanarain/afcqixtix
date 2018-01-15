@@ -1,6 +1,5 @@
 <?php
 namespace App\Http\Controllers;
-
 use App\Models\User;
 use App\Models\Permission;
 use Illuminate\Http\Request;
@@ -22,15 +21,11 @@ class PermissionsController extends Controller
     }
 
     public function index() {
-//        $users = Permission::all()
-//        ->leftjoin('user','permissions.user_id','user.id')->get();
-//        
-          $users = DB::table('users')->select('*')
+         $users = DB::table('users')->select('*','users.id as id')
                 ->leftjoin('permissions','permissions.user_id','users.id')
+                ->orderBy('users.id','desc')
                ->get();
-        
-        
-        return view('permissions.index', compact('users'));
+          return view('permissions.index', compact('users'));
     }
 
     /**
@@ -48,22 +43,23 @@ class PermissionsController extends Controller
         $checkid = Permission::where('user_id', $userid)->first();
         $checkid->user_id;
         $checkid->id;
-
         if ($checkid->id != '') {
             $permission = Permission::find($checkid->id);
-            $depots = implode(',', $request->depots);
-            $permission->depots = $depots;
-            $bus_types = implode(',', $request->bus_types);
-            $permission->bus_types = $bus_types;
+            $permission->users = implode(',', $request->users);
+            $permission->permissions = implode(',', $request->permissions);
+            $permission->depots = implode(',', $request->depots);;
+            $permission->bus_types = implode(',', $request->bus_types);
             $permission->save();
             echo "Menu Updated Successfully!";
             exit();
         } else {
             $input = $request->all();
-            $depots = implode(',', $request->depots);
-            $input['depots'] = $depots;
-            $bus_types = implode(',', $request->bus_types);
-            $input['bus_types'] = $bus_types;
+            $input['users'] = implode(',', $request->users);
+            $input['permissions'] = implode(',', $request->permissions);
+            $input['depots'] = implode(',', $request->depots);;
+            $input['bus_types'] = implode(',', $request->bus_types);
+            
+            
             Permission::create($input);
             echo "Menu Created Successfully!";
             exit();
@@ -110,8 +106,7 @@ class PermissionsController extends Controller
      */
     public function destroy(Permission $permission) {
         $permission->delete();
-        return redirect()->route('permissions.index')
-                        ->with('success', 'Permission deleted successfully!');
+        return redirect()->route('permissions.index')->with('success', 'Permission deleted successfully!');
     }
 
 }

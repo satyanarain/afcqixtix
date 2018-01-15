@@ -3,31 +3,13 @@ $segments_var = '';
 $segments_var = Request::segments();
 $segments_var[0];
 $segments_var[1];
-
 $testerere= Config::get('app.locales');
-  $testerere[0];
+$testerere[0];
 App::setLocale($testerere[0]);
-
-
 $dem_menu= pagePermissionView($result);
 $array_menu= explode(',', $dem_menu);
-
-//print_r($array_menu);
-
-//print_r($segments_var);
-
 $result = array_intersect($segments_var, $array_menu);
- count($result);
-
-/*
- if(count(array_intersect($segments_var, $array_menu))==count($segments_var))
-{  
-    echo "blade" ;
-     
-} else {
- echo "error" ;
-}
-*/
+count($result);
 
  ?>
 @if($segments_var!='' && $segments_var[1]!='')

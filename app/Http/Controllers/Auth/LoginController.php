@@ -45,10 +45,9 @@ class LoginController extends Controller
     
     public function login(Request $request)
     {
-        $this->validate($request, ['email' => 'required|email', 'password' => 'required']);
-        Auth::attempt(['email' => $request['email'], 'password' => $request['password']]);
-   
-        if(!Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
+        $this->validate($request, ['user_name' => 'required', 'password' => 'required']);
+        Auth::attempt(['user_name' => $request['user_name'], 'password' => $request['password']]);
+        if(!Auth::attempt(['user_name' => $request['user_name'], 'password' => $request['password']])) {
             return redirect()->back()->with('fail', 'Either username or password is incorrect!');
         }else
         { 

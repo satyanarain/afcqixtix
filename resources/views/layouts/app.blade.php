@@ -320,6 +320,9 @@
                             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                         </a>
                     </li>
+                    
+                    @php $pem=menuDisplayByUser($result, 'users','view'); @endphp
+                    @if($pem=='true')
                   <li @if($segments_var[0]=='users') class="treeview active" @else class="treeview" @endif>
                         <a href="#">
                             <i class="fa fa-user"></i> <span>Profiles</span>
@@ -336,6 +339,8 @@
                                 </a></li>   
                          </ul>
                     </li>
+                    @endif
+                    
                   <li @if($segments_var[0]=='depots') class="treeview active" @else class="treeview" @endif>
                         <a href="#">
                             <i class="fa fa-bus"></i> <span>Masters</span>
@@ -414,7 +419,8 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                              
                          </ul>
                     </li>
-                      @if(Entrust::hasRole('administrator'))
+               @php $pem=menuDisplayByUser($result, 'permissions','view'); @endphp
+                    @if($pem=='true')
                      <li  @if($segments_var[0]=='roles' || $segments_var[0]=='permissions' || $segments_var[0]=='settings') class="treeview active" @else class="treeview" @endif>
                         <a href="#">
                             <i class="fa fa-cog" aria-hidden="true"></i> <span>@lang('menu.settings.title')</span>
@@ -423,15 +429,12 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                             </span>
                         </a>
                         <ul @if($segments_var[0]=='roles' || $segments_var[0]=='permissions' || $segments_var[0]=='settings') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
-<!--                            <li @if($segments_var[0]=='roles') class="active" @endif><a href="{{route('roles.index')}}">
-                             <i class="fa fa-tasks" ></i>@lang('menu.settings.roles')</a>
-                            </li>-->
-                            <li @if($segments_var[0]=='permissions') class="active" @endif><a href="{{route('permissions.index')}}"><i class="fa fa-key"></i>@lang('menu.settings.permissions')</a>
+                         <li @if($segments_var[0]=='permissions') class="active" @endif><a href="{{route('permissions.index')}}"><i class="fa fa-key"></i>@lang('menu.settings.permissions')</a>
                             </li>
-<!--                            <li @if($segments_var[0]=='settings') class="active" @endif><a href="{{route('settings.index')}}"><i class="fa fa-cog"></i>@lang('menu.settings.overall')</a></li>-->
-                        </ul>
+                         </ul>
                     </li>
                     @endif
+                   
                     </ul>
             </section>
             <!-- /.sidebar -->
