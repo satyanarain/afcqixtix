@@ -12,13 +12,11 @@ use Illuminate\Support\Facades\Session;
 use DB;
 class PermissionsController extends Controller
 {
-
-    protected $permissions;
-
-    public function __construct(PermissionRepositoryContract $permissions) {
+ protected $permissions;
+ public function __construct(PermissionRepositoryContract $permissions) {
         $this->permissions = $permissions;
         //$this->middleware('user.is.admin', ['only' => ['index', 'create', 'destroy']]);
-    }
+}
 
     public function index() {
          $users = DB::table('users')->select('*','users.id as id')

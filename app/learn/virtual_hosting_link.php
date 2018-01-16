@@ -1,9 +1,5 @@
 //************* warning Add var/www/html/afc/public***************************************************/
 //*************Add var/www/html/afc/public***************************************************/
-
-
-
-
 https://glyphsearch.com/?query=BUS
  {!!Form::label('registration_term', 'Registration Term')!!}
  {!!Form::select("registration_term", ['7' => "7 Years", '10' => '10 Years', '14' => '14 Years', '15' => '15 Years'], isset($trademark->registration_term) ? $trademark->registration_term : 'null', ['class' => "form-control",onChange=>'reNewwalYear(this.value)','placeholder'=>'Select Registration Term'])!!}

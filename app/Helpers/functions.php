@@ -1,11 +1,11 @@
 <?php
 error_reporting(0);
+use App\Models\Permission;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 function displayIdBaseName($table = '', $id = '', $fieldname = '') {
     echo $sql = DB::table($table)->where('id', '=', $id)->first();
     if ($sql->$fieldname != '') {
@@ -148,23 +148,6 @@ function actionHeading($action = '', $newaction='') {
 
     <?php
 }
-function createButton($action = '', $title='') {
-            $segments = '';
-            $segments = Request::segments();
-           ?>
-                <a href="<?php  echo route($segments[0].".".$action) ?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;<?php echo $title ?></button></a>
-    <?php      
-}
-
-function pagePermissionView($result)
-{
-    $segments = '';
-    $segments = Request::segments();
-    $userid_menu = Auth::id();
-    $menu_dis = $segments[0];
-    $sql = App\Models\Permission::where('user_id', '=', $userid_menu)->first();
-    return $result = $sql[$menu_dis];
-}
 
 function menuDisplayByUser($result,$menuname='',$action='') {
  $userid_menu = Auth::id();
@@ -179,3 +162,70 @@ function menuDisplayByUser($result,$menuname='',$action='') {
         return $result = "false";
     }
 }
+
+function createButton($action = '', $title='') {
+   $segments = '';
+   $segments = Request::segments();
+   $menu_dis = $segments[0];
+   $userid_menu = Auth::id();
+   $sql = Permission::where('user_id', '=', $userid_menu)->first();
+   $dem_menu=$result = $sql[$menu_dis];  
+   $array_menu= explode(',', $dem_menu);
+   if(count(array_intersect($segments, $array_menu))==count($segments))
+    {
+  ?>
+   <a href="<?php  echo route($segments[0].".".$action) ?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;<?php echo $title ?></button></a>
+    <?php  
+}    
+}
+
+function pagePermissionView($result)
+{
+    $segments = '';
+    $segments = Request::segments();
+    $userid_menu = Auth::id();
+    $menu_dis = $segments[0];
+    $sql = Permission::where('user_id', '=', $userid_menu)->first();
+    return $result = $sql[$menu_dis];
+}
+
+function menuCreate($controllerName,$create='',$edit='',$view='',$value='')
+{ ?>
+    
+    <tr>
+                            <td><b>
+                                    <input type="checkbox" name="<?php echo $controllerName."[]"; ?>" value="<?php echo $controllerName."[]" ?>" <?php if(in_array($controllerName,explode(',',$value->$controllerName))) { ?> checked <?php } ?> onchange="showMenu(this.id)" id=<?php $controllerName.$value->id; ?>>
+                                           &nbsp;&nbsp;User</b></td>
+                            <td align="left" valign="top"><span id="<?php "show".$controllerName.$value->id; ?>" 
+                                                                <?php 
+                                                                if(in_array($controllerName,explode(',',$value->$controllerName)))
+                                                                { ?>
+                                                                
+                                                                <?php }else{ ?>
+                                                                class="display_none"
+                                                                <?php }  ?>
+                                                               
+                                                                <table class="table_normal_100">
+                                        <tr>
+                                            <?php if($create!='')
+                                            { ?>
+                                            <td><input type="checkbox" name="<?php echo $controllerName."[]" ?>" value="<?php echo $create; ?>" <?php if(in_array('create',explode(',',$value->$controllerName))) { ?>checked <?php } ?>>&nbsp;&nbsp;Add</td>
+                                            <?php } ?>
+                                             <?php if($edit!='')
+                                            { ?>
+                                            <td><input type="checkbox" name="<?php echo $controllerName."[]" ?>" value="<?php echo $edit; ?>" <?php if(in_array('edit',explode(',',$value->$controllerName))) { ?>checked <?php } ?>>&nbsp;&nbsp;Edit</td>
+                                            <?php } ?>
+                                             <?php if($view!='')
+                                            { ?>
+                                            
+                                            <td><input type="checkbox" name="<?php echo $controllerName."[]" ?>" value="<?php echo $view; ?>" <?php if(in_array('view',explode(',',$value->$controllerName))) { ?>checked <?php } ?>>&nbsp;&nbsp;View</td>
+                                          <?php } ?>
+                                        </tr>   
+                                    </table>  
+                                </span>
+                            </td>
+                        </tr>  
+    
+    <?php
+}
+?>

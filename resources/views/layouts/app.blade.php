@@ -6,7 +6,7 @@
         @endif
         <meta charset="UTF-8">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-         <title>AFC</title>
+         <title>Qixtix|AFC</title>
         <link rel="icon" type="image/png" sizes="16x16" href="{{url('images/favicon-16x16.png')}}">
         <script src="{{ asset(elixir('js/jquery-2.2.3.min.js')) }}"></script>
         <link rel="stylesheet" href="{{ asset(elixir('css/bootstrap.min.css')) }}">
