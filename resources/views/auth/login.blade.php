@@ -4612,7 +4612,7 @@ border-radius: 4px;
                               <div class="alert alert-danger">{{Session::get('fail')}}</div>
                               @endif
                                  <p> 
-                                    <label for="username" class="uname" style="float:left"> E-Mail Address</label>
+                                    <label for="username" class="uname" style="float:left">User Name</label>
                                     <input id="username" name="user_name" class="form-control" required="required" type="text" placeholder="Email" style="height:46"/>
                                 </p>
                                 <p> 

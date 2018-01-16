@@ -66,7 +66,7 @@
             <!-- Logo -->
             <a href="index2.html" class="logo">
              
-                <span class="logo-lg"><b>AFC</span>
+                <span class="logo-lg"><b>QixTix(AFC)</span>
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top">
