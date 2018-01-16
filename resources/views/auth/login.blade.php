@@ -4613,7 +4613,7 @@ border-radius: 4px;
                               @endif
                                  <p> 
                                     <label for="username" class="uname" style="float:left">User Name</label>
-                                    <input id="username" name="user_name" class="form-control" required="required" type="text" placeholder="Email" style="height:46"/>
+                                    <input id="username" name="user_name" class="form-control" required="required" type="text" placeholder="User Name" style="height:46"/>
                                 </p>
                                 <p> 
                                     <label for="password" class="youpasswd" style="float:left"> Password</label>
