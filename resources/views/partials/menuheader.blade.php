@@ -1,6 +1,7 @@
 @foreach($users as $value)
 <div class="modal fade" id="{{$value->id}}" role="dialog">
 
+    
     <div class="modal-dialog">
         <!-- Modal content-->
         <div class="modal-content">
@@ -16,95 +17,21 @@
 
                 <form autocomplete="off">
                     <table class="table table-responsive.view">
-                        <tr>
+                        <tr><?php  //print_r($value); ?>
                             <td>Menu</td>
                             <td>Action</td>
                         </tr>
-                        <tr>
-                            <td><b>
-                                    <input type="checkbox" name="users[]" value="users" @if(in_array('users',explode(',',$value->users)))checked @endif onchange="showMenu(this.id)" id={{'users'.$value->id}}>
-                                           &nbsp;&nbsp;User</b></td>
-                            <td align="left" valign="top"><span id="{{"showusers".$value->id}}" 
-                                                                @if(in_array('users',explode(',',$value->users)))
-                                                                @else
-                                                                class="display_none"
-                                                                @endif
-                                                                >
-                                                                <table class="table_normal_100">
-                                        <tr>
-                                            <td><input type="checkbox" name="users[]" value="create" @if(in_array('create',explode(',',$value->users)))checked @endif>&nbsp;&nbsp;Add</td>
-                                            <td><input type="checkbox" name="users[]" value="edit" @if(in_array('edit',explode(',',$value->users)))checked @endif>&nbsp;&nbsp;Edit</td>
-                                            <td><input type="checkbox" name="users[]" value="view" @if(in_array('view',explode(',',$value->users)))checked @endif>&nbsp;&nbsp;View</td>
-                                        </tr>   
-                                    </table>  
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><b>
-                                    <input type="checkbox" name="permissions[]" value="permissions" @if(in_array('permissions',explode(',',$value->permissions)))checked @endif onchange="showMenu(this.id)" id={{'permissions'.$value->id}}>
-                                           &nbsp;&nbsp;Permission</b></td>
-                            <td align="left" valign="top"><span id="{{"showpermissions".$value->id}}" 
-                                                                @if(in_array('permissions',explode(',',$value->permissions)))
-                                                                @else
-                                                                class="display_none"
-                                                                @endif
-                                                                >
-                                                                <table class="table_normal_100">
-                                        <tr>
-                                            <td><input type="checkbox" name="permissions[]" value="create" @if(in_array('create',explode(',',$value->permissions)))checked @endif>&nbsp;&nbsp;Add</td>
-                                            <td><input type="checkbox" name="permissions[]" value="edit" @if(in_array('edit',explode(',',$value->permissions)))checked @endif>&nbsp;&nbsp;Edit</td>
-                                            <td><input type="checkbox" name="permissions[]" value="view" @if(in_array('view',explode(',',$value->permissions)))checked @endif>&nbsp;&nbsp;View</td>
-                                        </tr>   
-                                    </table>  
-                                </span>
-                            </td>
-                        </tr>
-                        
-                        
-                        
-                        
-                        <tr>
-                            <td><b>
-                                    <input type="checkbox" name="depots[]" value="depots" @if(in_array('depots',explode(',',$value->depots)))checked @endif onchange="showMenu(this.id)" id={{'depots'.$value->id}}>
-                                           &nbsp;&nbsp;Depot</b></td>
-                            <td align="left" valign="top"><span id="{{"showdepots".$value->id}}" 
-                                                                @if(in_array('depots',explode(',',$value->depots)))
-                                                                @else
-                                                                class="display_none"
-                                                                @endif
-                                                                >
-                                                                <table class="table_normal_100">
-                                        <tr>
-                                            <td><input type="checkbox" name="depots[]" value="create" @if(in_array('create',explode(',',$value->depots)))checked @endif>&nbsp;&nbsp;Add</td>
-                                            <td><input type="checkbox" name="depots[]" value="edit" @if(in_array('edit',explode(',',$value->depots)))checked @endif>&nbsp;&nbsp;Edit</td>
-                                            <td><input type="checkbox" name="depots[]" value="view" @if(in_array('view',explode(',',$value->depots)))checked @endif>&nbsp;&nbsp;View</td>
-                                        </tr>   
-                                    </table>  
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><b>
-                                    <input type="checkbox" name="bus_types[]" value="bus_types" @if(in_array('bus_types',explode(',',$value->bus_types)))checked @endif onchange="showMenu(this.id)" id={{'bus_types'.$value->id}}>
-
-                                           &nbsp;&nbsp;Bus Type</b></td>
-                            <td><span 
-                                    id="{{"showbus_types".$value->id}}" 
-                                    @if(in_array('bus_types',explode(',',$value->bus_types)))
-                                    @else
-                                    class="display_none"
-                                    @endif
-                                    > 
-                                    <table  class="table_normal_100">
-                                        <tr>
-                                            <td><input type="checkbox" name="bus_types[]" value="create" @if(in_array('create',explode(',',$value->bus_types))) checked="checked" @endif>&nbsp;&nbsp;Add</td>
-                                            <td><input type="checkbox" name="bus_types[]" value="edit" @if(in_array('edit',explode(',',$value->bus_types)))checked @endif>&nbsp;&nbsp;Edit</td>
-                                            <td><input type="checkbox" name="bus_types[]" value="view" @if(in_array('view',explode(',',$value->bus_types)))checked @endif>&nbsp;&nbsp;View</td>
-                                        </tr>  
-                                    </table> 
-                                </span></td>
-                        </tr>
+                        {{ menuCreate('users','create','edit','view',$value->id,$value->users)}}
+                        {{ menuCreate('changepasswords','create','edit','view',$value->id,$value->changepasswords)}}
+                        {{ menuCreate('permissions','create','edit','view',$value->id,$value->permissions) }}
+                        {{  menuCreate('depots','create','edit','view',$value->id,$value->depots) }}
+                        {{ menuCreate('bus_types','create','edit','view',$value->id,$value->bus_types)}}
+                        {{ menuCreate('vehicles','create','edit','view',$value->id,$value->vehicles)}}
+                        {{ menuCreate('shifts','create','edit','view',$value->id,$value->shifts)}}
+                        {{ menuCreate('stops','create','edit','view',$value->id,$value->stops)}}
+                        {{ menuCreate('routes','create','edit','view',$value->id,$value->routes)}}
+                        {{ menuCreate('duties','create','edit','view',$value->id,$value->duties)}}
+                        {{ menuCreate('targets','create','edit','view',$value->id,$value->targets)}}
                         <tr>
                             {!! Form::hidden('user_id',$value->id) !!}
                             <td  align="left" id="{{$value->id}}"><div type="" class="btn btn-success" id="savemenuall" >Save</div></td>
@@ -120,6 +47,28 @@
 </div>
 @endforeach
 <script>
+    
+    
+    
+function checkAll(id,cid) {
+  //alert(cid)
+   $('.'+cid).not(id).prop('checked', id.checked);
+   
+   var final_id=cid.replace('checkAll','');
+   //value = value.replace(".", ":");
+  
+   
+   if ($('#' + cid).is(":checked"))
+        {
+            // alert(final_id)
+            $("#show" + final_id).show();
+        } else {
+            // alert(final_id)
+            $("#show" + final_id).hide();
+
+        }
+}
+
     function showMenu(id)
     {
      if ($('#' + id).is(":checked"))
@@ -131,6 +80,8 @@
         }
 
     }
+    
+    
     $(document).on('click', '#savemenuall', function () {
         var userid = $(this).parent().attr('id');
 
@@ -146,6 +97,7 @@
                 url: '/permissions/' + action,
                 type: 'POST',
                 success: function (data, textStatus, xhr) {
+                    //alert(data)
                    $("#message_show" + userid).show();
                    $("#message" + userid).html(data);
 

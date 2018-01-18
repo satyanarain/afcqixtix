@@ -1,9 +1,8 @@
 <?php
 
 namespace App\Http\Requests\User;
-
 use App\Http\Requests\Request;
-
+use Validator;
 class StoreUserRequest extends Request
 {
     /**
@@ -22,16 +21,33 @@ class StoreUserRequest extends Request
      *
      * @return array
      */
+    
+    
     public function rules()
     {
-        
-            return [
+      Validator::extend('without_spaces', function($attr, $value){
+    return preg_match('/^\S*$/u', $value);
+});
+
+return [
                  'name' => 'required',
-                // 'user_name' => 'required|user_name|unique:users,user_name',
+                 'user_name' => 'required|without_spaces|unique:users,user_name',
                  'email' => 'required',
                  'country' => 'required',
                  'mobile' => 'required'
              ];
         
     }
+    
+  
+    public function messages(){
+        return [
+            'user_name.without_spaces' => 'Space Is Not Allowed In User Name.',
+        ];
+    }  
+    
+    
+    
+    
+    
 }

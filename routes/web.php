@@ -37,6 +37,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('notifications/markread', 'NotificationsController@markRead')->name('notifications.markread');
 
     Route::get('users/data', 'UsersController@anyData')->name('users.data');
+      Route::get('user/statusupdate/{id}', 'UsersController@statusUpdate');
     Route::post('users/store', 'UsersController@store');
     Route::resource('users', 'UsersController');
     Route::post('users/changeprofileimage', 'UsersController@changeProfileImage')->middleware('user.changeprofileimage')->name('changeprofileimage');

@@ -82,9 +82,9 @@ function BreadCrumb() {
             $segments = '';
             $segments = Request::segments();
             $segments_value = str_replace("_", " ", $segments[0]);
-            echo substr(ucwords($segments_value), 0, -1);
+            echo "Manage ".substr(ucwords($segments_value), 0, -1);
             
-            ?> Management
+            ?> 
     <?php
 }
 
@@ -102,7 +102,7 @@ function headingMain() {
     } else {
         
         $segments_value = str_replace("_", " ", $segments[0]);
-        echo "All " . ucwords($segments_value);
+        echo "List of All " . ucwords($segments_value);
     }
 }
 ?>
@@ -129,18 +129,21 @@ function dispalyImage($imagepath = '', $imagename, $class = '', $alt = '', $styl
     }
 }
 
-function actionEdit($action = '', $id='') {
-            $segments = '';
-            $segments = Request::segments();
-            ?>
-                               <td>
-                                    <a  href="<?php echo route($segments[0].".".$action, $id) ?>" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <button  class="btn btn-small btn-primary"  data-toggle="modal" data-target="#<?php echo $id ?>"><span class="glyphicon glyphicon-search"></span>&nbsp;View</button>
-                               </td>
+function actionEdit($action = '', $id = '') {
+    $segments = '';
+    $segments = Request::segments();
+    
+        ?>
+        <td>
+             <a  href="<?php echo route($segments[0] . "." . $action, $id) ?>" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
+             <button  class="btn btn-small btn-primary"  data-toggle="modal" data-target="#<?php echo $id ?>"><span class="glyphicon glyphicon-search"></span>&nbsp;View</button>&nbsp;&nbsp;&nbsp;&nbsp;
+          <?php if($segments[0]=='users'){?>
+             <div  class="btn btn-small btn-success"   id="<?php echo $id; ?>" onclick="statusUpdate(this.id)"><i class="fa fa-check-circle"></i>&nbsp;<span id="<?php echo "ai".$id; ?>">Active</span></div>
+          <?php } ?>
+        </td>
 
     <?php
 }
-
 
 function actionHeading($action = '', $newaction='') {
             ?>
@@ -189,43 +192,60 @@ function pagePermissionView($result)
     return $result = $sql[$menu_dis];
 }
 
-function menuCreate($controllerName,$create='',$edit='',$view='',$value='')
+function menuCreate($controllerName,$create='',$edit='',$view='',$id='',$controllerName_Value)
 { ?>
-    
-    <tr>
-                            <td><b>
-                                    <input type="checkbox" name="<?php echo $controllerName."[]"; ?>" value="<?php echo $controllerName."[]" ?>" <?php if(in_array($controllerName,explode(',',$value->$controllerName))) { ?> checked <?php } ?> onchange="showMenu(this.id)" id=<?php $controllerName.$value->id; ?>>
-                                           &nbsp;&nbsp;User</b></td>
-                            <td align="left" valign="top"><span id="<?php "show".$controllerName.$value->id; ?>" 
-                                                                <?php 
-                                                                if(in_array($controllerName,explode(',',$value->$controllerName)))
-                                                                { ?>
-                                                                
-                                                                <?php }else{ ?>
-                                                                class="display_none"
-                                                                <?php }  ?>
-                                                               
-                                                                <table class="table_normal_100">
-                                        <tr>
-                                            <?php if($create!='')
-                                            { ?>
-                                            <td><input type="checkbox" name="<?php echo $controllerName."[]" ?>" value="<?php echo $create; ?>" <?php if(in_array('create',explode(',',$value->$controllerName))) { ?>checked <?php } ?>>&nbsp;&nbsp;Add</td>
-                                            <?php } ?>
-                                             <?php if($edit!='')
-                                            { ?>
-                                            <td><input type="checkbox" name="<?php echo $controllerName."[]" ?>" value="<?php echo $edit; ?>" <?php if(in_array('edit',explode(',',$value->$controllerName))) { ?>checked <?php } ?>>&nbsp;&nbsp;Edit</td>
-                                            <?php } ?>
-                                             <?php if($view!='')
-                                            { ?>
-                                            
-                                            <td><input type="checkbox" name="<?php echo $controllerName."[]" ?>" value="<?php echo $view; ?>" <?php if(in_array('view',explode(',',$value->$controllerName))) { ?>checked <?php } ?>>&nbsp;&nbsp;View</td>
-                                          <?php } ?>
-                                        </tr>   
-                                    </table>  
-                                </span>
-                            </td>
-                        </tr>  
+   <tr><td colspan="4" style="background:#f0f0f0; border:#ccc 1px solid;">
+       <input type="checkbox" id="<?php echo "checkAll".$controllerName . $id; ?>" onclick="checkAll(this,this.id);">&nbsp;
+      
+         <?php
+                  $array=array('_','-');
+                 $controllerName_heading= str_replace($array,' ', $controllerName);
+                 if($controllerName_heading=='Changepassword')
+                 {
+                    echo  "All Change Password";
+                 }else{
+                   echo "Check All ".ucwords(substr($controllerName_heading,0,-1)); 
+                  }
+                   ?></td>
+   </tr>
+   <tr>
+       
+                <td>
+                    <b>
+                   <input  class="<?php echo "checkAll". $controllerName . $id; ?>" type="checkbox" name="<?php echo $controllerName . "[]"; ?>" value="<?php echo $controllerName;?>" <?php if (in_array($controllerName, explode(',', $controllerName_Value))) { ?> checked <?php } ?> onchange="showMenu(this.id)" id="<?php echo $controllerName . $id; ?>">
+                   &nbsp;&nbsp;
+                  <?php
+                  $array=array('_','-');
+                 $controllerName_heading= str_replace($array,' ', $controllerName);
+                 if($controllerName_heading=='Changepassword')
+                 {
+                    echo  "Change Password";
+                 }else{
+                   echo ucwords(substr($controllerName_heading,0,-1)); 
+                  }
+                   ?></b>
+                </td>
+                 <td align="left" valign="top">
+                    <span id="<?php echo "show" . $controllerName . $id; ?>"<?php if (in_array($controllerName, explode(',', $controllerName_Value))) { ?>  <?php } else { ?>class="display_none"<?php } ?>>
+                     <table class="table_normal_100">
+                       <tr>
+                           <?php if($create!='')
+                           { ?>
+                          <td><input class="<?php echo "checkAll".$controllerName . $id; ?>" type="checkbox" name="<?php echo $controllerName . "[]" ?>" value="<?php echo $create; ?>" <?php if (in_array('create', explode(',', $controllerName_Value))) { ?> checked="checked" <?php } ?>>&nbsp;&nbsp;Add</td>
+                         <?php  } ?>
+                           <?php if($edit!='')
+                           { ?>
+                          <td><input class="<?php echo "checkAll".$controllerName . $id; ?>" type="checkbox" name="<?php echo $controllerName . "[]" ?>" value="<?php echo $edit; ?>" <?php if (in_array('edit', explode(',', $controllerName_Value))) { ?> checked="checked" <?php } ?>>&nbsp;&nbsp;Edit</td>
+                          <?php  } ?>
+                              <?php if($view!='')
+                           { ?>
+                          <td><input class="<?php echo "checkAll".$controllerName . $id; ?>" type="checkbox" name="<?php echo $controllerName . "[]" ?>" value="<?php echo $view; ?>" <?php if (in_array('view', explode(',', $controllerName_Value))) { ?> checked="checked" <?php } ?>>&nbsp;&nbsp;View</td>
+                           <?php  } ?>
+                       </tr>   
+                   </table>  
+               </span>
+           </td>
+       </tr>  
     
     <?php
 }
-?>

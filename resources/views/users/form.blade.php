@@ -52,21 +52,60 @@
       </div>
     <!-- /.input group -->
 </div>
+ @if($user->image_path!='')
 <div class="form-group">
-{!! Form::label('image_path', Lang::get('Existing Image'), ['class' => 'control-label']) !!}
 @if($user->image_path!='')
+{!! Form::label('image_path', Lang::get('Existing Image'), ['class' => 'control-label']) !!}
 {{Html::image('images/photo/'.$user->image_path, 'a picture', array('width' => '100','height'=>'100'))}}
+@else
+{!! Form::label('image_path', Lang::get('Existing Image'), ['class' => 'control-label']) !!}
+{{Html::image('images/photo/noimage.png', 'a picture', array('width' => '100','height'=>'100'))}}
 @endif
 </div>
+@endif
 <div class="form-group">
     {!! Form::label('image_path', Lang::get('user.headers.image_path'), ['class' => 'control-label']) !!}
     {!! Form::file('image_path',['class' => 'form-control','onchange'=>'loadFile(event)']) !!}
 </div>
 <img id="output" width="100" height="100"/>
-<script>
-  var loadFile = function(event) {
+
+ {!! Form::submit(Lang::get('common.titles.save'), ['class' => 'btn btn-success']) !!}
+ <script>
+
+ $('#image_path').change(function () {
+  var ext = $('#image_path').val().split('.').pop().toLowerCase();
+ if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1) {
+    $("#output").hide();
+    alert('invalid extension!');
+    return false;
+    
+}
+
+});
+ var loadFile = function(event) {
     var output = document.getElementById('output');
     output.src = URL.createObjectURL(event.target.files[0]);
-  };
+  };  
+ 
+     function validateForm(){
+      var usernane=   $("#user_name").val();
+     nospace = usernane.split(' '); //we split the string in an array of strings using     whitespace as separator
+     
+     if(nospace.length>1)
+     {
+         alert("Space is not allowed in user name");
+           return false; 
+     }
+     
+     var ext = $('#image_path').val().split('.').pop().toLowerCase();
+     if(ext!='')
+     {
+      if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1) {
+       $("#output").hide();
+       alert('invalid extension!');
+       return false;
+
+       }
+     }
+ }  
 </script>
- {!! Form::submit(Lang::get('common.titles.save'), ['class' => 'btn btn-success']) !!}

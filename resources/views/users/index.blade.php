@@ -24,16 +24,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($users as $user)
+                        @foreach($users as $value)
                         <tr class="nor_f">
                             <th class="display_none"></th>
-                            <td>{{$user->name}}</td>
-                            <td>{{$user->user_name}}</td>
-                            <td>{{$user->email}}</td>
-                            <td>
-                                <a  href="{{ route('users.edit', $user->id) }}" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil">Edit</span></a>
-                                <a  class="btn btn-small btn-primary" href="{{ route('users.show', $user->id) }}" ><span class="glyphicon glyphicon-search"></span>View</a>
-                            </td>
+                            <td>{{$value->name}}</td>
+                            <td>{{$value->user_name}}</td>
+                            <td>{{$value->email}}</td>
+                            {{ actionEdit('edit',$value->id)}}
                          </tr>
                         @endforeach
                         </tbody>
@@ -45,6 +42,30 @@
     </div>
     <!-- /.col -->
 </div>
+<script>
+function statusUpdate(id)
+{
+ $.ajax({
+    type:'get',
+    url:'/user/statusupdate/'+id,
+   success:function(data)
+    {
+   
+    if(data==1)
+    {
+    $("#"+id).removeClass('btn-danger');   
+    $("#"+id).addClass('btn-success');  
+    $("#ai"+id).html('Active');    
+    }else{
+    $("#"+id).removeClass('btn-success');   
+    $("#"+id).addClass('btn-danger');    
+    $("#ai"+id).html('Inactive');    
+    }
+    
+    }
+});
+}
+</script>
 <!-- /.row -->
 @include('partials.routesheader')
 @include('partials.table_script') 

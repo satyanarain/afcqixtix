@@ -19,8 +19,8 @@
                 {!! Form::open([
                 'route' => 'users.store',
                 'files'=>true,
-                'enctype' => 'multipart/form-data'
-
+                'enctype' => 'multipart/form-data',
+                 'onSubmit'=>"return validateForm();"
                 ]) !!}
                 @include('users.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 

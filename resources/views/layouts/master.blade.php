@@ -16,7 +16,6 @@ if($segments_var[2]=='edit')
 }
 
 ?>
-
 @if($segments_var!='' && $segments_var[1]!='')
 @if(count(array_intersect($segments_var, $array_menu))==count($segments_var))
 @include('layouts.app')

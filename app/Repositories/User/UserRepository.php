@@ -57,10 +57,10 @@ class UserRepository implements UserRepositoryContract {
         $input = $requestData->all();
         $date_of_birth = $requestData->date_of_birth;
 
-        if ($date_of_birth != '') {
+        if ($date_of_birth!= '') {
             $input['date_of_birth'] = date('Y-m-d', strtotime($date_of_birth));
         } else {
-            $input['date_of_birth'] = '';
+            $input['date_of_birth'] = NULL;
         }
 
         $companyname = "photo";
@@ -94,7 +94,7 @@ class UserRepository implements UserRepositoryContract {
         if ($date_of_birth != '') {
             $input['date_of_birth'] = date('Y-m-d', strtotime($date_of_birth));
         } else {
-            $input['date_of_birth'] = Null;
+            $input['date_of_birth'] ='';
         }
          $companyname = "photo";
         if ($requestData->hasFile('image_path')) {

@@ -78,8 +78,7 @@ class UsersController extends Controller
         $user = User::find($request->id);
         $user->image_path = $file_name;
         $user->save();
-
-       return response()->json([
+        return response()->json([
             'status' => 'success',
             'message' => 'Profile picture changed successfully!'
         ]);
@@ -102,6 +101,29 @@ class UsersController extends Controller
         $getInsertedId = $this->users->create($userRequest);
         return redirect()->route('users.index');         
     }
+    public function statusUpdate($id)
+    {
+    $sql=DB::table('users')->where('id',$id)->first(); 
+    
+       if($sql->status==0)
+       {
+       $status=  $sql->status;
+       $user = User::findorFail($id);
+       $user->status=1;
+       $user->save();
+       echo "1";
+      }else
+       {
+       $status=  $sql->status;
+       $user = User::findorFail($id);
+       $user->status=0;
+       $user->save();
+       echo "0";
+       }
+    }
+    
+
+    
     /**
      * Display the specified resource.
      *

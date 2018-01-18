@@ -44,18 +44,38 @@ class PermissionsController extends Controller
         if ($checkid->id != '') {
             $permission = Permission::find($checkid->id);
             $permission->users = implode(',', $request->users);
+            $permission->changepasswords = implode(',', $request->changepasswords);
             $permission->permissions = implode(',', $request->permissions);
-            $permission->depots = implode(',', $request->depots);;
+            $permission->depots = implode(',', $request->depots);
+            
+            //SELECT `id`, `user_id`, `users`, `changepasswords`, `permissions`, `depots`, `bus_types`, `vehicles`, `shifts`,
+                 //   `stops`, `routes`, `duties`, `targets`, `view`, `created_at`, `updated_at` FROM `permissions` WHERE 1
+            
+            
             $permission->bus_types = implode(',', $request->bus_types);
+            $permission->vehicles = implode(',', $request->vehicles);
+            $permission->shifts = implode(',', $request->shifts);
+            $permission->stops = implode(',', $request->stops);
+            $permission->routes = implode(',', $request->routes);
+            $permission->duties = implode(',', $request->duties);
+            $permission->targets = implode(',', $request->targets);
+        
             $permission->save();
             echo "Menu Updated Successfully!";
             exit();
         } else {
             $input = $request->all();
             $input['users'] = implode(',', $request->users);
+            $input['changepasswords'] = implode(',', $request->changepasswords);
             $input['permissions'] = implode(',', $request->permissions);
             $input['depots'] = implode(',', $request->depots);;
             $input['bus_types'] = implode(',', $request->bus_types);
+            $input['vehicles'] = implode(',', $request->vehicles);
+            $input['shifts'] = implode(',', $request->shifts);
+            $input['stops'] = implode(',', $request->stops);
+            $input['routes'] = implode(',', $request->routes);
+            $input['duties'] = implode(',', $request->duties);
+            $input['targets'] = implode(',', $request->targets);
             
             
             Permission::create($input);

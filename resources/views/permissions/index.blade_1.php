@@ -7,20 +7,7 @@
 
 <div class="row">
     <div class="col-xs-12">
-<!--<input type="checkbox" id="checkAll" onclick="checkAll(this,this.id);">Check All
-<hr />
-<input type="checkbox" class="checkAll">Item 1
-<input type="checkbox" class="checkAll">Item 2
-<input type="checkbox" class="checkAll">Item3
-<input type="checkbox" class="checkAll1">Item3
-<script>
-    
-    
-function checkAll(id,cid) {
-   alert(cid)
-   $('.'+cid).not(id).prop('checked', id.checked);
-}
-</script>-->
+
         <div class="box">
             <div class="box-header">
             <h3 class="box-title">{{headingMain()}}</h3>
@@ -54,10 +41,6 @@ function checkAll(id,cid) {
     <!-- /.col -->
 </div>
 <!-- /.row -->
-
-
-
-
 
 @include('partials.menuheader')
 @include('partials.table_script') 
