@@ -1,7 +1,7 @@
 <?php
 error_reporting(0);
 use App\Models\Permission;
-use Session;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates

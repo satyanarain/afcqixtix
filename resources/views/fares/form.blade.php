@@ -1,20 +1,28 @@
-<!--SELECT `id`, `user_id`, `stop`, `stop_id`, `abbreviation`, `shor_name`,-->
+@php $services=displayList('services','name')@endphp
+
+
 <div class="form-group">
-        {!! Form::label('stop', Lang::get(''), ['class' => 'control-label required']) !!}
-        {!! Form::text('stop', null, ['class' => 'form-control','required' => 'required']) !!}
+        {!! Form::label('service_id', Lang::get('Service'), ['class' => 'control-label required']) !!}
+        {!! Form::select('service_id',$services,isset($fares->service_id) ? $fares->service_id : selected,['class' => 'form-control','required' => 'required','onchange'=>'findDuty(this.value)','placeholder'=>"Select Service"]) !!}
+
+</div>
+
+<div class="form-group">
+        {!! Form::label('stage', Lang::get('Stage'), ['class' => 'control-label required']) !!}<br>
+         {!! Form::text('stage', null, ['class' => 'form-control','required' => 'required']) !!}
 </div>
 <div class="form-group">
-        {!! Form::label('stop_id', Lang::get('Stop ID'), ['class' => 'control-label required']) !!}
-        {!! Form::text('stop_id', null, ['class' => 'form-control','required' => 'required']) !!}
+        {!! Form::label('adult_ticket_amount', Lang::get('Adult Ticket Amount (Rs).'), ['class' => 'control-label required']) !!}<br>
+         {!! Form::text('adult_ticket_amount', null, ['class' => 'form-control','required' => 'required']) !!}
 </div>
 <div class="form-group">
-    {!! Form::label('abbreviation', Lang::get('Abbreviation'), ['class' => 'control-label required']) !!}
-    {!! Form::text('abbreviation', null, ['class' => 'form-control']) !!}
+        {!! Form::label('child_ticket_amount', Lang::get('Child Ticket Amount (Rs).'), ['class' => 'control-label required']) !!}<br>
+         {!! Form::text('child_ticket_amount', null, ['class' => 'form-control','required' => 'required']) !!}
 </div>
 <div class="form-group">
-    {!! Form::label('short_name', Lang::get('Shot Name'), ['class' => 'control-label required']) !!}
-    {!! Form::text('short_name', null, ['class' => 'form-control']) !!}
+        {!! Form::label('luggage_ticket_amount', Lang::get('Luggage Ticket Amount (Rs).'), ['class' => 'control-label required']) !!}<br>
+         {!! Form::text('luggage_ticket_amount', null, ['class' => 'form-control','required' => 'required']) !!}
 </div>
 
 
- {!! Form::submit(Lang::get('common.titles.save'), ['class' => 'btn btn-success']) !!}
+{!! Form::submit(Lang::get('common.titles.save'), ['class' => 'btn btn-success']) !!}

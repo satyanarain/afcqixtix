@@ -1,93 +1,62 @@
-<section class="content">
-
-      <div class="row">
-          <div class="col-md-3">
-
-              <!-- Profile Image -->
-              <div class="box box-primary" style="min-width:10%;">
-                  <div class="box-body box-profile" style="padding:8px 0 1px 1px;">
-                      @include('partials.include')
-                      <input type="hidden" id="user_id" value="{{ $services->id }}">
-                      <h3 class="profile-username text-center cursor-pointer" id="user_name">
-                          <span id="user-name-span"></span> 
-<!--                          <span id="edit-user-name" class="glyphicon glyphicon-pencil"></span>-->
-                      </h3>
-                        <p class="text-muted text-center"></p>
-                       <table width=90% class="table table-responsive">
-                          <tr>
-                              <td style="text-align:left;padding-left:10%;padding-top:3%;"><b>Bus Type</b></td>
-                              <td style="text-align:left;padding-left:15%;padding-top:3%; "><span></span>{{ $services->bus_type }}</span></td>
-                          </tr>
-                          <tr>
-                              <td style="text-align:left;padding-left:10%;padding-top:3%;"><b>Name</b></td>
-                              <td style="text-align:left;padding-left:15%;padding-top:3%; "><span></span>{{ $services->name }}</span></td>
-                          </tr>
-                          <tr>
-                              <td style="text-align:left;padding-left:10%;padding-top:3%;"><b>Short Name</b></td>
-                              <td style="text-align:left;padding-left:15%;padding-top:3%; "><span></span>{{ $services->short_name }}</span></td>
-                          </tr>
-                          
-                      </table>
-                       </ul>
-                      </div>
-                  <!-- /.box-body -->
-
-              </div>
-          <!-- /.box -->
-
-        </div>
-        <!-- /.col -->
-        <div class="col-md-9">
-          <div class="nav-tabs-custom">
-            <ul class="nav nav-tabs">
-            
-            @if($services->user_type == 1 || $services->user_type == 4 || $services->user_type == 9)
-              	<li class="active"><a href="#travel_detail" data-toggle="tab">Travel Profile</a></li>
-              	<li><a href="#bank_detail" data-toggle="tab">Bank Details</a></li>
-            @endif
-            {{--@if(Entrust::hasRole('administrator'))
-            	<li class="active"><a href="#travel_detail" data-toggle="tab">Travel Profile</a></li>
-              	<li><a href="#bank_detail" data-toggle="tab">Bank Details</a></li>
-            @endif
-            @if(Entrust::hasRole('associate_user'))
-              	<!-- <li class="active"><a href="#travel_detail" data-toggle="tab">Travel Profile</a></li> -->
-              	<!-- <li><a href="#bank_detail" data-toggle="tab">Bank Details</a></li> -->
-            @endif
-            @if(Entrust::hasRole('client_user'))
-              	<!-- <li class="active"><a href="#travel_detail" data-toggle="tab">Travel Profile</a></li>
-              	<li><a href="#bank_detail" data-toggle="tab">Bank Details</a></li> -->
-            @endif
-            
-            @if(Entrust::hasRole('kipg_general_user'))
-              	<li class="active"><a href="#travel_detail" data-toggle="tab">Travel Profile</a></li>
-              	<li><a href="#bank_detail" data-toggle="tab">Bank Details</a></li>
-            @endif--}}
-            
-            </ul>
-            <div class="tab-content">
-	        	@if($services->user_type == 1 || $services->user_type == 4 || $services->user_type == 9)
-		        	   <div class="active tab-pane" id="travel_detail">
-	                  	@include('users.travel')    
-	              	</div>
-	              	<div class="tab-pane" id="bank_detail">
-	                  	@include('users.bank_detail')
-	                </div>
-            @endif
-            {{--@if(Entrust::hasRole('kipg_general_user'))
-              	<div class="active tab-pane" id="travel_detail">
-                  	@include('users.travel')    
-              	</div>
-              	<div class="tab-pane" id="bank_detail">
-                		@include('users.bank_detail')
-              	</div>
-            @endif--}}
+@foreach($fares as $value)
+<div class="modal fade" id="{{$value->id}}" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header-view" >
+                <button type="button" class="close" data-dismiss="modal"><font class="white">&times;</font></button>
+                <h4 class="viewdetails_details"><span class="fa fa-bus"></span>&nbsp;Bus Type</h4>
             </div>
-            <!-- /.tab-content -->
-          </div>
-          <!-- /.nav-tabs-custom -->
+            <div class="modal-body-view">
+                 <table class="table table-responsive.view">
+                    <tr>       
+                        <td><b>Route</b></td>
+                        <td class="table_normal">{{ $value->route }}</span></td>
+                    </tr>
+                    <tr>
+                        <td><b>Duty</b></td>
+                       <td class="table_normal">{{ $value->duty_number}}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Shift</b></td>
+                        <td class="table_normal">{{ $value->shift}}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Trip</b></td>
+                        <td class="table_normal">{{ $value->trip }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>EPKM</b></td>
+                        <td class="table_normal">{{ $value->epkm }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Income</b></td>
+                        <td class="table_normal">{{ $value->income}}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Incentive</b></td>
+                        <td class="table_normal">{{ displayView($value->incentive) }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Driver Share</b></td>
+                        <td class="table_normal">{{ displayView($value->driver_share) }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Conductor Share</b></td>
+                        <td class="table_normal">{{ displayView($value->conductor_share) }}</td>
+                    </tr>
+                    
+                    
+                    
+                    
+                    
+                  </table>  
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
-        <!-- /.col -->
-      </div>
-      <!-- /.row -->
 
-    </section>
+    </div>
+</div>
+@endforeach

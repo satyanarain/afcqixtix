@@ -40,13 +40,11 @@ class TargetRepository implements TargetRepositoryContract {
 
     public function update($id, $requestData) {
 //       $targets_log = Target::where('id', '=', $id )->get()->toArray();
-//  
+//     unset($targets_log['id']);
 //         foreach ($targets_log as $item) 
 //        {
 //              TargetLog::create($item);
 //        }
-//        
-//        
         
         $targets = Target::findorFail($id);
         $input = $requestData->all();

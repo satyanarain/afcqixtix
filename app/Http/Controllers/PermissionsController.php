@@ -48,6 +48,7 @@ class PermissionsController extends Controller
             $permission->permissions = implode(',', $request->permissions);
             $permission->depots = implode(',', $request->depots);
             $permission->bus_types = implode(',', $request->bus_types);
+            $permission->services = implode(',', $request->services);
             $permission->vehicles = implode(',', $request->vehicles);
             $permission->shifts = implode(',', $request->shifts);
             $permission->stops = implode(',', $request->stops);
@@ -75,6 +76,7 @@ class PermissionsController extends Controller
             $input['permissions'] = implode(',', $request->permissions);
             $input['depots'] = implode(',', $request->depots);;
             $input['bus_types'] = implode(',', $request->bus_types);
+            $input['services'] = implode(',', $request->services);
             $input['vehicles'] = implode(',', $request->vehicles);
             $input['shifts'] = implode(',', $request->shifts);
             $input['stops'] = implode(',', $request->stops);

@@ -8,26 +8,26 @@ use Notifynder;
 use DB;
 use Schema;
 use Response;
-use App\Models\Fare;
+use App\Models\Target;
 use App\Models\Duty;
 use App\Models\Country;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Fare\UpdateFareRequest;
-use App\Http\Requests\Fare\StoreFareRequest;
-use App\Repositories\Fare\FareRepositoryContract;
+use App\Http\Requests\Target\UpdateTargetRequest;
+use App\Http\Requests\Target\StoreTargetRequest;
+use App\Repositories\Target\TargetRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
-class FaresController extends Controller {
+class TargetController extends Controller {
 
-    protected $fares;
+    protected $targets;
 
     public function __construct(
-    FareRepositoryContract $fares
+    TargetRepositoryContract $targets
     ) {
-        $this->fares = $fares;
+        $this->targets = $targets;
     }
 
     /**
@@ -35,15 +35,18 @@ class FaresController extends Controller {
      *
      * @return Response
      */
- public function index() {
-               $fares = DB::table('fares')->select('*','fares.id as id')
-                ->leftjoin('services', 'fares.service_id', '=', 'services.id')
+    public function index() {
+
+        $targets = DB::table('targets')->select('*','targets.id as id')
+                ->leftjoin('duties', 'targets.duty_id', '=', 'duties.id')
+                ->leftjoin('shifts', 'targets.shift_id', '=', 'shifts.id')
+                ->leftjoin('routes', 'targets.route_id', '=', 'routes.id')
                 ->get();
-        return view('fares.index')->withFares($fares);
+        return view('targets.index')->withTargets($targets);
     }
 
     public function create() {
-     return view('fares.create');
+     return view('targets.create');
     }
 
     /**
@@ -54,12 +57,12 @@ class FaresController extends Controller {
 
     /**
      * Store a newly created resource in storage.
-     * @param Fare $fares
+     * @param Target $targets
      * @return Response
      */
-    public function store(StoreFareRequest $faresRequest) {
-        $getInsertedId = $this->fares->create($faresRequest);
-        return redirect()->route('fares.index');
+    public function store(StoreTargetRequest $targetsRequest) {
+        $getInsertedId = $this->targets->create($targetsRequest);
+        return redirect()->route('targets.index');
     }
 
     /**
@@ -69,14 +72,14 @@ class FaresController extends Controller {
      * @return Response
      */
     public function show($id) {
-        // $fares=Fare::findOrFail($id);
-                $fares = DB::table('fares')->select('*','fares.id as id')
-                ->leftjoin('shifts', 'fares.shift_id', '=', 'shifts.id')
-                ->leftjoin('routes', 'fares.route_id', '=', 'routes.id')
-                 ->where('fares.id','=',$id)
+        // $targets=Target::findOrFail($id);
+                $targets = DB::table('targets')->select('*','targets.id as id')
+                ->leftjoin('shifts', 'targets.shift_id', '=', 'shifts.id')
+                ->leftjoin('routes', 'targets.route_id', '=', 'routes.id')
+                 ->where('targets.id','=',$id)
                 ->first();
         
-       return view('fares.show')->withFares($fares);
+       return view('targets.show')->withTargets($targets);
     }
 
     /**
@@ -86,8 +89,8 @@ class FaresController extends Controller {
      * @return Response
      */
     public function edit($id) {
-        $fares = Fare::findOrFail($id);
-        return view('fares.edit')->withFares($fares);
+        $targets = Target::findOrFail($id);
+        return view('targets.edit')->withTargets($targets);
     }
 
     /**
@@ -96,9 +99,9 @@ class FaresController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function update($id, UpdateFareRequest $request) {
-        $this->fares->update($id, $request);
-        return redirect()->route('fares.index');
+    public function update($id, UpdateTargetRequest $request) {
+        $this->targets->update($id, $request);
+        return redirect()->route('targets.index');
     }
     public function getDuty($id) {
         if($id!='')
