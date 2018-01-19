@@ -10,47 +10,26 @@
             <div class="modal-body-view">
                  <table class="table table-responsive.view">
                     <tr>       
-                        <td><b>Route</b></td>
-                        <td class="table_normal">{{ $value->route }}</span></td>
+                        <td><b>Service</b></td>
+                        <td class="table_normal">{{ $value->name}}</span></td>
                     </tr>
                     <tr>
-                        <td><b>Duty</b></td>
-                       <td class="table_normal">{{ $value->duty_number}}</td>
+                        <td><b>Stage</b></td>
+                       <td class="table_normal">{{ $value->stage}}</td>
                     </tr>
                     <tr>
-                        <td><b>Shift</b></td>
-                        <td class="table_normal">{{ $value->shift}}</td>
+                        <td><b>Adult Ticket Amount (Rs).</b></td>
+                        <td class="table_normal">{{ $value->adult_ticket_amount}}</td>
                     </tr>
                     <tr>
-                        <td><b>Trip</b></td>
-                        <td class="table_normal">{{ $value->trip }}</td>
+                        <td><b>Child Ticket Amount (Rs).</b></td>
+                        <td class="table_normal">{{ $value->chield_ticket_amount}}</td>
                     </tr>
                     <tr>
-                        <td><b>EPKM</b></td>
-                        <td class="table_normal">{{ $value->epkm }}</td>
+                        <td><b>Luggage Ticket Amount (Rs).</b></td>
+                        <td class="table_normal">{{ $value->luggage_ticket_amount }}</td>
                     </tr>
-                    <tr>
-                        <td><b>Income</b></td>
-                        <td class="table_normal">{{ $value->income}}</td>
-                    </tr>
-                    <tr>
-                        <td><b>Incentive</b></td>
-                        <td class="table_normal">{{ displayView($value->incentive) }}</td>
-                    </tr>
-                    <tr>
-                        <td><b>Driver Share</b></td>
-                        <td class="table_normal">{{ displayView($value->driver_share) }}</td>
-                    </tr>
-                    <tr>
-                        <td><b>Conductor Share</b></td>
-                        <td class="table_normal">{{ displayView($value->conductor_share) }}</td>
-                    </tr>
-                    
-                    
-                    
-                    
-                    
-                  </table>  
+                    </table>  
                   <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                 </div>

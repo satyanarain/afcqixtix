@@ -20,14 +20,14 @@ use App\Repositories\Target\TargetRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
-class TargetController extends Controller {
+class ConcessionFareSlabController extends Controller {
 
-    protected $targets;
+    protected $concession_fare_slabs;
 
     public function __construct(
-    TargetRepositoryContract $targets
+    TargetRepositoryContract $concession_fare_slabs
     ) {
-        $this->targets = $targets;
+        $this->concession_fare_slabs = $concession_fare_slabs;
     }
 
     /**
@@ -37,16 +37,16 @@ class TargetController extends Controller {
      */
     public function index() {
 
-        $targets = DB::table('targets')->select('*','targets.id as id')
-                ->leftjoin('duties', 'targets.duty_id', '=', 'duties.id')
-                ->leftjoin('shifts', 'targets.shift_id', '=', 'shifts.id')
-                ->leftjoin('routes', 'targets.route_id', '=', 'routes.id')
+        $concession_fare_slabs = DB::table('concession_fare_slabs')->select('*','concession_fare_slabs.id as id')
+                ->leftjoin('duties', 'concession_fare_slabs.duty_id', '=', 'duties.id')
+                ->leftjoin('shifts', 'concession_fare_slabs.shift_id', '=', 'shifts.id')
+                ->leftjoin('routes', 'concession_fare_slabs.route_id', '=', 'routes.id')
                 ->get();
-        return view('targets.index')->withTargets($targets);
+        return view('concession_fare_slabs.index')->withTargets($concession_fare_slabs);
     }
 
     public function create() {
-     return view('targets.create');
+     return view('concession_fare_slabs.create');
     }
 
     /**
@@ -57,12 +57,12 @@ class TargetController extends Controller {
 
     /**
      * Store a newly created resource in storage.
-     * @param Target $targets
+     * @param Target $concession_fare_slabs
      * @return Response
      */
-    public function store(StoreTargetRequest $targetsRequest) {
-        $getInsertedId = $this->targets->create($targetsRequest);
-        return redirect()->route('targets.index');
+    public function store(StoreTargetRequest $concession_fare_slabsRequest) {
+        $getInsertedId = $this->concession_fare_slabs->create($concession_fare_slabsRequest);
+        return redirect()->route('concession_fare_slabs.index');
     }
 
     /**
@@ -72,14 +72,14 @@ class TargetController extends Controller {
      * @return Response
      */
     public function show($id) {
-        // $targets=Target::findOrFail($id);
-                $targets = DB::table('targets')->select('*','targets.id as id')
-                ->leftjoin('shifts', 'targets.shift_id', '=', 'shifts.id')
-                ->leftjoin('routes', 'targets.route_id', '=', 'routes.id')
-                 ->where('targets.id','=',$id)
+        // $concession_fare_slabs=Target::findOrFail($id);
+                $concession_fare_slabs = DB::table('concession_fare_slabs')->select('*','concession_fare_slabs.id as id')
+                ->leftjoin('shifts', 'concession_fare_slabs.shift_id', '=', 'shifts.id')
+                ->leftjoin('routes', 'concession_fare_slabs.route_id', '=', 'routes.id')
+                 ->where('concession_fare_slabs.id','=',$id)
                 ->first();
         
-       return view('targets.show')->withTargets($targets);
+       return view('concession_fare_slabs.show')->withTargets($concession_fare_slabs);
     }
 
     /**
@@ -89,8 +89,8 @@ class TargetController extends Controller {
      * @return Response
      */
     public function edit($id) {
-        $targets = Target::findOrFail($id);
-        return view('targets.edit')->withTargets($targets);
+        $concession_fare_slabs = Target::findOrFail($id);
+        return view('concession_fare_slabs.edit')->withTargets($concession_fare_slabs);
     }
 
     /**
@@ -100,8 +100,8 @@ class TargetController extends Controller {
      * @return Response
      */
     public function update($id, UpdateTargetRequest $request) {
-        $this->targets->update($id, $request);
-        return redirect()->route('targets.index');
+        $this->concession_fare_slabs->update($id, $request);
+        return redirect()->route('concession_fare_slabs.index');
     }
     public function getDuty($id) {
         if($id!='')

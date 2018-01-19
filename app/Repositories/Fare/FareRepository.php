@@ -33,26 +33,31 @@ class FareRepository implements FareRepositoryContract {
         $input = $requestData->all();
         $userid = Auth::id();
         $input['user_id'] = $userid;
-        $targets = Fare::create($input);
+        $fares = Fare::create($input);
         Session::flash('flash_message', "Fare Created Successfully."); //Snippet in Master.blade.php
-        return $targets;
+        return $fares;
     }
 
     public function update($id, $requestData) {
-//       $targets_log = Fare::where('id', '=', $id )->get()->toArray();
-//     unset($targets_log['id']);
-//         foreach ($targets_log as $item) 
-//        {
-//              FareLog::create($item);
-//        }
+       $fares_log = Fare::where('id', '=', $id )->get()->toArray();
+     unset($fares_log[0]['id']);
+     
+    // print_r($fares_log);
+     //exit();
+     
+     
+         foreach ($fares_log as $item) 
+        {
+              FareLog::create($item);
+        }
         
-        $targets = Fare::findorFail($id);
+        $fares = Fare::findorFail($id);
         $input = $requestData->all();
         $userid = Auth::id();
         $input[user_id] = $userid;
-        $targets->fill($input)->save();
+        $fares->fill($input)->save();
         Session::flash('flash_message', "Fare Updated Successfully.");
-        return $targets;
+        return $fares;
     }
 
 }
