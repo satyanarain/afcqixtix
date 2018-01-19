@@ -1,6 +1,7 @@
 <?php
 error_reporting(0);
 use App\Models\Permission;
+use Session;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -136,8 +137,12 @@ function actionEdit($action = '', $id = '') {
         ?>
         <td>
              <a  href="<?php echo route($segments[0] . "." . $action, $id) ?>" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
-             <button  class="btn btn-small btn-primary"  data-toggle="modal" data-target="#<?php echo $id ?>"><span class="glyphicon glyphicon-search"></span>&nbsp;View</button>&nbsp;&nbsp;&nbsp;&nbsp;
-          <?php if($segments[0]=='users'){?>
+             <?php if($segments[0]=='users'){?>
+              <a  class="btn btn-small btn-primary" href="<?php echo route('users.show', $user->id); ?>" ><span class="glyphicon glyphicon-search"></span>&nbsp;View</a>&nbsp;&nbsp;&nbsp;&nbsp;
+             <?php }else{ ?>
+               <button  class="btn btn-small btn-primary"  data-toggle="modal" data-target="#<?php echo $id ?>"><span class="glyphicon glyphicon-search"></span>&nbsp;View</button>&nbsp;&nbsp;&nbsp;&nbsp;
+              <?php } ?>
+              <?php if($segments[0]=='users'){?>
              <div  class="btn btn-small btn-success"   id="<?php echo $id; ?>" onclick="statusUpdate(this.id)"><i class="fa fa-check-circle"></i>&nbsp;<span id="<?php echo "ai".$id; ?>">Active</span></div>
           <?php } ?>
         </td>
@@ -174,12 +179,12 @@ function createButton($action = '', $title='') {
    $sql = Permission::where('user_id', '=', $userid_menu)->first();
    $dem_menu=$result = $sql[$menu_dis];  
    $array_menu= explode(',', $dem_menu);
-   if(count(array_intersect($segments, $array_menu))==count($segments))
-    {
+   
+  if(in_array('create',$array_menu) && in_array($segments[0],$array_menu)){
   ?>
    <a href="<?php  echo route($segments[0].".".$action) ?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;<?php echo $title ?></button></a>
     <?php  
-}    
+}   
 }
 
 function pagePermissionView($result)
@@ -194,7 +199,9 @@ function pagePermissionView($result)
 
 function menuCreate($controllerName,$create='',$edit='',$view='',$id='',$controllerName_Value)
 { ?>
-   <tr><td colspan="4" style="background:#f0f0f0; border:#ccc 1px solid;">
+
+   <tr>
+     <td>
        <input type="checkbox" id="<?php echo "checkAll".$controllerName . $id; ?>" onclick="checkAll(this,this.id);">&nbsp;
       
          <?php
@@ -207,9 +214,6 @@ function menuCreate($controllerName,$create='',$edit='',$view='',$id='',$control
                    echo "Check All ".ucwords(substr($controllerName_heading,0,-1)); 
                   }
                    ?></td>
-   </tr>
-   <tr>
-       
                 <td>
                     <b>
                    <input  class="<?php echo "checkAll". $controllerName . $id; ?>" type="checkbox" name="<?php echo $controllerName . "[]"; ?>" value="<?php echo $controllerName;?>" <?php if (in_array($controllerName, explode(',', $controllerName_Value))) { ?> checked <?php } ?> onchange="showMenu(this.id)" id="<?php echo $controllerName . $id; ?>">

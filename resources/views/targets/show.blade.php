@@ -4,6 +4,6 @@
 {{BreadCrumb()}}
 @stop
 @section('content')
-@include('partials.dutiesheader')
+@include('partials.targetsheader')
 @stop
   

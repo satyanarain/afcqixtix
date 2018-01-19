@@ -18,6 +18,7 @@
                 <form autocomplete="off">
                     <table class="table table-responsive.view">
                         <tr><?php  //print_r($value); ?>
+                            <td>Check All</td>
                             <td>Menu</td>
                             <td>Action</td>
                         </tr>
@@ -26,13 +27,23 @@
                         {{ menuCreate('permissions','create','edit','view',$value->id,$value->permissions) }}
                         {{  menuCreate('depots','create','edit','view',$value->id,$value->depots) }}
                         {{ menuCreate('bus_types','create','edit','view',$value->id,$value->bus_types)}}
+                        {{ menuCreate('services','create','edit','view',$value->id,$value->services)}}
                         {{ menuCreate('vehicles','create','edit','view',$value->id,$value->vehicles)}}
                         {{ menuCreate('shifts','create','edit','view',$value->id,$value->shifts)}}
                         {{ menuCreate('stops','create','edit','view',$value->id,$value->stops)}}
                         {{ menuCreate('routes','create','edit','view',$value->id,$value->routes)}}
                         {{ menuCreate('duties','create','edit','view',$value->id,$value->duties)}}
                         {{ menuCreate('targets','create','edit','view',$value->id,$value->targets)}}
-                        <tr>
+                        {{ menuCreate('fares','create','edit','view',$value->id,$value->fares)}}
+                        {{ menuCreate('concession_fare_slabs','create','edit','view',$value->id,$value->concession_fare_slabs)}}
+                        {{ menuCreate('concessions','create','edit','view',$value->id,$value->concessions)}}
+                        {{ menuCreate('trip_cancellation_reason','create','edit','view',$value->id,$value->trip_cancellation_reason)}}
+                        {{ menuCreate('inspector_remarks','create','edit','view',$value->id,$value->inspector_remarks)}}
+                        {{ menuCreate('payout_reasons','create','edit','view',$value->id,$value->payout_reasons)}}
+                        {{ menuCreate('denominatios','create','edit','view',$value->id,$value->denominatios)}}
+                        {{ menuCreate('pass_types','create','edit','view',$value->id,$value->pass_types)}}
+                        {{ menuCreate('crew_details','create','edit','view',$value->id,$value->crew_details)}}
+                         <tr>
                             {!! Form::hidden('user_id',$value->id) !!}
                             <td  align="left" id="{{$value->id}}"><div type="" class="btn btn-success" id="savemenuall" >Save</div></td>
                             <td  align="right"> <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button></td>

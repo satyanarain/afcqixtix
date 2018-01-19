@@ -9,6 +9,7 @@ use DB;
 use Schema;
 use Response;
 use App\Models\Target;
+use App\Models\Duty;
 use App\Models\Country;
 use App\Http\Requests;
 use Illuminate\Http\Request;
@@ -21,12 +22,12 @@ use Illuminate\Support\Facades\Session;
 
 class TargetController extends Controller {
 
-    protected $duties;
+    protected $targets;
 
     public function __construct(
-    TargetRepositoryContract $duties
+    TargetRepositoryContract $targets
     ) {
-        $this->duties = $duties;
+        $this->targets = $targets;
     }
 
     /**
@@ -36,16 +37,16 @@ class TargetController extends Controller {
      */
     public function index() {
 
-        $duties = DB::table('duties')->select('*','duties.id as id')
-                ->leftjoin('shifts', 'duties.shift_id', '=', 'shifts.id')
-                ->leftjoin('routes', 'duties.route_id', '=', 'routes.id')
+        $targets = DB::table('targets')->select('*','targets.id as id')
+                ->leftjoin('duties', 'targets.duty_id', '=', 'duties.id')
+                ->leftjoin('shifts', 'targets.shift_id', '=', 'shifts.id')
+                ->leftjoin('routes', 'targets.route_id', '=', 'routes.id')
                 ->get();
-        return view('duties.index')->withDuties($duties);
+        return view('targets.index')->withTargets($targets);
     }
 
     public function create() {
-        //$duties = Target::findOrFail();
-        return view('duties.create');
+     return view('targets.create');
     }
 
     /**
@@ -56,12 +57,12 @@ class TargetController extends Controller {
 
     /**
      * Store a newly created resource in storage.
-     * @param Target $duties
+     * @param Target $targets
      * @return Response
      */
-    public function store(StoreTargetRequest $dutiesRequest) {
-        $getInsertedId = $this->duties->create($dutiesRequest);
-        return redirect()->route('duties.index');
+    public function store(StoreTargetRequest $targetsRequest) {
+        $getInsertedId = $this->targets->create($targetsRequest);
+        return redirect()->route('targets.index');
     }
 
     /**
@@ -71,14 +72,14 @@ class TargetController extends Controller {
      * @return Response
      */
     public function show($id) {
-        // $duties=Target::findOrFail($id);
-         $duties = DB::table('duties')->select('*','duties.id as id')
-                ->leftjoin('shifts', 'duties.shift_id', '=', 'shifts.id')
-                ->leftjoin('routes', 'duties.route_id', '=', 'routes.id')
-                 ->where('duties.id','=',$id)
+        // $targets=Target::findOrFail($id);
+                $targets = DB::table('targets')->select('*','targets.id as id')
+                ->leftjoin('shifts', 'targets.shift_id', '=', 'shifts.id')
+                ->leftjoin('routes', 'targets.route_id', '=', 'routes.id')
+                 ->where('targets.id','=',$id)
                 ->first();
         
-       return view('duties.show')->withDuties($duties);
+       return view('targets.show')->withTargets($targets);
     }
 
     /**
@@ -88,8 +89,8 @@ class TargetController extends Controller {
      * @return Response
      */
     public function edit($id) {
-        $duties = Target::findOrFail($id);
-        return view('duties.edit')->withDuties($duties);
+        $targets = Target::findOrFail($id);
+        return view('targets.edit')->withTargets($targets);
     }
 
     /**
@@ -99,14 +100,28 @@ class TargetController extends Controller {
      * @return Response
      */
     public function update($id, UpdateTargetRequest $request) {
-        $this->duties->update($id, $request);
-        return redirect()->route('duties.index');
+        $this->targets->update($id, $request);
+        return redirect()->route('targets.index');
     }
+    public function getDuty($id) {
+        if($id!='')
+        {
+        $sql = DB::table('duties')->select('*')->where('route_id', '=', $id)->get();
+        if(count($sql)>0)
+        {
+?>
+         <label class="required">Duty</label>
+        <select class="form-control" name="duty_id">
+        <?php
+        foreach ($sql as $value) {
+        ?>
+                    <option value="<?php echo $value->id; ?>"><?php echo $value->duty_number; ?></option>
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
+        <?php } ?>
+               </select> 
+
+        <?php
+    }
+    }
+    }
 }

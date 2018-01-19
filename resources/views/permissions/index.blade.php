@@ -41,7 +41,7 @@ function checkAll(id,cid) {
                         <tr>
                             <td>{{$value->name}}</td>
                             <td>{{$value->user_name}}</td>
-                            <td> <button  class="btn btn-small btn-primary"  data-toggle="modal" data-target="#<?php echo $value->id ?>"><span class="glyphicon glyphicon-search"></span>&nbsp;Menu</button></td>
+                            <td> <button  class="btn btn-small btn-primary"  data-toggle="modal" data-target="#<?php echo $value->id ?>"><span class="glyphicon glyphicon-plus"></span>&nbsp;Add Permissions</button></td>
                         </tr>
                         @endforeach
                     </tbody>

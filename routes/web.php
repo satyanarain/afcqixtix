@@ -77,6 +77,8 @@ Route::group(['middleware' => ['auth']], function () {
     
     Route::get('targets/data', 'TargetController@anyData')->name('targets.data');
     Route::post('targets/store', 'TargetController@store');
+    Route::get('targets/getduties/{id}', 'TargetController@getDuty');
+    
     Route::resource('targets', 'TargetController');
     
     Route::get('trips/data', 'TripController@anyData')->name('trips.data');

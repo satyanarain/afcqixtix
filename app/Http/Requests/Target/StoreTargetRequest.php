@@ -26,11 +26,11 @@ class StoreTargetRequest extends Request
     public function rules()
     {
             return [
-                   'duty_number' => 'required',
-                   'description' => 'required',
-                   'start_time' => 'required',
+                   'route_id' => 'required',
+                   'duty_id' => 'required',
                    'shift_id' => 'required',
-                   'order_number' => 'required'   
+                   'epkm' => 'required',
+                    'trip' => 'required'   
              ];
         
     }

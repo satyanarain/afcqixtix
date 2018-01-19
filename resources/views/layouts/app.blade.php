@@ -60,8 +60,7 @@
 
   
 <div class="wrapper">
-   
-        <header class="main-header">   
+    <header class="main-header">   
              
             <!-- Logo -->
             <a href="index2.html" class="logo">
@@ -343,7 +342,7 @@
                     
                   <li @if($segments_var[0]=='depots') class="treeview active" @else class="treeview" @endif>
                         <a href="#">
-                            <i class="fa fa-bus"></i> <span>Masters</span>
+                            <i class="fa fa-bus"></i> <span>Manage Masters</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>

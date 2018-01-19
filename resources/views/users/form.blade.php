@@ -5,7 +5,7 @@
 @if($user->user_name!='')
 <div class="form-group">
         {!! Form::label('user_name', Lang::get('User Name'), ['class' => 'control-label required']) !!}
-        {!! Form::text('user_name', null, ['class' => 'form-control','readably'=>'readably']) !!}
+        {!! Form::text('user_name', null, ['class' => 'form-control','readonly'=>'readonly']) !!}
 </div>
 @else
 <div class="form-group">
@@ -76,13 +76,14 @@
   var ext = $('#image_path').val().split('.').pop().toLowerCase();
  if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1) {
     $("#output").hide();
-    alert('invalid extension!');
+    alert('Only JPG, JPEG, PNG &amp; GIF files are allowed.' );
     return false;
     
 }
 
 });
  var loadFile = function(event) {
+       $("#output").show();
     var output = document.getElementById('output');
     output.src = URL.createObjectURL(event.target.files[0]);
   };  

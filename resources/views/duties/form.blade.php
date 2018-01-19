@@ -1,7 +1,7 @@
 @php $routes=displayList('routes','route')@endphp
 <div class="form-group">
         {!! Form::label('route_id', Lang::get('Routes'), ['class' => 'control-label required']) !!}
-        {!! Form::select('route_id',$routes,isset($routes->route_id) ? $routes->route_id : selected,['class' => 'form-control','required' => 'required']) !!}
+        {!! Form::select('route_id',$routes,isset($duties->route_id) ? $duties->route_id : selected,['class' => 'form-control','required' => 'required']) !!}
 
 </div>
 <div class="form-group">
