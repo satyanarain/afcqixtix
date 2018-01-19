@@ -201,18 +201,18 @@ function menuCreate($controllerName,$create='',$edit='',$view='',$id='',$control
 { ?>
 
    <tr>
-     <td>
+     <td align="center">
        <input type="checkbox" id="<?php echo "checkAll".$controllerName . $id; ?>" onclick="checkAll(this,this.id);">&nbsp;
       
          <?php
                   $array=array('_','-');
                  $controllerName_heading= str_replace($array,' ', $controllerName);
-                 if($controllerName_heading=='Changepassword')
-                 {
-                    echo  "All Change Password";
-                 }else{
-                   echo "Check All ".ucwords(substr($controllerName_heading,0,-1)); 
-                  }
+//                 if($controllerName_heading=='Changepassword')
+//                 {
+//                    echo  "All Change Password";
+//                 }else{
+//                   echo "Check All ".ucwords(substr($controllerName_heading,0,-1)); 
+//                  }
                    ?></td>
                 <td>
                     <b>
@@ -243,7 +243,7 @@ function menuCreate($controllerName,$create='',$edit='',$view='',$id='',$control
                           <?php  } ?>
                               <?php if($view!='')
                            { ?>
-                          <td><input class="<?php echo "checkAll".$controllerName . $id; ?>" type="checkbox" name="<?php echo $controllerName . "[]" ?>" value="<?php echo $view; ?>" <?php if (in_array('view', explode(',', $controllerName_Value))) { ?> checked="checked" <?php } ?>>&nbsp;&nbsp;View</td>
+                          <td><input class="<?php echo "checkAll".$controllerName . $id; ?>" type="checkbox" name="<?php echo $controllerName . "[]" ?>" value="<?php echo $view; ?>" checked="checked" readonly="readonly">&nbsp;&nbsp;View</td>
                            <?php  } ?>
                        </tr>   
                    </table>  

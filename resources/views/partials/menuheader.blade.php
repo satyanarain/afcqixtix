@@ -18,7 +18,7 @@
                 <form autocomplete="off">
                     <table class="table table-responsive.view">
                         <tr><?php  //print_r($value); ?>
-                            <td>Check All</td>
+                            <td>Select All</td>
                             <td>Menu</td>
                             <td>Action</td>
                         </tr>
