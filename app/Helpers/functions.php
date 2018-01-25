@@ -320,6 +320,5 @@ function menuCreate($controllerName,$create='',$edit='',$view='',$id='',$control
                </span>
            </td>
        </tr> 
-    
     <?php
 }
