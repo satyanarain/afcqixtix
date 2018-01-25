@@ -25,11 +25,11 @@ class UpdateUserRequest extends Request
     {
         
             return [
-//                 'name' => 'required',
-//                 'user_name' => 'required|user_name|unique:users,user_name',
-//                 'email' => 'required',
-//                 'country' => 'required',
-//                 'mobile' => 'required'
+                 'name' => 'required',
+                // 'user_name' => 'required|without_spaces|unique:users,user_name',
+                 'email' => 'required',
+                 'country' => 'required',
+                 'mobile' => 'required'
                ];
         
     }

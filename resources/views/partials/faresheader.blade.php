@@ -23,12 +23,36 @@
                     </tr>
                     <tr>
                         <td><b>Child Ticket Amount (Rs).</b></td>
-                        <td class="table_normal">{{ $value->chield_ticket_amount}}</td>
+                        <td class="table_normal">{{ $value->child_ticket_amount}}</td>
                     </tr>
                     <tr>
                         <td><b>Luggage Ticket Amount (Rs).</b></td>
                         <td class="table_normal">{{ $value->luggage_ticket_amount }}</td>
                     </tr>
+                    
+                    
+                    <tr>
+                        <td><b>Luggage Ticket Amount (Rs).</b></td>
+                        <td class="table_normal">{{ $value->luggage_ticket_amount }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Luggage Ticket Amount (Rs).</b></td>
+                        <td class="table_normal">{{ $value->luggage_ticket_amount }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Created By</b></td>
+                        <td class="table_normal">{{ $value->username }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Created At</b></td>
+                        <td class="table_normal">{{ dateView($value->created_at) }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Updated At</b></td>
+                        <td class="table_normal">{{ dateView($value->updated_at) }}</td>
+                    </tr>
+                    
+                    
                     </table>  
                   <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>

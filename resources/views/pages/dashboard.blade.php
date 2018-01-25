@@ -90,7 +90,7 @@ $('.popoverOption').each(function() {
       <div class="row">
         <div class="col-md-12">
           <div class="box">
-            <div class="box-header with-border">
+            <div class="box-header">
               <h3 class="box-title">Monthly Recap Report</h3>
                <div class="box-tools pull-right">
                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -225,7 +225,7 @@ $('.popoverOption').each(function() {
         <div class="col-md-8">
           <!-- MAP & BOX PANE -->
           <div class="box box-success">
-            <div class="box-header with-border">
+            <div class="box-header">
               <h3 class="box-title">Visitors Report</h3>
 
               <div class="box-tools pull-right">
@@ -277,7 +277,7 @@ $('.popoverOption').each(function() {
             <div class="col-md-6">
               <!-- DIRECT CHAT -->
               <div class="box box-warning direct-chat direct-chat-warning">
-                <div class="box-header with-border">
+                <div class="box-header">
                   <h3 class="box-title">Direct Chat</h3>
 
                   <div class="box-tools pull-right">
@@ -475,7 +475,7 @@ $('.popoverOption').each(function() {
             <div class="col-md-6">
               <!-- USERS LIST -->
               <div class="box box-danger">
-                <div class="box-header with-border">
+                <div class="box-header">
                   <h3 class="box-title">Latest Members</h3>
 
                   <div class="box-tools pull-right">
@@ -545,7 +545,7 @@ $('.popoverOption').each(function() {
           <!-- /.row -->
  <!-- TABLE: LATEST ORDERS -->
           <div class="box box-info">
-            <div class="box-header with-border">
+            <div class="box-header">
               <h3 class="box-title">Latest Orders</h3>
 
               <div class="box-tools pull-right">
@@ -711,7 +711,7 @@ $('.popoverOption').each(function() {
           <!-- /.info-box -->
 
           <div class="box box-default">
-            <div class="box-header with-border">
+            <div class="box-header">
               <h3 class="box-title">Browser Usage</h3>
 
               <div class="box-tools pull-right">
@@ -760,7 +760,7 @@ $('.popoverOption').each(function() {
           <!-- /.box -->
  <!-- PRODUCT LIST -->
           <div class="box box-primary">
-            <div class="box-header with-border">
+            <div class="box-header">
               <h3 class="box-title">Recently Added Products</h3>
 
               <div class="box-tools pull-right">

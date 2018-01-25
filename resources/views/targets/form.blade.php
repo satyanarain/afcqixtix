@@ -1,6 +1,5 @@
+
 @php $routes=displayList('routes','route')@endphp
-
-
 <div class="form-group">
         {!! Form::label('route_id', Lang::get('Route'), ['class' => 'control-label required']) !!}
         {!! Form::select('route_id',$routes,isset($targets->route_id) ? $targets->route_id : selected,['class' => 'form-control','required' => 'required','onchange'=>'findDuty(this.value)','placeholder'=>"Select Route"]) !!}

@@ -43,11 +43,11 @@
               	<li class="active"><a href="#travel_detail" data-toggle="tab">User Details</a></li>
               	
             </ul>
-            <div class="tab-content">
-	   <table width=90% class="table table-responsive">
-                          <tr>
-                              <td>Address</td>
-                              <td class="table_normal">{{ displayView($user->address) }}</td>
+            <div class="tab-content" >
+	   <table width=90% class="table table-responsive" style="border-top:none;">
+                          <tr style="border-top:none; margin-top:-5px;">
+                              <td style="border-top:none;">Address</td>
+                              <td class="table_normal" style="border-top:none;">{{ displayView($user->address) }}</td>
                           </tr>
                            <tr>
                               <td>Country</td>

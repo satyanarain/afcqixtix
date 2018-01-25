@@ -15,7 +15,6 @@ class UpdateBusTypeRequest extends Request
     {
         return true;
     }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -25,7 +24,7 @@ class UpdateBusTypeRequest extends Request
     {
         
             return [
-                  'bus_type' => 'required',
+                   'bus_type' => 'required',
                    'abbreviation' => 'required',
                    'order_number' => 'required'
              ];

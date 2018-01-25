@@ -35,7 +35,7 @@ class BusTypesController extends Controller
     public function index()
     {
         
-    $bustypes = BusType::orderBy('id')->get();
+    $bustypes = BusType::orderBy('order_number')->get();
     return view('bustypes.index')->withBustypes($bustypes);
    
     }
@@ -94,6 +94,37 @@ class BusTypesController extends Controller
     {
         $this->bustypes->update($id, $request);
         return redirect()->route('bus_types.index');
+    }
+    
+    
+    public function sortOrder($id) {
+        $array = explode(',', $id);
+
+        for ($i = 0; $i <= count($array); $i++) {
+            DB::table('bus_types')->where('id', $array[$i])->update(['order_number' => $i]);
+        }
+        $bustypes = BusType::orderBy('order_number')->get();
+        ?>
+                <thead>
+                    <tr>  <th>Bus Type</th>
+                        <th>Order Number</th>
+                        <th>Abbreviation</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+            <?php foreach ($bustypes as $value) {
+                ?>
+                            <tr class="nor_f">
+                                <td><?php echo $value->bus_type; ?></td>
+                                <td><?php echo $value->order_number; ?></td>
+                                <td><?php echo $value->abbreviation ?></td>
+                                <td><a  href="<?php echo route("bus_types.edit", $value->id) ?>" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button  class="btn btn-small btn-primary"  data-toggle="modal" data-target="#<?php echo $id ?>"><span class="glyphicon glyphicon-search"></span>&nbsp;View</button>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            </tr>
+            <?php } ?>
+                </tbody>
+        <?php
     }
 
     /**

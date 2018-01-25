@@ -9,7 +9,7 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{headingMain()}}</h3>
-                {{ createButton('create','Add') }}
+                {{ createButton('create','Add','order','order_id') }}
              </div>
             @include('partials.message')
             
@@ -19,19 +19,21 @@
                     <thead>
                          <tr>
                             <th>@lang('Bus Type')</th>
-                            <th>@lang('Abbreviation')</th>
                             <th>@lang('Order Number')</th>
+                            <th>@lang('Abbreviation')</th>
+                            
                            {{  actionHeading('Action', $newaction='') }}
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($bustypes as $value)
-                        <tr class="nor_f    ">
+                        <tr class="nor_f">
                             <td>{{$value->bus_type}}</td>
+                             <td>{{$value->order_number}}
+                            </td>
                             <td>{{$value->abbreviation}}
                             </td>
-                            <td>{{$value->order_number}}
-                            </td>
+                           
                            {{ actionEdit('edit',$value->id)}}
                          </tr>
                         @endforeach
@@ -44,7 +46,15 @@
     </div>
     <!-- /.col -->
 </div>
+
+ </div>
+ <script>
+
+     
+</script>
 <!-- /.row -->
+
+@include('partials.bustypes_order_header')
 @include('partials.bustypesheader')
-@include('partials.table_script')
+@include('partials.table_script_order')
 @stop

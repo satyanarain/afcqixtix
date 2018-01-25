@@ -26,7 +26,7 @@ class StoreBusTypeRequest extends Request
     {
         
             return [
-                  'bus_type' => 'required',
+                   'bus_type' => 'required|unique:bus_types,bus_type',
                    'abbreviation' => 'required',
                    'order_number' => 'required'
              ];

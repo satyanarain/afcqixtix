@@ -32,6 +32,7 @@
         <link rel="stylesheet" href="{{URL::asset('plugins/datatables/dataTables.bootstrap.css')}}">
          <link rel="stylesheet" href="{{URL::asset('css/AdminLTE.min.css')}}">
       <link rel="stylesheet" href="{{URL::asset('css/custom.css')}}">
+      <script src="{{ asset('js/custom.js') }}"></script>
     <script>    
      
  window.Laravel = <?php echo json_encode([
@@ -388,16 +389,16 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                             </a>
                                  
                             <li @if($segments_var[0]=='fares') class="active" @endif><a href="{{route('fares.index')}}">
-                                    <i class="fa fa-plane"></i> @lang('menu.fares.title') </a>
+                                    <i class="fa fa-inr"></i> @lang('menu.fares.title') </a>
                            </li>
                            <li @if($segments_var[0]=='concession_fare_slabs') class="active" @endif><a href="{{route('concession_fare_slabs.index')}}">
-                                    <i class="fa fa-plane"></i> @lang('menu.concession_fare_slabs.title') </a>
+                                    <i class="fa fa-inr"></i> @lang('menu.concession_fare_slabs.title') </a>
                            </li>
                            <li @if($segments_var[0]=='concessions') class="active" @endif><a href="{{route('concessions.index')}}">
-                                    <i class="fa fa-map-marker"></i> @lang('menu.concessions.title') </a>
+                                    <i class="fa fa-inr"></i> @lang('menu.concessions.title') </a>
                            </li>
                            <li @if($segments_var[0]=='trip_cancellation_reason') class="active" @endif><a href="{{route('trip_cancellation_reason.index')}}">
-                                    <i class="fa fa-plane"></i> @lang('menu.trip_cancellation_reason.title') </a>
+                                    <i class="fa fa-inr"></i> @lang('menu.trip_cancellation_reason.title') </a>
                            </li>
                            <li @if($segments_var[0]=='inspector_remarks') class="active" @endif><a href="{{route('inspector_remarks.index')}}">
                                     <i class="fa fa-user"></i> @lang('menu.inspector_remarks.title') </a>
@@ -445,6 +446,7 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                     @yield('header')
                 </section>
                 <section class="content">
+                    
                     @if($errors->any())
                     <ul class="list-group"> 
                         @foreach($errors->all() as $error)
@@ -497,7 +499,7 @@ $.widget.bridge('uibutton', $.ui.button);
 <script src="{{ asset(elixir('plugins/datatables/dataTables.bootstrap.min.js')) }}"></script>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
 <script src="{{ asset(elixir('js/demo.js')) }}"></script>
-<script src="{{ asset('js/custom.js') }}"></script>
+
 
 <script>
     

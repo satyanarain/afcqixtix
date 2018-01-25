@@ -8,24 +8,24 @@ use Notifynder;
 use DB;
 use Schema;
 use Response;
-use App\Models\ConcessionFareSlab;
+use App\Models\Concession;
 use App\Models\Duty;
 use App\Models\Country;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ConcessionFareSlab\UpdateConcessionFareSlabRequest;
-use App\Http\Requests\ConcessionFareSlab\StoreConcessionFareSlabRequest;
-use App\Repositories\ConcessionFareSlab\ConcessionFareSlabRepositoryContract;
+use App\Http\Requests\Concession\UpdateConcessionRequest;
+use App\Http\Requests\Concession\StoreConcessionRequest;
+use App\Repositories\Concession\ConcessionRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
-class ConcessionFareSlabController extends Controller {
+class ConcessionController extends Controller {
 
     protected $concession_fare_slabs;
 
     public function __construct(
-    ConcessionFareSlabRepositoryContract $concession_fare_slabs
+    ConcessionRepositoryContract $concession_fare_slabs
     ) {
         $this->concession_fare_slabs = $concession_fare_slabs;
     }
@@ -40,13 +40,13 @@ class ConcessionFareSlabController extends Controller {
                 ->leftjoin('users', 'users.id', '=', 'concession_fare_slabs.user_id')
                 ->leftjoin('services', 'concession_fare_slabs.service_id', '=', 'services.id')
                 ->get();
-                 return view('concession_fare_slabs.index')->withConcessionFareSlabs($concession_fare_slabs);
+                 return view('concession_fare_slabs.index')->withConcessions($concession_fare_slabs);
     }
  public function Previous() {
     $concession_fare_slabs = DB::table('fare_logs')->select('*','fare_logs.id as id')
                 ->leftjoin('services', 'fare_logs.service_id', '=', 'services.id')
                 ->get();
-        return view('concession_fare_slabs.previous')->withConcessionFareSlabs($concession_fare_slabs);
+        return view('concession_fare_slabs.previous')->withConcessions($concession_fare_slabs);
     }
 
     public function create() {
@@ -61,10 +61,10 @@ class ConcessionFareSlabController extends Controller {
 
     /**
      * Store a newly created resource in storage.
-     * @param ConcessionFareSlab $concession_fare_slabs
+     * @param Concession $concession_fare_slabs
      * @return Response
      */
-    public function store(StoreConcessionFareSlabRequest $concession_fare_slabsRequest) {
+    public function store(StoreConcessionRequest $concession_fare_slabsRequest) {
         $getInsertedId = $this->concession_fare_slabs->create($concession_fare_slabsRequest);
         return redirect()->route('concession_fare_slabs.index');
     }
@@ -80,7 +80,7 @@ class ConcessionFareSlabController extends Controller {
                 ->leftjoin('users', 'users.id', '=', 'concession_fare_slabs.user_id')
                 ->leftjoin('services', 'concession_fare_slabs.service_id', '=', 'services.id')
                 ->get();
-                 return view('concession_fare_slabs.index')->withConcessionFareSlabs($concession_fare_slabs);
+                 return view('concession_fare_slabs.index')->withConcessions($concession_fare_slabs);
     }
 
     /**
@@ -90,7 +90,7 @@ class ConcessionFareSlabController extends Controller {
      * @return Response
      */
     public function edit($id) {
-        $concession_fare_slabs = ConcessionFareSlab::findOrFail($id);
+        $concession_fare_slabs = Concession::findOrFail($id);
         return view('concession_fare_slabs.edit',compact('concession_fare_slabs'));
     }
 
@@ -100,7 +100,7 @@ class ConcessionFareSlabController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function update($id, UpdateConcessionFareSlabRequest $request) {
+    public function update($id, UpdateConcessionRequest $request) {
         $this->concession_fare_slabs->update($id, $request);
         return redirect()->route('concession_fare_slabs.index');
     }

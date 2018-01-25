@@ -35,7 +35,7 @@ class VehicleController extends Controller
      */
     public function index()
     {
-     $vehicles = DB::table('vehicles')->select('vehicles.id','vehicles.vehicle_registration_number','vehicles.depot_id','vehicles.bus_type_id','vehicles.vehicle_registration_number','depots.id','depots.name as name','bus_types.id','bus_types.bus_type')
+     $vehicles = DB::table('vehicles')->select('vehicles.vehicle_registration_number','vehicles.depot_id','vehicles.bus_type_id','vehicles.vehicle_registration_number','depots.id','depots.name as name','bus_types.id','bus_types.bus_type','vehicles.id as id')
             ->leftjoin('depots', 'depots.id', '=', 'vehicles.depot_id')
             ->leftjoin('bus_types', 'bus_types.id', '=', 'vehicles.bus_type_id')
             ->get();

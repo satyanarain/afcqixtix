@@ -9,9 +9,9 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{headingMain()}}</h3>
-             {{ createButton('create','Add') }}
+             {{-- createButton('create','Add') --}}
             </div>
-           @include('partials.message')
+<!--           @include('partials.message')-->
             <!-- /.box-header -->
             <div class="box-body">
                 <table id="example1" class="table table-bordered table-striped">
@@ -22,11 +22,13 @@
                            <th>@lang('Adult Ticket Amount')</th>
                             <th>@lang('Child Ticket Amount')</th>
                             <th>@lang('Luggage Ticket Amount')</th>
-                            {{  actionHeading('Action', $newaction='') }}
+                            <th>@lang('Created Date')</th>
+                            <th>@lang('Updated Date')</th>
+                           
                         </tr>
                     </thead>
                     <tbody>
-                         @foreach($fares as $value)
+                         @foreach($concession_fare_slabs as $value)
                         <tr class="nor_f">
                             <td>{{$value->name}}</td>
                             <td>{{$value->stage}}</td>
@@ -34,10 +36,13 @@
                             </td>
                             <td>{{$value->child_ticket_amount}}
                             </td>
-                            
                             <td>{{$value->luggage_ticket_amount}}
                             </td>
-                             {{ actionEdit('edit',$value->id)}}
+                            <td>{{dateView($value->created_at)}}
+                            </td>
+                            <td>{{dateView($value->updated_at)}}
+                            </td>
+                           
                         </tr>
                         @endforeach
                         </tbody>
@@ -51,6 +56,6 @@
 </div>
 <!-- /.row -->
 
-@include('partials.faresheader')
+@include('partials.concession_fare_slabsheader')
 @include('partials.table_script')
 @stop

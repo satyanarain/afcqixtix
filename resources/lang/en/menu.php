@@ -78,7 +78,7 @@ return [
      ],
    
     'trip_cancellation_reason' =>  [
-        'title' => 'Trip Cancession Reason',
+        'title' => 'Trip Cancellation Reason',
      
      ],
     'inspector_remarks' =>  [

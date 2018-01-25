@@ -48,6 +48,7 @@ Route::group(['middleware' => ['auth']], function () {
     /************************masters created by satya 28-12-2017 depot***************************** */
     Route::get('bus_types/data', 'BusTypesController@anyData')->name('bustypes.data');
     Route::post('bus_types/store', 'BusTypesController@store');
+    Route::get('bus_types/sort_order/{id}', 'BusTypesController@sortOrder');
     Route::resource('bus_types', 'BusTypesController');
     
     /************************masters created by satya 28-12-2017 depot***************************** */
@@ -84,9 +85,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('trips/data', 'TripController@anyData')->name('trips.data');
     Route::post('trips/store', 'TripController@store');
     Route::resource('trips', 'TripController');
-    
+    Route::get('fares/previous', 'FaresController@Previous')->name('fares.previous');
     Route::post('fares/data', 'FaresController@anyData')->name('fares.data');
     Route::resource('fares', 'FaresController');
+  
     
     Route::get('concession_fare_slabs/data', 'ConcessionFareSlabController@anyData')->name('concession_fare_slabs.data');
     Route::post('concession_fare_slabs/store', 'ConcessionFareSlabController@store');

@@ -115,7 +115,7 @@ class TargetController extends Controller {
         <?php
         foreach ($sql as $value) {
         ?>
-                    <option value="<?php echo $value->id; ?>"><?php echo $value->duty_number; ?></option>
+        <option value="<?php echo $value->id; ?>"><?php echo $value->duty_number; ?></option>
 
         <?php } ?>
                </select> 

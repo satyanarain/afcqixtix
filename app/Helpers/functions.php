@@ -42,6 +42,65 @@ function changeDateFromYMDToDMY($dateToConvert = "") {
 
     return $result;
 }
+function maxId($result)
+{
+$bus_types_id = DB::table('bus_types')->where('order_number', DB::raw("(select max(`order_number`) from bus_types)"))->first();
+if($bus_types_id->order_number!='')
+{
+   return $bus_types_id->order_number+1;
+} else {
+ return $bus_types_id->order_number=1;
+}
+}
+
+function orderList($table='',$field1='',$field2='',$field3='',$field4='',$field5='')
+{
+    $sql = DB::table($table)->select('*')->get() ;
+    
+    ?>
+
+
+  
+
+    <div class="gallery">
+        <ul class="list-group-order">
+            <li class="order-sub"><a href="javascript:void(0);">Bus Type</a>
+          <a href="javascript:void(0);">Order Number</a>
+         <a href="javascript:void(0);">Abbreviation</a>
+         </li>     
+      <?php foreach($sql as $value) 
+      { ?>
+        <li id="<?php echo $value->$field1; ?>" class="list-group-order-sub">
+                        
+             <?php
+             if($field2!='')
+             { ?>
+                <a href="javascript:void(0);" ><?php echo $value->$field2; ?></a>
+             <?php } ?>
+           <?php
+             if($field3!='')
+             { ?>
+        <a href="javascript:void(0);"><?php echo $value->$field3; ?></a>
+       
+        <?php } 
+             if($field4!='')
+             { ?>
+       
+        <a href="javascript:void(0);"><?php echo $value->$field4; ?></a>
+           <?php
+             }
+             if($field5!='')
+             { ?>
+       <a href="javascript:void(0);"><?php echo $value->$field5; ?></a>
+         <?php } ?>
+      
+                    </li>
+		
+      <?php } ?>   
+       	</ul>
+    </div>
+<?php
+}
 
 function BreadCrumb() {
     $segments = '';
@@ -83,8 +142,12 @@ function BreadCrumb() {
             $segments = '';
             $segments = Request::segments();
             $segments_value = str_replace("_", " ", $segments[0]);
-            echo "Manage ".substr(ucwords($segments_value), 0, -1);
-            
+             if(is_numeric(end($segments)) && empty($segments[2]) && $segments[0]=='users')
+             {
+                 echo substr(ucwords($segments_value), 0, -1)."&nbsp;Profile ";     
+             } else {
+              echo "Manage ".substr(ucwords($segments_value), 0, -1);
+             }
             ?> 
     <?php
 }
@@ -105,6 +168,15 @@ function headingMain() {
         $segments_value = str_replace("_", " ", $segments[0]);
         echo "List of All " . ucwords($segments_value);
     }
+}
+function PopUpheadingMain($result) {
+    $segments = '';
+    $segments = Request::segments();
+ 
+        $areay=array('-','_');
+        $segments_value = str_replace($areay, " ", $segments[0]);
+       return $result= substr(ucwords($segments_value), 0, -1);
+  
 }
 ?>
 <?php
@@ -138,7 +210,7 @@ function actionEdit($action = '', $id = '') {
         <td>
              <a  href="<?php echo route($segments[0] . "." . $action, $id) ?>" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
              <?php if($segments[0]=='users'){?>
-              <a  class="btn btn-small btn-primary" href="<?php echo route('users.show', $user->id); ?>" ><span class="glyphicon glyphicon-search"></span>&nbsp;View</a>&nbsp;&nbsp;&nbsp;&nbsp;
+              <a  class="btn btn-small btn-primary" href="<?php echo route('users.show', $id); ?>" ><span class="glyphicon glyphicon-search"></span>&nbsp;View</a>&nbsp;&nbsp;&nbsp;&nbsp;
              <?php }else{ ?>
                <button  class="btn btn-small btn-primary"  data-toggle="modal" data-target="#<?php echo $id ?>"><span class="glyphicon glyphicon-search"></span>&nbsp;View</button>&nbsp;&nbsp;&nbsp;&nbsp;
               <?php } ?>
@@ -152,9 +224,8 @@ function actionEdit($action = '', $id = '') {
 
 function actionHeading($action = '', $newaction='') {
             ?>
-                               <th><?php echo htmlentities("Action"); ?></th>
-
-    <?php
+             <th><?php echo htmlentities("Action"); ?></th>
+            <?php
 }
 
 function menuDisplayByUser($result,$menuname='',$action='') {
@@ -171,7 +242,7 @@ function menuDisplayByUser($result,$menuname='',$action='') {
     }
 }
 
-function createButton($action = '', $title='') {
+function createButton($action = '', $title='',$order='',$order_id='',$privious='') {
    $segments = '';
    $segments = Request::segments();
    $menu_dis = $segments[0];
@@ -182,8 +253,13 @@ function createButton($action = '', $title='') {
    
   if(in_array('create',$array_menu) && in_array($segments[0],$array_menu)){
   ?>
-   <a href="<?php  echo route($segments[0].".".$action) ?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;<?php echo $title ?></button></a>
-    <?php  
+   <a href="<?php  echo route($segments[0].".".$action) ?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;<?php echo $title; ?></button></a>
+   <?php if($order!=''){ ?>
+ </br>
+ </br>
+      <button  class="btn btn-primary pull-left"  data-toggle="modal" data-target="#<?php echo $order_id ?>"><span class="fa fa-sort-desc"></span>&nbsp;Update Order</button>&nbsp;&nbsp;&nbsp;&nbsp;
+ <?php 
+   }
 }   
 }
 
@@ -207,13 +283,7 @@ function menuCreate($controllerName,$create='',$edit='',$view='',$id='',$control
          <?php
                   $array=array('_','-');
                  $controllerName_heading= str_replace($array,' ', $controllerName);
-//                 if($controllerName_heading=='Changepassword')
-//                 {
-//                    echo  "All Change Password";
-//                 }else{
-//                   echo "Check All ".ucwords(substr($controllerName_heading,0,-1)); 
-//                  }
-                   ?></td>
+               ?></td>
                 <td>
                     <b>
                    <input  class="<?php echo "checkAll". $controllerName . $id; ?>" type="checkbox" name="<?php echo $controllerName . "[]"; ?>" value="<?php echo $controllerName;?>" <?php if (in_array($controllerName, explode(',', $controllerName_Value))) { ?> checked <?php } ?> onchange="showMenu(this.id)" id="<?php echo $controllerName . $id; ?>">

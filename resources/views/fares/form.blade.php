@@ -9,18 +9,19 @@
 
 <div class="form-group">
         {!! Form::label('stage', Lang::get('Stage'), ['class' => 'control-label required']) !!}<br>
-         {!! Form::text('stage', null, ['class' => 'form-control','required' => 'required']) !!}
+         {!! Form::number('stage', null, ['class' => 'form-control','required' => 'required','onkeypress'=>'return isNumberKey(event)']) !!}
 </div>
 <div class="form-group">
-        {!! Form::label('adult_ticket_amount', Lang::get('Adult Ticket Amount (Rs).'), ['class' => 'control-label required']) !!}<br>
-         {!! Form::text('adult_ticket_amount', null, ['class' => 'form-control','required' => 'required']) !!}
+        {!! Form::label('adult_ticket_amount', Lang::get('Adult Ticket Amount (Rs).'), ['class' => 'control-label required','onkeypress'=>'return isNumberKey(event)']) !!}<br>
+         {!! Form::text('adult_ticket_amount', null, ['class' => 'form-control','required' => 'required','onkeypress'=>'return isNumberKey(event)']) !!}
 </div>
 <div class="form-group">
-        {!! Form::label('child_ticket_amount', Lang::get('Child Ticket Amount (Rs).'), ['class' => 'control-label required']) !!}<br>
+        {!! Form::label('child_ticket_amount', Lang::get('Child Ticket Amount (Rs).'), ['class' => 'control-label required','onkeypress'=>'return isNumberKey(event)']) !!}<br>
          {!! Form::text('child_ticket_amount', null, ['class' => 'form-control','required' => 'required']) !!}
+     
 </div>
 <div class="form-group">
-        {!! Form::label('luggage_ticket_amount', Lang::get('Luggage Ticket Amount (Rs).'), ['class' => 'control-label required']) !!}<br>
+        {!! Form::label('luggage_ticket_amount', Lang::get('Luggage Ticket Amount (Rs).'), ['class' => 'control-label required','onkeypress'=>'return isNumberKey(event)']) !!}<br>
          {!! Form::text('luggage_ticket_amount', null, ['class' => 'form-control','required' => 'required']) !!}
 </div>
 

@@ -4,6 +4,6 @@
 {{BreadCrumb()}}
 @stop
 @section('content')
-@include('partials.stopsheader')
+@include('partials.concession_fare_slabsheader')
 @stop
   

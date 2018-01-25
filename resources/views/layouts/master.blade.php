@@ -1,4 +1,5 @@
 <?php
+
 $segments_var = '';
 $segments_var = Request::segments();
 
@@ -16,7 +17,28 @@ if($segments_var[2]=='edit')
   
 }
 
+
+
+
+
+
+
+
+
+
 ?>
+
+
+
+
+@if(is_numeric(end($segments_var)) && empty($segments_var[2]) && $segments_var[0]=='users')
+@include('layouts.app')
+@else
+@if($segments_var[1]=='previous')
+
+@include('layouts.app')
+@else
+
 @if($segments_var[2]=='edit')
 
 @if(in_array($segments_var[0],$array_menu) && in_array($segments_var[2],$array_menu))
@@ -40,4 +62,6 @@ if($segments_var[2]=='edit')
 @endif
 
 
+@endif
+@endif
 @endif

@@ -1,3 +1,7 @@
+<div class="row fix-gutters-six">
+<div class="col-sm-6">
+
+
 {{ createButton('create','Add') }}
 {{  actionHeading('Action', $newaction='') }}
 {{ actionEdit('edit',$value->id)}}
@@ -23,3 +27,4 @@ foreach($companydocumentsubtypes as $value)
 
 <?php
 }
+

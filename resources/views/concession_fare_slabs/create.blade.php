@@ -10,18 +10,16 @@
         <div class="box">
             <div class="box-header">
                 <h3 class="box-title">{{headingMain()}}</h3>
-               @if(Entrust::hasRole('administrator'))
-                <a href="{{ route('stops.create')}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>   @lang('common.titles.add')</button></a>
-            @endif
-            </div>
+              <a href="{{ route('concession_fare_slabs.create')}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>   @lang('common.titles.add')</button></a>
+           </div>
             <!-- /.box-header -->
             <div class="box-body">
                 {!! Form::open([
-                'route' => 'stops.store',
+                'route' => 'concession_fare_slabs.store',
                 'files'=>true,
                 'enctype' => 'multipart/form-data'
                  ]) !!}
-                @include('stops.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
+                @include('concession_fare_slabs.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 
                 {!! Form::close() !!}
             </div>

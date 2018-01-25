@@ -23,13 +23,13 @@ class UpdateFareRequest extends Request
      */
       public function rules()
     {
-        
-            return [
-                   'service_id' => 'required',
+      $regex = "/^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$/";
+           return [
+                    'service_id' => 'required|numeric',
                    'stage' => 'required',
-                   'adult_ticket_amount' => 'required',
-                   'child_ticket_amount' => 'required',
-                   'luggage_ticket_amount' => 'required'                                    
+                   'adult_ticket_amount' =>  array('required','regex:'.$regex),
+                    'child_ticket_amount' =>  array('required','regex:'.$regex),
+                   'luggage_ticket_amount' =>  array('required','regex:'.$regex)  
              ];
         
     }
