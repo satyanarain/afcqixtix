@@ -254,12 +254,12 @@ function createButton($action = '', $title='',$order='',$order_id='',$privious='
   if(in_array('create',$array_menu) && in_array($segments[0],$array_menu)){
   ?>
    <a href="<?php  echo route($segments[0].".".$action) ?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;<?php echo $title; ?></button></a>
-   <?php if($order!=''){ ?>
+  
  </br>
  </br>
       <button  class="btn btn-primary pull-left"  data-toggle="modal" data-target="#<?php echo $order_id ?>"><span class="fa fa-sort-desc"></span>&nbsp;Update Order</button>&nbsp;&nbsp;&nbsp;&nbsp;
  <?php 
-   }
+   
 }   
 }
 
