@@ -7,9 +7,9 @@
                 <h4 class="viewdetails_details"><span class="fa fa-bus"></span>&nbsp;Bus Type</h4>
             </div>
             <div class="modal-body-view">
-                <div class="alert alert-success alert-block" id="successMessage_show">
+                <div class="alert alert-success alert-block" id="successMessage_order" style="display:none">
 <!--                    <button type="button" class="close" data-dismiss="alert">×</button>	-->
-                    <strong id="success_order">{{ $message }}</strong>
+                    <strong id="success_order"></strong>
                 </div>
                 <?php echo orderList('bus_types','id','bus_type','order_number','abbreviation'); ?>
                   <div class="modal-footer">
