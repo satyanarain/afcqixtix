@@ -39,8 +39,7 @@ class FareRepository implements FareRepositoryContract {
         if(count( $fares)>0)
         {
           Session::flash('error', "Service Name and stage must be uquque.");
-          
- 
+        
         } else {
         
         $input = $requestData->all();
@@ -52,7 +51,7 @@ class FareRepository implements FareRepositoryContract {
         }
     }
  public function update($id, $requestData) {
-        $this->createLog('App\Models\Fare','App\Models\FareLog',$id);
+       // $this->createLog('App\Models\Fare','App\Models\FareLog',$id);
         $fares = Fare::findorFail($id);
         $input = $requestData->all();
         $userid = Auth::id();
