@@ -319,7 +319,7 @@ function menuCreate($controllerName,$create='',$edit='',$view='',$id='',$control
                    </table>  
                </span>
            </td>
-       </tr>  
+       </tr> 
     
     <?php
 }
