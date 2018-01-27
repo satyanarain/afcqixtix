@@ -10,19 +10,16 @@
         <div class="box">
             <div class="box-header">
               <h3 class="box-title">{{headingMain()}}</h3>
-                @if(Entrust::hasRole('administrator'))
-                <a href="{{ route('stops.create')}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>   @lang('common.titles.add')</button></a>
-            @endif
-            </div>
+           </div>
             <!-- /.box-header -->
             <div class="box-body">
-               {!! Form::model($stops, [
+               {!! Form::model($concession_fare_slabs, [
         'method' => 'PATCH',
-        'route' => ['stops.update', $stops->id],
+        'route' => ['concession_fare_slabs.update', $concession_fare_slabs->id],
         'files'=>true,
         'enctype' => 'multipart/form-data'
         ]) !!}
-               @include('stops.form', ['submitButtonText' => Lang::get('user.headers.update_submit')])
+               @include('concession_fare_slabs.form', ['submitButtonText' => Lang::get('user.headers.update_submit')])
 
                 {!! Form::close() !!}
             </div>
