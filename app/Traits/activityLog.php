@@ -14,10 +14,21 @@ trait activityLog {
        unset($fares_log[0]['updated_at']);
        foreach ($fares_log as $item) 
         {
-          return  $controllerModelLog::create($item);
+          return  $controllerModelLog::insert($item);
         }
         
 	}
+        
+        function mySqlDate($date='')
+	{ 
+        if ($date!= '') {
+           return date('Y-m-d', strtotime($date));
+        } else {
+           return NULL;
+        
+	}
+        }
+        
 }
 
 

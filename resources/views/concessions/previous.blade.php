@@ -28,7 +28,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                         @foreach($concession_fare_slabs as $value)
+                         @foreach($concessions as $value)
                         <tr class="nor_f">
                             <td>{{$value->name}}</td>
                             <td>{{$value->stage}}</td>
@@ -56,6 +56,6 @@
 </div>
 <!-- /.row -->
 
-@include('partials.concession_fare_slabsheader')
+@include('partials.concessionsheader')
 @include('partials.table_script')
 @stop

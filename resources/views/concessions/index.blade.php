@@ -18,21 +18,22 @@
                     <thead>
                          <tr>
                             <th>@lang('Service Name')</th>
-                           <th>@lang('Percetage')</th>
-                            <th>@lang('From Stage')</th>
-                            <th>@lang('To Stage')</th>
-                            <th>@lang('Fare')</th>
+                            <th>@lang('Order Number')</th>
+                           <th>@lang('Concession Provider')</th>
+                            <th>@lang('Concession')</th>
+                            <th>@lang('Description')</th>
                             {{  actionHeading('Action', $newaction='') }}
                         </tr>
                     </thead>
                     <tbody>
-                         @foreach($concessionFareSlabs as $value)
+                        <?php //print_r($concessions);?>
+                         @foreach($concessions as $value)
                         <tr class="nor_f">
                             <td>{{$value->name}}</td>
-                             <td>{{$value->percentage}}</td>
-                            <td>{{$value->stage_from}}</td>
-                            <td>{{$value->stage_to}}</td>
-                            <td>{{$value->fare}}</td>
+                             <td>{{$value->order_number}}</td>
+                            <td>{{$value->concession_provider}}</td>
+                            <td>{{$value->concession}}</td>
+                            <td>{{$value->description}}</td>
                              {{ actionEdit('edit',$value->id)}}
                         </tr>
                         @endforeach
@@ -47,6 +48,6 @@
 </div>
 <!-- /.row -->
 
-@include('partials.concession_fare_slabsheader')
+@include('partials.concessionsheader')
 @include('partials.table_script')
 @stop

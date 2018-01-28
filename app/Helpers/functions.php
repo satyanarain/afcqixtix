@@ -42,9 +42,9 @@ function changeDateFromYMDToDMY($dateToConvert = "") {
 
     return $result;
 }
-function maxId($result)
+function maxId($table='',$result='')
 {
-$bus_types_id = DB::table('bus_types')->where('order_number', DB::raw("(select max(`order_number`) from bus_types)"))->first();
+$bus_types_id = DB::table($table)->where('order_number', DB::raw("(select max(`order_number`) from bus_types)"))->first();
 if($bus_types_id->order_number!='')
 {
    return $bus_types_id->order_number+1;

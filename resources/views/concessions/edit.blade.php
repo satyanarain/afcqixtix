@@ -13,13 +13,13 @@
            </div>
             <!-- /.box-header -->
             <div class="box-body">
-               {!! Form::model($concession_fare_slabs, [
+               {!! Form::model($concessions, [
         'method' => 'PATCH',
-        'route' => ['concession_fare_slabs.update', $concession_fare_slabs->id],
+        'route' => ['concessions.update', $concessions->id],
         'files'=>true,
         'enctype' => 'multipart/form-data'
         ]) !!}
-               @include('concession_fare_slabs.form', ['submitButtonText' => Lang::get('user.headers.update_submit')])
+               @include('concessions.form', ['submitButtonText' => Lang::get('user.headers.update_submit')])
 
                 {!! Form::close() !!}
             </div>
