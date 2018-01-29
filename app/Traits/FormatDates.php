@@ -11,7 +11,7 @@ trait FormatDates {
 		$newDate = date("d-m-Y", strtotime($date));
 		return $newDate;
 	}
-
+	
 	public function changeDateFromDMYToYMD($dateToChange="")
 	{
 		if($dateToChange != '')

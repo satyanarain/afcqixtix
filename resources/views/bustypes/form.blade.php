@@ -18,7 +18,7 @@
      {!! Form::label('order_number', Lang::get('Order Number'), ['class' => 'control-label required']) !!}
     {!! Form::text('order_number',null, ['class' => 'form-control','readonly'=>readonly]) !!}
      @else
-    @php $bus_type_value= maxId($result) @endphp
+    @php $bus_type_value= maxId('bus_types',$result='') @endphp
      {!! Form::label('order_number', Lang::get('Order Number'), ['class' => 'control-label required']) !!}
     {!! Form::text('order_number', $bus_type_value, ['class' => 'form-control','readonly'=>readonly]) !!}
   @endif
