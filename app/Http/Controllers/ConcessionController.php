@@ -22,12 +22,12 @@ use Illuminate\Support\Facades\Session;
 
 class ConcessionController extends Controller {
 
-    protected $concession_fare_slabs;
+    protected $concessions;
 
     public function __construct(
-    ConcessionRepositoryContract $concession_fare_slabs
+    ConcessionRepositoryContract $concessions
     ) {
-        $this->concession_fare_slabs = $concession_fare_slabs;
+        $this->concessions = $concessions;
     }
 
     /**
@@ -36,21 +36,22 @@ class ConcessionController extends Controller {
      * @return Response
      */
  public function index() {
-                $concession_fare_slabs = DB::table('concession_fare_slabs')->select('*','concession_fare_slabs.id as id','users.name as username','services.name as name')
-                ->leftjoin('users', 'users.id', '=', 'concession_fare_slabs.user_id')
-                ->leftjoin('services', 'concession_fare_slabs.service_id', '=', 'services.id')
+                $concessions = DB::table('concessions')->select('*','concessions.id as id','users.name as username','concession_providers.name as concession_provider','services.name as name')
+                ->leftjoin('users', 'users.id', '=', 'concessions.user_id')
+                ->leftjoin('services', 'concessions.service_id', '=', 'services.id')
+                ->leftjoin('concession_providers', 'concession_providers.id', '=', 'concessions.concession_provider')
                 ->get();
-                 return view('concession_fare_slabs.index')->withConcessions($concession_fare_slabs);
+                 return view('concessions.index')->withConcessions($concessions);
     }
  public function Previous() {
-    $concession_fare_slabs = DB::table('fare_logs')->select('*','fare_logs.id as id')
+    $concessions = DB::table('fare_logs')->select('*','fare_logs.id as id')
                 ->leftjoin('services', 'fare_logs.service_id', '=', 'services.id')
                 ->get();
-        return view('concession_fare_slabs.previous')->withConcessions($concession_fare_slabs);
+        return view('concessions.previous')->withConcessions($concessions);
     }
 
     public function create() {
-     return view('concession_fare_slabs.create');
+     return view('concessions.create');
     }
 
     /**
@@ -61,12 +62,12 @@ class ConcessionController extends Controller {
 
     /**
      * Store a newly created resource in storage.
-     * @param Concession $concession_fare_slabs
+     * @param Concession $concessions
      * @return Response
      */
-    public function store(StoreConcessionRequest $concession_fare_slabsRequest) {
-        $getInsertedId = $this->concession_fare_slabs->create($concession_fare_slabsRequest);
-        return redirect()->route('concession_fare_slabs.index');
+    public function store(StoreConcessionRequest $concessionsRequest) {
+        $getInsertedId = $this->concessions->create($concessionsRequest);
+        return redirect()->route('concessions.index');
     }
 
     /**
@@ -76,11 +77,11 @@ class ConcessionController extends Controller {
      * @return Response
      */
     public function show($id) {
-                $concession_fare_slabs = DB::table('concession_fare_slabs')->select('*','concession_fare_slabs.id as id','users.name as username','services.name as name')
-                ->leftjoin('users', 'users.id', '=', 'concession_fare_slabs.user_id')
-                ->leftjoin('services', 'concession_fare_slabs.service_id', '=', 'services.id')
+                $concessions = DB::table('concessions')->select('*','concessions.id as id','users.name as username','services.name as name')
+                ->leftjoin('users', 'users.id', '=', 'concessions.user_id')
+                ->leftjoin('services', 'concessions.service_id', '=', 'services.id')
                 ->get();
-                 return view('concession_fare_slabs.index')->withConcessions($concession_fare_slabs);
+                 return view('concessions.index')->withConcessions($concessions);
     }
 
     /**
@@ -90,8 +91,8 @@ class ConcessionController extends Controller {
      * @return Response
      */
     public function edit($id) {
-        $concession_fare_slabs = Concession::findOrFail($id);
-        return view('concession_fare_slabs.edit',compact('concession_fare_slabs'));
+        $concessions = Concession::findOrFail($id);
+        return view('concessions.edit',compact('concessions'));
     }
 
     /**
@@ -101,8 +102,8 @@ class ConcessionController extends Controller {
      * @return Response
      */
     public function update($id, UpdateConcessionRequest $request) {
-        $this->concession_fare_slabs->update($id, $request);
-        return redirect()->route('concession_fare_slabs.index');
+        $this->concessions->update($id, $request);
+        return redirect()->route('concessions.index');
     }
     public function getDuty($id) {
         if($id!='')

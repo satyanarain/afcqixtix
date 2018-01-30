@@ -9,32 +9,40 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{headingMain()}}</h3>
-             {{ createButton('create','Add') }}
+             {{-- createButton('create','Add') --}}
             </div>
-           @include('partials.message')
+<!--           @include('partials.message')-->
             <!-- /.box-header -->
             <div class="box-body">
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                          <tr>
                             <th>@lang('Service Name')</th>
-                            <th>@lang('Order Number')</th>
-                           <th>@lang('Concession Provider')</th>
-                            <th>@lang('Concession')</th>
-                            <th>@lang('Description')</th>
-                            {{  actionHeading('Action', $newaction='') }}
+                            <th>@lang('Stage')</th>
+                           <th>@lang('Adult Ticket Amount')</th>
+                            <th>@lang('Child Ticket Amount')</th>
+                            <th>@lang('Luggage Ticket Amount')</th>
+                            <th>@lang('Created Date')</th>
+                            <th>@lang('Updated Date')</th>
+                           
                         </tr>
                     </thead>
                     <tbody>
-                        <?php //print_r($concessions);?>
                          @foreach($concessions as $value)
                         <tr class="nor_f">
                             <td>{{$value->name}}</td>
-                             <td>{{$value->order_number}}</td>
-                            <td>{{$value->concession_provider}}</td>
-                            <td>{{$value->concession}}</td>
-                            <td>{{$value->description}}</td>
-                             {{ actionEdit('edit',$value->id)}}
+                            <td>{{$value->stage}}</td>
+                            <td>{{$value->adult_ticket_amount}}
+                            </td>
+                            <td>{{$value->child_ticket_amount}}
+                            </td>
+                            <td>{{$value->luggage_ticket_amount}}
+                            </td>
+                            <td>{{dateView($value->created_at)}}
+                            </td>
+                            <td>{{dateView($value->updated_at)}}
+                            </td>
+                           
                         </tr>
                         @endforeach
                         </tbody>

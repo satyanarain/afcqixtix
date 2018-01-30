@@ -42,15 +42,24 @@ function changeDateFromYMDToDMY($dateToConvert = "") {
 
     return $result;
 }
-function maxId($result)
+function maxId($table='',$fieldname='')
 {
-$bus_types_id = DB::table('bus_types')->where('order_number', DB::raw("(select max(`order_number`) from bus_types)"))->first();
-if($bus_types_id->order_number!='')
+$maxid = DB::table($table)->where($fieldname, DB::raw("(select max($fieldname) from $table)"))->first();
+
+if($fieldname!='')
 {
-   return $bus_types_id->order_number+1;
+if($maxid->$fieldname!='')
+{
+   return $maxid->$fieldname+1;
 } else {
- return $bus_types_id->order_number=1;
+ return $maxid->$fieldname=1;
 }
+} else {
+
+ return  $maxid;  
+}
+
+
 }
 
 function orderList($table='',$field1='',$field2='',$field3='',$field4='',$field5='')
@@ -58,11 +67,7 @@ function orderList($table='',$field1='',$field2='',$field3='',$field4='',$field5
     $sql = DB::table($table)->select('*')->get() ;
     
     ?>
-
-
-  
-
-    <div class="gallery">
+ <div class="gallery">
         <ul class="list-group-order">
             <li class="order-sub"><a href="javascript:void(0);">Bus Type</a>
           <a href="javascript:void(0);">Order Number</a>

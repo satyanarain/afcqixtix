@@ -82,7 +82,6 @@ class VehicleController extends Controller
   
     return view('vehicles.show')->withVehicles($vehicles);
      }
-
     /**
      * Show the form for editing the specified resource.
      *
