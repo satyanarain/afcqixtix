@@ -32,18 +32,70 @@ class ConcessionController extends Controller {
 
     /**
      * Display a listing of the resource.
-     *
+     ** @Author created by satya 31-01-2018 
      * @return Response
      */
  public function index() {
-                $concessions = DB::table('concessions')->select('*','concessions.id as id','users.name as username','concession_providers.name as concession_provider','services.name as name','concession_masters.name as con_name','concessions.order_number as order_number')
+                $concessions = DB::table('concessions')->select('*','concessions.id as id','users.name as username','concession_provider_masters.name as concession_provider_master_id','services.name as name','concession_masters.name as con_name','concessions.order_number as order_number')
                 ->leftjoin('users', 'users.id', '=', 'concessions.user_id')
                 ->leftjoin('services', 'concessions.service_id', '=', 'services.id')
-                ->leftjoin('concession_providers', 'concession_providers.id', '=', 'concessions.concession_provider')
+                ->leftjoin('concession_provider_masters', 'concession_provider_masters.id', '=', 'concessions.concession_provider_master_id')
                 ->leftjoin('concession_masters', 'concession_masters.id', '=', 'concessions.concession_master_id')
+                ->orderby('concessions.order_number')       
                 ->get();
+                
+                
+                
+                
                  return view('concessions.index')->withConcessions($concessions);
     }
+    
+ /**
+     * Display a listing of the resource.
+     ** @Author created by satya 31-01-2018 
+     * @return Response
+     */    
+    
+public function sortOrder($id) {
+$array = explode(',', $id);
+$k=1;
+        for ($i = 0; $i <= count($array); $i++) {
+            DB::table('concessions')->where('id', $array[$i])->update(['order_number' => $k]);
+          $k++;  
+        }
+        
+         $sql = DB::table('concessions')->select('*','concessions.id as id','users.name as username','concession_provider_masters.name as concession_provider_master_id','services.name as name','concession_masters.name as con_name','concessions.order_number as order_number')
+                ->leftjoin('users', 'users.id', '=', 'concessions.user_id')
+                ->leftjoin('services', 'concessions.service_id', '=', 'services.id')
+                ->leftjoin('concession_provider_masters', 'concession_provider_masters.id', '=', 'concessions.concession_provider_master_id')
+                ->leftjoin('concession_masters', 'concession_masters.id', '=', 'concessions.concession_master_id')
+                 ->orderby('concessions.order_number')       
+                ->get();
+        ?>
+                <thead>
+                    <tr>  <th>Service Name</th>
+                        <th>Order Number</th>
+                        <th>Concession Provider</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+            <?php foreach ($sql as $value) {
+                ?>
+                            <tr class="nor_f">
+                                <td><?php echo $value->name; ?></td>
+                                <td><?php echo $value->order_number; ?></td>
+                                <td><?php echo $value->concession_provider_master_id ?></td>
+                                <td><a  href="<?php echo route("concessions.edit", $value->id) ?>" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button  class="btn btn-small btn-primary"  data-toggle="modal" data-target="#<?php echo $id ?>"><span class="glyphicon glyphicon-search"></span>&nbsp;View</button>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            </tr>
+            <?php } ?>
+                </tbody>
+        <?php
+    }
+    
+    
+    
  public function Previous() {
     $concessions = DB::table('fare_logs')->select('*','fare_logs.id as id')
                 ->leftjoin('services', 'fare_logs.service_id', '=', 'services.id')
@@ -54,6 +106,19 @@ class ConcessionController extends Controller {
     public function create() {
      return view('concessions.create');
     }
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+
+    /**
+     * Store a newly created resource in storage.
+     * @param Concession $concessions
+     * @return Response
+     * @Author created by satya 31-01-2018  
+     */
+    
 
     /**
      * Show the form for creating a new resource.
@@ -65,6 +130,7 @@ class ConcessionController extends Controller {
      * Store a newly created resource in storage.
      * @param Concession $concessions
      * @return Response
+     * * @Author created by satya 31-01-2018 
      */
     public function store(StoreConcessionRequest $concessionsRequest) {
         $getInsertedId = $this->concessions->create($concessionsRequest);
@@ -89,6 +155,7 @@ class ConcessionController extends Controller {
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
+     * * @Author created by satya 31-01-2018 
      * @return Response
      */
     public function edit($id) {
@@ -101,6 +168,7 @@ class ConcessionController extends Controller {
      *
      * @param  int  $id
      * @return Response
+     * * @Author created by satya 31-01-2018 
      */
     public function update($id, UpdateConcessionRequest $request) {
         $this->concessions->update($id, $request);

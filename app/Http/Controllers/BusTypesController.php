@@ -99,10 +99,12 @@ class BusTypesController extends Controller
     
     public function sortOrder($id) {
         $array = explode(',', $id);
-
+$k=1;
         for ($i = 0; $i <= count($array); $i++) {
-            DB::table('bus_types')->where('id', $array[$i])->update(['order_number' => $i]);
+            DB::table('bus_types')->where('id', $array[$i])->update(['order_number' => $k]);
+          $k++;  
         }
+        
         $bustypes = BusType::orderBy('order_number')->get();
         ?>
                 <thead>

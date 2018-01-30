@@ -67,10 +67,16 @@ function orderList($table='',$id='',$field1='',$field2='',$field3='',$field4='',
     
      if($t1!='') 
      {
-      $sql = DB::table($table)->select('*','services.name as name')->leftjoin($t1, $table.".".$t1_id, $t1.".".$id)->get() ;
+       $sql = DB::table('concessions')->select('*','concessions.id as id','users.name as username','concession_provider_masters.name as concession_provider_master_id','services.name as name','concession_masters.name as con_name','concessions.order_number as order_number')
+                ->leftjoin('users', 'users.id', '=', 'concessions.user_id')
+                ->leftjoin('services', 'concessions.service_id', '=', 'services.id')
+                ->leftjoin('concession_provider_masters', 'concession_provider_masters.id', '=', 'concessions.concession_provider_master_id')
+                ->leftjoin('concession_masters', 'concession_masters.id', '=', 'concessions.concession_master_id')
+                ->orderby('concessions.order_number')       
+                ->get();
      } 
      else {
-      $sql = DB::table($table)->select('*')->get() ;
+      $sql = DB::table($table)->select('*')->orderby('order_number')->get() ;
      }
             
     ?>

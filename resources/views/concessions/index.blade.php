@@ -30,7 +30,7 @@
                         <tr class="nor_f">
                             <td>{{$value->name}}</td>
                              <td>{{$value->order_number}}</td>
-                            <td>{{$value->concession_provider}}</td>
+                            <td>{{$value->concession_provider_master_id}}</td>
                             <td>{{$value->con_name}}</td>
                             <td>{{$value->description}}</td>
                              {{ actionEdit('edit',$value->id)}}
@@ -48,5 +48,5 @@
 <!-- /.row -->
 @include('partials.concession_order_header')
 @include('partials.concessionsheader')
-@include('partials.table_script')
+@include('partials.table_script_order')
 @stop
