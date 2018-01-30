@@ -44,9 +44,6 @@ class ConcessionController extends Controller {
                 ->orderby('concessions.order_number')       
                 ->get();
                 
-                
-                
-                
                  return view('concessions.index')->withConcessions($concessions);
     }
     

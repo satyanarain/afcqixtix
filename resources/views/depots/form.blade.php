@@ -4,6 +4,10 @@
         {!! Form::label('name', Lang::get('Depot Name'), ['class' => 'control-label required']) !!}
         {!! Form::text('name', null, ['class' => 'form-control','required' => 'required']) !!}
 </div>
+<div class="form-group">
+        {!! Form::label('depot_id', Lang::get('Depot ID'), ['class' => 'control-label required']) !!}
+        {!! Form::text('depot_id', null, ['class' => 'form-control','required' => 'required']) !!}
+</div>
 </div>
 <div class="col-sm-6">
 <div class="form-group">
@@ -24,7 +28,7 @@
     ['class' => 'form-control', 'placeholder'=>'Select Default Service','required' => 'required']) !!}
 </div> 
 </div> 
-<div class="col-sm-6">
+<div class="col-sm-12">
 {!! Form::submit(Lang::get('common.titles.save'), ['class' => 'btn btn-success']) !!}
 </div> 
 </div> 

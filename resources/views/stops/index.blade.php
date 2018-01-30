@@ -29,7 +29,7 @@
                             <td>{{$value->stop}}</td>
                             <td>{{$value->stop_id}}
                             </td>
-                            <td>{{$value->short_name}}
+                            <td>{{$value->abbreviation}}
                             </td>
                            {{ actionEdit('edit',$value->id)}}
                         </tr>

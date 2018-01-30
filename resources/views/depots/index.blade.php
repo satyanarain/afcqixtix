@@ -20,6 +20,7 @@
                          <tr>
                             <th class="display_none"></th>
                             <th>@lang('Depot Name')</th>
+                            <th>@lang('Depot ID')</th>
                             <th>@lang('Short Name')</th>
                             <th>@lang('Depot Location')</th>
                           {{  actionHeading('Action', $newaction='') }}
@@ -31,6 +32,7 @@
                         <tr class="nor_f">
                             <td class="display_none"></td>
                             <td>{{$value->name}}</td>
+                            <td>{{$value->depot_id}}</td>
                             <td>{{$value->short_name}}
                             </td>
                             <td>{{$value->depot_location}}
