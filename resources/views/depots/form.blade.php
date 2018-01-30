@@ -6,7 +6,7 @@
 </div>
 <div class="form-group">
         {!! Form::label('depot_id', Lang::get('Depot ID'), ['class' => 'control-label required']) !!}
-        {!! Form::text('depot_id', null, ['class' => 'form-control','required' => 'required']) !!}
+        {!! Form::number('depot_id', null, ['class' => 'form-control','required' => 'required']) !!}
 </div>
 </div>
 <div class="col-sm-6">

@@ -14,6 +14,10 @@
                         <td class="table_normal">{{ $value->name }}</span></td>
                     </tr>
                     <tr>
+                        <td><b>Depot ID</b></td>
+                        <td class="table_normal">{{ $value->depot_id }}</span></td>
+                    </tr>
+                    <tr>
                         <td><b>Short Name</b></td>
                         <td class="table_normal">{{ $value->short_name }}</span></td>
                     </tr>
