@@ -11,13 +11,14 @@
 <!--                    <button type="button" class="close" data-dismiss="alert">×</button>	-->
                     <strong id="success_order"></strong>
                 </div>
-                    <ul class="list-group-order">
-            <li class="order-sub"><a href="javascript:void(0);">Bus Type</a>
-          <a href="javascript:void(0);">Order Number</a>
-         <a href="javascript:void(0);">Abbreviation</a>
-         </li> 
-                <?php echo orderList('bus_types','id','bus_type','order_number','abbreviation'); ?>
-         </ul>
+                <ul class="list-group-order-main">
+                    <li class="order-sub"><a href="javascript:void(0);">Bus Type</a>
+                        <a href="javascript:void(0);">Order Number</a>
+                        <a href="javascript:void(0);">Abbreviation</a>
+                    </li>  </ul>
+                <ul class="list-group-order">
+                    <?php echo orderList('bus_types', 'id', 'bus_type', 'order_number', 'abbreviation'); ?>
+                </ul>
          </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="Close()">Close</button>
@@ -27,3 +28,38 @@
 
     </div>
 </div>
+<script>
+ $(document).ready(function(){	
+	$("ul.list-group-order").sortable({		
+		update: function( event, ui ) {
+			updateOrder();
+		}
+	});  
+        
+       setTimeout(function() {
+          $('#successMessage').fadeOut('fast');
+        }, 1000); // <-- time in milliseconds 
+        
+});
+function updateOrder() {	
+	var item_order = new Array();
+	$('ul.list-group-order li').each(function() {
+		item_order.push($(this).attr("id"));
+	});
+	var order_string = item_order;
+	$.ajax({
+		type: "GET",
+		url: "/bus_types/sort_order/"+order_string,
+		data: order_string,
+		cache: false,
+		success: function(data){
+                  $("#successMessage_order").show();
+                  $("#success_order").html("Order Number Updated successfully.");
+                  $("#example1").html(data);
+                  setTimeout(function() {
+                  $('#successMessage_order').fadeOut('fast');
+        }, 5000); // <-- time in milliseconds 
+		}
+	});
+}  
+</script>

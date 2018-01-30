@@ -12,13 +12,16 @@
                     <strong id="success_order"></strong>
                 </div>
         <div class="gallery">
-        <ul class="list-group-order">
+        <ul class="list-group-order-main">
             <li class="order-sub"><a href="javascript:void(0);">Service Name</a>
           <a href="javascript:void(0);">Order Number</a>
          <a href="javascript:void(0);">Concession Provider</a>
          <a href="javascript:void(0);">Concession</a>
-         </li>  
-                <?php echo orderList('concessions','id','name','order_number','concession_provider','concession_master_id','services','service_id','concession_masters','concession_master_id');?>
+         </li>
+          </ul>
+         <ul class="list-group-order">
+        
+                <?php echo orderList('concessions','id','name','order_number','concession_provider_master_id','concession_master_id','services','service_id','concession_masters','concession_master_id');?>
          </ul>
          </div>
                   <div class="modal-footer">
@@ -29,3 +32,38 @@
 
     </div>
 </div>
+<script>
+ $(document).ready(function(){	
+	$("ul.list-group-order").sortable({		
+		update: function( event, ui ) {
+			updateOrder();
+		}
+	});  
+        
+       setTimeout(function() {
+          $('#successMessage').fadeOut('fast');
+        }, 1000); // <-- time in milliseconds 
+        
+});
+function updateOrder() {	
+	var item_order = new Array();
+	$('ul.list-group-order li').each(function() {
+		item_order.push($(this).attr("id"));
+	});
+	var order_string = item_order;
+	$.ajax({
+		type: "GET",
+		url: "/concessions/sort_order/"+order_string,
+		data: order_string,
+		cache: false,
+		success: function(data){
+                  $("#successMessage_order").show();
+                  $("#success_order").html("Order Number Updated successfully.");
+                  $("#example1").html(data);
+                  setTimeout(function() {
+                  $('#successMessage_order').fadeOut('fast');
+        }, 5000); // <-- time in milliseconds 
+		}
+	});
+}  
+</script>

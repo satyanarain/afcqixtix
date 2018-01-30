@@ -346,6 +346,45 @@ ul.list-group-order li.order-sub a{
     color:#fff;
     padding: 0px 0px 0px 0px;
 }
+ul.list-group-order-main{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+   width:100%;
+   color:#fff;
+}
+
+ul.list-group-order-main li {
+     margin: 0;
+    padding: 0;
+    float: left;
+    width:100%;
+    height:40px;
+    background-color: #3c8dbc;
+    padding: 10px 0px 0px 20px;
+    border-bottom: #fff 1px solid;
+    color:#fff;
+}
+ul.list-group-order-main li.list-group-order-main-sub{
+ background-color: #ddd;
+ font-weight: normal;
+}
+
+ul.list-group-order-main li a {
+   float: left;
+    width:33%;
+    height:30px;
+    color:#333;
+    padding: 0px 0px 0px 0px;
+}
+ul.list-group-order-main li.order-sub a{
+   float: left;
+    width:33%;
+    height:30px;
+    color:#fff;
+    padding: 0px 0px 0px 0px;
+}
 
 /*******************************************************/
 /*ul.list-group-order-head{

@@ -95,6 +95,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('concession_fare_slabs', 'ConcessionFareSlabController');
     
     Route::get('concessions/data', 'ConcessionController@anyData')->name('concessions.data');
+    Route::get('concessions/sort_order/{id}','ConcessionController@sortOrder');
     Route::post('concessions/store', 'ConcessionController@store');
     Route::resource('concessions', 'ConcessionController');
     
