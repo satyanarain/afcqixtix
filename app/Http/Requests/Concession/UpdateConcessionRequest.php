@@ -25,8 +25,8 @@ class UpdateConcessionRequest extends Request
     {
            return [
                    'service_id' => 'required',
-                   'concession_provider' => 'required|integer',
-                   'concession' => 'required|integer',
+                    'concession_provider' => 'required',
+                   'concession_master_id' => 'required',
                    'description' => 'required',
                    'order_number' => 'required',
                    'percentage' => 'required' 

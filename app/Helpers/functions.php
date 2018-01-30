@@ -62,48 +62,48 @@ if($maxid->$fieldname!='')
 
 }
 
-function orderList($table='',$field1='',$field2='',$field3='',$field4='',$field5='')
+function orderList($table='',$id='',$field1='',$field2='',$field3='',$field4='',$t1='',$t1_id='',$t2='',$t2_id='')
 {
-    $sql = DB::table($table)->select('*')->get() ;
     
+     if($t1!='') 
+     {
+      $sql = DB::table($table)->select('*','services.name as name')->leftjoin($t1, $table.".".$t1_id, $t1.".".$id)->get() ;
+     } 
+     else {
+      $sql = DB::table($table)->select('*')->get() ;
+     }
+            
     ?>
- <div class="gallery">
-        <ul class="list-group-order">
-            <li class="order-sub"><a href="javascript:void(0);">Bus Type</a>
-          <a href="javascript:void(0);">Order Number</a>
-         <a href="javascript:void(0);">Abbreviation</a>
-         </li>     
+   
       <?php foreach($sql as $value) 
       { ?>
-        <li id="<?php echo $value->$field1; ?>" class="list-group-order-sub">
+        <li id="<?php echo $value->$id; ?>" class="list-group-order-sub">
                         
              <?php
-             if($field2!='')
+             if($field1!='')
              { ?>
-                <a href="javascript:void(0);" ><?php echo $value->$field2; ?></a>
+                <a href="javascript:void(0);" ><?php echo $value->$field1; ?></a>
              <?php } ?>
            <?php
-             if($field3!='')
+             if($field2!='')
              { ?>
-        <a href="javascript:void(0);"><?php echo $value->$field3; ?></a>
+        <a href="javascript:void(0);"><?php echo $value->$field2; ?></a>
        
         <?php } 
-             if($field4!='')
+             if($field3!='')
              { ?>
        
-        <a href="javascript:void(0);"><?php echo $value->$field4; ?></a>
+        <a href="javascript:void(0);"><?php echo $value->$field3; ?></a>
            <?php
              }
-             if($field5!='')
+             if($field4!='')
              { ?>
-       <a href="javascript:void(0);"><?php echo $value->$field5; ?></a>
+       <a href="javascript:void(0);"><?php echo $value->$field4; ?></a>
          <?php } ?>
-      
-                    </li>
+       </li>
 		
       <?php } ?>   
-       	</ul>
-    </div>
+       
 <?php
 }
 
@@ -174,6 +174,27 @@ function headingMain() {
         echo "List of All " . ucwords($segments_value);
     }
 }
+function headingMainOrder() {
+    $segments = '';
+    $segments = Request::segments();
+    if (count($segments) >= 2) {
+        if (is_numeric($segments[1])) {
+            $segments_value = str_replace("_", " ", $segments[0]);
+        echo substr(ucwords($segments_value), 0, -1) . " Update";
+        } else {
+            $segments_value = str_replace("_", " ", $segments[0]);
+            echo ucwords($segments[1]) . " " . substr(ucwords($segments_value), 0, -1);
+        }
+    } else {
+        
+        $segments_value = str_replace("_", " ", $segments[0]);
+        echo substr(ucwords($segments_value),0,-1);
+    }
+}
+
+
+
+
 function PopUpheadingMain($result) {
     $segments = '';
     $segments = Request::segments();

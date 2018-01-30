@@ -9,7 +9,7 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{headingMain()}}</h3>
-             {{ createButton('create','Add') }}
+           {{ createButton('create','Add','order','order_id') }}
             </div>
            @include('partials.message')
             <!-- /.box-header -->
@@ -26,13 +26,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php //print_r($concessions);?>
-                         @foreach($concessions as $value)
+                     @foreach($concessions as $value)
                         <tr class="nor_f">
                             <td>{{$value->name}}</td>
                              <td>{{$value->order_number}}</td>
                             <td>{{$value->concession_provider}}</td>
-                            <td>{{$value->concession}}</td>
+                            <td>{{$value->con_name}}</td>
                             <td>{{$value->description}}</td>
                              {{ actionEdit('edit',$value->id)}}
                         </tr>
@@ -47,7 +46,7 @@
     <!-- /.col -->
 </div>
 <!-- /.row -->
-
+@include('partials.concession_order_header')
 @include('partials.concessionsheader')
 @include('partials.table_script')
 @stop

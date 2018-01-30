@@ -37,7 +37,12 @@ class ConcessionRepository implements ConcessionRepositoryContract {
      
         $input['user_id'] = $userid;
         $input['concession_allowed_on'] = $this->mySqlDate($requestData->concession_allowed_on);
-
+        if($requestData->print_ticket==1)
+        {
+         $input[print_ticket] = $userid=$requestData->print_ticket;  
+        } else {
+         $input[print_ticket] = 0;     
+        }
         $concession = Concession::create($input);
         Session::flash('flash_message', "Concession Fare Slab Created Successfully."); //Snippet in Master.blade.php
         return $concession;
@@ -50,6 +55,15 @@ class ConcessionRepository implements ConcessionRepositoryContract {
         $input['concession_allowed_on'] = $this->mySqlDate($requestData->concession_allowed_on);
         $userid = Auth::id();
         $input[user_id] = $userid;
+        if($requestData->print_ticket==1)
+        {
+         $input[print_ticket] = $userid=$requestData->print_ticket;  
+        } else {
+         $input[print_ticket] = 0;     
+        }
+        
+        
+        
         $concession->fill($input)->save();
         Session::flash('flash_message', "Concession Fare Slab Updated Successfully.");
         return $concession;
