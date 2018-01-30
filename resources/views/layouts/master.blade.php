@@ -17,15 +17,6 @@ if($segments_var[2]=='edit')
   
 }
 
-
-
-
-
-
-
-
-
-
 ?>
 
 

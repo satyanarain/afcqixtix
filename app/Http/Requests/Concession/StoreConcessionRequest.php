@@ -26,9 +26,10 @@ class StoreConcessionRequest extends Request
     public function rules()
     {  
            return [
-                    'service_id' => 'required',
-                   'concession_provider' => 'required|integer',
-                   'concession' => 'required|integer',
+                // 'name' => 'required|unique:depots,name',
+                   'service_id' => 'required|unique:concessions,service_id',
+                   'concession_provider' => 'required',
+                   'concession_master_id' => 'required',
                    'description' => 'required',
                    'order_number' => 'required',
                    'percentage' => 'required'

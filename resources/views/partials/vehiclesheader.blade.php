@@ -5,7 +5,7 @@
         <div class="modal-content">
             <div class="modal-header-view">
                 <button type="button" class="close" data-dismiss="modal"><font class="white">&times;</font></button>
-               <h4 class="viewdetails_details"><span class="fa fa-bus"></span>&nbsp;Vehicles Details</h4>
+               <h4 class="viewdetails_details"><span class="fa fa-bus"></span>&nbsp;Vehicle</h4>
             </div>
             <div class="modal-body-view">
                 <table class="table table-responsive.view">

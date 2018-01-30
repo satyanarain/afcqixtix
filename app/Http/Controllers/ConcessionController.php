@@ -36,10 +36,11 @@ class ConcessionController extends Controller {
      * @return Response
      */
  public function index() {
-                $concessions = DB::table('concessions')->select('*','concessions.id as id','users.name as username','concession_providers.name as concession_provider','services.name as name')
+                $concessions = DB::table('concessions')->select('*','concessions.id as id','users.name as username','concession_providers.name as concession_provider','services.name as name','concession_masters.name as con_name','concessions.order_number as order_number')
                 ->leftjoin('users', 'users.id', '=', 'concessions.user_id')
                 ->leftjoin('services', 'concessions.service_id', '=', 'services.id')
                 ->leftjoin('concession_providers', 'concession_providers.id', '=', 'concessions.concession_provider')
+                ->leftjoin('concession_masters', 'concession_masters.id', '=', 'concessions.concession_master_id')
                 ->get();
                  return view('concessions.index')->withConcessions($concessions);
     }
