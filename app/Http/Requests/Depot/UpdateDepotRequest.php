@@ -26,7 +26,7 @@ class UpdateDepotRequest extends Request
         
             return [
                  'name' => 'name',
-                  'depot_id' => 'required|integer',
+                  'depot_id' => 'required',
                    'short_name' => 'required',
                    'depot_location' => 'required',
                    'default_service' => 'required'

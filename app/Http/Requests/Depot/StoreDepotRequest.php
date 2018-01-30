@@ -28,7 +28,7 @@ class StoreDepotRequest extends Request
             return [
                  //'name'=>'required',
                    'name' => 'required|unique:depots,name',
-                    'depot_id' => 'required|unique:depots,depot_id|integer',
+                    'depot_id' => 'required|unique:depots,depot_id',
                    'short_name' => 'required',
                    'depot_location' => 'required',
                    'default_service' => 'required'
