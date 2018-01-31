@@ -5,7 +5,12 @@
 </div>
 
 <div class="form-group">
-    @php $concession_masters=displayList('concession_provider_masters','name')@endphp
+    @php $concession_provider_masters=displayList('concession_provider_masters','name')@endphp
+    {!! Form::label('concession_provider_master_id', Lang::get('Concession Provider'), ['class' => 'control-label required']) !!}
+  {!! Form::select('concession_provider_master_id',$concession_provider_masters, isset($concessions->concession_provider_master_id) ? $concessions->concession_provider_master_id :selected,['class' => 'form-control','placeholder'=>'Select Concession','required'=>'required']) !!}
+</div>
+<div class="form-group">
+    @php $concession_masters=displayList('concession_masters','name')@endphp
     {!! Form::label('concession_master_id', Lang::get('Concession'), ['class' => 'control-label required']) !!}
   {!! Form::select('concession_master_id',$concession_masters, isset($concessions->concession_master_id) ? $concessions->concession_master_id :selected,['class' => 'form-control','placeholder'=>'Select Concession','required'=>'required']) !!}
 </div>

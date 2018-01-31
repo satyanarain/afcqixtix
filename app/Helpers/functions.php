@@ -83,7 +83,7 @@ function orderList($table='',$id='',$field1='',$field2='',$field3='',$field4='',
    
       <?php foreach($sql as $value) 
       { ?>
-        <li id="<?php echo $value->$id; ?>" class="list-group-order-sub">
+        <li id="<?php echo "order".$value->$id; ?>" class="list-group-order-sub">
                         
              <?php
              if($field1!='')
@@ -197,9 +197,6 @@ function headingMainOrder() {
         echo substr(ucwords($segments_value),0,-1);
     }
 }
-
-
-
 
 function PopUpheadingMain($result) {
     $segments = '';

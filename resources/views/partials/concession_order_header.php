@@ -7,7 +7,7 @@
                 <h4 class="viewdetails_details"><span class="fa fa-ins"></span>&nbsp;<?php echo headingMainOrder(); ?></h4>
             </div>
             <div class="modal-body-view">
-                <div class="alert alert-success alert-block" id="successMessage_order" style="display:none">
+                <div class="alert-new-success" id="successMessage_order" style="display:none">
 <!--                    <button type="button" class="close" data-dismiss="alert">×</button>	-->
                     <strong id="success_order"></strong>
                 </div>
@@ -40,16 +40,19 @@
 		}
 	});  
         
-       setTimeout(function() {
-          $('#successMessage').fadeOut('fast');
-        }, 1000); // <-- time in milliseconds 
-        
+     setTimeout(function() {
+        $('#successMessage').fadeOut('fast');
+      }, 1000); // <-- time in milliseconds 
+      
 });
 function updateOrder() {	
 	var item_order = new Array();
 	$('ul.list-group-order li').each(function() {
-		item_order.push($(this).attr("id"));
+          var text= $(this).attr("id");
+          var id = text.replace('order','');
+          item_order.push(id);
 	});
+    
 	var order_string = item_order;
 	$.ajax({
 		type: "GET",

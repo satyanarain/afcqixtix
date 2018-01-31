@@ -1,3 +1,8 @@
+      $(document).ready(function(){	
+     setTimeout(function() {
+          $('#successMessage').fadeOut('fast');
+        }, 1000000); // <-- time in milliseconds
+      });
 function findDuty(id)
  {
  if(id!='')    
@@ -28,39 +33,5 @@ function findDuty(id)
 
           return true;
        }
-       
-// $(document).ready(function(){	
-//	$("ul.list-group-order").sortable({		
-//		update: function( event, ui ) {
-//			updateOrder();
-//		}
-//	});  
-//        
-//       setTimeout(function() {
-//          $('#successMessage').fadeOut('fast');
-//        }, 1000); // <-- time in milliseconds 
-//        
-//});
-//function updateOrder() {	
-//	var item_order = new Array();
-//	$('ul.list-group-order li').each(function() {
-//		item_order.push($(this).attr("id"));
-//	});
-//	var order_string = item_order;
-//	$.ajax({
-//		type: "GET",
-//		url: "/bus_types/sort_order/"+order_string,
-//		data: order_string,
-//		cache: false,
-//		success: function(data){
-//                  $("#successMessage_order").show();
-//                  $("#success_order").html("Order Number Updated successfully.");
-//                  $("#example1").html(data);
-//                  setTimeout(function() {
-//                  $('#successMessage_order').fadeOut('fast');
-//        }, 5000); // <-- time in milliseconds 
-//		}
-//	});
-//}  
-
+ 
    

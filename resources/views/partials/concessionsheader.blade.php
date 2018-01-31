@@ -1,4 +1,4 @@
-@foreach($concessionFareSlabs as $value)
+@foreach($concessions as $value)
 <div class="modal fade" id="{{$value->id}}" role="dialog">
     <div class="modal-dialog">
         <!-- Modal content-->
