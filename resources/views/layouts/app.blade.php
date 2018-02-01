@@ -350,7 +350,7 @@
                         </a>
                         @php
 $array= array('depots','bus_types','services','vehicles','shifts','stops','routes','duties','targets','trips','fares','concession_fare_slabs'
-,'concessions','trip_cancellation_reason','inspector_remarks','payout_reasons','denominations','pass_types','crew_details','')
+,'concessions','trip_cancellation_reasons','inspector_remarks','payout_reasons','denominations','pass_types','crew_details','')
                        @endphp
                         <ul @if(in_array($segments_var[0],$array)) class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
                             <li @if($segments_var[0]=='depots') class="active" @endif><a href="{{route('depots.index')}}">
@@ -397,7 +397,7 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                            <li @if($segments_var[0]=='concessions') class="active" @endif><a href="{{route('concessions.index')}}">
                                     <i class="fa fa-inr"></i> @lang('menu.concessions.title') </a>
                            </li>
-                           <li @if($segments_var[0]=='trip_cancellation_reason') class="active" @endif><a href="{{route('trip_cancellation_reason.index')}}">
+                           <li @if($segments_var[0]=='trip_cancellation_reasons') class="active" @endif><a href="{{route('trip_cancellation_reasons.index')}}">
                                     <i class="fa fa-inr"></i> @lang('menu.trip_cancellation_reason.title') </a>
                            </li>
                            <li @if($segments_var[0]=='inspector_remarks') class="active" @endif><a href="{{route('inspector_remarks.index')}}">

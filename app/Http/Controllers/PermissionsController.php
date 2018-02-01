@@ -58,7 +58,7 @@ class PermissionsController extends Controller
             $permission->fares = implode(',', $request->fares);
             $permission->concession_fare_slabs = implode(',', $request->concession_fare_slabs);
             $permission->concessions = implode(',', $request->concessions);
-            $permission->trip_cancellation_reason = implode(',', $request->trip_cancellation_reason);
+            $permission->trip_cancellation_reasons = implode(',', $request->trip_cancellation_reasons);
             $permission->inspector_remarks = implode(',', $request->inspector_remarks);
             $permission->payout_reasons = implode(',', $request->payout_reasons);
             $permission->denominatios = implode(',', $request->denominatios);
@@ -86,7 +86,7 @@ class PermissionsController extends Controller
             $input['fares'] = implode(',', $request->fares);
             $input['concession_fare_slabs'] = implode(',', $request->concession_fare_slabs);
             $input['concessions'] = implode(',', $request->concessions);
-            $input['trip_cancellation_reason'] = implode(',', $request->trip_cancellation_reason);
+            $input['trip_cancellation_reasons'] = implode(',', $request->trip_cancellation_reasons);
             $input['inspector_remarks'] = implode(',', $request->inspector_remarks);
             $input['payout_reasons'] = implode(',', $request->payout_reasons);
             $input['denominatios'] = implode(',', $request->denominatios);

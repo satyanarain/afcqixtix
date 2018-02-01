@@ -10,7 +10,7 @@
                 <h4 class="viewdetails_details"><span class="fa fa-menu"></span>&nbsp;Menu Details</h4>
             </div>
             <div class="modal-body-view">
-                <div class="alert alert-success alert-block" id="{{"message_show".$value->id}}" style="display:none;">
+                <div class="alert-new-success alert-block" id="{{"message_show".$value->id}}" style="display:none;">
                     <button type="button" class="close" data-dismiss="alert">×</button>	
                     <strong id="{{"message".$value->id}}"></strong>
                 </div>
@@ -37,7 +37,7 @@
                         {{ menuCreate('fares','create','edit','view',$value->id,$value->fares)}}
                         {{ menuCreate('concession_fare_slabs','create','edit','view',$value->id,$value->concession_fare_slabs)}}
                         {{ menuCreate('concessions','create','edit','view',$value->id,$value->concessions)}}
-                        {{ menuCreate('trip_cancellation_reason','create','edit','view',$value->id,$value->trip_cancellation_reason)}}
+                        {{ menuCreate('trip_cancellation_reasons','create','edit','view',$value->id,$value->trip_cancellation_reasons)}}
                         {{ menuCreate('inspector_remarks','create','edit','view',$value->id,$value->inspector_remarks)}}
                         {{ menuCreate('payout_reasons','create','edit','view',$value->id,$value->payout_reasons)}}
                         {{ menuCreate('denominatios','create','edit','view',$value->id,$value->denominatios)}}

@@ -54,11 +54,6 @@ function checkAll(id,cid) {
     <!-- /.col -->
 </div>
 <!-- /.row -->
-
-
-
-
-
 @include('partials.menuheader')
 @include('partials.table_script') 
 @stop

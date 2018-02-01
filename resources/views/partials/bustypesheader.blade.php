@@ -31,3 +31,6 @@
     </div>
 </div>
 @endforeach
+<div class="modal fade" id="view_detail" role="dialog">
+    
+</div>

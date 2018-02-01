@@ -49,6 +49,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('bus_types/data', 'BusTypesController@anyData')->name('bustypes.data');
     Route::post('bus_types/store', 'BusTypesController@store');
     Route::get('bus_types/sort_order/{id}', 'BusTypesController@sortOrder');
+    Route::get('bus_types/view_detail/{id}', 'BusTypesController@viewDetail');
+    Route::get('bus_types/order_list', 'BusTypesController@orderList');
+    
     Route::resource('bus_types', 'BusTypesController');
     
     /************************masters created by satya 28-12-2017 depot***************************** */
@@ -99,9 +102,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('concessions/store', 'ConcessionController@store');
     Route::resource('concessions', 'ConcessionController');
     
-    Route::get('trip_cancellation_reason/data', 'TripCancellationReasonController@anyData')->name('trip_cancellation_reason.data');
-    Route::post('trip_cancellation_reason/store', 'TripCancellationReasonController@store');
-    Route::resource('trip_cancellation_reason', 'TripCancellationReasonController');
+    Route::get('trip_cancellation_reasons/data', 'TripCancellationReasonController@anyData')->name('trip_cancellation_reasons.data');
+    Route::post('trip_cancellation_reasons/store', 'TripCancellationReasonController@store');
+    Route::resource('trip_cancellation_reasons', 'TripCancellationReasonController');
     
      Route::get('inspector_remarks/data', 'InspectorRemarkController@anyData')->name('inspector_remarks.data');
     Route::post('inspector_remarks/store', 'InspectorRemarkControllerController@store');
@@ -123,17 +126,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('crew_details/data', 'CrewDetailController@anyData')->name('crew_details.data');
     Route::post('crew_details/store', 'CrewDetailControllerController@store');
     Route::resource('crew_details', 'CrewDetailControllerController');
-    
-    
     /* ROLES */
     Route::resource('roles', 'RolesController');
-   
     Route::resource('permissions', 'PermissionsController');
-      Route::post('permissions/savemenuall', 'PermissionsController@saveMenuAll');
+    Route::post('permissions/savemenuall', 'PermissionsController@saveMenuAll');
     Route::patch('settings/permissionsUpdate', 'SettingsController@permissionsUpdate');
-   
     Route::resource('settings', 'SettingsController');
-//     Route::get('password/reset/{token}', 'Auth\PasswordController@getReset');
     Route::post('changepasswords/update', 'ChangepasswordsController@updatePassword');
     Route::resource('changepasswords', 'ChangepasswordsController');
     

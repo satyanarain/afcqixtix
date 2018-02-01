@@ -100,8 +100,32 @@ class AccessServiceProvider extends ServiceProvider
             \App\Repositories\Concession\ConcessionRepository::class
         );
         $this->app->bind(
-            \App\Repositories\TripConcessionReason\TripConcessionReasonRepositoryContract::class,
-            \App\Repositories\TripConcessionReason\TripConcessionReasonRepository::class
+            \App\Repositories\TripCancellationReason\TripCancellationReasonRepositoryContract::class,
+            \App\Repositories\TripCancellationReason\TripCancellationReasonRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\InspectorRemark\InspectorRemarkRepositoryContract::class,
+            \App\Repositories\InspectorRemark\InspectorRemarkRepository::class
+        );
+        
+        $this->app->bind(
+            \App\Repositories\PayoutReason\PayoutReasonRepositoryContract::class,
+            \App\Repositories\PayoutReason\PayoutReasonRepository::class
+        );
+        
+        $this->app->bind(
+            \App\Repositories\Denomination\DenominationRepositoryContract::class,
+            \App\Repositories\Denomination\DenominationRepository::class
+        );
+        
+        $this->app->bind(
+            \App\Repositories\PassType\PassTypeRepositoryContract::class,
+            \App\Repositories\PassType\PassTypeRepository::class
+        );
+        
+        $this->app->bind(
+            \App\Repositories\CrewDetail\CrewDetailRepositoryContract::class,
+            \App\Repositories\CrewDetail\CrewDetailRepository::class
         );
         
         

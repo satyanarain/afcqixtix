@@ -45,12 +45,8 @@
     </div>
     <!-- /.col -->
 </div>
-
  </div>
- <script>
 
-     
-</script>
 <!-- /.row -->
 
 @include('partials.bustypes_order_header')

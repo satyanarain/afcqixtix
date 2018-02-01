@@ -36,11 +36,13 @@ class ConcessionController extends Controller {
      * @return Response
      */
  public function index() {
-                $concessions = DB::table('concessions')->select('*','concessions.id as id','users.name as username','concession_provider_masters.name as concession_provider_master_id','services.name as name','concession_masters.name as con_name','concessions.order_number as order_number')
+                $concessions = DB::table('concessions')->select('*','concessions.id as id','users.name as username','concession_provider_masters.name as concession_provider_master_id','services.name as name','concession_masters.name as con_name','concessions.order_number as order_number','etm_hot_key_masters.name as etm_hot_key_master_id','pass_type_masters.name as pass_type_master_id','concessions.created_at as created_at','concessions.updated_at as updated_at')
                 ->leftjoin('users', 'users.id', '=', 'concessions.user_id')
                 ->leftjoin('services', 'concessions.service_id', '=', 'services.id')
                 ->leftjoin('concession_provider_masters', 'concession_provider_masters.id', '=', 'concessions.concession_provider_master_id')
                 ->leftjoin('concession_masters', 'concession_masters.id', '=', 'concessions.concession_master_id')
+                ->leftjoin('pass_type_masters', 'pass_type_masters.id', '=', 'concessions.pass_type_master_id')
+                ->leftjoin('etm_hot_key_masters', 'etm_hot_key_masters.id', '=', 'concessions.etm_hot_key_master_id')
                 ->orderby('concessions.order_number')       
                 ->get();
                 
@@ -84,7 +86,7 @@ $k=1;
                                 <td><?php echo $value->order_number; ?></td>
                                 <td><?php echo $value->concession_provider_master_id ?></td>
                                 <td><a  href="<?php echo route("concessions.edit", $value->id) ?>" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <button  class="btn btn-small btn-primary"  data-toggle="modal" data-target="#<?php echo $id ?>"><span class="glyphicon glyphicon-search"></span>&nbsp;View</button>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                    <button  class="btn btn-small btn-primary"  data-toggle="modal" data-target="#<?php echo $value->id ?>"><span class="glyphicon glyphicon-search"></span>&nbsp;View</button>&nbsp;&nbsp;&nbsp;&nbsp;</td>
                             </tr>
             <?php } ?>
                 </tbody>

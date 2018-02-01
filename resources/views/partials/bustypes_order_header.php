@@ -16,7 +16,7 @@
                         <a href="javascript:void(0);">Order Number</a>
                         <a href="javascript:void(0);">Abbreviation</a>
                     </li>  </ul>
-                <ul class="list-group-order">
+                <ul class="list-group-order" id="order_list">
                     <?php echo orderList('bus_types', 'id', 'bus_type', 'order_number', 'abbreviation'); ?>
                 </ul>
          </div>
@@ -29,6 +29,41 @@
     </div>
 </div>
 <script>
+    
+   function orderList(order_id,order_list)
+   {
+   var urldata=   '/bus_types/' + order_list;
+    
+    $.ajax({
+		type: "GET",
+		url: urldata,
+		cache: false,
+		success: function(data){
+                  $("#" + order_id).modal('show');
+                  $("#"+order_list).html(data);
+		}
+	});
+  
+   }
+   
+   function viewDetails(id,view_detail)
+   {
+   var urldata=   '/bus_types/' + view_detail + '/' +id;
+    
+    $.ajax({
+		type: "GET",
+		url: urldata,
+		cache: false,
+		success: function(data){
+                   // alert(data);
+                 $("#" + view_detail).modal('show');
+                  $("#"+view_detail).html(data);
+		}
+	});
+  
+   }
+    
+    
  $(document).ready(function(){	
 	$("ul.list-group-order").sortable({		
 		update: function( event, ui ) {
@@ -40,6 +75,7 @@
         $('#successMessage').fadeOut('fast');
       }, 1000); // <-- time in milliseconds   
 });
+
 function updateOrder() {	
 	var item_order = new Array();
 	$('ul.list-group-order li').each(function() {

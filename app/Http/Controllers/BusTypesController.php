@@ -99,7 +99,7 @@ class BusTypesController extends Controller
     
     public function sortOrder($id) {
         $array = explode(',', $id);
-$k=1;
+       $k=1;
         for ($i = 0; $i <= count($array); $i++) {
             DB::table('bus_types')->where('id', $array[$i])->update(['order_number' => $k]);
           $k++;  
@@ -122,14 +122,70 @@ $k=1;
                                 <td><?php echo $value->order_number; ?></td>
                                 <td><?php echo $value->abbreviation ?></td>
                                 <td><a  href="<?php echo route("bus_types.edit", $value->id) ?>" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <button  class="btn btn-small btn-primary"  data-toggle="modal" data-target="#<?php echo $id ?>"><span class="glyphicon glyphicon-search"></span>&nbsp;View</button>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                    <button  class="btn btn-small btn-primary"  data-toggle="modal" onclick="viewDetails(<?php echo $value->id ?>,'view_detail')"><span class="glyphicon glyphicon-search"></span>&nbsp;View</button>&nbsp;&nbsp;&nbsp;&nbsp;</td>
                             </tr>
             <?php } ?>
                 </tbody>
         <?php
     }
+    
+    public function orderList() {
+        $bustypes = BusType::orderBy('order_number')->get();
+        ?>
+                      
+        <?php foreach ($bustypes as $value) {
+        ?>
+                    <li id="<?php echo "order" . $value->id; ?>" class="list-group-order-sub">
+                    <a href="javascript:void(0);" ><?php echo $value->bus_type; ?></a>
+                    <a href="javascript:void(0);"><?php echo $value->order_number; ?></a>
+                    <a href="javascript:void(0);"><?php echo $value->abbreviation; ?></a>
+                   </li>
+        <?php } ?>
+                   
+        <?php
+    }
+    
+    public function viewDetail($id) {
+          $value = BusType::orderBy('order_number')->where('id',$id)->first();
+        ?>
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header-view" >
+                <button type="button" class="close" data-dismiss="modal"><font class="white">&times;</font></button>
+                <h4 class="viewdetails_details"><span class="fa fa-bus"></span>&nbsp;Bus Type</h4>
+            </div>
+            <div class="modal-body-view">
+                 <table class="table table-responsive.view">
+                    <tr>       
+                        <td><b>Bus Type</b></td>
+                        <td class="table_normal"><?php  echo $value->bus_type ?></span></td>
+                    </tr>
+                    <tr>
+                        <td><b>Abbreviation</b></td>
+                        <td class="table_normal"><?php  echo $value->abbreviation; ?></span></td>
+                    </tr>
+                    <tr>
+                        <td><b>Order Number</b></td>
+                        <td class="table_normal"><?php echo $value->order_number; ?></td>
+                    </tr>
+                  </table>  
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
 
-    /**
+    </div>
+    <?php   
+    }
+    
+   
+    
+    
+    
+    
+  /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
