@@ -4,6 +4,6 @@
 {{BreadCrumb()}}
 @stop
 @section('content')
-@include('partials.trip_cancellation_reasonsheader')
+@include('partials.inspector_remarksheader')
 @stop
   

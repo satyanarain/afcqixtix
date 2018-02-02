@@ -4,7 +4,7 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header-view" >
-                <button type="button" class="close" data-dismiss="modal"><font class="white">&times;</font></button>
+<!--                <button type="button" class="close" data-dismiss="modal"><font class="white">&times;</font></button>-->
                 <h4 class="viewdetails_details"><i class="fa fa-inr" aria-hidden="true"></i>&nbsp;{{ PopUpheadingMain($result) }}</h4>
             </div>
             <div class="modal-body-view">

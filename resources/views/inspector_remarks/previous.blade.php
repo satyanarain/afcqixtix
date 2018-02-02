@@ -28,7 +28,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                         @foreach($trip_cancellation_reasons as $value)
+                         @foreach($inspector_remarks as $value)
                         <tr class="nor_f">
                             <td>{{$value->name}}</td>
                             <td>{{$value->stage}}</td>
@@ -56,6 +56,6 @@
 </div>
 <!-- /.row -->
 
-@include('partials.trip_cancellation_reasonsheader')
+@include('partials.inspector_remarksheader')
 @include('partials.table_script')
 @stop

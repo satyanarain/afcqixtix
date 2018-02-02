@@ -1,4 +1,3 @@
-<!--SELECT `id`, `name`, `depot_id`, `short_name`, `depot_location`, `default_service`, `created_at`, `updated_at` FROM `services` WHERE 1-->
 <div class="form-group">
     @php
     $bus_type_id=displayList('bus_types','bus_type')
@@ -16,7 +15,15 @@
     {!! Form::text('short_name', null, ['class' => 'form-control']) !!}
 </div>
 <div class="form-group">
-    {!! Form::label('order_number', Lang::get('Order Number'), ['class' => 'control-label required']) !!}
-    {!! Form::text('order_number', null, ['class' => 'form-control']) !!}
+    <div class="form-group">
+    @if($bustypes->order_number!='')
+     {!! Form::label('order_number', Lang::get('Order Number'), ['class' => 'control-label required']) !!}
+    {!! Form::text('order_number',null, ['class' => 'form-control','readonly'=>readonly]) !!}
+     @else
+    @php $bus_type_value= maxId('services','order_number') @endphp
+     {!! Form::label('order_number', Lang::get('Order Number'), ['class' => 'control-label required']) !!}
+    {!! Form::text('order_number', $bus_type_value, ['class' => 'form-control','readonly'=>readonly]) !!}
+  @endif
+    </div>
 </div>
  {!! Form::submit(Lang::get('common.titles.save'), ['class' => 'btn btn-success']) !!}

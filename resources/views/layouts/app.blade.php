@@ -362,7 +362,7 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                             </a>
                            </li>
                             <li @if($segments_var[0]=='services') class="active" @endif><a href="{{route('services.index')}}">
-                                    <i class="glyphicon glyphicon-cog"></i> @lang('menu.services.title') 
+                                    <i class="fa fa-briefcase"></i> @lang('menu.services.title') 
                             </a>
                             </li>
                             <li @if($segments_var[0]=='vehicles') class="active" @endif><a href="{{route('vehicles.index')}}">

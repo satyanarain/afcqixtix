@@ -35,7 +35,8 @@ class ServiceController extends Controller
      */
     public function index()
     {
-    $services = DB::table('services')->select('services.id as id','services.name as name','services.order_number as order_number','services.short_name as short_name','bus_types.bus_type')->leftjoin('bus_types', 'bus_types.id', '=', 'services.bus_type_id')->get();
+    $services = DB::table('services')->select('services.id as id','services.name as name','services.order_number as order_number','services.short_name as short_name','bus_types.bus_type')
+    ->leftjoin('bus_types', 'bus_types.id', '=', 'services.bus_type_id')->orderby('order_number')->get();
     return view('services.index')->withServices($services);
    
     }
@@ -99,7 +100,102 @@ class ServiceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int  Add By Satya
      * @return Response
      */
+      public function sortOrder($id) {
+        $array = explode(',', $id);
+       $k=1;
+        for ($i = 0; $i <= count($array); $i++) {
+            DB::table('services')->where('id', $array[$i])->update(['order_number' => $k]);
+          $k++;  
+        }
+        
+    $services = DB::table('services')->select('services.id as id','services.name as name','services.order_number as order_number','services.short_name as short_name','bus_types.bus_type')
+    ->leftjoin('bus_types', 'bus_types.id', '=', 'services.bus_type_id')->orderby('order_number')->get();
+        ?>
+                <thead>
+                    <tr> <th>Bus Type</th>
+                        <th>Order Number</th>
+                        <th>Service Name</th>
+                        <th>Short Name</th>
+                        
+                    </tr>
+                </thead>
+                
+            <?php foreach ($services as $value) {
+                ?>
+                            <tr class="nor_f">
+                                  <td><?php echo $value->bus_type; ?></td>
+                                 <td><?php echo $value->order_number; ?></td>
+                                 <td><?php echo $value->name; ?></td>
+                                <td><?php echo $value->short_name ?></td>
+                                     
+                                <td><a  href="<?php echo route("services.edit", $value->id) ?>" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button  class="btn btn-small btn-primary"  data-toggle="modal" onclick="viewDetails(<?php echo $value->id ?>,'view_detail')"><span class="glyphicon glyphicon-search"></span>&nbsp;View</button>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            </tr>
+            <?php } ?>
+                </tbody>
+        <?php
+    }
+    
+    public function orderList() {
+          $services = DB::table('services')->select('services.id as id','services.name as name','services.order_number as order_number','services.short_name as short_name','bus_types.bus_type')
+    ->leftjoin('bus_types', 'bus_types.id', '=', 'services.bus_type_id')->orderby('order_number')->get();
+        ?>
+                      
+        <?php foreach ($services as $value) {
+        ?>
+                    <li id="<?php echo "order" . $value->id; ?>" class="list-group-order-sub">
+                    <a href="javascript:void(0);" ><?php echo $value->bus_type; ?></a>
+                    <a href="javascript:void(0);"><?php echo $value->order_number; ?></a>
+                    <a href="javascript:void(0);"><?php echo $value->name; ?></a>
+                   </li>
+        <?php } ?>
+                   
+        <?php
+    }
+    
+    public function viewDetail($id) {
+           $value = DB::table('services')->select('services.id as id','services.name as name','services.order_number as order_number','services.short_name as short_name','bus_types.bus_type')
+    ->leftjoin('bus_types', 'bus_types.id', '=', 'services.bus_type_id')->where('services.id',$id)->first();
+        ?>
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header-view" >
+                <button type="button" class="close" data-dismiss="modal"><font class="white">&times;</font></button>
+                <h4 class="viewdetails_details"><span class="fa fa-briefcase"></span>&nbsp;Service</h4>
+            </div>
+            <div class="modal-body-view">
+                 <table class="table table-responsive.view">
+                    <tr>       
+                        <td><b>Bus Type</b></td>
+                        <td class="table_normal"><?php  echo $value->name ?></span></td>
+                    </tr>
+                    <tr>
+                        <td><b>Service Name</b></td>
+                        <td class="table_normal"><?php  echo $value->name; ?></span></td>
+                    </tr>
+                    <tr>
+                        <td><b>Short Name</b></td>
+                        <td class="table_normal"><?php  echo $value->short_name; ?></span></td>
+                    </tr>
+                    <tr>
+                        <td><b>Order Number</b></td>
+                        <td class="table_normal"><?php echo $value->order_number; ?></td>
+                    </tr>
+                  </table>  
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <?php   
+    }
+    
+    
+    
  }

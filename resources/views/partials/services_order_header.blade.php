@@ -3,8 +3,8 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header-view" >
-<!--                <button type="button" class="close" data-dismiss="modal"><font class="white">&times;</font></button>-->
-                <h4 class="viewdetails_details"><span class="fa fa-bus"></span>&nbsp;Bus Type</h4>
+<!--                <button type="button" class="close" data-dismiss="modal"><font class="white">&times;</font></<button>-->
+                <h4 class="viewdetails_details"><span class="fa fa-briefcase"></span>&nbsp;{{ PopUpheadingMain($result) }}</h4>
             </div>
             <div class="modal-body-view">
                 <div class="alert-new-success" id="successMessage_order" style="display:none;">
@@ -14,10 +14,10 @@
                 <ul class="list-group-order-main">
                     <li class="order-sub"><a href="javascript:void(0);">Bus Type</a>
                         <a href="javascript:void(0);">Order Number</a>
-                        <a href="javascript:void(0);">Abbreviation</a>
+                        <a href="javascript:void(0);">Service Name</a>
                     </li>  </ul>
                 <ul class="list-group-order" id="order_list">
-                    <?php echo orderList('bus_types', 'id', 'bus_type', 'order_number', 'abbreviation'); ?>
+                    <?php //echo orderList('services', 'id', 'bus_type_id', 'order_number', 'abbreviation'); ?>
                 </ul>
          </div>
                   <div class="modal-footer">
@@ -34,7 +34,7 @@
     
    function orderList(order_id,order_list)
    {
-   var urldata=   '/bus_types/' + order_list;
+   var urldata=   '/services/' + order_list;
     
     $.ajax({
 		type: "GET",
@@ -50,7 +50,7 @@
    
    function viewDetails(id,view_detail)
    {
-   var urldata=   '/bus_types/' + view_detail + '/' +id;
+   var urldata=   '/services/' + view_detail + '/' +id;
     
     $.ajax({
 		type: "GET",
@@ -89,7 +89,7 @@ function updateOrder() {
 	var order_string = item_order;
 	$.ajax({
 		type: "GET",
-		url: "/bus_types/sort_order/"+order_string,
+		url: "/services/sort_order/"+order_string,
 		data: order_string,
 		cache: false,
 		success: function(data){

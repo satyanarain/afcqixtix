@@ -51,12 +51,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('bus_types/sort_order/{id}', 'BusTypesController@sortOrder');
     Route::get('bus_types/view_detail/{id}', 'BusTypesController@viewDetail');
     Route::get('bus_types/order_list', 'BusTypesController@orderList');
-    
     Route::resource('bus_types', 'BusTypesController');
     
     /************************masters created by satya 28-12-2017 depot***************************** */
     Route::get('services/data', 'ServiceController@anyData')->name('services.data');
     Route::post('services/store', 'ServiceController@store');
+    Route::post('bus_types/store', 'ServiceController@store');
+    Route::get('services/sort_order/{id}', 'ServiceController@sortOrder');
+    Route::get('services/view_detail/{id}', 'ServiceController@viewDetail');
+    Route::get('services/order_list', 'ServiceController@orderList');
     Route::resource('services', 'ServiceController');
     /************************masters created by satya 28-12-2017 depot***************************** */
     Route::get('vehicles/data', 'VehicleController@anyData')->name('services.data');
@@ -104,11 +107,18 @@ Route::group(['middleware' => ['auth']], function () {
     
     Route::get('trip_cancellation_reasons/data', 'TripCancellationReasonController@anyData')->name('trip_cancellation_reasons.data');
     Route::post('trip_cancellation_reasons/store', 'TripCancellationReasonController@store');
+    Route::get('trip_cancellation_reasons/sort_order/{id}', 'TripCancellationReasonController@sortOrder');
+    Route::get('trip_cancellation_reasons/view_detail/{id}', 'TripCancellationReasonController@viewDetail');
+    Route::get('trip_cancellation_reasons/order_list', 'TripCancellationReasonController@orderList');
     Route::resource('trip_cancellation_reasons', 'TripCancellationReasonController');
+    
     
      Route::get('inspector_remarks/data', 'InspectorRemarkController@anyData')->name('inspector_remarks.data');
     Route::post('inspector_remarks/store', 'InspectorRemarkControllerController@store');
-    Route::resource('inspector_remarks', 'InspectorRemarkControllerController');
+     Route::get('inspector_remarks/sort_order/{id}', 'InspectorRemarkController@sortOrder');
+    Route::get('inspector_remarks/view_detail/{id}', 'InspectorRemarkController@viewDetail');
+    Route::get('inspector_remarks/order_list', 'InspectorRemarkController@orderList');
+    Route::resource('inspector_remarks', 'InspectorRemarkController');
     
     Route::get('payout_reasons/data', 'PayoutReasonsController@anyData')->name('payout_reasons.data');
     Route::post('payout_reasons/store', 'PayoutReasonsControllerController@store');

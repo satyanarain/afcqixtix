@@ -1,33 +1,32 @@
-@foreach($services as $value)
+@foreach($inspector_remarks as $value)
 <div class="modal fade" id="{{$value->id}}" role="dialog">
     <div class="modal-dialog">
         <!-- Modal content-->
         <div class="modal-content">
-            <div class="modal-header-view">
+            <div class="modal-header-view" >
 <!--                <button type="button" class="close" data-dismiss="modal"><font class="white">&times;</font></button>-->
-               <h4 class="viewdetails_details"><span class="fa fa-briefcase"></span>&nbsp;Service</h4>
+                <h4 class="viewdetails_details"><span class="fa fa-user"></span>&nbsp;{{ PopUpheadingMain($result) }}</h4>
             </div>
             <div class="modal-body-view">
-                <table class="table table-responsive.view">
-                    <tr>
-                        <td><b>Bus Type</b></td>
-                        <td class="table_normal">{{ $value->bus_type }}</span></td>
+                 <table class="table table-responsive.view">
+                    <tr>       
+                        <td><b>Inspector Remarks</b></td>
+                        <td class="table_normal">{{ $value->inspector_remark }}</span></td>
                     </tr>
                     <tr>
-                        <td><b>Service Name</b></td>
-                        <td class="table_normal">{{ $value->name }}</span></td>
+                        <td><b>Short Remarks</b></td>
+                        <td class="table_normal">{{ $value->short_remark }}</span></td>
                     </tr>
                     <tr>
-                        <td><b>Short Name</b></td>
-                        <td class="table_normal">{{ $value->short_name }}</td>
+                        <td><b>Remarks Description</b></td>
+                        <td class="table_normal">{{ $value->remark_description }}</td>
                     </tr>
                     <tr>
                         <td><b>Order Number</b></td>
                         <td class="table_normal">{{ $value->order_number }}</td>
                     </tr>
-                </table>  
-
-                <div class="modal-footer">
+                  </table>  
+                  <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                 </div>
             </div>

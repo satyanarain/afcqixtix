@@ -26,6 +26,7 @@ class StoreServiceRequest extends Request
     {
         
             return [
+                  'bus_type_id' => 'required',
                   'name' => 'required',
                    'short_name' => 'required',
                    'order_number' => 'required'

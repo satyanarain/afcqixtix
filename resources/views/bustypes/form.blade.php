@@ -23,7 +23,6 @@
     {!! Form::text('order_number', $bus_type_value, ['class' => 'form-control','readonly'=>readonly]) !!}
   @endif
     </div>
-    
 </div>
 <div class="col-sm-12">
 <div class="form-group">

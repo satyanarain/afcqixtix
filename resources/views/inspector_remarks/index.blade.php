@@ -17,20 +17,20 @@
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                          <tr>
-                            <th>@lang('Trip Cancellation Reason')</th>
+                            <th>@lang('Inspector Remarks')</th>
                            <th>@lang('Order Number')</th>
-                            <th>@lang('Short Reason')</th>
-                            <th>@lang('Reason Description')</th>
+                            <th>@lang('Short Remarks')</th>
+                            <th>@lang('Remarks Description')</th>
                              {{  actionHeading('Action', $newaction='') }}
                         </tr>
                     </thead>
                     <tbody>
-                         @foreach($trip_cancellation_reasons as $value)
+                         @foreach($inspector_remarks as $value)
                         <tr class="nor_f">
-                            <td>{{$value->trip_cancellation_reason_category_master_id}}</td>
+                            <td>{{$value->inspector_remark}}</td>
                             <td>{{$value->order_number}}</td>
-                             <td>{{$value->short_reason}}</td>
-                            <td>{{$value->reason_description}}</td>
+                             <td>{{$value->short_remark}}</td>
+                            <td>{{$value->remark_description}}</td>
                              {{ actionEdit('edit',$value->id)}}
                         </tr>
                         @endforeach
@@ -45,8 +45,8 @@
 </div>
 <!-- /.row -->
 
-@include('partials.trip_cancellation_reason_order_header')
-@include('partials.trip_cancellation_reasonsheader')
+@include('partials.inspector_remark_order_header')
+@include('partials.inspector_remarksheader')
 
 @include('partials.table_script_order')
 @stop

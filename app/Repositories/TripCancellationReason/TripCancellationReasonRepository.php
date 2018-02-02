@@ -34,38 +34,27 @@ class TripCancellationReasonRepository implements TripCancellationReasonReposito
     public function create($requestData) {
         $input = $requestData->all();
         $userid = Auth::id();
-     
         $input['user_id'] = $userid;
-        $input['concession_allowed_on'] = $this->mySqlDate($requestData->concession_allowed_on);
-       if($requestData->print_ticket=="Yse")
-        {
-         $input[print_ticket] = $userid=$requestData->print_ticket;  
-        } else {
-         $input[print_ticket] = "No";     
-        }
         $concession = TripCancellationReason::create($input);
-        Session::flash('flash_message', "TripCancellationReason Fare Slab Created Successfully."); //Snippet in Master.blade.php
+        Session::flash('flash_message', "Trip Cancellation Reason created Successfully."); //Snippet in Master.blade.php
         return $concession;
        
     }
  public function update($id, $requestData) {
-        $this->createLog('App\Models\TripCancellationReason','App\Models\TripCancellationReasonLog',$id);
-        $concession = TripCancellationReason::findorFail($id);
+         $this->createLog('App\Models\TripCancellationReason','App\Models\TripCancellationReasonLog',$id);
+         $concession = TripCancellationReason::findorFail($id);
          $input = $requestData->all();
-        //        print_r($requestData->all());
-//        exit();
-        $input['concession_allowed_on'] = $this->mySqlDate($requestData->concession_allowed_on);
-        $userid = Auth::id();
-        $input[user_id] = $userid;
-        if($requestData->print_ticket=="Yse")
-        {
-         $input[print_ticket] = $userid=$requestData->print_ticket;  
-        } else {
-         $input[print_ticket] = "No";     
-        }
+         $userid = Auth::id();
+         $input[user_id] = $userid;
          $concession->fill($input)->save();
-        Session::flash('flash_message', "TripCancellationReason Fare Slab Updated Successfully.");
+         Session::flash('flash_message', "Trip Cancellation Reason Updated Successfully.");
         return $concession;
     }
 
+    
+    
+    
+    
+    
+    
 }

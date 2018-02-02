@@ -9,17 +9,16 @@
    
         <div class="box">
             <div class="box-header">
-              <h3 class="box-title">{{headingMain()}}</h3>
+                <h3 class="box-title">{{headingMain()}}</h3>
            </div>
             <!-- /.box-header -->
             <div class="box-body">
-               {!! Form::model($trip_cancellation_reasons, [
-        'method' => 'PATCH',
-        'route' => ['trip_cancellation_reasons.update', $trip_cancellation_reasons->id],
-        'files'=>true,
-        'enctype' => 'multipart/form-data'
-        ]) !!}
-               @include('trip_cancellation_reasons.form', ['submitButtonText' => Lang::get('user.headers.update_submit')])
+                {!! Form::open([
+                'route' => 'inspector_remarks.store',
+                'files'=>true,
+                'enctype' => 'multipart/form-data'
+                 ]) !!}
+                @include('inspector_remarks.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 
                 {!! Form::close() !!}
             </div>
@@ -31,3 +30,4 @@
 </div>
 
 @stop
+

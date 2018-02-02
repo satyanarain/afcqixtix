@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header-view" >
 <!--                <button type="button" class="close" data-dismiss="modal"><font class="white">&times;</font></button>-->
-                <h4 class="viewdetails_details"><span class="fa fa-bus"></span>&nbsp;Bus Type</h4>
+                <h4 class="viewdetails_details"><span class="fa fa-inr"></span>&nbsp;Bus Type</h4>
             </div>
             <div class="modal-body-view">
                 <div class="alert-new-success" id="successMessage_order" style="display:none;">
@@ -12,12 +12,12 @@
                     <strong id="success_order"></strong>
                 </div>
                 <ul class="list-group-order-main">
-                    <li class="order-sub"><a href="javascript:void(0);">Bus Type</a>
+                    <li class="order-sub"><a href="javascript:void(0);">Trip Cancellation Reason</a>
                         <a href="javascript:void(0);">Order Number</a>
-                        <a href="javascript:void(0);">Abbreviation</a>
+                        <a href="javascript:void(0);">Short Reason</a>
                     </li>  </ul>
                 <ul class="list-group-order" id="order_list">
-                    <?php echo orderList('bus_types', 'id', 'bus_type', 'order_number', 'abbreviation'); ?>
+                    <?php echo orderList('trip_cancellation_reasons', 'id', 'bus_type', 'order_number', 'abbreviation'); ?>
                 </ul>
          </div>
                   <div class="modal-footer">
@@ -25,16 +25,14 @@
                 </div>
             </div>
         </div>
+ </div>
 
-    </div>
-</div>
 <div class="modal fade" id="view_detail" role="dialog">
  </div>
 <script>
-    
-   function orderList(order_id,order_list)
+function orderList(order_id,order_list)
    {
-   var urldata=   '/bus_types/' + order_list;
+   var urldata=   '/trip_cancellation_reasons/' + order_list;
     
     $.ajax({
 		type: "GET",
@@ -50,15 +48,13 @@
    
    function viewDetails(id,view_detail)
    {
-   var urldata=   '/bus_types/' + view_detail + '/' +id;
-    
+   var urldata=   '/trip_cancellation_reasons/' + view_detail + '/' +id;
     $.ajax({
 		type: "GET",
 		url: urldata,
 		cache: false,
 		success: function(data){
-                   // alert(data);
-                 $("#" + view_detail).modal('show');
+                  $("#" + view_detail).modal('show');
                   $("#"+view_detail).html(data);
 		}
 	});
@@ -89,7 +85,7 @@ function updateOrder() {
 	var order_string = item_order;
 	$.ajax({
 		type: "GET",
-		url: "/bus_types/sort_order/"+order_string,
+		url: "/trip_cancellation_reasons/sort_order/"+order_string,
 		data: order_string,
 		cache: false,
 		success: function(data){

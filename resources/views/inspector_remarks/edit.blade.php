@@ -13,13 +13,13 @@
            </div>
             <!-- /.box-header -->
             <div class="box-body">
-               {!! Form::model($trip_cancellation_reasons, [
+               {!! Form::model($inspector_remarks, [
         'method' => 'PATCH',
-        'route' => ['trip_cancellation_reasons.update', $trip_cancellation_reasons->id],
+        'route' => ['inspector_remarks.update', $inspector_remarks->id],
         'files'=>true,
         'enctype' => 'multipart/form-data'
         ]) !!}
-               @include('trip_cancellation_reasons.form', ['submitButtonText' => Lang::get('user.headers.update_submit')])
+               @include('inspector_remarks.form', ['submitButtonText' => Lang::get('user.headers.update_submit')])
 
                 {!! Form::close() !!}
             </div>
