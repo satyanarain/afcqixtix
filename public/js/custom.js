@@ -33,5 +33,43 @@ function findDuty(id)
 
           return true;
        }
- 
-   
+  function AddNewShow(table_name,field_name,placeholder)
+{
+ $("#table_name").val(table_name); 
+ $("#field_name").val(field_name); 
+ $("#placeholder").val(placeholder); 
+$("#common_details").modal('show');
+  $("#name").val('');
+ }
+   function AddNew()
+{
+var table_name = $("#table_name").val();
+var field_name = $("#field_name").val();
+var name = $("#name").val();
+var placeholder = $("#placeholder").val();
+var string_length="&table_name="+table_name+"&field_name="+field_name+"&placeholder="+placeholder+"&name="+name;
+ $.ajax({
+   type:"post",
+   url:'/denominations/add_new',
+    data:string_length,
+        success: function (data)
+        {
+           if(data==1)
+           {
+              $("#add_new_data_danger").show();
+              $("#add_new_data_danger").html("This record already exists! Please select another."); 
+              $("#add_new_data").hide();
+           }else{
+            $("#add_new_data").show();
+             $("#add_new_data_danger").hide();
+            $("#add_new_data").html("Record Updated Successfully.");
+            $("#denomination_masters").html(data);
+            setTimeout(function () {
+                $('#add_new_data').fadeOut('fast');
+            }, 5000); // <-- time in milliseconds  
+        }
+        }
+  })  
+    
+    
+}

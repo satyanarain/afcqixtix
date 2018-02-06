@@ -40,7 +40,7 @@
                         {{ menuCreate('trip_cancellation_reasons','create','edit','view',$value->id,$value->trip_cancellation_reasons)}}
                         {{ menuCreate('inspector_remarks','create','edit','view',$value->id,$value->inspector_remarks)}}
                         {{ menuCreate('payout_reasons','create','edit','view',$value->id,$value->payout_reasons)}}
-                        {{ menuCreate('denominatios','create','edit','view',$value->id,$value->denominatios)}}
+                        {{ menuCreate('denominations','create','edit','view',$value->id,$value->denominations)}}
                         {{ menuCreate('pass_types','create','edit','view',$value->id,$value->pass_types)}}
                         {{ menuCreate('crew_details','create','edit','view',$value->id,$value->crew_details)}}
                          <tr>

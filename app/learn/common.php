@@ -1,7 +1,7 @@
 <div class="row fix-gutters-six">
 <div class="col-sm-6">
 
-
+,'onkeypress'=>"return isNumberKey(event)
 {{ createButton('create','Add') }}
 {{  actionHeading('Action', $newaction='') }}
 {{ actionEdit('edit',$value->id)}}

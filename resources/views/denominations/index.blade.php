@@ -17,22 +17,20 @@
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                          <tr>
-                            <th>@lang('Service Name')</th>
-                           <th>@lang('Percetage')</th>
-                            <th>@lang('From Stage')</th>
-                            <th>@lang('To Stage')</th>
-                            <th>@lang('Fare')</th>
-                            {{  actionHeading('Action', $newaction='') }}
+                            <th>@lang('Denomination Type')</th>
+                           <th>@lang('Denomination')</th>
+                            <th>@lang('Description')</th>
+                            <th>@lang('Price')</th>
+                             {{  actionHeading('Action', $newaction='') }}
                         </tr>
                     </thead>
                     <tbody>
-                         @foreach($concessionFareSlabs as $value)
+                         @foreach($denominations as $value)
                         <tr class="nor_f">
-                            <td>{{$value->name}}</td>
-                             <td>{{$value->percentage}}</td>
-                            <td>{{$value->stage_from}}</td>
-                            <td>{{$value->stage_to}}</td>
-                            <td>{{$value->fare}}</td>
+                            <td>{{$value->denomination_master_id}}</td>
+                            <td>{{$value->denomination}}</td>
+                             <td>{{$value->description}}</td>
+                            <td>{{$value->price}}</td>
                              {{ actionEdit('edit',$value->id)}}
                         </tr>
                         @endforeach
@@ -46,7 +44,6 @@
     <!-- /.col -->
 </div>
 <!-- /.row -->
-
-@include('partials.concessionheader')
+@include('partials.denominationsheader')
 @include('partials.table_script')
 @stop

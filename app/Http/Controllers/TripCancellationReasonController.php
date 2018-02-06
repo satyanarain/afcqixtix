@@ -128,7 +128,7 @@ class TripCancellationReasonController extends Controller {
             <div class="modal-body-view">
                  <table class="table table-responsive.view">
                     <tr>       
-                        <td><b>Trip Cancellation Reason Category</b></td>
+                        <td><b>Trip Cancellation Reason</b></td>
                         <td class="table_normal"><?php  echo $value->trip_cancellation_reason_category_master_id; ?></span></td>
                     </tr>
                     <tr>

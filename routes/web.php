@@ -56,7 +56,6 @@ Route::group(['middleware' => ['auth']], function () {
     /************************masters created by satya 28-12-2017 depot***************************** */
     Route::get('services/data', 'ServiceController@anyData')->name('services.data');
     Route::post('services/store', 'ServiceController@store');
-    Route::post('bus_types/store', 'ServiceController@store');
     Route::get('services/sort_order/{id}', 'ServiceController@sortOrder');
     Route::get('services/view_detail/{id}', 'ServiceController@viewDetail');
     Route::get('services/order_list', 'ServiceController@orderList');
@@ -114,28 +113,32 @@ Route::group(['middleware' => ['auth']], function () {
     
     
      Route::get('inspector_remarks/data', 'InspectorRemarkController@anyData')->name('inspector_remarks.data');
-    Route::post('inspector_remarks/store', 'InspectorRemarkControllerController@store');
+    Route::post('inspector_remarks/store', 'InspectorRemarkController@store');
      Route::get('inspector_remarks/sort_order/{id}', 'InspectorRemarkController@sortOrder');
     Route::get('inspector_remarks/view_detail/{id}', 'InspectorRemarkController@viewDetail');
     Route::get('inspector_remarks/order_list', 'InspectorRemarkController@orderList');
     Route::resource('inspector_remarks', 'InspectorRemarkController');
     
-    Route::get('payout_reasons/data', 'PayoutReasonsController@anyData')->name('payout_reasons.data');
-    Route::post('payout_reasons/store', 'PayoutReasonsControllerController@store');
-    Route::resource('payout_reasons', 'PayoutReasonsControllerController');
+    Route::get('payout_reasons/data', 'PayoutReasonController@anyData')->name('payout_reasons.data');
+    Route::post('payout_reasons/store', 'PayoutReasonController@store');
+    Route::get('payout_reasons/sort_order/{id}', 'PayoutReasonController@sortOrder');
+    Route::get('payout_reasons/view_detail/{id}', 'PayoutReasonController@viewDetail');
+    Route::get('payout_reasons/order_list', 'PayoutReasonController@orderList');
+    Route::resource('payout_reasons', 'PayoutReasonController');
     
     Route::get('denominations/data', 'DenominationController@anyData')->name('payout_reasons.data');
-    Route::post('denominations/store', 'DenominationControllerController@store');
-    Route::resource('denominations', 'DenominationControllerController');
+    Route::post('denominations/add_new', 'DenominationController@addNew');
+    Route::post('denominations/store', 'DenominationController@store');
+    Route::resource('denominations', 'DenominationController');
    
     
     Route::get('pass_types/data', 'PassTypeController@anyData')->name('pass_types.data');
-    Route::post('pass_types/store', 'PassTypeControllerController@store');
-    Route::resource('pass_types', 'PassTypeControllerController');
+    Route::post('pass_types/store', 'PassTypeController@store');
+    Route::resource('pass_types', 'PassTypeController');
     
     Route::get('crew_details/data', 'CrewDetailController@anyData')->name('crew_details.data');
-    Route::post('crew_details/store', 'CrewDetailControllerController@store');
-    Route::resource('crew_details', 'CrewDetailControllerController');
+    Route::post('crew_details/store', 'CrewDetailController@store');
+    Route::resource('crew_details', 'CrewDetailController');
     /* ROLES */
     Route::resource('roles', 'RolesController');
     Route::resource('permissions', 'PermissionsController');

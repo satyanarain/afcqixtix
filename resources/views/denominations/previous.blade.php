@@ -28,7 +28,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                         @foreach($concession as $value)
+                         @foreach($denominations as $value)
                         <tr class="nor_f">
                             <td>{{$value->name}}</td>
                             <td>{{$value->stage}}</td>
@@ -56,6 +56,6 @@
 </div>
 <!-- /.row -->
 
-@include('partials.concessionheader')
+@include('partials.denominationsheader')
 @include('partials.table_script')
 @stop

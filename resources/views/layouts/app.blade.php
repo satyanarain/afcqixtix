@@ -404,7 +404,7 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                                     <i class="fa fa-user"></i> @lang('menu.inspector_remarks.title') </a>
                            </li>
                            
-                           <li @if($segments_var[0]=='fa fa-money') class="active" @endif><a href="{{route('payout_reasons.index')}}">
+                           <li @if($segments_var[0]=='payout_reasons') class="active" @endif><a href="{{route('payout_reasons.index')}}">
                                     <i class="fa fa-cc-mastercard"></i> @lang('menu.payout_reasons.title') </a>
                            </li>
                            <li @if($segments_var[0]=='denominations') class="active" @endif><a href="{{route('denominations.index')}}">
@@ -455,8 +455,42 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                     </ul>
                     @endif
                     @yield('content')
+<div class="modal fade" id="common_details" role="dialog">
+  <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header-view" >
+<!--                <button type="button" class="close" data-dismiss="modal"><font class="white">&times;</font></button>-->
+                <h4 class="viewdetails_details"><span class="fa fa-plus"></span>&nbsp;Add New</h4>
+            </div>
+            <div class="modal-body-view">
+                 <div class="alert-new-success" id="add_new_data" style="display:none;"></div>
+                 <div class="list-group-item alert alert-danger" id="add_new_data_danger" style="display:none;"></div>
+                 <table class="table table-responsive.view">
+                    <tr>       
+                        <td>Name</td>
+                        <td class="table_normal">
+                            <input name="name" id="name" class="form-control">
+                            <input name="field_name" id="field_name" class="form-control" type="hidden">
+                            <input name="table_name" id="table_name" class="form-control" type="hidden">
+                            <input name="placeholder" id="placeholder" class="form-control" type="hidden">
+                        </td>
+                    </tr>
+                   </table>  
+                  <div class="modal-footer">
+                     <div  class="btn btn-success pull-left" onclick="AddNew()">Add New</div><button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+                    
+                    
+                    
                 </section>
             </div>
+        
    </section>
 <footer class="main-footer">
     <div class="pull-right hidden-xs">
@@ -499,10 +533,10 @@ $.widget.bridge('uibutton', $.ui.button);
 <script src="{{ asset(elixir('plugins/datatables/dataTables.bootstrap.min.js')) }}"></script>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
 <script src="{{ asset(elixir('js/demo.js')) }}"></script>
+<script src="{{ asset(elixir('js/jQueryRotate.js')) }}"></script>
 
 
 <script>
-    
  $('body').on('focus',".multiple_date", function(){
          $(this).datepicker({
               dateFormat: 'dd-mm-yy',
