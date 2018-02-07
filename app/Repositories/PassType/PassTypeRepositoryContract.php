@@ -1,9 +1,9 @@
 <?php
-namespace App\Repositories\Concession;
-interface ConcessionRepositoryContract
+namespace App\Repositories\PassType;
+interface PassTypeRepositoryContract
 {
     public function find($id);
-    public function getAllConcessions();
+    public function getAllPassTypes();
     public function create($requestData);
     public function update($id, $requestData);
 

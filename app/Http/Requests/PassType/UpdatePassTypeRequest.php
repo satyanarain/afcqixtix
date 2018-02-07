@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Concession;
+namespace App\Http\Requests\PassType;
 
 use App\Http\Requests\Request;
 
-class UpdateConcessionRequest extends Request
+class UpdatePassTypeRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.

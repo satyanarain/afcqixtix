@@ -29,5 +29,22 @@ trait activityLog {
 	}
         }
         
+        function displayView($fieldname) {
+    if ($fieldname != '') {
+        echo $fieldname;
+    } else {
+        echo "N/A";
+    }
+}
+
+function dateView($date_blank) {
+    if ($date_blank == "0000-00-00" || $date_blank == '') {
+        echo "N/A";
+    } else {
+        echo $date_blank = date("d-m-Y", strtotime($date_blank));
+        ;
+    }
+}
+        
 }
 

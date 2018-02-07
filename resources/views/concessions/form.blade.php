@@ -41,7 +41,7 @@
 </div>
 <div class="form-group">
     {!! Form::label('print_ticket', Lang::get('Print Ticket'), ['class' => 'control-label']) !!}<br>
-    <input type="checkbox" name="print_ticket" value="Yes" <?php if($concessions->print_ticket==1) { ?>checked="checked"<?php } ?>>
+    <input type="checkbox" name="print_ticket" value="Yes" <?php if($concessions->print_ticket=='Yes') { ?>checked="checked"<?php } ?>>
 </div>
 <div class="form-group">
       @php $etm_hot_key_master_id=displayList('etm_hot_key_masters','name')@endphp

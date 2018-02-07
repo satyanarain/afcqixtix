@@ -4,25 +4,23 @@
         <div class="modal-content">
             <div class="modal-header-view" >
 <!--                <button type="button" class="close" data-dismiss="modal"><font class="white">&times;</font></button>-->
-                <h4 class="viewdetails_details"><span class="fa fa-ins"></span>&nbsp;<?php echo headingMainOrder(); ?></h4>
+                <h4 class="viewdetails_details"><span class="fa fa-inr"></span>&nbsp;{{ PopUpheadingMain($result) }}</h4>
             </div>
             <div class="modal-body-view">
-                <div class="alert-new-success" id="successMessage_order" style="display:none">
+                <div class="alert-new-success" id="successMessage_order" style="display:none;">
 <!--                    <button type="button" class="close" data-dismiss="alert">×</button>	-->
                     <strong id="success_order"></strong>
                 </div>
-        <div class="gallery">
-        <ul class="list-group-order-main">
-            <li class="order-sub"><a href="javascript:void(0);">Service Name</a>
-          <a href="javascript:void(0);">Order Number</a>
-         <a href="javascript:void(0);">Concession Provider</a>
-         <a href="javascript:void(0);">Concession</a>
-         </li>
-          </ul>
-         <ul class="list-group-order">
-        
-                <?php echo orderList('concessions','id','name','order_number','concession_provider_master_id','concession_master_id','services','service_id','concession_masters','concession_master_id');?>
-         </ul>
+                <ul class="list-group-order-main">
+                    <li class="order-sub"><a href="javascript:void(0);">Service Name</a>
+                        <a href="javascript:void(0);">Order Number</a>
+                        <a href="javascript:void(0);">Concession Provider</a>
+                        <a href="javascript:void(0);">Concession</a>
+                    </li> 
+                </ul>
+                <ul class="list-group-order" id="order_list">
+                   
+                </ul>
          </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="Close()">Close</button>
@@ -31,7 +29,6 @@
         </div>
 
     </div>
-</div>
 
 <div class="modal fade" id="view_detail" role="dialog">
  </div>

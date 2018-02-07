@@ -14,11 +14,11 @@
             <!-- /.box-header -->
             <div class="box-body">
                 {!! Form::open([
-                'route' => 'concessions.store',
+                'route' => 'pass_types.store',
                 'files'=>true,
                 'enctype' => 'multipart/form-data'
                  ]) !!}
-                @include('concessions.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
+                @include('pass_types.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 
                 {!! Form::close() !!}
             </div>

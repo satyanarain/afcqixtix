@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Concession;
+namespace App\Http\Requests\PassType;
 
 use App\Http\Requests\Request;
 
-class StoreConcessionRequest extends Request
+class StorePassTypeRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,11 +27,11 @@ class StoreConcessionRequest extends Request
     {  
            return [
                 // 'name' => 'required|unique:depots,name',
-                   'service_id' => 'required|unique:concessions,service_id',
-                   'concession_master_id' => 'required',
-                   'description' => 'required',
-                   'order_number' => 'required',
-                   'percentage' => 'required'
+//                   'service_id' => 'required|unique:concessions,service_id',
+//                   'concession_master_id' => 'required',
+//                   'description' => 'required',
+//                   'order_number' => 'required',
+//                   'percentage' => 'required'
   
              ];
         

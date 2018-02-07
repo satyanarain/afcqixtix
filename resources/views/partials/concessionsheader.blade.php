@@ -19,7 +19,7 @@
                     </tr>
                     <tr>
                         <td><b>Concession Provider</b></td>
-                       <td class="table_normal">{{ $value->concession_master_id}}</td>
+                       <td class="table_normal">{{ $value->concession_provider_master_id}}</td>
                     </tr>
                     <tr>
                         <td><b>Description</b></td>
@@ -66,6 +66,8 @@
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                 </div>
             </div>
+            
+            
         </div>
 
     </div>

@@ -28,7 +28,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                         @foreach($concessions as $value)
+                         @foreach($pass_types as $value)
                         <tr class="nor_f">
                             <td>{{$value->name}}</td>
                             <td>{{$value->stage}}</td>
@@ -56,6 +56,6 @@
 </div>
 <!-- /.row -->
 
-@include('partials.concessionsheader')
+@include('partials.pass_typesheader')
 @include('partials.table_script')
 @stop

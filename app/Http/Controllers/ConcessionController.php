@@ -19,9 +19,9 @@ use App\Http\Requests\Concession\StoreConcessionRequest;
 use App\Repositories\Concession\ConcessionRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-
+use App\Traits\activityLog;
 class ConcessionController extends Controller {
-
+  use activityLog;
     protected $concessions;
 
     public function __construct(
@@ -57,15 +57,23 @@ class ConcessionController extends Controller {
     
 
     public function orderList() {
-        $bustypes = BusType::orderBy('order_number')->get();
+         $concessions = DB::table('concessions')->select('*','concessions.id as id','users.name as username','concession_provider_masters.name as concession_provider_master_id','services.name as name','concession_masters.name as con_name','concessions.order_number as order_number','etm_hot_key_masters.name as etm_hot_key_master_id','pass_type_masters.name as pass_type_master_id','concessions.created_at as created_at','concessions.updated_at as updated_at')
+                ->leftjoin('users', 'users.id', '=', 'concessions.user_id')
+                ->leftjoin('services', 'concessions.service_id', '=', 'services.id')
+                ->leftjoin('concession_provider_masters', 'concession_provider_masters.id', '=', 'concessions.concession_provider_master_id')
+                ->leftjoin('concession_masters', 'concession_masters.id', '=', 'concessions.concession_master_id')
+                ->leftjoin('pass_type_masters', 'pass_type_masters.id', '=', 'concessions.pass_type_master_id')
+                ->leftjoin('etm_hot_key_masters', 'etm_hot_key_masters.id', '=', 'concessions.etm_hot_key_master_id')
+                ->orderby('concessions.order_number')       
+                ->get();
         ?>
                       
-        <?php foreach ($bustypes as $value) {
+        <?php foreach ($concessions as $value) {
         ?>
                     <li id="<?php echo "order" . $value->id; ?>" class="list-group-order-sub">
-                    <a href="javascript:void(0);" ><?php echo $value->bus_type; ?></a>
+                    <a href="javascript:void(0);" ><?php echo $value->name; ?></a>
                     <a href="javascript:void(0);"><?php echo $value->order_number; ?></a>
-                    <a href="javascript:void(0);"><?php echo $value->abbreviation; ?></a>
+                    <a href="javascript:void(0);"><?php echo $value->concession_provider_master_id; ?></a>
                    </li>
         <?php } ?>
                    
@@ -73,37 +81,95 @@ class ConcessionController extends Controller {
     }
     
     public function viewDetail($id) {
-          $value = BusType::orderBy('order_number')->where('id',$id)->first();
+         $value = DB::table('concessions')->select('*','concessions.id as id','users.name as username','concession_provider_masters.name as concession_provider_master_id','services.name as name','concession_masters.name as con_name','concessions.order_number as order_number','etm_hot_key_masters.name as etm_hot_key_master_id','pass_type_masters.name as pass_type_master_id','concessions.created_at as created_at','concessions.updated_at as updated_at')
+                ->leftjoin('users', 'users.id', '=', 'concessions.user_id')
+                ->leftjoin('services', 'concessions.service_id', '=', 'services.id')
+                ->leftjoin('concession_provider_masters', 'concession_provider_masters.id', '=', 'concessions.concession_provider_master_id')
+                ->leftjoin('concession_masters', 'concession_masters.id', '=', 'concessions.concession_master_id')
+                ->leftjoin('pass_type_masters', 'pass_type_masters.id', '=', 'concessions.pass_type_master_id')
+                ->leftjoin('etm_hot_key_masters', 'etm_hot_key_masters.id', '=', 'concessions.etm_hot_key_master_id')
+                ->where('concessions.id',$id)->first();
         ?>
       <div class="modal-dialog">
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header-view" >
                 <button type="button" class="close" data-dismiss="modal"><font class="white">&times;</font></button>
-                <h4 class="viewdetails_details"><span class="fa fa-bus"></span>&nbsp;Bus Type</h4>
+                <h4 class="viewdetails_details"><span class="fa fa-inr"></span>&nbsp;Concession</h4>
             </div>
             <div class="modal-body-view">
-                 <table class="table table-responsive.view">
-                    <tr>       
-                        <td><b>Bus Type</b></td>
-                        <td class="table_normal"><?php  echo $value->bus_type ?></span></td>
-                    </tr>
-                    <tr>
-                        <td><b>Abbreviation</b></td>
-                        <td class="table_normal"><?php  echo $value->abbreviation; ?></span></td>
-                    </tr>
-                    <tr>
-                        <td><b>Order Number</b></td>
-                        <td class="table_normal"><?php echo $value->order_number; ?></td>
-                    </tr>
-                  </table>  
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
+                        <table class="table table-responsive.view">
+                            <tr>       
+                                <td><b>Service</b></td>
+                                <td class="table_normal"><?php echo $value->name; ?></span></td>
+                            </tr>
+                            <tr>
+                                <td><b>Concession</b></td>
+                                <td class="table_normal"><?php echo $value->concession_provider_master_id ?></td>
+                            </tr>
+                            <tr>
+                                <td><b>Concession Provider</b></td>
+                                <td class="table_normal"><?php echo $value->concession_provider_master_id; ?></td>
+                            </tr>
+                            <tr>
+                                <td><b>Description</b></td>
+                                <td class="table_normal"><?php echo $value->description; ?></td>
+                            </tr>
+                            <tr>
+                                <td><b>Order Number</b></td>
+                                <td class="table_normal"><?php echo $value->order_number; ?></td>
+                            </tr>
+                            <tr>
+                                <td><b>Percentage</b></td>
+                                <td class="table_normal"><?php echo $value->percentage; ?></td>
+                            </tr>
 
-    </div>
+                            <tr>
+                                <td><b>Pass Type</b></td>
+                                <td class="table_normal"><?php echo $value->pass_type_master_id; ?></td>
+                            </tr>
+
+                            <tr>
+                                <td><b>Print Ticket</b></td>
+                                <td class="table_normal"><?php echo $value->print_ticket; ?></td>
+                            </tr>
+                            <tr>
+                                <td><b>ETM Hot Key</b></td>
+                                <td class="table_normal"><?php echo $this->displayView($value->etm_hot_key_master_id); ?></td>
+                            </tr>
+
+                            <tr>
+                                <td><b>Concession Allowed on(for all days of the year leave field blank)</b></td>
+                                <td class="table_normal"><?php echo $this->displayView($value->concession_allowed_on); ?></td>
+                            </tr>
+                            <tr>
+                                <td><b>Flat Fare</b></td>
+                                <td class="table_normal"><?php echo $this->displayView($value->flat_fare); ?></td>
+                            </tr>
+                            <tr>
+                                <td><b>Flat Fare Amount</b></td>
+                                <td class="table_normal"><?php echo $this->displayView($value->flat_fare_amount); ?></td>
+                            </tr>
+                            <tr>
+                                <td><b>Created By</b></td>
+                                <td class="table_normal"><?php echo  $value->username; ?></td>
+                            </tr>
+                            <tr>
+                                <td><b>Created On</b></td>
+                                <td class="table_normal"><?php echo $this->dateView($value->created_at); ?></td>
+                            </tr>
+                            <tr>
+                                <td><b>Last Updated At</b></td>
+                                <td class="table_normal"><?php echo $this->dateView($value->updated_at); ?></td>
+                            </tr>
+                        </table>  
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+
+              </div>
     <?php   
     }
     
@@ -128,6 +194,8 @@ $k=1;
                     <tr>  <th>Service Name</th>
                         <th>Order Number</th>
                         <th>Concession Provider</th>
+                        <th>Concession</th>
+                        <th>Description</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -138,9 +206,12 @@ $k=1;
                                 <td><?php echo $value->name; ?></td>
                                 <td><?php echo $value->order_number; ?></td>
                                 <td><?php echo $value->concession_provider_master_id ?></td>
+                                <td><?php echo $value->con_name ?></td>
+                                <td><?php echo $value->description ?></td>
                                 <td><a  href="<?php echo route("concessions.edit", $value->id) ?>" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <button  class="btn btn-small btn-primary"  data-toggle="modal" data-target="#<?php echo $value->id ?>"><span class="glyphicon glyphicon-search"></span>&nbsp;View</button>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                    <button  class="btn btn-small btn-primary"  data-toggle="modal" onclick="viewDetails(<?php echo $value->id ?>,'view_detail')"><span class="glyphicon glyphicon-search"></span>&nbsp;View</button>&nbsp;&nbsp;&nbsp;&nbsp;</td>
                             </tr>
+                           
             <?php } ?>
                 </tbody>
         <?php

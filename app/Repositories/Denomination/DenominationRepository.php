@@ -36,7 +36,7 @@ class DenominationRepository implements DenominationRepositoryContract {
         $userid = Auth::id();
         $input['user_id'] = $userid;
         $concession = Denomination::create($input);
-        Session::flash('flash_message', "Trip Cancellation Reason created Successfully."); //Snippet in Master.blade.php
+        Session::flash('flash_message', "Denomination created Successfully."); //Snippet in Master.blade.php
         return $concession;
        
     }
@@ -47,14 +47,8 @@ class DenominationRepository implements DenominationRepositoryContract {
          $userid = Auth::id();
          $input[user_id] = $userid;
          $concession->fill($input)->save();
-         Session::flash('flash_message', "Trip Cancellation Reason Updated Successfully.");
+         Session::flash('flash_message', "Denomination Updated Successfully.");
         return $concession;
     }
 
-    
-    
-    
-    
-    
-    
-}
+ }

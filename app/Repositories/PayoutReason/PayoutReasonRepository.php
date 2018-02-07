@@ -36,7 +36,7 @@ class PayoutReasonRepository implements PayoutReasonRepositoryContract {
         $userid = Auth::id();
         $input['user_id'] = $userid;
         $concession = PayoutReason::create($input);
-        Session::flash('flash_message', "Inspactor Remark Created Successfully."); //Snippet in Master.blade.php
+        Session::flash('flash_message', "Payout Created Successfully."); //Snippet in Master.blade.php
         return $concession;
        
     }
@@ -47,7 +47,7 @@ class PayoutReasonRepository implements PayoutReasonRepositoryContract {
          $userid = Auth::id();
          $input[user_id] = $userid;
          $concession->fill($input)->save();
-         Session::flash('flash_message', "Inspactor Remark Updated Successfully.");
+         Session::flash('flash_message', "Payout Updated Successfully.");
         return $concession;
     }
 }

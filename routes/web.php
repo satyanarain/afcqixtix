@@ -102,7 +102,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('concessions/data', 'ConcessionController@anyData')->name('concessions.data');
     Route::get('concessions/sort_order/{id}','ConcessionController@sortOrder');
     Route::post('concessions/store', 'ConcessionController@store');
+    
+      Route::get('concessions/sort_order/{id}', 'ConcessionController@sortOrder');
+    Route::get('concessions/view_detail/{id}', 'ConcessionController@viewDetail');
+    Route::get('concessions/order_list', 'ConcessionController@orderList');
+    
     Route::resource('concessions', 'ConcessionController');
+    
+    
+    
     
     Route::get('trip_cancellation_reasons/data', 'TripCancellationReasonController@anyData')->name('trip_cancellation_reasons.data');
     Route::post('trip_cancellation_reasons/store', 'TripCancellationReasonController@store');

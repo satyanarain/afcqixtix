@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header-view" >
 <!--                <button type="button" class="close" data-dismiss="modal"><font class="white">&times;</font></button>-->
-                <h4 class="viewdetails_details"><span class="fa fa-bus"></span>&nbsp;Bus Type</h4>
+                <h4 class="viewdetails_details"><span class="fa fa-bus"></span>&nbsp;{{ PopUpheadingMain($result) }}</h4>
             </div>
             <div class="modal-body-view">
                 <div class="alert-new-success" id="successMessage_order" style="display:none;">

@@ -8,26 +8,26 @@ use Notifynder;
 use DB;
 use Schema;
 use Response;
-use App\Models\Concession;
+use App\Models\PassType;
 use App\Models\Duty;
 use App\Models\Country;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Concession\UpdateConcessionRequest;
-use App\Http\Requests\Concession\StoreConcessionRequest;
-use App\Repositories\Concession\ConcessionRepositoryContract;
+use App\Http\Requests\PassType\UpdatePassTypeRequest;
+use App\Http\Requests\PassType\StorePassTypeRequest;
+use App\Repositories\PassType\PassTypeRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
-class ConcessionController extends Controller {
+class PassTypeController extends Controller {
 
-    protected $concessions;
+    protected $pass_types;
 
     public function __construct(
-    ConcessionRepositoryContract $concessions
+    PassTypeRepositoryContract $pass_types
     ) {
-        $this->concessions = $concessions;
+        $this->pass_types = $pass_types;
     }
 
     /**
@@ -36,17 +36,15 @@ class ConcessionController extends Controller {
      * @return Response
      */
  public function index() {
-                $concessions = DB::table('concessions')->select('*','concessions.id as id','users.name as username','concession_provider_masters.name as concession_provider_master_id','services.name as name','concession_masters.name as con_name','concessions.order_number as order_number','etm_hot_key_masters.name as etm_hot_key_master_id','pass_type_masters.name as pass_type_master_id','concessions.created_at as created_at','concessions.updated_at as updated_at')
-                ->leftjoin('users', 'users.id', '=', 'concessions.user_id')
-                ->leftjoin('services', 'concessions.service_id', '=', 'services.id')
-                ->leftjoin('concession_provider_masters', 'concession_provider_masters.id', '=', 'concessions.concession_provider_master_id')
-                ->leftjoin('concession_masters', 'concession_masters.id', '=', 'concessions.concession_master_id')
-                ->leftjoin('pass_type_masters', 'pass_type_masters.id', '=', 'concessions.pass_type_master_id')
-                ->leftjoin('etm_hot_key_masters', 'etm_hot_key_masters.id', '=', 'concessions.etm_hot_key_master_id')
-                ->orderby('concessions.order_number')       
+                $pass_types = DB::table('pass_types')->select('*')
+                ->leftjoin('users', 'users.id', '=', 'pass_types.user_id')
+                ->leftjoin('services', 'pass_types.service_id', '=', 'services.id')
+                ->leftjoin('concession_provider_masters', 'concession_provider_masters.id', '=', 'pass_types.concession_provider_master_id')
+                ->leftjoin('pass_type_masters', 'pass_type_masters.id', '=', 'pass_types.pass_type_master_id')
+                ->orderby('pass_types.order_number')       
                 ->get();
                 
-                 return view('concessions.index')->withConcessions($concessions);
+                 return view('pass_types.index')->withPassTypes($pass_types);
     }
     
  /**
@@ -112,22 +110,21 @@ public function sortOrder($id) {
 $array = explode(',', $id);
 $k=1;
         for ($i = 0; $i <= count($array); $i++) {
-            DB::table('concessions')->where('id', $array[$i])->update(['order_number' => $k]);
+            DB::table('pass_types')->where('id', $array[$i])->update(['order_number' => $k]);
           $k++;  
         }
         
-         $sql = DB::table('concessions')->select('*','concessions.id as id','users.name as username','concession_provider_masters.name as concession_provider_master_id','services.name as name','concession_masters.name as con_name','concessions.order_number as order_number')
-                ->leftjoin('users', 'users.id', '=', 'concessions.user_id')
-                ->leftjoin('services', 'concessions.service_id', '=', 'services.id')
-                ->leftjoin('concession_provider_masters', 'concession_provider_masters.id', '=', 'concessions.concession_provider_master_id')
-                ->leftjoin('concession_masters', 'concession_masters.id', '=', 'concessions.concession_master_id')
-                 ->orderby('concessions.order_number')       
+         $sql = DB::table('pass_types')->select('*','pass_types.id as id','users.name as username','concession_provider_masters.name as concession_provider_master_id','services.name as name','concession_masters.name as con_name','pass_types.order_number as order_number')
+                ->leftjoin('users', 'users.id', '=', 'pass_types.user_id')
+                ->leftjoin('services', 'pass_types.service_id', '=', 'services.id')
+                ->leftjoin('concession_provider_masters', 'concession_provider_masters.id', '=', 'pass_types.concession_provider_master_id')
+                ->orderby('pass_types.order_number')       
                 ->get();
         ?>
                 <thead>
                     <tr>  <th>Service Name</th>
                         <th>Order Number</th>
-                        <th>Concession Provider</th>
+                        <th>PassType Provider</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -138,7 +135,7 @@ $k=1;
                                 <td><?php echo $value->name; ?></td>
                                 <td><?php echo $value->order_number; ?></td>
                                 <td><?php echo $value->concession_provider_master_id ?></td>
-                                <td><a  href="<?php echo route("concessions.edit", $value->id) ?>" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <td><a  href="<?php echo route("pass_types.edit", $value->id) ?>" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
                                     <button  class="btn btn-small btn-primary"  data-toggle="modal" data-target="#<?php echo $value->id ?>"><span class="glyphicon glyphicon-search"></span>&nbsp;View</button>&nbsp;&nbsp;&nbsp;&nbsp;</td>
                             </tr>
             <?php } ?>
@@ -149,14 +146,14 @@ $k=1;
     
     
  public function Previous() {
-    $concessions = DB::table('fare_logs')->select('*','fare_logs.id as id')
+    $pass_types = DB::table('fare_logs')->select('*','fare_logs.id as id')
                 ->leftjoin('services', 'fare_logs.service_id', '=', 'services.id')
                 ->get();
-        return view('concessions.previous')->withConcessions($concessions);
+        return view('pass_types.previous')->withPassTypes($pass_types);
     }
 
     public function create() {
-     return view('concessions.create');
+     return view('pass_types.create');
     }
     /**
      * Show the form for creating a new resource.
@@ -166,7 +163,7 @@ $k=1;
 
     /**
      * Store a newly created resource in storage.
-     * @param Concession $concessions
+     * @param PassType $pass_types
      * @return Response
      * @Author created by satya 31-01-2018  
      */
@@ -180,13 +177,13 @@ $k=1;
 
     /**
      * Store a newly created resource in storage.
-     * @param Concession $concessions
+     * @param PassType $pass_types
      * @return Response
      * * @Author created by satya 31-01-2018 
      */
-    public function store(StoreConcessionRequest $concessionsRequest) {
-        $getInsertedId = $this->concessions->create($concessionsRequest);
-        return redirect()->route('concessions.index');
+    public function store(StorePassTypeRequest $pass_typesRequest) {
+        $getInsertedId = $this->pass_types->create($pass_typesRequest);
+        return redirect()->route('pass_types.index');
     }
 
     /**
@@ -196,11 +193,11 @@ $k=1;
      * @return Response
      */
     public function show($id) {
-                $concessions = DB::table('concessions')->select('*','concessions.id as id','users.name as username','services.name as name')
-                ->leftjoin('users', 'users.id', '=', 'concessions.user_id')
-                ->leftjoin('services', 'concessions.service_id', '=', 'services.id')
+                $pass_types = DB::table('pass_types')->select('*','pass_types.id as id','users.name as username','services.name as name')
+                ->leftjoin('users', 'users.id', '=', 'pass_types.user_id')
+                ->leftjoin('services', 'pass_types.service_id', '=', 'services.id')
                 ->get();
-                 return view('concessions.index')->withConcessions($concessions);
+                 return view('pass_types.index')->withPassTypes($pass_types);
     }
 
     /**
@@ -211,8 +208,8 @@ $k=1;
      * @return Response
      */
     public function edit($id) {
-        $concessions = Concession::findOrFail($id);
-        return view('concessions.edit',compact('concessions'));
+        $pass_types = PassType::findOrFail($id);
+        return view('pass_types.edit',compact('pass_types'));
     }
 
     /**
@@ -222,9 +219,9 @@ $k=1;
      * @return Response
      * * @Author created by satya 31-01-2018 
      */
-    public function update($id, UpdateConcessionRequest $request) {
-        $this->concessions->update($id, $request);
-        return redirect()->route('concessions.index');
+    public function update($id, UpdatePassTypeRequest $request) {
+        $this->pass_types->update($id, $request);
+        return redirect()->route('pass_types.index');
     }
     public function getDuty($id) {
         if($id!='')

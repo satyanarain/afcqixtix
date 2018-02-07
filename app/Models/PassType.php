@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ConcessionFareSlab extends Model
+class PassType extends Model
 {
-  protected $table = 'concession_fare_slabs';
+  protected $table = 'pass_types';
   protected $guarded = [];
     
 }
