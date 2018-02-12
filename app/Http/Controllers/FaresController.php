@@ -36,12 +36,12 @@ class FaresController extends Controller {
      * @return Response
      */
  public function index() {
-                $fares = DB::table('fares')->select('*','fares.id as id','users.name as username','services.name as name')
+   
+                $fares = DB::table('fares')->select('*','fares.id as id','services.name as name')
                 ->leftjoin('users', 'users.id', '=', 'fares.user_id')
                 ->leftjoin('services', 'fares.service_id', '=', 'services.id')
-                ->get();
-               
-                return view('fares.index')->withFares($fares);
+               ->get();
+     return view('fares.index')->withFares($fares);
     }
  public function Previous() {
     $fares = DB::table('fare_logs')->select('*','fare_logs.id as id')
@@ -77,8 +77,7 @@ class FaresController extends Controller {
      * @return Response
      */
     public function show($id) {
-        // $fares=Fare::findOrFail($id);
-                $fares = DB::table('fares')->select('*','fares.id as id')
+                 $fares = DB::table('fares')->select('*','fares.id as id')
                 ->leftjoin('shifts', 'fares.shift_id', '=', 'shifts.id')
                 ->leftjoin('routes', 'fares.route_id', '=', 'routes.id')
                  ->where('fares.id','=',$id)
@@ -94,9 +93,32 @@ class FaresController extends Controller {
      * @return Response
      */
     public function edit($id) {
-        $fares = Fare::findOrFail($id);
-        return view('fares.edit')->withFares($fares);
+          $fares = Fare::findOrFail($id);
+         $service_id= $fares->service_id;
+         $fare_details = DB::table('fare_details')->where('service_id',$service_id)->get();
+         return view('fares.edit',compact('fare_details'))->withFares($fares);
     }
+    
+    public function fareList($id) {
+         $fare_details = DB::table('fare_details')->where('service_id',$id)->get();
+         if(count($fare_details)>0)
+         {
+         foreach($fare_details as $value)
+         { ?>
+        <div id="control-group" style="padding-left:0px;  margin-bottom:10px;" class="col-md-12" >
+           <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="stage[]" class="form-control" placeholder="Stage" required="required" onkeypress="return isNumberKey(event)" value="<?php echo $value->stage; ?>"></div>
+       <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="adult_ticket_amount[]" class="form-control" placeholder="Adult Ticket Amount" required="required" onkeypress="return isNumberKey(event)" value="<?php echo $value->adult_ticket_amount; ?>"></div>
+       <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="child_ticket_amount[]" class="form-control" placeholder="Child Ticket Amount" required="required" onkeypress="return isNumberKey(event)" value="<?php echo $value->child_ticket_amount; ?>"></div>
+       <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="luggage_ticket_amount[]" class="form-control" placeholder="Luggage Ticket Amount" required="required" onkeypress="return isNumberKey(event)" value="<?php echo $value->luggage_ticket_amount; ?>"></div>
+       </div> 
+         <?php }}else{ 
+echo "<spsn style=\"color:#ff0000;\">RECORD NOT FOUND!</span></br></br>";
+     }  
+    }
+    
+    
+    
+    
 
     /**
      * Update the specified resource in storage.

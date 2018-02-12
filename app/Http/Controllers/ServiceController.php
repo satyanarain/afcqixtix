@@ -171,7 +171,7 @@ class ServiceController extends Controller
                  <table class="table table-responsive.view">
                     <tr>       
                         <td><b>Bus Type</b></td>
-                        <td class="table_normal"><?php  echo $value->name ?></span></td>
+                        <td class="table_normal"><?php  echo $value->bus_type ?></span></td>
                     </tr>
                     <tr>
                         <td><b>Service Name</b></td>

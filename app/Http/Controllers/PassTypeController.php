@@ -36,15 +36,15 @@ class PassTypeController extends Controller {
      * @return Response
      */
  public function index() {
-                $pass_types = DB::table('pass_types')->select('*')
+                $pass_types = DB::table('pass_types')->select('*','services.name as name','pass_types.order_number as order_number','pass_type_masters.name as type_name','concession_provider_masters.name as concession_provider_master_id')
                 ->leftjoin('users', 'users.id', '=', 'pass_types.user_id')
                 ->leftjoin('services', 'pass_types.service_id', '=', 'services.id')
                 ->leftjoin('concession_provider_masters', 'concession_provider_masters.id', '=', 'pass_types.concession_provider_master_id')
                 ->leftjoin('pass_type_masters', 'pass_type_masters.id', '=', 'pass_types.pass_type_master_id')
                 ->orderby('pass_types.order_number')       
                 ->get();
-                
-                 return view('pass_types.index')->withPassTypes($pass_types);
+        
+                 return view('pass_types.index',compact('pass_types'));
     }
     
  /**
@@ -55,15 +55,22 @@ class PassTypeController extends Controller {
     
 
     public function orderList() {
-        $bustypes = BusType::orderBy('order_number')->get();
-        ?>
+          $sql = DB::table('pass_types')->select('*','pass_types.order_number as order_number','pass_type_masters.name as type_name','concession_provider_masters.name as concession_provider_master_id','services.name as servicename')
+                ->leftjoin('users', 'users.id', '=', 'pass_types.user_id')
+                ->leftjoin('services', 'pass_types.service_id', '=', 'services.id')
+                ->leftjoin('concession_provider_masters', 'concession_provider_masters.id', '=', 'pass_types.concession_provider_master_id')
+                ->leftjoin('pass_type_masters', 'pass_type_masters.id', '=', 'pass_types.pass_type_master_id')
+                ->orderby('pass_types.order_number')       
+                ->get();
+
+            ?>
                       
-        <?php foreach ($bustypes as $value) {
+        <?php foreach ($sql as $value) {
         ?>
                     <li id="<?php echo "order" . $value->id; ?>" class="list-group-order-sub">
-                    <a href="javascript:void(0);" ><?php echo $value->bus_type; ?></a>
+                    <a href="javascript:void(0);" ><?php echo $value->servicename; ?></a>
                     <a href="javascript:void(0);"><?php echo $value->order_number; ?></a>
-                    <a href="javascript:void(0);"><?php echo $value->abbreviation; ?></a>
+                    <a href="javascript:void(0);"><?php echo $value->concession_provider_master_id; ?></a>
                    </li>
         <?php } ?>
                    
@@ -71,7 +78,13 @@ class PassTypeController extends Controller {
     }
     
     public function viewDetail($id) {
-          $value = BusType::orderBy('order_number')->where('id',$id)->first();
+           $value = DB::table('pass_types')->select('*','pass_types.order_number as order_number','pass_type_masters.name as type_name','concession_provider_masters.name as concession_provider_master_id','services.name as name')
+                ->leftjoin('users', 'users.id', '=', 'pass_types.user_id')
+                ->leftjoin('services', 'pass_types.service_id', '=', 'services.id')
+                ->leftjoin('concession_provider_masters', 'concession_provider_masters.id', '=', 'pass_types.concession_provider_master_id')
+                ->leftjoin('pass_type_masters', 'pass_type_masters.id', '=', 'pass_types.pass_type_master_id')
+                ->orderby('pass_types.order_number')       
+                ->get();
         ?>
       <div class="modal-dialog">
         <!-- Modal content-->
@@ -114,10 +127,11 @@ $k=1;
           $k++;  
         }
         
-         $sql = DB::table('pass_types')->select('*','pass_types.id as id','users.name as username','concession_provider_masters.name as concession_provider_master_id','services.name as name','concession_masters.name as con_name','pass_types.order_number as order_number')
+     $sql = DB::table('pass_types')->select('*','services.name as name','pass_types.order_number as order_number','pass_type_masters.name as type_name','concession_provider_masters.name as concession_provider_master_id')
                 ->leftjoin('users', 'users.id', '=', 'pass_types.user_id')
                 ->leftjoin('services', 'pass_types.service_id', '=', 'services.id')
                 ->leftjoin('concession_provider_masters', 'concession_provider_masters.id', '=', 'pass_types.concession_provider_master_id')
+                ->leftjoin('pass_type_masters', 'pass_type_masters.id', '=', 'pass_types.pass_type_master_id')
                 ->orderby('pass_types.order_number')       
                 ->get();
         ?>
@@ -125,6 +139,8 @@ $k=1;
                     <tr>  <th>Service Name</th>
                         <th>Order Number</th>
                         <th>PassType Provider</th>
+                        <th>Pass Type</th>
+                        <th>Description</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -134,9 +150,11 @@ $k=1;
                             <tr class="nor_f">
                                 <td><?php echo $value->name; ?></td>
                                 <td><?php echo $value->order_number; ?></td>
-                                <td><?php echo $value->concession_provider_master_id ?></td>
+                                <td><?php echo $value->concession_provider_master_id; ?></td>
+                                <td><?php echo $value->type_name; ?></td>
+                                <td><?php echo $value->description; ?></td>
                                 <td><a  href="<?php echo route("pass_types.edit", $value->id) ?>" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <button  class="btn btn-small btn-primary"  data-toggle="modal" data-target="#<?php echo $value->id ?>"><span class="glyphicon glyphicon-search"></span>&nbsp;View</button>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                    <button  class="btn btn-small btn-primary"  data-toggle="modal" onclick="viewDetails(<?php echo $value->id ?>,'view_detail')"><span class="glyphicon glyphicon-search"></span>&nbsp;View</button>&nbsp;&nbsp;&nbsp;&nbsp;</td>
                             </tr>
             <?php } ?>
                 </tbody>

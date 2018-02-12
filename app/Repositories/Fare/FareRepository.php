@@ -30,33 +30,63 @@ class FareRepository implements FareRepositoryContract {
     public function getAllFares() {
         return Fare::all();
     }
+    
+public function create($requestData) {
 
-    public function create($requestData) {
-      
-          $fares = DB::table('fares')->select('*')
-                ->where([['service_id',$requestData->service_id],['stage',$requestData->stage]])
-                ->first();
-        if(count( $fares)>0)
-        {
-          Session::flash('error', "Service Name and stage must be uquque.");
         
-        } else {
-        
-        $input = $requestData->all();
-        $userid = Auth::id();
-        $input['user_id'] = $userid;
-        $fares = Fare::create($input);
-        Session::flash('flash_message', "Fare Created Successfully."); //Snippet in Master.blade.php
-        return $fares;
-        }
+$stage=  $requestData->stage;
+$userid = Auth::id();
+$adult_ticket_amount = $requestData->adult_ticket_amount;
+$child_ticket_amount = $requestData->child_ticket_amount;
+$luggage_ticket_amount = $requestData->luggage_ticket_amount;
+$service_id = $requestData->service_id;
+
+$input = $requestData->all();
+$userid = Auth::id();
+$input['adult_ticket_amount'] = '';
+$input['adult_ticket_amount'] = '';
+$input['luggage_ticket_amount'] = '';
+$input['stage'] = '';
+$input['user_id'] = $userid;
+$input['service_id'] = $requestData->service_id;;
+$fares = Fare::create($input);
+
+foreach($stage as $key => $n ) 
+{
+$id = DB::table('fare_details')->insertGetId(
+    ['service_id' =>$service_id,'user_id' =>$userid, 'stage' => $stage[$key],'adult_ticket_amount'=>$adult_ticket_amount[$key],'child_ticket_amount'=>$child_ticket_amount[$key],'luggage_ticket_amount'=>$luggage_ticket_amount[$key]]
+);
+
+}	
+ Session::flash('flash_message', "Fare Created Successfully."); //Snippet in Master.blade.php
+ return $id;
+ 
     }
  public function update($id, $requestData) {
-       // $this->createLog('App\Models\Fare','App\Models\FareLog',$id);
-        $fares = Fare::findorFail($id);
-        $input = $requestData->all();
-        $userid = Auth::id();
-        $input[user_id] = $userid;
-        $fares->fill($input)->save();
+       $stage=  $requestData->stage;
+$userid = Auth::id();
+$adult_ticket_amount = $requestData->adult_ticket_amount;
+$child_ticket_amount = $requestData->child_ticket_amount;
+$luggage_ticket_amount = $requestData->luggage_ticket_amount;
+$service_id = $requestData->service_id;
+
+$input = $requestData->all();
+$userid = Auth::id();
+$input['adult_ticket_amount'] = '';
+$input['adult_ticket_amount'] = '';
+$input['luggage_ticket_amount'] = '';
+$input['stage'] = '';
+$input['user_id'] = $userid;
+$input['service_id'] = $requestData->service_id;
+$fares = Fare::create($input);
+
+foreach($stage as $key => $n ) 
+{
+$id = DB::table('fare_details')->insertGetId(
+    ['service_id' =>$service_id,'user_id' =>$userid, 'stage' => $stage[$key],'adult_ticket_amount'=>$adult_ticket_amount[$key],'child_ticket_amount'=>$child_ticket_amount[$key],'luggage_ticket_amount'=>$luggage_ticket_amount[$key]]
+);
+}
+$fares->fill($input)->save();
         Session::flash('flash_message', "Fare Updated Successfully.");
         return $fares;
     }

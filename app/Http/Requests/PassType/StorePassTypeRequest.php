@@ -25,13 +25,14 @@ class StorePassTypeRequest extends Request
     
     public function rules()
     {  
+     //   SELECT `id`, `user_id`, `service_id`, `concession_provider_master_id`, `pass_type_master_id`, `description`, `short_description`, `amount`, `info_message`, `validity_message`, `accept_gender`, `accept_age`, `accept_age_from`, `accept_age_to`, `accept_spouse_age`, `accept_spouse_age_from`, `accept_spouse_age_to`, `accept_id_number`, `order_number`, `created_at`, `updated_at` FROM `pass_types` WHERE 1
            return [
-                // 'name' => 'required|unique:depots,name',
-//                   'service_id' => 'required|unique:concessions,service_id',
-//                   'concession_master_id' => 'required',
-//                   'description' => 'required',
-//                   'order_number' => 'required',
-//                   'percentage' => 'required'
+                   'service_id' => 'required|unique:depots,service_id,concession_provider_master_id,pass_type_master_id',
+                   'service_id' => 'required',
+                   'concession_provider_master_id' => 'required',
+                   'short_description' => 'required',
+                   'info_message' => 'required',
+                   'validity_message' => 'required'
   
              ];
         

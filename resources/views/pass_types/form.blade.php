@@ -1,11 +1,8 @@
 @php $services=displayList('services','name')@endphp
-
-
 <div class="form-group">
         {!! Form::label('service_id', Lang::get('Service'), ['class' => 'control-label required']) !!}
         {!! Form::select('service_id',$services,isset($pass_types->service_id) ? $pass_types->service_id : selected,['class' => 'form-control','required' => 'required','placeholder'=>"Select Service"]) !!}
 </div>
-
 <div class="form-group">
     @php $concession_provider_masters=displayList('concession_provider_masters','name')@endphp
     {!! Form::label('concession_provider_master_id', Lang::get('Pass Provider'), ['class' => 'control-label required']) !!}
@@ -42,7 +39,7 @@
 </div>
 <div class="form-group">
     {!! Form::label('accept_agg', Lang::get('Accept Age ?'), ['class' => 'control-label']) !!}<br>
-  <input type="checkbox" name="accept_age" value="Yes" <?php if($pass_types->accept_agg=='Yes') { ?>checked="checked"<?php } ?>>
+  <input type="checkbox" name="accept_age" value="Yes" <?php if($pass_types->accept_age=='Yes') { ?>checked="checked"<?php } ?>>
 </div>
 
 <div class="col-sm-12"  style="padding-left:0px; padding-bottom:20px;">
@@ -59,7 +56,7 @@
 </div>
 <div class="form-group">
     {!! Form::label('accept_agg', Lang::get('Accept Spouse Age'), ['class' => 'control-label']) !!}<br>
-  <input type="checkbox" name="accept_spouse_age" value="Yes" <?php if($pass_types->accept_agg=='Yes') { ?>checked="checked"<?php } ?>>
+  <input type="checkbox" name="accept_spouse_age" value="Yes" <?php if($pass_types->accept_spouse_age=='Yes') { ?>checked="checked"<?php } ?>>
 </div>
 <div class="col-sm-12"  style="padding-left:0px; padding-bottom:20px;">
 <div class="col-sm-6" style="padding-left:0px; ">
@@ -75,9 +72,9 @@
 </div>
 <div class="form-group">
         {!! Form::label('accept_id_number', Lang::get('Accept ID Number'), ['class' => 'control-label required']) !!}<br>
-        <input type="radio" name="accept_id_number" value="No" <?php if($pass_types->accept_agg=='No') { ?>checked="checked"<?php } ?>> &nbsp;No&nbsp;&nbsp;&nbsp;
-        <input type="radio" name="accept_id_number" value="Optional" <?php if($pass_types->accept_agg=='Optional') { ?>checked="checked"<?php } ?>>&nbsp;Optional&nbsp;&nbsp;&nbsp;
-        <input type="radio" name="accept_id_number" value="Mandatory" <?php if($pass_types->accept_agg=='Mandatory') { ?>checked="checked"<?php } ?>>&nbsp;Mandatory
+        <input type="radio" name="accept_id_number" value="No" <?php if($pass_types->accept_id_number=='No') { ?>checked="checked"<?php } ?>> &nbsp;No&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="accept_id_number" value="Optional" <?php if($pass_types->accept_id_number=='Optional') { ?>checked="checked"<?php } ?>>&nbsp;Optional&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="accept_id_number" value="Mandatory" <?php if($pass_types->accept_id_number=='Mandatory') { ?>checked="checked"<?php } ?>>&nbsp;Mandatory
 </div>
 
 <div class="form-group">

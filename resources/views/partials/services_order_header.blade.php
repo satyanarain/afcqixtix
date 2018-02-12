@@ -72,10 +72,7 @@
 			updateOrder();
 		}
 	});  
-        
-        setTimeout(function() {
-        $('#successMessage').fadeOut('fast');
-      }, 1000); // <-- time in milliseconds   
+      
 });
 
 function updateOrder() {	

@@ -92,6 +92,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('trips', 'TripController');
     Route::get('fares/previous', 'FaresController@Previous')->name('fares.previous');
     Route::post('fares/data', 'FaresController@anyData')->name('fares.data');
+    Route::get('fares/fare_list/{id}','FaresController@fareList');
     Route::resource('fares', 'FaresController');
   
     
@@ -142,6 +143,9 @@ Route::group(['middleware' => ['auth']], function () {
     
     Route::get('pass_types/data', 'PassTypeController@anyData')->name('pass_types.data');
     Route::post('pass_types/store', 'PassTypeController@store');
+     Route::get('pass_types/sort_order/{id}', 'PassTypeController@sortOrder');
+    Route::get('pass_types/view_detail/{id}', 'PassTypeController@viewDetail');
+    Route::get('pass_types/order_list', 'PassTypeController@orderList');
     Route::resource('pass_types', 'PassTypeController');
     
     Route::get('crew_details/data', 'CrewDetailController@anyData')->name('crew_details.data');

@@ -16,13 +16,13 @@
 </div>
 <div class="form-group">
     <div class="form-group">
-    @if($bustypes->order_number!='')
+    @if($services->order_number!='')
      {!! Form::label('order_number', Lang::get('Order Number'), ['class' => 'control-label required']) !!}
     {!! Form::text('order_number',null, ['class' => 'form-control','readonly'=>readonly]) !!}
      @else
-    @php $bus_type_value= maxId('services','order_number') @endphp
+    @php $services_value= maxId('services','order_number') @endphp
      {!! Form::label('order_number', Lang::get('Order Number'), ['class' => 'control-label required']) !!}
-    {!! Form::text('order_number', $bus_type_value, ['class' => 'form-control','readonly'=>readonly]) !!}
+    {!! Form::text('order_number', $services_value, ['class' => 'form-control','readonly'=>readonly]) !!}
   @endif
     </div>
 </div>

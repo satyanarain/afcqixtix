@@ -26,10 +26,10 @@ class UpdateFareRequest extends Request
       $regex = "/^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$/";
            return [
                     'service_id' => 'required|numeric',
-                   'stage' => 'required',
-                   'adult_ticket_amount' =>  array('required','regex:'.$regex),
-                    'child_ticket_amount' =>  array('required','regex:'.$regex),
-                   'luggage_ticket_amount' =>  array('required','regex:'.$regex)  
+                   'stage' => 'required'
+                  // 'adult_ticket_amount' =>  array('required','regex:'.$regex),
+                  //  'child_ticket_amount' =>  array('required','regex:'.$regex),
+                  // 'luggage_ticket_amount' =>  array('required','regex:'.$regex)  
              ];
         
     }

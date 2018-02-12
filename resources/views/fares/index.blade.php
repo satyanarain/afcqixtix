@@ -18,26 +18,17 @@
                     <thead>
                          <tr>
                             <th>@lang('Service Name')</th>
-                            <th>@lang('Stage')</th>
-                           <th>@lang('Adult Ticket Amount')</th>
-                            <th>@lang('Child Ticket Amount')</th>
-                            <th>@lang('Luggage Ticket Amount')</th>
-                            {{  actionHeading('Action', $newaction='') }}
+                           
+                           <th>@lang('Short Name')</th>
+                          {{  actionHeading('Action', $newaction='') }}
                         </tr>
                     </thead>
                     <tbody>
                          @foreach($fares as $value)
                         <tr class="nor_f">
                             <td>{{$value->name}}</td>
-                            <td>{{$value->stage}}</td>
-                            <td>{{$value->adult_ticket_amount}}
-                            </td>
-                            <td>{{$value->child_ticket_amount}}
-                            </td>
-                            
-                            <td>{{$value->luggage_ticket_amount}}
-                            </td>
-                             {{ actionEdit('edit',$value->id)}}
+                            <td>{{$value->short_name}}</td>
+                            {{ actionEdit('edit',$value->id)}}
                         </tr>
                         @endforeach
                         </tbody>

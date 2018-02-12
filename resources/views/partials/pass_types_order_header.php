@@ -13,15 +13,15 @@
                 </div>
         <div class="gallery">
         <ul class="list-group-order-main">
-            <li class="order-sub"><a href="javascript:void(0);">Service Name</a>
+         <li class="order-sub"><a href="javascript:void(0);">Service Name</a>
           <a href="javascript:void(0);">Order Number</a>
-         <a href="javascript:void(0);">Concession Provider</a>
-         <a href="javascript:void(0);">Concession</a>
+         <a href="javascript:void(0);">Pass Provider</a>
+         <a href="javascript:void(0);">Pass Type</a>
          </li>
           </ul>
-         <ul class="list-group-order">
+         <ul class="list-group-order" id="order_list">
         
-                <?php echo orderList('concessions','id','name','order_number','concession_provider_master_id','concession_master_id','services','service_id','concession_masters','concession_master_id');?>
+                <?php echo orderList('pass_types','id','name','order_number','concession_provider_master_id','concession_master_id','services','service_id','concession_masters','concession_master_id');?>
          </ul>
          </div>
                   <div class="modal-footer">
@@ -38,13 +38,15 @@
 <script>
  function orderList(order_id,order_list)
    {
-   var urldata=   '/concessions/' + order_list;
-    
+   var urldata=   '/pass_types/' + order_list;
+   // alert(urldata)
     $.ajax({
 		type: "GET",
 		url: urldata,
 		cache: false,
 		success: function(data){
+                 //   alert(data)
+                    
                   $("#" + order_id).modal('show');
                   $("#"+order_list).html(data);
 		}
@@ -53,7 +55,7 @@
    }
   function viewDetails(id,view_detail)
    {
-   var urldata=   '/concessions/' + view_detail + '/' +id;
+   var urldata=   '/pass_types/' + view_detail + '/' +id;
     
     $.ajax({
 		type: "GET",
@@ -90,7 +92,7 @@ function updateOrder() {
 	var order_string = item_order;
 	$.ajax({
 		type: "GET",
-		url: "/concessions/sort_order/"+order_string,
+		url: "/pass_types/sort_order/"+order_string,
 		data: order_string,
 		cache: false,
 		success: function(data){

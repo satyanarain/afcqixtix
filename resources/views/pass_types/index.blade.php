@@ -19,8 +19,8 @@
                          <tr>
                             <th>@lang('Service Name')</th>
                             <th>@lang('Order Number')</th>
-                           <th>@lang('Concession Provider')</th>
-                            <th>@lang('Concession')</th>
+                           <th>@lang('Pass Provider')</th>
+                            <th>@lang('Pass Type')</th>
                             <th>@lang('Description')</th>
                             {{  actionHeading('Action', $newaction='') }}
                         </tr>
@@ -31,7 +31,7 @@
                             <td>{{$value->name}}</td>
                              <td>{{$value->order_number}}</td>
                             <td>{{$value->concession_provider_master_id}}</td>
-                            <td>{{$value->con_name}}</td>
+                            <td>{{$value->type_name}}</td>
                             <td>{{$value->description}}</td>
                              {{ actionEdit('edit',$value->id)}}
                         </tr>

@@ -1,7 +1,7 @@
-      $(document).ready(function(){	
+$(document).ready(function(){	
      setTimeout(function() {
           $('#successMessage').fadeOut('fast');
-        }, 1000000); // <-- time in milliseconds
+        }, 5000); // <-- time in milliseconds
       });
 function findDuty(id)
  {
@@ -33,6 +33,22 @@ function findDuty(id)
 
           return true;
        }
+ function isIntegerKey(evt)
+       {
+    evt = (evt) ? evt : window.event;
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+    }
+    return true;
+       
+       
+ }  
+       
+       
+       
+       
+       
   function AddNewShow(table_name,field_name,placeholder)
 {
  $("#table_name").val(table_name); 

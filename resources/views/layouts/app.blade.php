@@ -65,8 +65,7 @@
              
             <!-- Logo -->
             <a href="index2.html" class="logo">
-             
-                <span class="logo-lg"><b>Qixtix(AFC)</span>
+               <span class="logo-lg"><b>Qixtix(AFC)</span>
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top">
@@ -440,12 +439,12 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
             <!-- /.sidebar -->
         </aside>
         <!-- Page Content -->
-            <div class="content-wrapper">
+        <div class="content-wrapper" style="min-height:0px;">
                 <!-- Content Header (Page header) -->
-                <section class="content-header">
+                <section class="content-header" >
                     @yield('header')
                 </section>
-                <section class="content">
+                <section class="content"  style="min-height:0px;">
                     
                     @if($errors->any())
                     <ul class="list-group"> 

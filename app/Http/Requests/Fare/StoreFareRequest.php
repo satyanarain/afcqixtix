@@ -27,12 +27,16 @@ class StoreFareRequest extends Request
     {
         $regex = "/^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$/";
            return [
-                    'service_id' => 'required',
-                   'stage' => 'required|numeric',
-                   'adult_ticket_amount' =>  array('required','regex:'.$regex),
-                    'child_ticket_amount' =>  array('required','regex:'.$regex),
-                   'luggage_ticket_amount' =>  array('required','regex:'.$regex)  
-             ];
+                   'service_id' => 'required|unique:fares,service_id'
+              ];
         
     }
+  public function messages()
+{
+    return [
+        'service_id.required' => 'Service name required',
+        'service_id.unique' => 'The service name has already been taken.',
+    ];
+}
+
 }
