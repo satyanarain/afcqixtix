@@ -499,8 +499,6 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
     reserved.
 </footer>
 </div>
-
-
 <!-- jQuery UI 1.11.4 -->
 
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
