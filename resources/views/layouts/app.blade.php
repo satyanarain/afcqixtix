@@ -504,7 +504,6 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script src="{{ asset(elixir('plugins/jQuery/jquery-2.2.3.min.js')) }}"></script>
 <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
-
 <script>
 $.widget.bridge('uibutton', $.ui.button);
 </script>
