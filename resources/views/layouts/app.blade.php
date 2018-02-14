@@ -65,7 +65,8 @@
              
             <!-- Logo -->
             <a href="index2.html" class="logo">
-               <span class="logo-lg"><b>Qixtix(AFC)</span>
+             
+                <span class="logo-lg"><b>Qixtix(AFC)</span>
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top">
@@ -439,12 +440,12 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
             <!-- /.sidebar -->
         </aside>
         <!-- Page Content -->
-        <div class="content-wrapper" style="min-height:0px;">
+            <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
-                <section class="content-header" >
+                <section class="content-header">
                     @yield('header')
                 </section>
-                <section class="content"  style="min-height:0px;">
+                <section class="content">
                     
                     @if($errors->any())
                     <ul class="list-group"> 
@@ -454,6 +455,10 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                     </ul>
                     @endif
                     @yield('content')
+                    
+                  
+                    
+                    
 <div class="modal fade" id="common_details" role="dialog">
   <div class="modal-dialog">
         <!-- Modal content-->
@@ -499,11 +504,14 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
     reserved.
 </footer>
 </div>
+
+
 <!-- jQuery UI 1.11.4 -->
 
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script src="{{ asset(elixir('plugins/jQuery/jquery-2.2.3.min.js')) }}"></script>
 <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+
 <script>
 $.widget.bridge('uibutton', $.ui.button);
 </script>

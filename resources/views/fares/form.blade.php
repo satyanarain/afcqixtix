@@ -23,9 +23,9 @@
        <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;">Child Ticket Amount</div>
        <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;">Luggage Ticket Amount</div>
 </div>
-<span id="fare_list">
+<div id="fare_list">
  
-@if($fare_details!='')
+
 @foreach($fare_details as $value)
 <div id="control-group" style="padding-left:0px;  margin-bottom:10px;" class="col-md-12" >
            <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="stage[]" class="form-control" placeholder="Stage" required="required" onkeypress="return isNumberKey(event)" value="{{$value->stage}}"></div>
@@ -35,6 +35,7 @@
 </div>
 @endforeach
 <div class="copy show" id="input_fields_wrap_classes">
+ 
 </div>
 @else
  <div class="copy show" id="input_fields_wrap_classes">
@@ -46,10 +47,13 @@
 </div>
 </div>
 @endif
-</span>
 <div class="input-group col-md-12" id="button">
   {!! Form::submit(Lang::get('common.titles.save'), ['class' => 'btn btn-success']) !!}
   </div>
+</div>
+<div class="copy show" id="input_fields_wrap_classes">
+ 
+</div>
   </div>
 
 
@@ -57,8 +61,8 @@
 <script type="text/javascript">
     function fareList(id)
     {
-  alert(id)
-
+if(id!='')
+{
         $.ajax({
                type: "get",
                url:'/fares/fare_list/'+id,
@@ -69,7 +73,7 @@
             
         });
    
-        
+   }   
     }
     
     

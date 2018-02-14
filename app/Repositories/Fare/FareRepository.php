@@ -63,13 +63,21 @@ $id = DB::table('fare_details')->insertGetId(
  
     }
  public function update($id, $requestData) {
-       $stage=  $requestData->stage;
+ $stage=  $requestData->stage;
 $userid = Auth::id();
 $adult_ticket_amount = $requestData->adult_ticket_amount;
 $child_ticket_amount = $requestData->child_ticket_amount;
 $luggage_ticket_amount = $requestData->luggage_ticket_amount;
-$service_id = $requestData->service_id;
+ $service_id = $requestData->service_id;
 
+//$sql=Fare::where('service_id',$service_id)->first();
+//echo count($sql);
+//
+//
+//if(count($sql)>0)
+//{
+//    
+//}else{
 $input = $requestData->all();
 $userid = Auth::id();
 $input['adult_ticket_amount'] = '';
@@ -85,7 +93,14 @@ foreach($stage as $key => $n )
 $id = DB::table('fare_details')->insertGetId(
     ['service_id' =>$service_id,'user_id' =>$userid, 'stage' => $stage[$key],'adult_ticket_amount'=>$adult_ticket_amount[$key],'child_ticket_amount'=>$child_ticket_amount[$key],'luggage_ticket_amount'=>$luggage_ticket_amount[$key]]
 );
+
 }
+//}
+
+
+
+
+
 $fares->fill($input)->save();
         Session::flash('flash_message', "Fare Updated Successfully.");
         return $fares;
