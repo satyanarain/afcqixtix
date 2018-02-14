@@ -395,6 +395,8 @@ ul.list-group-order-main li.order-sub a{
   background-color: #dff0d8; 
   border-color: #d6e9c6;
  }
+.no-sort::after { display: none!important; }
+.no-sort { pointer-events: none!important; cursor: default!important; }
 
 
 

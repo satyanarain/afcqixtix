@@ -252,7 +252,7 @@ function actionEdit($action = '', $id = '') {
 
 function actionHeading($action = '', $newaction='') {
             ?>
-             <th><?php echo htmlentities("Action"); ?></th>
+             <th class="no-sort"><?php echo htmlentities("Action"); ?></th>
             <?php
 }
 
