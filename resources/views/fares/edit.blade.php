@@ -29,7 +29,7 @@
         'enctype' => 'multipart/form-data'
         ]) !!}
                     <!-- Warranty -->
-                    @include('fares.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
+                    @include('fares.form1', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 
                     {!! Form::close() !!}
                 </div>

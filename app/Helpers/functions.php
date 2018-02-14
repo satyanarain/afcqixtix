@@ -240,7 +240,7 @@ function actionEdit($action = '', $id = '') {
              <?php if($segments[0]=='users'){?>
               <a  class="btn btn-small btn-primary" href="<?php echo route('users.show', $id); ?>" ><span class="glyphicon glyphicon-search"></span>&nbsp;View</a>&nbsp;&nbsp;&nbsp;&nbsp;
              <?php }else{ ?>
-               <button  class="btn btn-small btn-primary"  data-toggle="modal" data-target="#<?php echo $id ?>"><span class="glyphicon glyphicon-search"></span>&nbsp;View</button>&nbsp;&nbsp;&nbsp;&nbsp;
+               <button  class="btn btn-small btn-primary"  data-toggle="modal" data-target="#<?php echo $id ?>"  onclick="viewDetails(<?php echo $id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span>&nbsp;View</button>&nbsp;&nbsp;&nbsp;&nbsp;
               <?php } ?>
               <?php if($segments[0]=='users'){?>
              <div  class="btn btn-small btn-success"   id="<?php echo $id; ?>" onclick="statusUpdate(this.id)"><i class="fa fa-check-circle"></i>&nbsp;<span id="<?php echo "ai".$id; ?>">Active</span></div>

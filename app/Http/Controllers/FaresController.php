@@ -9,6 +9,8 @@ use DB;
 use Schema;
 use Response;
 use App\Models\Fare;
+use App\Models\FareDetail;
+use App\Models\Service;
 use App\Models\Duty;
 use App\Models\Country;
 use App\Http\Requests;
@@ -36,8 +38,7 @@ class FaresController extends Controller {
      * @return Response
      */
  public function index() {
-   
-                $fares = DB::table('fares')->select('*','fares.id as id','services.name as name')
+                 $fares = DB::table('fares')->select('*','fares.id as id','services.name as name')
                 ->leftjoin('users', 'users.id', '=', 'fares.user_id')
                 ->leftjoin('services', 'fares.service_id', '=', 'services.id')
                ->get();
@@ -100,30 +101,88 @@ class FaresController extends Controller {
     }
     
     public function fareList($id) {
-         $fare_details = DB::table('fare_details')->where('service_id',$id)->get();
-         if(count($fare_details)>0)
-         {
-         foreach($fare_details as $value)
-         { ?>
-        <div id="control-group" style="padding-left:0px;  margin-bottom:10px;" class="col-md-12" >
-           <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="stage[]" class="form-control" placeholder="Stage" required="required" onkeypress="return isNumberKey(event)" value="<?php echo $value->stage; ?>"></div>
-       <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="adult_ticket_amount[]" class="form-control" placeholder="Adult Ticket Amount" required="required" onkeypress="return isNumberKey(event)" value="<?php echo $value->adult_ticket_amount; ?>"></div>
-       <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="child_ticket_amount[]" class="form-control" placeholder="Child Ticket Amount" required="required" onkeypress="return isNumberKey(event)" value="<?php echo $value->child_ticket_amount; ?>"></div>
-       <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="luggage_ticket_amount[]" class="form-control" placeholder="Luggage Ticket Amount" required="required" onkeypress="return isNumberKey(event)" value="<?php echo $value->luggage_ticket_amount; ?>"></div>
-       </div> 
+        $fare_details = DB::table('fare_details')->where('service_id', $id)->get();
+        if (count($fare_details) > 0) {
+            foreach ($fare_details as $value) {
+                ?>
+                                                <div id="control-group" style="padding-left:0px;  margin-bottom:10px;" class="col-md-12" >
+                                                    <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="stage[]" class="form-control" placeholder="Stage" required="required" onkeypress="return isNumberKey(event)" value="<?php echo $value->stage; ?>"></div>
+                                                    <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="adult_ticket_amount[]" class="form-control" placeholder="Adult Ticket Amount" required="required" onkeypress="return isNumberKey(event)" value="<?php echo $value->adult_ticket_amount; ?>"></div>
+                                                    <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="child_ticket_amount[]" class="form-control" placeholder="Child Ticket Amount" required="required" onkeypress="return isNumberKey(event)" value="<?php echo $value->child_ticket_amount; ?>"></div>
+                                                    <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="luggage_ticket_amount[]" class="form-control" placeholder="Luggage Ticket Amount" required="required" onkeypress="return isNumberKey(event)" value="<?php echo $value->luggage_ticket_amount; ?>"></div>
+                                                    <button class="btn btn-danger remove" type="button" id="remove_field" onclick="removeFunction(this.id)"><i class="glyphicon glyphicon-remove"></i> Remove</button>
+                                                </div>
+             <?php } ?>
+                                    <div class="copy show" id="input_fields_wrap_classes">
+                                    </div>
+              <?php } else { ?>
+                                    <div id="control-group" style="padding-left:0px;  margin-bottom:10px;" class="col-md-12" >
+                                        <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="stage[]" class="form-control" placeholder="Stage" required="required" onkeypress="return isNumberKey(event)" value="<?php echo $value->stage; ?>"></div>
+                                        <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="adult_ticket_amount[]" class="form-control" placeholder="Adult Ticket Amount" required="required" onkeypress="return isNumberKey(event)" value="<?php echo $value->adult_ticket_amount; ?>"></div>
+                                        <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="child_ticket_amount[]" class="form-control" placeholder="Child Ticket Amount" required="required" onkeypress="return isNumberKey(event)" value="<?php echo $value->child_ticket_amount; ?>"></div>
+                                        <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="luggage_ticket_amount[]" class="form-control" placeholder="Luggage Ticket Amount" required="required" onkeypress="return isNumberKey(event)" value="<?php echo $value->luggage_ticket_amount; ?>"></div>
+                                    </div> 
+                                    <div class="copy show" id="input_fields_wrap_classes">
+                                    </div>
+            <?php
+        }
+    }
+/**
+     * Update the specified resource in storage.
+     *
+     * @author  int  satya
+     * Date 14 February
+     */
+    
+       public function viewDetail($id) {
+           $fare=Fare::find($id);
+           $id=$fare->service_id;
+           $service=Service::find($id);
+           $sql = DB::table('fares')
+                  ->leftjoin('services','fares.service_id','services.id')
+                  ->leftjoin('fare_details','fare_details.service_id','fares.service_id')
+                  ->where('fares.service_id',$id)
+             ->get();
+            Service   
+        ?>
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header-view" >
+                <button type="button" class="close" data-dismiss="modal"><font class="white">&times;</font></button>
+                <h4 class="viewdetails_details"><span class="fa fa-inr"></span>&nbsp;Fare</h4>
+            </div>
+            <div class="modal-body-view">
+                 <table class="table table-responsive.view">
+                    <tr>       
+                        <td colspan="2"><b>Service Name</b></td>
+                        <td class="table_normal"><?php  echo $service->name; ?></span></td>
+                    </tr>
+                    <tr>        <td>Stage</td>
+                                <td>Adult Ticket Amount</td>
+                                <td>Child Ticket Amount</td>
+                                <td>Luggage Ticket Amount</td>
+                          
+                         </tr>
+                      <?php foreach($sql as $value) { ?>   
+                                     <tr><td class="table_normal"><?php echo $value->stage; ?></td>
+                                         <td class="table_normal"><?php echo $value->adult_ticket_amount; ?></td>
+                                         <td class="table_normal"><?php echo $value->child_ticket_amount; ?></td>
+                                         <td class="table_normal"><?php echo $value->luggage_ticket_amount; ?></td>
+                                     </tr>
+                      <?php } ?> 
+                    </table>  
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
 
-
-         <?php }?>
-   
-       <?php   }else{ 
-    echo  "RECORD NOT FOUND";
-     }  
+    </div>
+    <?php   
     }
     
     
-    
-    
-
     /**
      * Update the specified resource in storage.
      *

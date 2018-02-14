@@ -27,7 +27,7 @@ class StoreFareRequest extends Request
     {
         $regex = "/^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$/";
            return [
-                   'service_id' => 'required|unique:fares,service_id'
+                   'service_id' => 'required'
               ];
         
     }

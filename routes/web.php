@@ -93,6 +93,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('fares/previous', 'FaresController@Previous')->name('fares.previous');
     Route::post('fares/data', 'FaresController@anyData')->name('fares.data');
     Route::get('fares/fare_list/{id}','FaresController@fareList');
+     Route::get('fares/view_detail/{id}','FaresController@viewDetail');
     Route::resource('fares', 'FaresController');
   
     

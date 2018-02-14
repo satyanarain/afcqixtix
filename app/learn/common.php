@@ -1,30 +1,14 @@
-<div class="row fix-gutters-six">
-<div class="col-sm-6">
-
-,'onkeypress'=>"return isNumberKey(event)
-{{ createButton('create','Add') }}
-{{  actionHeading('Action', $newaction='') }}
-{{ actionEdit('edit',$value->id)}}
-http://fontawesome.io/examples/
-@include('partials.depotsheader')
-@include('partials.table_script')
-@stop
-public function companydocumentsubtypes($id)
-{ 
-  $companydocumentsubtypes= DB::table('companydocumentsubtypes')->select('*')->where('companydocument_id',$id)->get();
- ?>
-
-<label>Select Company Document Sub Types</label>
-
- <select class="form-control">
-<?php
-foreach($companydocumentsubtypes as $value)
-        {?>
-          <option value="<?php echo $value->id ; ?>"><?php echo $value->companydocumemtsubtype_name ; ?></option>
-
-          <?php  } ?>
-       </select> 
-
-<?php
-}
-
+<div id="b" style="position:absolute; top:50px"><i class="fa fa-bus" style="font-size:48px;color:red"></i></div>-->
+<script type="text/javascript">
+$(document).ready(function() {
+    
+    function beeLeft() {
+        $("#b").animate({left: "-=300"}, 1500, "swing", beeRight);
+    }
+    function beeRight() {
+        $("#b").animate({left: "+=300"}, 1500, "swing", beeLeft);
+    }
+    
+    beeRight();
+    
+});

@@ -17,7 +17,7 @@
                         <a href="javascript:void(0);">Abbreviation</a>
                     </li>  </ul>
                 <ul class="list-group-order" id="order_list">
-                    <?php echo orderList('bus_types', 'id', 'bus_type', 'order_number', 'abbreviation'); ?>
+                    <?php //echo orderList('bus_types', 'id', 'bus_type', 'order_number', 'abbreviation'); ?>
                 </ul>
          </div>
                   <div class="modal-footer">
@@ -34,6 +34,7 @@
     
    function orderList(order_id,order_list)
    {
+     
    var urldata=   '/bus_types/' + order_list;
     
     $.ajax({
