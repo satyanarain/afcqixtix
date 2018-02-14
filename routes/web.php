@@ -96,7 +96,6 @@ Route::group(['middleware' => ['auth']], function () {
      Route::get('fares/view_detail/{id}','FaresController@viewDetail');
     Route::resource('fares', 'FaresController');
   
-    
     Route::get('concession_fare_slabs/data', 'ConcessionFareSlabController@anyData')->name('concession_fare_slabs.data');
     Route::post('concession_fare_slabs/store', 'ConcessionFareSlabController@store');
     Route::resource('concession_fare_slabs', 'ConcessionFareSlabController');
@@ -110,10 +109,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('concessions/order_list', 'ConcessionController@orderList');
     
     Route::resource('concessions', 'ConcessionController');
-    
-    
-    
-    
     Route::get('trip_cancellation_reasons/data', 'TripCancellationReasonController@anyData')->name('trip_cancellation_reasons.data');
     Route::post('trip_cancellation_reasons/store', 'TripCancellationReasonController@store');
     Route::get('trip_cancellation_reasons/sort_order/{id}', 'TripCancellationReasonController@sortOrder');
