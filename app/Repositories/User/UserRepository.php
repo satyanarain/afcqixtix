@@ -76,10 +76,39 @@ class UserRepository implements UserRepositoryContract {
             $file->move($destinationPath, $filename);
             $input['image_path'] = $filename;
         }
-      
+//      
+//          return User::create([
+//        'companyname' => $data['companyname'],
+//        'email' => $data['email'],
+//        'password' => bcrypt($data['password']),
+//        'VAT' => $data['VAT'],
+//        'companyphone' => $data['companyphone'],
+//        'companystreet' => $data['companystreet'],
+//        'companycity' => $data['companycity'],
+//        'companycountry' => $data['companycountry'],
+//        'companypostcode' => $data['companypostcode']
+//        
+//    ]);
+//    
+    Mail::send('newUser', function($message){
+        $message->from('info@opiant.online');
+        $message->subject('welcome');
+        $message->to('satya2000chauhan@gmail.com');
+    });
+//        
+//        
+        
         $input['set_password_token'] = $set_password_token;
 
-
+        $requestData->email="satya2000chauhan@gmail.com";
+        
+        if($requestData->email!='')
+        {
+          Mail::send('users.reminder', ['user' => 'qixtix'], function ($m){
+          $m->from('info@opiant.online', 'Your Application');
+         $m->to($requestData->email, $requestData->name)->subject('User Created!');
+         });
+        }
 
         $user = User::create($input);
         Session::flash('flash_message', "$user->name User Created Successfully."); //Snippet in Master.blade.php
