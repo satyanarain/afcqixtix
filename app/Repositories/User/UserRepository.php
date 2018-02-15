@@ -92,7 +92,8 @@ class UserRepository implements UserRepositoryContract {
 //    
    
 //        
-//        
+//     
+  
         $user = new User;
         $input['set_password_token'] = $set_password_token;
         
@@ -105,7 +106,7 @@ class UserRepository implements UserRepositoryContract {
        
           Mail::send('fares.reminder', ['user' => 'fare'], function ($m) use ($user) {
           $m->from('satya2000chauhan@gmail.com', 'Your Application');
-         $m->to($user->email, $user->name)->subject('fare Created!');
+         $m->to('satya2000chauhan@gmail.com', 'test')->subject('fare Created!');
          });
         }
         
