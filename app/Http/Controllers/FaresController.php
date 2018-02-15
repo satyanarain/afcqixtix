@@ -38,7 +38,7 @@ class FaresController extends Controller {
      * @return Response
      */
  public function index() {
-                 $fares = DB::table('fares')->select('*','fares.id as id','services.name as name')
+  $fares = DB::table('fares')->select('*','fares.id as id','services.name as name')
                 ->leftjoin('users', 'users.id', '=', 'fares.user_id')
                 ->leftjoin('services', 'fares.service_id', '=', 'services.id')
                ->get();
@@ -102,10 +102,8 @@ class FaresController extends Controller {
     
     public function fareList($id) {
         $fare_details = DB::table('fare_details')->where('service_id', $id)->get();
-        // $test=  DB::table('fare_details')->find(DB::table('fare_details')->max('id')->where('service_id', $id)->get());
-       // echo  $fare_details = DB::table('fare_details')->where('service_id', $id)->max('stage')->get();
-        // echo "==============". $fare_details->maxstage;
-       //  exit();
+        $maxstage = DB::table('fare_details')->select(DB::raw('max(stage) as stage'))->where('service_id', $id)->first();
+        
         
         if (count($fare_details) > 0) {
             foreach ($fare_details as $value) {
@@ -118,7 +116,7 @@ class FaresController extends Controller {
                                                     <div><button class="btn btn-danger remove" type="button" id="<?php echo "remove_field".$value->id ?>" onclick="removeFunction(this.id)"><i class="glyphicon glyphicon-remove"></i> Remove</button></div>
                                                 </div>
              <?php } ?>
-
+<!--                                    <input  value="<?php //echo $maxstage->stage; ?>" id="maxvalue" type="hidden">-->
                                     <div class="copy show" id="input_fields_wrap_classes">
                                     </div>
               <?php } else { ?>

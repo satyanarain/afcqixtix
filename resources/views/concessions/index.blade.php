@@ -47,6 +47,5 @@
 </div>
 <!-- /.row -->
 @include('partials.concession_order_header')
-@include('partials.concessionsheader')
 @include('partials.table_script_order')
 @stop

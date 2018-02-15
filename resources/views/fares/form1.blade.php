@@ -24,12 +24,12 @@
 <div id="fare_list">
 @if($fare_details!='')
 @foreach($fare_details as $value)
-<div id="control-group" style="padding-left:0px;  margin-bottom:10px;" class="col-md-12" >
+<div id="control-group" style="padding-left:0px;  margin-bottom:10px;" class="col-md-12" id="{{ "div_remove_field".$value->id }}">
            <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="stage[]" class="form-control" placeholder="Stage" required="required" onkeypress="return isNumberKey(event)" value="{{$value->stage}}"></div>
        <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="adult_ticket_amount[]" class="form-control" placeholder="Adult Ticket Amount" required="required" onkeypress="return isNumberKey(event)" value="{{$value->adult_ticket_amount}}"></div>
        <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="child_ticket_amount[]" class="form-control" placeholder="Child Ticket Amount" required="required" onkeypress="return isNumberKey(event)" value="{{$value->child_ticket_amount}}"></div>
        <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="luggage_ticket_amount[]" class="form-control" placeholder="Luggage Ticket Amount" required="required" onkeypress="return isNumberKey(event)" value="{{$value->luggage_ticket_amount}}"></div>
-<button class="btn btn-danger remove" type="button" id="remove_field" onclick="removeFunction(this.id)"><i class="glyphicon glyphicon-remove"></i> Remove</button>
+<button class="btn btn-danger remove" type="button" id="{{"remove_field".$value->id }}" onclick="removeFunction(this.id)"><i class="glyphicon glyphicon-remove"></i> Remove</button>
 </div>
 @endforeach
 <div class="copy show" id="input_fields_wrap_classes">
@@ -89,11 +89,23 @@ if(id!='')
 }
     
  $(document).ready(function() {
-    var max_fields      = 10; //maximum input boxes allowed
+    var max_fields      = 10000; //maximum input boxes allowed
     var wrapper         = $("#input_fields_wrap_classes"); //Fields wrapper
     var add_button      = $("#add_field_button_classes"); //Add button ID
-   
-    var x = 1; //initlal text box count
+    var add_button      = $("#add_field_button_classes");
+    
+   //var maxvalue= $("#maxvalue").val();
+   //alert(maxvalue)
+//  if(maxvalue != 'undefined')
+//  {
+    var x = 1;  
+//  }else
+//  {
+//    var x = maxvalue;   
+//  }
+
+    
+    //initlal text box count
     $("#add_field_button_classes").click(function(e){ //on add input button click
      
         e.preventDefault();

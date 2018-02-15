@@ -51,7 +51,7 @@ if(id!='')
                url:'/fares/fare_list/'+id,
             success:function(data)
             {
-                alert(data);
+               // alert(data);
               $('#fare_list').html(data);
             }
             
@@ -61,11 +61,23 @@ if(id!='')
 }
     
  $(document).ready(function() {
-    var max_fields      = 10; //maximum input boxes allowed
+    var max_fields      = 10000; //maximum input boxes allowed
     var wrapper         = $("#input_fields_wrap_classes"); //Fields wrapper
     var add_button      = $("#add_field_button_classes"); //Add button ID
-   
-    var x = 1; //initlal text box count
+    var add_button      = $("#add_field_button_classes");
+    
+   //var maxvalue= $("#maxvalue").val();
+   //alert(maxvalue)
+//  if(maxvalue != 'undefined')
+//  {
+    var x = 1;  
+//  }else
+//  {
+//    var x = maxvalue;   
+//  }
+
+    
+    //initlal text box count
     $("#add_field_button_classes").click(function(e){ //on add input button click
      
         e.preventDefault();

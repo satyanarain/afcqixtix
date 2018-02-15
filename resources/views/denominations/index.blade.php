@@ -44,6 +44,6 @@
     <!-- /.col -->
 </div>
 <!-- /.row -->
-@include('partials.denominationsheader')
+
 @include('partials.table_script')
 @stop
