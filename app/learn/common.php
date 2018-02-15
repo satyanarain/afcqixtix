@@ -12,3 +12,20 @@ $(document).ready(function() {
     beeRight();
     
 });
+
+ $this->validate($request, [
+            'name' => 'required',
+            'email' => 'required|email',
+            'password'=>'required'
+        ]);
+     $user = new User;
+     $user->name=$request->get('name');
+     $user->email=$request->get('email');
+     $user->password=$request->get('password');
+    $user->verification_token = md5(uniqid('KP'));
+    $user->save();
+    $activation_link = route('user.activate', ['email' => $user->email, 'verification_token' => urlencode($user->verification_token)]);
+    Mail::send('users.email.welcome', ['name' => $user->name, 'activation_link' => $activation_link], function ($message) use($user,$activation_link)
+       {
+          $message->to($user->email, $user->name)->subject('Welcome to Expertphp.in!');    
+        });

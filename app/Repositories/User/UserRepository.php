@@ -90,11 +90,11 @@ class UserRepository implements UserRepositoryContract {
 //        
 //    ]);
 //    
-    Mail::send('newUser', function($message){
-        $message->from('info@opiant.online');
-        $message->subject('welcome');
-        $message->to('satya2000chauhan@gmail.com');
-    });
+//    Mail::send('newUser', function($message){
+//        $message->from('info@opiant.online');
+//        $message->subject('welcome');
+//        $message->to('satya2000chauhan@gmail.com');
+//    });
 //        
 //        
         
@@ -104,12 +104,25 @@ class UserRepository implements UserRepositoryContract {
         
         if($requestData->email!='')
         {
-          Mail::send('users.reminder', ['user' => 'qixtix'], function ($m){
-          $m->from('info@opiant.online', 'Your Application');
+           // echo "================";
+            
+         Mail::send('users.reminder', ['user' => 'qixtix'], function ($m){
+         $m->from('info@opiant.online', 'Your Application');
          $m->to($requestData->email, $requestData->name)->subject('User Created!');
-         });
+        });
         }
-
+        
+     
+//    $activation_link = route('user.activate', ['email' => $user->email, 'verification_token' => urlencode($user->verification_token)]);
+//    Mail::send('users.email.welcome', ['name' => $user->name, 'activation_link' => $activation_link], function ($message) use($user,$activation_link)
+//       {
+//          $message->to($user->email, $user->name)->subject('Welcome to Expertphp.in!');    
+//        });
+//        
+        
+        
+        
+exit();
         $user = User::create($input);
         Session::flash('flash_message', "$user->name User Created Successfully."); //Snippet in Master.blade.php
         return $user;
