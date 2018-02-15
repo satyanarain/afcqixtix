@@ -90,36 +90,24 @@ class UserRepository implements UserRepositoryContract {
 //        
 //    ]);
 //    
-//    Mail::send('newUser', function($message){
-//        $message->from('info@opiant.online');
-//        $message->subject('welcome');
-//        $message->to('satya2000chauhan@gmail.com');
-//    });
+   
 //        
 //        
-        
+        $user = new User;
         $input['set_password_token'] = $set_password_token;
+        
+         $user->name="sata";
+         $user->email="satya2000chauhan@gmail.com";
+        
 
-        $requestData->email="satya2000chauhan@gmail.com";
-        
-        if($requestData->email!='')
+         if($user->email!='')
         {
-           // echo "================";
-            
-         Mail::send('users.reminder', ['user' => 'qixtix'], function ($m){
-         $m->from('info@opiant.online', 'Your Application');
-         $m->to($requestData->email, $requestData->name)->subject('User Created!');
-        });
+       
+          Mail::send('fares.reminder', ['user' => 'fare'], function ($m) use ($user) {
+          $m->from('satya2000chauhan@gmail.com', 'Your Application');
+         $m->to($user->email, $user->name)->subject('fare Created!');
+         });
         }
-        
-     
-//    $activation_link = route('user.activate', ['email' => $user->email, 'verification_token' => urlencode($user->verification_token)]);
-//    Mail::send('users.email.welcome', ['name' => $user->name, 'activation_link' => $activation_link], function ($message) use($user,$activation_link)
-//       {
-//          $message->to($user->email, $user->name)->subject('Welcome to Expertphp.in!');    
-//        });
-//        
-        
         
         
 exit();
