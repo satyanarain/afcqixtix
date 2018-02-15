@@ -102,17 +102,23 @@ class FaresController extends Controller {
     
     public function fareList($id) {
         $fare_details = DB::table('fare_details')->where('service_id', $id)->get();
+        // $test=  DB::table('fare_details')->find(DB::table('fare_details')->max('id')->where('service_id', $id)->get());
+       // echo  $fare_details = DB::table('fare_details')->where('service_id', $id)->max('stage')->get();
+        // echo "==============". $fare_details->maxstage;
+       //  exit();
+        
         if (count($fare_details) > 0) {
             foreach ($fare_details as $value) {
                 ?>
-                                                <div id="control-group" style="padding-left:0px;  margin-bottom:10px;" class="col-md-12" >
+                                                <div id="<?php echo "div_remove_field".$value->id ?>" style="padding-left:0px;margin-bottom:10px;" class="col-md-12">
                                                     <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="stage[]" class="form-control" placeholder="Stage" required="required" onkeypress="return isNumberKey(event)" value="<?php echo $value->stage; ?>"></div>
                                                     <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="adult_ticket_amount[]" class="form-control" placeholder="Adult Ticket Amount" required="required" onkeypress="return isNumberKey(event)" value="<?php echo $value->adult_ticket_amount; ?>"></div>
                                                     <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="child_ticket_amount[]" class="form-control" placeholder="Child Ticket Amount" required="required" onkeypress="return isNumberKey(event)" value="<?php echo $value->child_ticket_amount; ?>"></div>
                                                     <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="luggage_ticket_amount[]" class="form-control" placeholder="Luggage Ticket Amount" required="required" onkeypress="return isNumberKey(event)" value="<?php echo $value->luggage_ticket_amount; ?>"></div>
-                                                    <button class="btn btn-danger remove" type="button" id="remove_field" onclick="removeFunction(this.id)"><i class="glyphicon glyphicon-remove"></i> Remove</button>
+                                                    <div><button class="btn btn-danger remove" type="button" id="<?php echo "remove_field".$value->id ?>" onclick="removeFunction(this.id)"><i class="glyphicon glyphicon-remove"></i> Remove</button></div>
                                                 </div>
              <?php } ?>
+
                                     <div class="copy show" id="input_fields_wrap_classes">
                                     </div>
               <?php } else { ?>

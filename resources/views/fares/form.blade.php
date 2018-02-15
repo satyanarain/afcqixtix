@@ -51,6 +51,7 @@ if(id!='')
                url:'/fares/fare_list/'+id,
             success:function(data)
             {
+                alert(data);
               $('#fare_list').html(data);
             }
             
@@ -70,12 +71,12 @@ if(id!='')
         e.preventDefault();
          if(x < max_fields){ //max input box allowed
             x++; //text box increment
-$("#input_fields_wrap_classes").append('<div id="control-group" style="padding-left:0px;  margin-bottom:10px;" class="col-md-12">\n\
+$("#input_fields_wrap_classes").append('<div id="div_remove_field'+ x +'" style="padding-left:0px;  margin-bottom:10px;" class="col-md-12">\n\
 <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="stage[]" class="form-control" placeholder="Stage" required="required" onkeypress="return isNumberKey(event)"></div>\n\
  <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="adult_ticket_amount[]" class="form-control" placeholder="Adult Ticket Amount" required="required" onkeypress="return isNumberKey(event)"></div>\n\
 <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="child_ticket_amount[]" class="form-control" placeholder="Child Ticket Amount" required="required" onkeypress="return isNumberKey(event)"></div>\n\
 <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="luggage_ticket_amount[]" class="form-control" placeholder="Luggage Ticket Amount" required="required" onkeypress="return isNumberKey(event)"></div>\n\
-<button class="btn btn-danger remove" type="button" id="remove_field" onclick="removeFunction(this.id)"><i class="glyphicon glyphicon-remove"></i> Remove</button></div>'); //add input box
+<button class="btn btn-danger remove" type="button" id="remove_field'+ x+'" onclick="removeFunction(this.id)"><i class="glyphicon glyphicon-remove"></i> Remove</button></div>'); //add input box
    }
  });
    
@@ -83,7 +84,9 @@ $("#input_fields_wrap_classes").append('<div id="control-group" style="padding-l
 });
 function removeFunction(id)
 {
-  
-   $("#"+id).parent('div').remove();
+
+       $("#"+id).parent('div').remove();
+      $("#div_"+id).remove();
+    
 }
 </script>

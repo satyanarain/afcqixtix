@@ -47,6 +47,6 @@
 </div>
 <!-- /.row -->
 @include('partials.services_order_header')
-@include('partials.servicesheader')
+
 @include('partials.table_script_order')  
 @stop
