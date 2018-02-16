@@ -9,7 +9,7 @@
 </div>
 @else
 <div class="form-group">
-        {!! Form::label('user_name', Lang::get('User Name'), ['class' => 'control-label required']) !!}
+        {!! Form::label('user_name', Lang::get('Username'), ['class' => 'control-label required']) !!}
         {!! Form::text('user_name', null, ['class' => 'form-control','required' => 'required']) !!}
 </div>
 @endif

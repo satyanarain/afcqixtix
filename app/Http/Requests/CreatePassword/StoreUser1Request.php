@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Denomination;
+namespace App\Http\Requests\User;
 
 use App\Http\Requests\Request;
 
-class UpdateDenominationRequest extends Request
+class StoreUserRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,6 +14,7 @@ class UpdateDenominationRequest extends Request
     public function authorize()
     {
         return true;
+        //return auth()->user()->can('user-create');
     }
 
     /**
@@ -21,15 +22,13 @@ class UpdateDenominationRequest extends Request
      *
      * @return array
      */
-  public function rules()
+    public function rules()
     {
-          $regex = "/^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$/";
-           return [
-                    'denomination_master_id' => 'required',
-                    'description' => 'required',
-                    'price' => 'required'
+        
+            return [
+                  'name' => 'required',
+                   'email' => 'required|email|unique:users,email'
              ];
         
     }
-
 }

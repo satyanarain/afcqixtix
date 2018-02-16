@@ -18,7 +18,6 @@
                     <thead>
                          <tr>
                             <th>@lang('Denomination Type')</th>
-                           <th>@lang('Denomination')</th>
                             <th>@lang('Description')</th>
                             <th>@lang('Price')</th>
                              {{  actionHeading('Action', $newaction='') }}
@@ -28,7 +27,6 @@
                          @foreach($denominations as $value)
                         <tr class="nor_f">
                             <td>{{$value->denomination_master_id}}</td>
-                            <td>{{$value->denomination}}</td>
                              <td>{{$value->description}}</td>
                             <td>{{$value->price}}</td>
                              {{ actionEdit('edit',$value->id)}}
@@ -44,6 +42,6 @@
     <!-- /.col -->
 </div>
 <!-- /.row -->
-
+@include('partials.denominationsheader')
 @include('partials.table_script')
 @stop

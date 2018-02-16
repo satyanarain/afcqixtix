@@ -27,6 +27,9 @@ Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail'
 
 // Password reset routes...
 Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.request');
+//Route::resource('create_passwords', 'CreatePasswordsController', ['only'=> ['index','create','store','update']]);
+Route::resource('create_passwords', 'CreatePasswordsController');
+ 
 Route::post('password/reset', 'Auth\ResetPasswordController@postReset')->name('password.reset');
 Route::get('notifications/markall', 'NotificationsController@markAll')->name('notifications.markall');
 Route::group(['middleware' => ['auth']], function () {

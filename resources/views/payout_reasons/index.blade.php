@@ -46,7 +46,5 @@
 <!-- /.row -->
 
 @include('partials.payout_reason_order_header')
-@include('partials.payout_reasonsheader')
-
 @include('partials.table_script_order')
 @stop

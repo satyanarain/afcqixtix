@@ -46,7 +46,5 @@
 <!-- /.row -->
 
 @include('partials.trip_cancellation_reason_order_header')
-@include('partials.trip_cancellation_reasonsheader')
-
 @include('partials.table_script_order')
 @stop

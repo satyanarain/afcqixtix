@@ -36,7 +36,7 @@ return [
     |
     */
 
-    'host' => env('MAIL_HOST', 'mail.opiant.online'),
+    'host' => env('MAIL_HOST', 'smtp.gmail.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -62,7 +62,7 @@ return [
     |
     */
 
-    'from' => ['address' => 'info@opiant.online', 'name' => 'qixtix'],
+    'from' => ['address' => 'satya2000chauhan@gmail.com', 'name' => 'qixtix'],
 
 
     /*

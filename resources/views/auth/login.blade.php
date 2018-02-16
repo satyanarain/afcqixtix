@@ -32,6 +32,9 @@
                                   alt="">
                              <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
                                  {!! csrf_field() !!}
+                                @if(Session::has('flash_message'))
+                                 <div class="alert alert-success">{{Session::get('flash_message')}}</div>
+                                 @endif
                                  @if(Session::has('success'))
                                  <div class="alert alert-success">{{Session::get('success')}}</div>
                                  @elseif(Session::has('fail'))

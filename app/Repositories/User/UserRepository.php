@@ -76,44 +76,27 @@ class UserRepository implements UserRepositoryContract {
             $file->move($destinationPath, $filename);
             $input['image_path'] = $filename;
         }
-//      
-//          return User::create([
-//        'companyname' => $data['companyname'],
-//        'email' => $data['email'],
-//        'password' => bcrypt($data['password']),
-//        'VAT' => $data['VAT'],
-//        'companyphone' => $data['companyphone'],
-//        'companystreet' => $data['companystreet'],
-//        'companycity' => $data['companycity'],
-//        'companycountry' => $data['companycountry'],
-//        'companypostcode' => $data['companypostcode']
-//        
-//    ]);
-//    
-   
-//        
-//     
-  
+
         $user = new User;
         $input['set_password_token'] = $set_password_token;
         
-         $user->name="sata";
-         $user->email="satya2000chauhan@gmail.com";
-        
+//         $requestData->name;
+//         $requestData->email="satya2000chauhan@gmail.com";
+        $user = User::create($input);
+        $userid = User::create($input)->id;
+        $user = User::findOrFail($userid);
 
          if($user->email!='')
         {
        
-          Mail::send('fares.reminder', ['user' => 'fare'], function ($m) use ($user) {
-          $m->from('satya2000chauhan@gmail.com', 'Your Application');
-         $m->to('satya2000chauhan@gmail.com', 'test')->subject('fare Created!');
+          Mail::send('users.reminder', ['userid' => $userid,'email'=>$user->email,'name'=>$user->username], function ($m) use ($user) {
+          $m->from($user->email, 'Your Application');
+         $m->to($user->email, $user->name)->subject('User Created!');
          });
         }
+           exit();
         
-        
-exit();
-        $user = User::create($input);
-        Session::flash('flash_message', "$user->name User Created Successfully."); //Snippet in Master.blade.php
+         Session::flash('flash_message', "$user->name User Created Successfully."); //Snippet in Master.blade.php
         return $user;
     }
 
