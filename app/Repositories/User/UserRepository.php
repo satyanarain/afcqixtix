@@ -90,7 +90,7 @@ class UserRepository implements UserRepositoryContract {
         {
        
           Mail::send('users.reminder', ['userid' => $userid,'email'=>$user->email,'name'=>$user->username], function ($m) use ($user) {
-          $m->from($user->email, 'Your Application');
+          $m->from('info@opiant.online', 'Your Application');
          $m->to($user->email, $user->name)->subject('User Created!');
          });
         }

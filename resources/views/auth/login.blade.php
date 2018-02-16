@@ -41,8 +41,8 @@
                                  <div class="alert alert-danger">{{Session::get('fail')}}</div>
                                  @endif
                                  <p> 
-                                     <label for="username" class="uname" style="float:left">User Name</label>
-                                     <input id="username" name="user_name" class="form-control" required="required" type="text" placeholder="User Name" style="height:46"/>
+                                  <label for="username" class="uname" style="float:left">User Name</label>
+                                  <input id="username" name="user_name" class="form-control" required="required" type="text" placeholder="User Name" style="height:46"/>
                                  </p>
                                  <p> 
                                      <label for="password" class="youpasswd" style="float:left"> Password</label>
