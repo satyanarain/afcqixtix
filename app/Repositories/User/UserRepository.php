@@ -82,7 +82,7 @@ class UserRepository implements UserRepositoryContract {
         
 //         $requestData->name;
 //         $requestData->email="satya2000chauhan@gmail.com";
-        $user = User::create($input);
+      
         $userid = User::create($input)->id;
         $user = User::findOrFail($userid);
 
