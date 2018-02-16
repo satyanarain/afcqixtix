@@ -36,7 +36,7 @@ return [
     |
     */
 
-    'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+    'host' => env('MAIL_HOST', 'mail.opiant.online'),
 
     /*
     |--------------------------------------------------------------------------

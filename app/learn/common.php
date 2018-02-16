@@ -29,3 +29,16 @@ $(document).ready(function() {
        {
           $message->to($user->email, $user->name)->subject('Welcome to Expertphp.in!');    
         });
+        
+        
+        
+$g_allow_signup = ON; //allows the users to sign up for a new account
+$g_enable_email_notification = ON; //enables the email messages
+$g_phpMailer_method = PHPMAILER_METHOD_MAIL;
+$g_smtp_host = 'mail.opiant.online';
+$g_smtp_username = 'info@opiant.online'; //replace it with your gmail address
+$g_smtp_password = 'Password@123'; //replace it with your gmail password
+$g_webmaster_email      = 'info@opiant.online';
+$g_from_email           = 'info@opiant.online';
+# $g_email_receive_own	= OFF;
+# $g_email_send_using_cronjob = OFF;
