@@ -8,6 +8,7 @@
       "order": [[0,'desc']],
       "info": true,
       "autoWidth": false
+     //"columnDefs": [{ "orderable": false, "targets": 2 }]
     });
     });
  </script> 

@@ -46,7 +46,5 @@
 <!-- /.row -->
 
 @include('partials.inspector_remark_order_header')
-@include('partials.inspector_remarksheader')
-
 @include('partials.table_script_order')
 @stop

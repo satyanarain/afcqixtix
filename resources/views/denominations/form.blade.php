@@ -11,10 +11,10 @@
     </div>
 
 </div>   
- <div class="form-group">
+<!-- <div class="form-group">
          {!! Form::label('denomination', Lang::get('Denomination'), ['class' => 'control-label required']) !!}
          {!! Form::text('denomination', null, ['class' => 'form-control','required' => 'required']) !!}
-</div>
+</div>-->
 <div class="form-group">
          {!! Form::label('description', Lang::get('Description'), ['class' => 'control-label required']) !!}
          {!! Form::text('description', null, ['class' => 'form-control','required' => 'required']) !!}

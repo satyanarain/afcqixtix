@@ -18,7 +18,7 @@
                     <thead>
                          <tr>
                             <th>@lang('Depot Name')</th>
-                            <th>@lang('Vehicles Registration Number')</th>
+                            <th>@lang('Vehicle Registration Number')</th>
                             <th>@lang('Bus Type')</th>
                              {{  actionHeading('Action', $newaction='') }}
                         </tr>

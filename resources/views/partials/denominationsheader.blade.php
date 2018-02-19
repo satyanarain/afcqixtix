@@ -14,10 +14,6 @@
                         <td class="table_normal">{{ $value->denomination_master_id }}</span></td>
                     </tr>
                     <tr>
-                        <td><b>Denomination</b></td>
-                        <td class="table_normal">{{ $value->denomination }}</span></td>
-                    </tr>
-                    <tr>
                         <td><b>Description</b></td>
                         <td class="table_normal">{{ $value->description }}</td>
                     </tr>

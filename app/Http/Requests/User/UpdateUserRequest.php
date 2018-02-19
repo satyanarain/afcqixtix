@@ -23,8 +23,7 @@ class UpdateUserRequest extends Request
      */
     public function rules()
     {
-        
-            return [
+                    return [
                  'name' => 'required',
                 // 'user_name' => 'required|without_spaces|unique:users,user_name',
                  'email' => 'required',

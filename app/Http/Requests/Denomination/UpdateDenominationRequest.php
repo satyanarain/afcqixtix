@@ -26,7 +26,6 @@ class UpdateDenominationRequest extends Request
           $regex = "/^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$/";
            return [
                     'denomination_master_id' => 'required',
-                    'denomination' => 'required',
                     'description' => 'required',
                     'price' => 'required'
              ];

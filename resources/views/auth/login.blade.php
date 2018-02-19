@@ -32,14 +32,17 @@
                                   alt="">
                              <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
                                  {!! csrf_field() !!}
+                                @if(Session::has('flash_message'))
+                                 <div class="alert alert-success">{{Session::get('flash_message')}}</div>
+                                 @endif
                                  @if(Session::has('success'))
                                  <div class="alert alert-success">{{Session::get('success')}}</div>
                                  @elseif(Session::has('fail'))
                                  <div class="alert alert-danger">{{Session::get('fail')}}</div>
                                  @endif
                                  <p> 
-                                     <label for="username" class="uname" style="float:left">User Name</label>
-                                     <input id="username" name="user_name" class="form-control" required="required" type="text" placeholder="User Name" style="height:46"/>
+                                  <label for="username" class="uname" style="float:left">User Name</label>
+                                  <input id="username" name="user_name" class="form-control" required="required" type="text" placeholder="User Name" style="height:46"/>
                                  </p>
                                  <p> 
                                      <label for="password" class="youpasswd" style="float:left"> Password</label>

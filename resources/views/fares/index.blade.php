@@ -4,6 +4,7 @@
 {{BreadCrumb()}}
 @stop
 @section('content')
+
 <div class="row">
     <div class="col-xs-12">
       <div class="box">
@@ -41,7 +42,27 @@
     <!-- /.col -->
 </div>
 <!-- /.row -->
+<div class="modal fade" id="view_detail" role="dialog">
+ </div>
+<script>
+   function viewDetails(id,view_detail)
+   {
+   var urldata=   '/fares/' + view_detail + '/' +id;
+  //  alert(urldata)
+    $.ajax({
+		type: "GET",
+		url: urldata,
+		cache: false,
+		success: function(data){
+              //  alert(data);
+                 $("#" + view_detail).modal('show');
+                  $("#"+view_detail).html(data);
+		}
+	});
+  
+   }
+</script>
 
-@include('partials.faresheader')
+@include('partials.bustypesheader')
 @include('partials.table_script')
 @stop

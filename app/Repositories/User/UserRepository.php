@@ -76,13 +76,27 @@ class UserRepository implements UserRepositoryContract {
             $file->move($destinationPath, $filename);
             $input['image_path'] = $filename;
         }
-      
+
+        $user = new User;
         $input['set_password_token'] = $set_password_token;
+        
+//         $requestData->name;
+//         $requestData->email="satya2000chauhan@gmail.com";
+      
+        $userid = User::create($input)->id;
+        $user = User::findOrFail($userid);
 
-
-
-        $user = User::create($input);
-        Session::flash('flash_message', "$user->name User Created Successfully."); //Snippet in Master.blade.php
+         if($user->email!='')
+        {
+       
+          Mail::send('users.reminder', ['userid' => $userid,'email'=>$user->email,'name'=>$user->username], function ($m) use ($user) {
+          $m->from('info@opiant.online', 'Your Application');
+         $m->to($user->email, $user->name)->subject('User Created!');
+         });
+        }
+           exit();
+        
+         Session::flash('flash_message', "$user->name User Created Successfully."); //Snippet in Master.blade.php
         return $user;
     }
 
