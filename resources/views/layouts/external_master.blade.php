@@ -9,6 +9,7 @@ $testerere= Config::get('app.locales');
 $testerere[0];
 App::setLocale($testerere[0]);
 Config::get('app.timezone');
+
 $dem_menu= pagePermissionView($result);
 $array_menu= explode(',', $dem_menu);
 if($segments_var[2]=='edit')

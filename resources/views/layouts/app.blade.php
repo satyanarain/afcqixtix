@@ -544,7 +544,11 @@ $.widget.bridge('uibutton', $.ui.button);
  $('body').on('focus',".multiple_date", function(){
          $(this).datepicker({
               dateFormat: 'dd-mm-yy',
-              changeYear: true
+               startView: "year", 
+                changeYear: true,
+              yearRange: "-80Y:-0Y",
+minDate: "-80Y",
+maxDate: "-0Y"
           });
       }); 
   $('#map1').append('<div style="" id="map"><div class="loading_bar"></div></div>');

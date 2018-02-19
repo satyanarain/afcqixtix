@@ -9,7 +9,7 @@ use DB;
 use Excel;
 use Schema;
 use Response;
-use App\Models\User;
+use App\Models\CrewDetail;
 use App\Models\Country;
 use App\Http\Requests;
 use App\Models\Role;
@@ -17,31 +17,31 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use PHPZen\LaravelRbac\Traits\Rbac;
 use Illuminate\Support\Facades\Input;
-use App\Http\Requests\User\UpdateUserRequest;
-use App\Http\Requests\User\StoreUserRequest;
-use App\Repositories\User\UserRepositoryContract;
+use App\Http\Requests\CrewDetail\UpdateCrewDetailRequest;
+use App\Http\Requests\CrewDetail\StoreCrewDetailRequest;
+use App\Repositories\CrewDetail\CrewDetailRepositoryContract;
 use App\Repositories\Role\RoleRepositoryContract;
 use App\Repositories\Setting\SettingRepositoryContract;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Notifications\Notifiable;
-class UsersController extends Controller
+class CrewDetailController extends Controller
 {
-    protected $users;
+    protected $crew_details;
     protected $roles;
     protected $departments;
     protected $settings;
-    public function __construct(
-        UserRepositoryContract $users,
-        RoleRepositoryContract $roles,
-        SettingRepositoryContract $settings
-    ) {
-        $this->users = $users;
-        $this->roles = $roles;
-        $this->settings = $settings;
-      
-    }
+//    public function __construct(
+//        CrewDetailRepositoryContract $crew_details,
+//        RoleRepositoryContract $roles,
+//        SettingRepositoryContract $settings
+//    ) {
+//        $this->crew_details = $crew_details;
+//        $this->roles = $roles;
+//        $this->settings = $settings;
+//      
+//    }
 
     /**
      * Display a listing of the resource.
@@ -50,14 +50,14 @@ class UsersController extends Controller
      */
     public function index()
     {
-    $user = DB::table('users')->select('*')->orderBy('id','desc')->get();
-    return view('users.index')->withUsers($user);
+    $user = DB::table('crew_details')->select('*')->orderBy('id','desc')->get();
+    return view('crew_details.index')->withCrewDetails($user);
    
     }
     public function create()
     {
-     $user = User::findOrFail(Auth::id());
-     return view('users.create')->withRoles($roles)->withCountries(Country::orderBy('country_name', 'asc')->pluck('country_name', 'id'));
+    //  $user = CrewDetail::findOrFail(Auth::id());
+     return view('crew_details.create');
     }
 
 
@@ -69,7 +69,7 @@ class UsersController extends Controller
         $file_name = str_random(40).'.jpeg';
         $folder_path = public_path().'/images/Media/'.$file_name;
         file_put_contents($folder_path, $data);
-        $user = User::find($request->id);
+        $user = CrewDetail::find($request->id);
         $user->image_path = $file_name;
         $user->save();
         return response()->json([
@@ -87,29 +87,29 @@ class UsersController extends Controller
  
     /**
      * Store a newly created resource in storage.
-     * @param User $user
+     * @param CrewDetail $user
      * @return Response
      */
-    public function store(StoreUserRequest $userRequest)
+    public function store(StoreCrewDetailRequest $userRequest)
     {
-        $getInsertedId = $this->users->create($userRequest);
-        return redirect()->route('users.index');         
+        $getInsertedId = $this->crew_details->create($userRequest);
+        return redirect()->route('crew_details.index');         
     }
     public function statusUpdate($id)
     {
-    $sql=DB::table('users')->where('id',$id)->first(); 
+    $sql=DB::table('crew_details')->where('id',$id)->first(); 
     
        if($sql->status==0)
        {
        $status=  $sql->status;
-       $user = User::findorFail($id);
+       $user = CrewDetail::findorFail($id);
        $user->status=1;
        $user->save();
        echo "1";
       }else
        {
        $status=  $sql->status;
-       $user = User::findorFail($id);
+       $user = CrewDetail::findorFail($id);
        $user->status=0;
        $user->save();
        echo "0";
@@ -126,8 +126,8 @@ class UsersController extends Controller
      */
    public function show($id)
    {
-   $user=User::findOrFail($id);
-    return view('users.show')->withUser($user);
+   $user=CrewDetail::findOrFail($id);
+    return view('crew_details.show')->withCrewDetail($user);
      }
 
     /**
@@ -138,8 +138,8 @@ class UsersController extends Controller
      */
     public function edit($id)
     {
-       $user=User::findOrFail($id);
-      return view('users.edit')->withUser($user);
+       $user=CrewDetail::findOrFail($id);
+      return view('crew_details.edit')->withCrewDetail($user);
     }
 
     /**
@@ -150,8 +150,8 @@ class UsersController extends Controller
      */
     public function update($id, Request $request)
     {
-        $this->users->update($id, $request);
-        return redirect()->route('users.index');
+        $this->crew_details->update($id, $request);
+        return redirect()->route('crew_details.index');
     }
 
     /**
@@ -162,13 +162,13 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        $this->users->destroy($id);
+        $this->crew_details->destroy($id);
         
-        return redirect()->route('users.index');
+        return redirect()->route('crew_details.index');
     }
 
     public function createdPassword($token){
-        return view('users.activate', ['token' => $token]);
+        return view('crew_details.activate', ['token' => $token]);
     }
  
     

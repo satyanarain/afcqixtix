@@ -4,6 +4,6 @@
 {{BreadCrumb()}}
 @stop
 @section('content')
-@include('partials.faresheader')
+@include('partials.userheader')
 @stop
   

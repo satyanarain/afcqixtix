@@ -28,26 +28,9 @@ class PagesController extends Controller
 
   public function dashboard()
     {
-    
-      /* 
-      Logic for showing the intermediate screen
-      if user is having access in more than one countries then show the intermediate screen other wise show the dash board directly
-      */
+        $user = User::findOrFail(Auth::id());
+         return $this->showDashboard();
 
-      $user = User::findOrFail(Auth::id());
-
-      $group_company_ids = $user->group_company_id;
-
-      $group_company_ids = explode(',', $group_company_ids);
-
-      if(count($group_company_ids)> 1){
-          //echo "More than one";dfdfdfdfhhh
-          return $this->showCompanySelectPage();
-      }else{
-          $user = User::findOrFail(Auth::id());
-          session(['companyId' => $user->group_company_id]);
-          return $this->showDashboard();
-      }  
   }
 
   public function showDashboard(){
@@ -59,13 +42,6 @@ class PagesController extends Controller
         ));
     }
 
-    public function showCompanySelectPage(){
-       $user = User::findOrFail(Auth::id());
-        //echo json_encode($user);exit();
-        $companies = $user->group_company_id;
-        //echo json_encode($compnaies);exit();
-        $companies = explode(',', $companies);
-        return view('pages.select_company')
-                  ->withGroupCompanies(GroupCompany::whereIn('id', $companies)->pluck('name', 'id'));
-    }
+    
+   
 }

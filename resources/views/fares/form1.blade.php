@@ -1,3 +1,4 @@
+
 <div class="input-group col-md-12" >
 <div class="input-group col-md-12">
 @php $services=displayList('services','name')@endphp
@@ -52,6 +53,7 @@
 </div>
 
  </div>
+
 
 <!--<div id="b" style="position:absolute; top:50px"><i class="fa fa-bus" style="font-size:48px;color:red"></i></div>-->
 <script type="text/javascript">

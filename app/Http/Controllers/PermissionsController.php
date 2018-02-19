@@ -65,7 +65,6 @@ class PermissionsController extends Controller
             $permission->pass_types = implode(',', $request->pass_types);
             $permission->crew_details = implode(',', $request->crew_details);
             
-        
             $permission->save();
             echo "Menu Updated Successfully!";
             exit();

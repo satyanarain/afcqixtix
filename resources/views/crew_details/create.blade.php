@@ -4,12 +4,12 @@
 {{BreadCrumb()}}
 @stop
 @section('content')
-
 <div class="col-md-12">
     <div class="callout callout-info">
         {{headingMain()}}
     </div>
 </div>
+<div class="row">
 <div class="col-md-8 col-md-offset-2" style="min-height:10px;">
             <div class="box box-default" style="min-height:0px;">
                 <div class="box-header with-border">
@@ -21,20 +21,25 @@
                 </div><!-- /.box-header -->
 
                 <div class="box-body">
-                    {!! Form::open([
-                    'route' => 'fares.store',
-                    'files'=>true,
-                    'enctype' => 'multipart/form-data',
-                    'id'=>'create-form',
-                    'class'=>'form-horizontal'
-                    ]) !!}
-                    <!-- Warranty -->
-                    @include('fares.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
+                {!! Form::open([
+                'route' => 'crew_details.store',
+                'files'=>true,
+                'enctype' => 'multipart/form-data',
+                'class'=>'form-horizontal',
+                 'onSubmit'=>"return validateForm();"
+                ]) !!}
+                @include('crew_details.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 
-                    {!! Form::close() !!}
-                </div>
+                {!! Form::close() !!}
             </div>
+            <!-- /.box-body -->
         </div>
+        </div>
+        </div>
+        <!-- /.box -->
+
+    <!-- /.col -->
+
 
 @stop
 

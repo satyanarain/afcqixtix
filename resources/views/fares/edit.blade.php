@@ -4,7 +4,7 @@
 {{BreadCrumb()}}
 @stop
 @section('content')
-
+<div class="row">
 <div class="col-md-12">
     <div class="callout callout-info">
         {{headingMain()}}
@@ -34,6 +34,7 @@
                     {!! Form::close() !!}
                 </div>
             </div>
+        </div>
         </div>
 
 @stop

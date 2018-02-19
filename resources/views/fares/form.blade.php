@@ -1,3 +1,4 @@
+
 <div class="input-group col-md-12" >
 <div class="input-group col-md-12">
 @php $services=displayList('services','name')@endphp
@@ -36,6 +37,7 @@
   {!! Form::submit(Lang::get('common.titles.save'), ['class' => 'btn btn-success']) !!}
 </div>
  </div>
+
 <script type="text/javascript">
 function fareList(id)
 {
