@@ -80,10 +80,7 @@ class UserRepository implements UserRepositoryContract {
         $user = new User;
         $input['set_password_token'] = $set_password_token;
         
-//         $requestData->name;
-//         $requestData->email="satya2000chauhan@gmail.com";
-      
-        $userid = User::create($input)->id;
+         $userid = User::create($input)->id;
         $user = User::findOrFail($userid);
 
          if($user->email!='')
@@ -94,9 +91,7 @@ class UserRepository implements UserRepositoryContract {
          $m->to($user->email, $user->name)->subject('User Created!');
          });
         }
-           exit();
-        
-         Session::flash('flash_message', "$user->name User Created Successfully."); //Snippet in Master.blade.php
+          Session::flash('flash_message', "$user->name User Created Successfully."); //Snippet in Master.blade.php
         return $user;
     }
 

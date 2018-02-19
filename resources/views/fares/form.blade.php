@@ -35,11 +35,7 @@
 <div class="input-group col-md-12" id="button">
   {!! Form::submit(Lang::get('common.titles.save'), ['class' => 'btn btn-success']) !!}
 </div>
-
  </div>
-
-
-
 <script type="text/javascript">
 function fareList(id)
 {
