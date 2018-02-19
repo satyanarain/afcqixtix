@@ -111,8 +111,12 @@ class FaresController extends Controller {
        <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="child_ticket_amount[]" class="form-control" placeholder="Child Ticket Amount" required="required" onkeypress="return isNumberKey(event)" value="<?php echo $value->child_ticket_amount; ?>"></div>
        <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="luggage_ticket_amount[]" class="form-control" placeholder="Luggage Ticket Amount" required="required" onkeypress="return isNumberKey(event)" value="<?php echo $value->luggage_ticket_amount; ?>"></div>
        </div> 
-         <?php }}else{ 
-echo "<spsn style=\"color:#ff0000;\">RECORD NOT FOUND!</span></br></br>";
+
+
+         <?php }?>
+   
+       <?php   }else{ 
+    echo  "RECORD NOT FOUND";
      }  
     }
     
