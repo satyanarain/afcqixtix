@@ -1,15 +1,15 @@
 <?php
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
-class CrewDetail extends Model
+class DepotLog extends Model
 {
   /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'crew_details';
-    protected $guarded = ['confirm_password'];
+    protected $table = 'depot_logs';
+    protected $guarded = [];
     /**
      * The attributes that are mass assignable.
      *

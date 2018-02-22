@@ -19,10 +19,11 @@ use App\Repositories\Depot\DepotRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
-
+use App\Traits\activityLog;
 //use Illuminate\Support\Facades\Validator;
 class DepotsController extends Controller
 {
+    use activityLog;
     protected $depots;
     public function __construct(
         DepotRepositoryContract $depots
@@ -36,8 +37,11 @@ class DepotsController extends Controller
      */
     public function index()
     {
-    $depot = DB::table('depots')->select('*')->orderBy('id','desc')->get();
-    return view('depots.index')->withDepots($depot);
+ 
+      $depot = DB::table('depots')->select('*','depots.id as id','depots.created_at as created_at','depots.updated_at as updated_at')
+      ->leftjoin('users','users.id','depots.user_id')
+      ->orderBy('depots.id','desc')->get();
+      return view('depots.index')->withDepots($depot);
    
     }
     public function create()

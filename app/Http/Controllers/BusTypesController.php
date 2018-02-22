@@ -18,9 +18,10 @@ use App\Http\Requests\BusType\StoreBusTypeRequest;
 use App\Repositories\BusType\BusTypeRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-
+use App\Traits\activityLog;
 class BusTypesController extends Controller
 {
+    use activityLog;
     protected $bustypes;
     public function __construct(
         BusTypeRepositoryContract $bustypes
@@ -144,15 +145,17 @@ class BusTypesController extends Controller
                    
         <?php
     }
-    
-    public function viewDetail($id) {
-          $value = BusType::orderBy('order_number')->where('id',$id)->first();
+   public function viewDetail($id) {
+          $value = DB::table('bus_types')->select("*",'bus_types.created_at','bus_types.updated_at','bus_types.id as id')
+                  ->leftjoin('users','users.id','bus_types.user_id')
+                  ->orderBy('bus_types.order_number')
+                  ->where('bus_types.id',$id)->first();
         ?>
       <div class="modal-dialog">
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header-view" >
-                <button type="button" class="close" data-dismiss="modal"><font class="white">&times;</font></button>
+<!--                <button type="button" class="close" data-dismiss="modal"><font class="white">&times;</font></button>-->
                 <h4 class="viewdetails_details"><span class="fa fa-bus"></span>&nbsp;Bus Type</h4>
             </div>
             <div class="modal-body-view">
@@ -169,6 +172,7 @@ class BusTypesController extends Controller
                         <td><b>Order Number</b></td>
                         <td class="table_normal"><?php echo $value->order_number; ?></td>
                     </tr>
+                    <?php $this->userHistory($value->user_name,$value->created_at,$value->updated_at) ; ?>
                   </table>  
                   <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -180,7 +184,6 @@ class BusTypesController extends Controller
     <?php   
     }
     
-   
     
     
     

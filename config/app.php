@@ -185,6 +185,8 @@ return [
         App\Providers\BroadcastServiceProvider::class,
          Zizaco\Entrust\EntrustServiceProvider::class,
          App\Providers\HelperServiceProvider::class,
+         App\Providers\ValidationServiceProvider::class,
+        
       ],
 
     /*

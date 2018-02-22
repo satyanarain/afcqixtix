@@ -4,19 +4,12 @@
 {{BreadCrumb()}}
 @stop
 @section('content')
-<div class="row">
-    <div class="col-xs-12">
-    <div class="box">
-            <div class="box-header">
-                <h3 class="box-title">{{headingMain()}}</h3>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
+ @include('partials.form_header')
                 {!! Form::open([
                 'route' => 'bus_types.store',
                 'files'=>true,
-                'enctype' => 'multipart/form-data'
-
+                'enctype' => 'multipart/form-data',
+                 'class'=>'form-horizontal'
                 ]) !!}
                 @include('bustypes.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 

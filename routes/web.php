@@ -47,6 +47,7 @@ Route::group(['middleware' => ['auth']], function () {
     /*     * **********************masters created by satya 22-11-2017 depot***************************** */
     Route::get('depots/data', 'DepotsController@anyData')->name('depots.data');
     Route::post('depots/store', 'DepotsController@store');
+        Route::get('depots/order_list', 'DepotsController@orderList');
     Route::resource('depots', 'DepotsController');
     /************************masters created by satya 28-12-2017 depot***************************** */
     Route::get('bus_types/data', 'BusTypesController@anyData')->name('bustypes.data');
@@ -149,6 +150,7 @@ Route::group(['middleware' => ['auth']], function () {
     
     Route::get('crew_details/data', 'CrewDetailController@anyData')->name('crew_details.data');
     Route::post('crew_details/store', 'CrewDetailController@store');
+    Route::get('crew_details/view_detail/{id}', 'CrewDetailController@viewDetail');
     Route::resource('crew_details', 'CrewDetailController');
     /* ROLES */
     Route::resource('roles', 'RolesController');

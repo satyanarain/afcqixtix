@@ -19,9 +19,10 @@ use App\Http\Requests\Service\StoreServiceRequest;
 use App\Repositories\Service\ServiceRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-
+use App\Traits\activityLog;
 class ServiceController extends Controller
 {
+    use activityLog;
     protected $services;
     public function __construct(
         ServiceRepositoryContract $services
@@ -157,14 +158,15 @@ class ServiceController extends Controller
     }
     
     public function viewDetail($id) {
-           $value = DB::table('services')->select('services.id as id','services.name as name','services.order_number as order_number','services.short_name as short_name','bus_types.bus_type')
-    ->leftjoin('bus_types', 'bus_types.id', '=', 'services.bus_type_id')->where('services.id',$id)->first();
+   $value = DB::table('services')->select('services.id as id','services.name as name','services.order_number as order_number','services.short_name as short_name','bus_types.bus_type','users.user_name','services.created_at','services.updated_at')
+   ->leftjoin('users', 'users.id', '=', 'services.user_id')
+    ->leftjoin('bus_types', 'bus_types.id', '=', 'services.bus_type_id')->where('services.id',$id)->first()
         ?>
       <div class="modal-dialog">
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header-view" >
-                <button type="button" class="close" data-dismiss="modal"><font class="white">&times;</font></button>
+<!--                <button type="button" class="close" data-dismiss="modal"><font class="white">&times;</font></button>-->
                 <h4 class="viewdetails_details"><span class="fa fa-briefcase"></span>&nbsp;Service</h4>
             </div>
             <div class="modal-body-view">
@@ -185,6 +187,8 @@ class ServiceController extends Controller
                         <td><b>Order Number</b></td>
                         <td class="table_normal"><?php echo $value->order_number; ?></td>
                     </tr>
+                    <?php $this->userHistory($value->user_name,$value->created_at,$value->updated_at) ; ?>
+                    
                   </table>  
                   <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -196,6 +200,17 @@ class ServiceController extends Controller
     <?php   
     }
     
-    
+     /**
+     * Display the specified resource.
+     *
+     * @Author satya
+     * @22-02-2018
+     */
+   public function show($id)
+   {
+    $services = DB::table('services')->select('services.id as id','services.name as name','services.order_number as order_number','services.short_name as short_name','bus_types.bus_type')
+    ->leftjoin('bus_types', 'bus_types.id', '=', 'services.bus_type_id')->orderby('order_number')->get();
+    return view('services.index')->withServices($services);
+     }
     
  }

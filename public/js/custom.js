@@ -57,6 +57,19 @@ function findDuty(id)
 $("#common_details").modal('show');
   $("#name").val('');
  }
+ 
+ /************************************************************************************/
+  function AddDepot(depots)
+{
+$("#"+depots).modal('show');
+$("#name").val('');
+  
+}
+ 
+ 
+ 
+ 
+ 
    function AddNew()
 {
 var table_name = $("#table_name").val();

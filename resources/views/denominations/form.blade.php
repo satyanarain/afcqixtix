@@ -7,7 +7,7 @@
     </div>
     <div class="col-sm-6">
         </br>
-        <div class="btn btn-success" onclick="AddNewShow('denomination_masters','denomination_master_id','Select Denomination Type')">Add New</div> 
+        <div class="btn btn-sm btn-default" onclick="AddNewShow('denomination_masters','denomination_master_id','Select Denomination Type')">Add New</div> 
     </div>
 
 </div>   

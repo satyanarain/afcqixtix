@@ -24,6 +24,24 @@ trait FormatDates {
 
         return $result;
 	}
+        
+        
+        
+        
+        
+	public function insertDate($date='')
+	{
+        
+         	if($date != '')
+        {
+        	$result = date('Y-m-d', strtotime($date));
+        } else 
+        {
+        	$result =NULL;            
+        }
+
+        return $result;
+	}
 
 }
 

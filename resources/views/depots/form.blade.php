@@ -1,35 +1,46 @@
-<div class="row fix-gutters-six">
-<div class="col-sm-6">
 <div class="form-group">
-        {!! Form::label('name', Lang::get('Depot Name'), ['class' => 'control-label required']) !!}
-        {!! Form::text('name', null, ['class' => 'form-control','required' => 'required']) !!}
+        {!! Form::label('name', Lang::get('Depot Name'), ['class' => 'col-md-3 control-label']) !!}
+         <div class="col-md-7 col-sm-12 required">
+        {!! Form::text('name', null, ['class' => 'col-md-6 form-control','required' => 'required']) !!}
+</div>
 </div>
 <div class="form-group">
-        {!! Form::label('depot_id', Lang::get('Depot ID'), ['class' => 'control-label required']) !!}
-        {!! Form::number('depot_id', null, ['class' => 'form-control','required' => 'required']) !!}
+        {!! Form::label('depot_id', Lang::get('Depot ID'), ['class' => 'col-md-3 control-label']) !!}
+         <div class="col-md-7 col-sm-12 required">
+        {!! Form::number('depot_id', null, ['class' => 'col-md-6 form-control','required' => 'required']) !!}
 </div>
 </div>
-<div class="col-sm-6">
+
 <div class="form-group">
-    {!! Form::label('short_name', Lang::get('Short Name'), ['class' => 'control-label required']) !!}
-    {!! Form::text('short_name', null, ['class' => 'form-control']) !!}
+    {!! Form::label('short_name', Lang::get('Short Name'), ['class' => 'col-md-3 control-label']) !!}
+     <div class="col-md-7 col-sm-12 required">
+    {!! Form::text('short_name', null, ['class' => 'col-md-6 form-control']) !!}
 </div>
-    </div>
-<div class="col-sm-6">
+</div>
+
 <div class="form-group">
-    {!! Form::label('depot_location', Lang::get('Depot Location'), ['class' => 'control-label required']) !!}
-    {!! Form::text('depot_location', null, ['class' => 'form-control']) !!}
+    {!! Form::label('depot_location', Lang::get('Depot Location'), ['class' => 'col-md-3 control-label']) !!}
+     <div class="col-md-7 col-sm-12 required">
+    {!! Form::text('depot_location', null, ['class' => 'col-md-6 form-control']) !!}
 </div>
 </div>
-<div class="col-sm-6">
+
 <div class="form-group">
-      {!! Form::label('default_service', Lang::get('Default Service'), ['class' => 'control-label required']) !!}
+      {!! Form::label('default_service', Lang::get('Default Service'), ['class' => 'col-md-3 control-label']) !!}
+       <div class="col-md-7 col-sm-12 required">
       {!! Form::select('default_service',  ['A-G-Holidays' => "A-G-Holidays", 'Apple-Travels' => 'Apple-Travels'],isset($depot->default_service) ? $depot->default_service : selected,
-    ['class' => 'form-control', 'placeholder'=>'Select Default Service','required' => 'required']) !!}
+    ['class' => 'col-md-6 form-control', 'placeholder'=>'Select Default Service','required' => 'required']) !!}
 </div> 
 </div> 
-<div class="col-sm-12">
-{!! Form::submit(Lang::get('common.titles.save'), ['class' => 'btn btn-success']) !!}
+<div class="form-group">
+    <div class="col-md-3" style="margin-right: 15px;"></div>
+    {{ Form::submit('Save', array('class' => 'btn btn-success pull-left','required' => 'required')) }}
+    <div class="col-md-9">
+        <div class="col-md-7 col-sm-12">
+        </div>
+        <div class="col-md-9" style="padding-left: 0px;">
+        </div>
+    </div>
 </div> 
-</div> 
+
 

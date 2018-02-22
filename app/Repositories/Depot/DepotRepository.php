@@ -15,8 +15,9 @@ use Illuminate\Support\Facades\Input;
 use DB;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\DepotCreated;
-
+use App\Traits\activityLog;
 class DepotRepository implements DepotRepositoryContract {
+    use activityLog;
   public function find($id) {
         return Depot::join('depots', 'users.user_type', '=', 'roles.id')->first();
     }
@@ -34,12 +35,20 @@ class DepotRepository implements DepotRepositoryContract {
     }
 
     public function update($id, $requestData) {
+       $this->createLog('App\Models\Depot','App\Models\DepotLog',$id);
        $depot = Depot::findorFail($id);
        $input = $requestData->all();
-       $input['user_id'] = Auth::id();
+      $name = $requestData->name;
+      $sql=Depot::where([['name',$name],['id','!=',$id]])->first();
+     if(count($sql)>0)
+     {
+       return redirect()->back()->withErrors(['Name has already been taken.']);
+      } else {
+        $input['user_id'] = Auth::id();
        $depot->fill($input)->save();
        Session::flash('flash_message', "$depot->name Depot Updated Successfully.");
        return $depot;
+    }
     }
 
 

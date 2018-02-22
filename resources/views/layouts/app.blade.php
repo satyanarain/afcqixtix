@@ -490,12 +490,17 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
     </div>
 </div>
                     
+@include('partials.depot_addnew')
                     
                     
-                </section>
-            </div>
-        
-   </section>
+                    
+                    
+                    
+                    
+             
+</section>
+</div>
+ </section>
 <footer class="main-footer">
     <div class="pull-right hidden-xs">
         <b>Version</b> 2.3.7

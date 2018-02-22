@@ -4,20 +4,14 @@
 {{BreadCrumb()}}
 @stop
 @section('content')
-<div class="row">
-    <div class="col-xs-12">
-
-        <div class="box">
-            <div class="box-header">
-                <h3 class="box-title">{{headingMain()}}</h3>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
+@include('partials.form_header')
                 {!! Form::model($depot, [
                 'method' => 'PATCH',
                 'route' => ['depots.update', $depot->id],
                 'files'=>true,
-                'enctype' => 'multipart/form-data'
+                  'class'=>'form-horizontal',
+                'enctype' => 'multipart/form-data',
+                'class'=>'form-horizontal'
                 ]) !!}
                 @include('depots.form', ['submitButtonText' => Lang::get('user.headers.update_submit')])
 

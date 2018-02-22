@@ -42,3 +42,53 @@ $g_webmaster_email      = 'info@opiant.online';
 $g_from_email           = 'info@opiant.online';
 # $g_email_receive_own	= OFF;
 # $g_email_send_using_cronjob = OFF;
+ 'trip_cancellation_reason_category_master_id' => 'required|unique:trip_cancellation_reasons,trip_cancellation_reason_category_master_id'
+ 
+ <div class="form-group ">
+    {!! Form::label('depot_id', Lang::get('Depot'), ['class' => 'col-md-3 control-label']) !!}
+    <div class="col-md-5 required">
+        @php $depots=displayList('depots','name');@endphp
+       <span id="denomination_masters"> {!! Form::select('depot_id', $depots,isset($crew_details->depot_id) ? $crew_details->depot_id : selected,
+        ['class' => 'col-md-6 form-control', 'placeholder'=>'Select Depot','required' => 'required']) !!}</span>
+    </div>
+    <div class="col-md-1 col-sm-1 text-left">
+        <div class="btn btn-sm btn-default" onclick="AddNewShow('depots', 'denomination_master_id', 'Select Denomination Type')">New</div> 
+    </div>
+</div>
+
+ $name = $requestData->name;
+      $sql=Depot::where([['name',$name],['id','!=',$id]])->first();
+     if(count($sql)>0)
+     {
+       return redirect()->back()->withErrors(['Name has already been taken.']);
+      } else {
+          
+      }
+       'class'=>'form-horizontal',
+      
+      @include('partials.form_header')
+      
+      
+      
+      <div class="form-group">
+        {!! Form::label('name', Lang::get('Depot Name'), ['class' => 'col-md-3 control-label']) !!}
+         <div class="col-md-7 col-sm-12 required">
+        {!! Form::text('name', null, ['class' => 'col-md-6 form-control','required' => 'required']) !!}
+</div>
+</div>
+
+
+
+<div class="form-group">
+    <div class="col-md-3" style="margin-right: 15px;"></div>
+    {{ Form::submit('Save', array('class' => 'btn btn-success pull-left','required' => 'required')) }}
+    <div class="col-md-9">
+        <div class="col-md-7 col-sm-12">
+        </div>
+        <div class="col-md-9" style="padding-left: 0px;">
+        </div>
+    </div>
+</div> 
+
+
+<?php $this->userHistory($value->user_name,$value->created_at,$value->updated_at) ; ?>

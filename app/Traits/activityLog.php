@@ -45,6 +45,23 @@ function dateView($date_blank) {
         ;
     }
 }
+function userHistory($user='',$created_at='',$updated_at='')
+{ ?>
+<tr>
+    <td><b>Created By</b></td>
+    <td class="table_normal"><?php echo $user; ?></td>
+</tr>
+<tr>
+    <td><b>Created On</b></td>
+    <td class="table_normal"><?php echo $this->dateView($created_at); ?></td>
+</tr>
+<tr>
+    <td><b>Last Updated At</b></td>
+    <td class="table_normal"><?php echo $this->dateView($updated_at); ?></td>
+</tr>
+<?php
+
+}
         
 }
 

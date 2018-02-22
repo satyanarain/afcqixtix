@@ -51,19 +51,10 @@ class PassTypeRepository implements PassTypeRepositoryContract {
  public function update($id, $requestData) {
         $this->createLog('App\Models\PassType','App\Models\PassTypeLog',$id);
         $pass_pypes = PassType::findorFail($id);
-         $input = $requestData->all();
-        //        print_r($requestData->all());
-//        exit();
-        //$input['concession_allowed_on'] = $this->mySqlDate($requestData->concession_allowed_on);
+        $input = $requestData->all();
         $userid = Auth::id();
         $input[user_id] = $userid;
-//        if($requestData->print_ticket=="Yse")
-//        {
-//         $input[print_ticket] = $userid=$requestData->print_ticket;  
-//        } else {
-//         $input[print_ticket] = "No";     
-//        }
-         $pass_pypes->fill($input)->save();
+        $pass_pypes->fill($input)->save();
         Session::flash('flash_message', "Pass Type Updated Successfully.");
         return $pass_pypes;
     }

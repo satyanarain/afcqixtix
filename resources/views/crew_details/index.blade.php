@@ -17,9 +17,11 @@
                     <thead>
                         <tr>
                             <th class="display_none"></th>
-                            <th>@lang('user.headers.name')</th>
-                            <th>@lang('User Name')</th>
-                            <th>@lang('user.headers.email')</th>
+                            <th>@lang('Depot Name')</th>
+                            <th>@lang('Crew Name')</th>
+                            <th>@lang('Crew ID')</th>
+                            <th>@lang('Role')</th>
+                           
                              {{  actionHeading('Action', $newaction='') }}
                         </tr>
                     </thead>
@@ -28,8 +30,9 @@
                         <tr class="nor_f">
                             <th class="display_none"></th>
                             <td>{{$value->name}}</td>
-                            <td>{{$value->user_name}}</td>
-                            <td>{{$value->email}}</td>
+                            <td>{{$value->crew_name}}</td>
+                            <td>{{$value->crew_id}}</td>
+                            <td>{{$value->crew_id}}</td>
                             {{ actionEdit('edit',$value->id)}}
                          </tr>
                         @endforeach
@@ -67,6 +70,7 @@ function statusUpdate(id)
 }
 </script>
 <!-- /.row -->
-@include('partials.routesheader')
-@include('partials.table_script') 
+@include('partials.crew_details_header')
+@include('partials.table_script')
+
 @stop

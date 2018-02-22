@@ -29,6 +29,7 @@
                         <td><b>Default Service</b></td>
                         <td class="table_normal">{{ $value->default_service }}</td>
                     </tr>
+                    @include('partials.userhistory')
                 </table>  
 
                 <div class="modal-footer">
@@ -40,3 +41,25 @@
     </div>
 </div>
 @endforeach
+<!--<div class="modal fade" id="view_detail" role="dialog">
+ </div>-->
+<script>
+//  function orderList(order_id,order_list)
+//   {
+//       
+//     alert("7878");
+//   var urldata=   '/depots/' + order_list;
+//    
+//    $.ajax({
+//		type: "GET",
+//		url: urldata,
+//		cache: false,
+//		success: function(data){
+//                  $("#" + order_id).modal('show');
+//                  $("#"+order_list).html(data);
+//		}
+//	});
+//  
+//   }
+
+</script>
