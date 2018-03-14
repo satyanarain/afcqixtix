@@ -22,6 +22,7 @@
                             <th>@lang('Depot Name')</th>
                             <th>@lang('Depot ID')</th>
                             <th>@lang('Short Name')</th>
+                            <th>@lang('Service Name')</th>
                             <th>@lang('Depot Location')</th>
                           {{  actionHeading('Action', $newaction='') }}
                             
@@ -33,8 +34,8 @@
                             <td class="display_none"></td>
                             <td>{{$value->name}}</td>
                             <td>{{$value->depot_id}}</td>
-                            <td>{{$value->short_name}}
-                            </td>
+                            <td>{{$value->short_name}}</td>
+                            <td>{{$value->service_name}}</td>
                             <td>{{$value->depot_location}}
                             </td>
                           {{ actionEdit('edit',$value->id)}}

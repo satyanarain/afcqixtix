@@ -35,11 +35,12 @@ class VehicleController extends Controller
      */
     public function index()
     {
-     $vehicles = DB::table('vehicles')->select('vehicles.vehicle_registration_number','vehicles.depot_id','vehicles.bus_type_id','vehicles.vehicle_registration_number','depots.id','depots.name as name','bus_types.id','bus_types.bus_type','vehicles.id as id')
+     $vehicles = DB::table('vehicles')->select('vehicles.vehicle_registration_number','vehicles.depot_id','vehicles.bus_type_id','vehicles.vehicle_registration_number','depots.id','depots.name as name','bus_types.id','bus_types.bus_type','vehicles.created_at as created_at','vehicles.updated_at as updated_at','vehicles.id as id','vehicles.user_id as user_id','users.user_name as user_name')
             ->leftjoin('depots', 'depots.id', '=', 'vehicles.depot_id')
-            ->leftjoin('bus_types', 'bus_types.id', '=', 'vehicles.bus_type_id')
+            ->leftjoin('users', 'users.id', '=', 'vehicles.user_id')
+         ->leftjoin('bus_types', 'bus_types.id', '=', 'vehicles.bus_type_id')
             ->get();
- 
+
     return view('vehicles.index')->withVehicles($vehicles);
    
     }
@@ -102,8 +103,14 @@ class VehicleController extends Controller
      */
     public function update($id, UpdateVehicleRequest $request)
     {
-        $this->vehicles->update($id, $request);
+         $sql=Vehicle::where([['vehicle_registration_number',$request->vehicle_registration_number],['id','!=',$id]])->first();
+     if(count($sql)>0)
+     {
+       return redirect()->back()->withErrors(['Vehicle registration number has already been taken.']);
+      } else {   
+          $this->vehicles->update($id, $request);
         return redirect()->route('vehicles.index');
+      }
     }
 
     /**

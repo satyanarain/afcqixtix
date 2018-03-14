@@ -4,20 +4,14 @@
 {{BreadCrumb()}}
 @stop
 @section('content')
-<div class="row">
-    <div class="col-xs-12">
-   
-        <div class="box">
-            <div class="box-header">
-              <h3 class="box-title">{{headingMain()}}</h3>
-           </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-               {!! Form::model($denominations, [
+@include('partials.form_header')
+         {!! Form::model($denominations, [
         'method' => 'PATCH',
         'route' => ['denominations.update', $denominations->id],
         'files'=>true,
-        'enctype' => 'multipart/form-data'
+        'enctype' => 'multipart/form-data',
+        'class'=>'form-horizontal',
+         'autocomplete'=>'0ff'
         ]) !!}
                @include('denominations.form', ['submitButtonText' => Lang::get('user.headers.update_submit')])
 

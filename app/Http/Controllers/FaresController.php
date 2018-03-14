@@ -31,28 +31,25 @@ class FaresController extends Controller {
     ) {
         $this->fares = $fares;
     }
-
     /**
      * Display a listing of the resource.
      *
      * @return Response
      */
  public function index() {
-  $fares = DB::table('fares')->select('*','fares.id as id','services.name as name')
-                ->leftjoin('users', 'users.id', '=', 'fares.user_id')
-                ->leftjoin('services', 'fares.service_id', '=', 'services.id')
-               ->get();
-     return view('fares.index')->withFares($fares);
+        $service = Service::all();
+        return view('fares.index')->withFares($service);
     }
- public function Previous() {
-    $fares = DB::table('fare_logs')->select('*','fare_logs.id as id')
+
+    public function Previous() {
+        $fares = DB::table('fare_logs')->select('*', 'fare_logs.id as id')
                 ->leftjoin('services', 'fare_logs.service_id', '=', 'services.id')
                 ->get();
         return view('fares.previous')->withFares($fares);
     }
 
     public function create() {
-     return view('fares.create');
+        return view('fares.create');
     }
 
     /**
@@ -94,9 +91,9 @@ class FaresController extends Controller {
      * @return Response
      */
     public function edit($id) {
-          $fares = Fare::findOrFail($id);
-         $service_id= $fares->service_id;
-         $fare_details = DB::table('fare_details')->where('service_id',$service_id)->get();
+          $fares = Service::findOrFail($id);
+        
+         $fare_details = DB::table('fare_details')->where('service_id',$id)->get();
          return view('fares.edit',compact('fare_details'))->withFares($fares);
     }
     
@@ -139,54 +136,56 @@ class FaresController extends Controller {
      */
     
        public function viewDetail($id) {
-           $fare=Fare::find($id);
-           $id=$fare->service_id;
-           $service=Service::find($id);
-           $sql = DB::table('fares')
-                  ->leftjoin('services','fares.service_id','services.id')
-                  ->leftjoin('fare_details','fare_details.service_id','fares.service_id')
-                  ->where('fares.service_id',$id)
-             ->get();
-            Service   
-        ?>
-      <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header-view" >
-<!--                <button type="button" class="close" data-dismiss="modal"><font class="white">&times;</font></button>-->
-                <h4 class="viewdetails_details"><span class="fa fa-inr"></span>&nbsp;Fare</h4>
-            </div>
-            <div class="modal-body-view">
-                 <table class="table table-responsive.view">
-                    <tr>       
-                        <td colspan="2"><b>Service Name</b></td>
-                        <td class="table_normal"><?php  echo $service->name; ?></span></td>
-                    </tr>
-                    <tr>        <td>Stage</td>
-                                <td>Adult Ticket Amount</td>
-                                <td>Child Ticket Amount</td>
-                                <td>Luggage Ticket Amount</td>
-                          
-                         </tr>
-                      <?php foreach($sql as $value) { ?>   
-                                     <tr><td class="table_normal"><?php echo $value->stage; ?></td>
-                                         <td class="table_normal"><?php echo $value->adult_ticket_amount; ?></td>
-                                         <td class="table_normal"><?php echo $value->child_ticket_amount; ?></td>
-                                         <td class="table_normal"><?php echo $value->luggage_ticket_amount; ?></td>
-                                     </tr>
-                      <?php } ?> 
-                    </table>  
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
+        $service = Service::find($id);
+        $sql = DB::table('fare_details')->where('service_id', $id)->get();
+       ?>
+       <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header-view" >
+        <!--                <button type="button" class="close" data-dismiss="modal"><font class="white">&times;</font></button>-->
+                        <h4 class="viewdetails_details"><span class="fa fa-inr"></span>&nbsp;Fare</h4>
+                    </div>
+                    <div class="modal-body-view">
+                         <table class="table table-responsive.view">
+                            <tr>       
+                                <td colspan="2"><b>Service Name</b></td>
+                                <td class="table_normal"><?php echo $service->name; ?></span></td>
+                            </tr>
+                            <tr> <td colspan="4">
+                                            <div class="path-section">
+                                                <p class="path-section-heading">Fare Details</p>
 
-    </div>
-    <?php   
+                                                <div class="path-section-content">
+                                                    <table class="table table-responsive.view">
+                                                        <tr>        <td>Stage</td>
+                                                            <td>Adult Ticket Amount</td>
+                                                            <td>Child Ticket Amount</td>
+                                                            <td>Luggage Ticket Amount</td>
+                                                        </tr>
+                                                        <?php foreach ($sql as $value) { ?>   
+                                                            <tr><td class="table_normal"><?php echo $value->stage; ?></td>
+                                                                <td class="table_normal"><?php echo $value->adult_ticket_amount; ?></td>
+                                                                <td class="table_normal"><?php echo $value->child_ticket_amount; ?></td>
+                                                                <td class="table_normal"><?php echo $value->luggage_ticket_amount; ?></td>
+                                                            </tr>
+                                                        <?php } ?> </table> 
+                                                </div>             
+                                            </div>             
+
+                                        </td>
+                                    </tr>
+                            </table>  
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        <?php
     }
-    
-    
+
     /**
      * Update the specified resource in storage.
      *

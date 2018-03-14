@@ -1,10 +1,11 @@
 
 <div class="input-group col-md-12" >
 <div class="input-group col-md-12">
-@php $services=displayList('services','name')@endphp
-        {!! Form::label('service_id', Lang::get('Service'), ['class' => 'control-label','style'=>"margin-bottom:10px;"]) !!}</br>
-        {!! Form::select('service_id',$services,isset($fares->service_id) ? $fares->service_id : selected,['class' => 'form-control required','required' => 'required','onchange'=>'fareList(this.value)','placeholder'=>"Select Service"]) !!}
+       {!! Form::label('service_id', Lang::get('Service'), ['class' => 'control-label','style'=>"margin-bottom:10px;"]) !!}</br>
+        {!! Form::text('service_name',$fares->name,['class' => 'form-control','onchange'=>'fareList(this.value)','placeholder'=>"Service",'readonly'=>'readonly']) !!}
 </div>
+</div>
+    
 </br>
 <div class="row" id="after-add-more">
   <div class="form-group ">
@@ -49,6 +50,7 @@
 </div>
 
 <div class="input-group col-md-12" id="button">
+    <input type="hidden" name='service_id' value="<?php echo $fares->id; ?>">
   {!! Form::submit(Lang::get('common.titles.save'), ['class' => 'btn btn-success']) !!}
 </div>
 

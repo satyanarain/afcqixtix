@@ -70,7 +70,7 @@
                           <tr>
                              <tr>
                               <td>Date Of Borth</td>
-                              <td class="table_normal">{{ dateView($user->dob) }}</td>
+                              <td class="table_normal">{{ dateView($user->date_of_birth) }}</td>
                           </tr>
                         </table>
             </div>

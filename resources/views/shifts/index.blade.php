@@ -9,7 +9,7 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{headingMain()}}</h3>
-             {{ createButton('create','Add') }}
+             {{ createButton('create','Add','order','order_id') }}
             </div>
           @include('partials.message')
             <!-- /.box-header -->
@@ -18,7 +18,7 @@
                     <thead>
                          <tr>
                             <th>@lang('Shift')</th>
-                            <th>@lang('Abbreviation')</th>
+                            <th>@lang('Order Number')</th>
                             <th>@lang('Start Time')</th>
                             <th>@lang('End Time')</th>
                            {{  actionHeading('Action', $newaction='') }}
@@ -28,7 +28,7 @@
                       @foreach($shifts as $value)
                         <tr class="nor_f">
                             <td>{{$value->shift}}</td>
-                            <td>{{$value->abbreviation}}</td>
+                            <td>{{$value->order_number}}</td>
                             <td>{{displayView($value->start_time)}}
                             </td>
                             <td>{{displayView($value->end_time)}}
@@ -46,6 +46,6 @@
     <!-- /.col -->
 </div>
 <!-- /.row -->
-@include('partials.shiftsheader')
+@include('partials.shifts_order_header')
 @include('partials.table_script')  
 @stop

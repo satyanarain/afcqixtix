@@ -32,8 +32,7 @@
                             </td>
                             <td>{{$value->abbreviation}}
                             </td>
-                           
-                           {{ actionEdit('edit',$value->id)}}
+                            {{ actionEdit('edit',$value->id)}}
                          </tr>
                         @endforeach
                         </tbody>

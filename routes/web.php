@@ -40,9 +40,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('notifications/markread', 'NotificationsController@markRead')->name('notifications.markread');
 
     Route::get('users/data', 'UsersController@anyData')->name('users.data');
-      Route::get('user/statusupdate/{id}', 'UsersController@statusUpdate');
+    Route::get('users/statusupdate/{id}', 'UsersController@statusUpdate');
+    Route::get('users/roleupdate/{id}', 'UsersController@roleUpdate');
     Route::post('users/store', 'UsersController@store');
     Route::resource('users', 'UsersController');
+    
+    
+    
+    
     Route::post('users/changeprofileimage', 'UsersController@changeProfileImage')->middleware('user.changeprofileimage')->name('changeprofileimage');
     /*     * **********************masters created by satya 22-11-2017 depot***************************** */
     Route::get('depots/data', 'DepotsController@anyData')->name('depots.data');
@@ -71,6 +76,9 @@ Route::group(['middleware' => ['auth']], function () {
     
     Route::get('shifts/data', 'ShiftController@anyData')->name('shifts.data');
     Route::post('shifts/store', 'ShiftController@store');
+      Route::get('shifts/sort_order/{id}', 'ShiftController@sortOrder');
+    Route::get('shifts/view_detail/{id}', 'ShiftController@viewDetail');
+    Route::get('shifts/order_list', 'ShiftController@orderList');
     Route::resource('shifts', 'ShiftController');
     
     Route::get('stops/data', 'StopController@anyData')->name('stops.data');
@@ -78,11 +86,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('stops', 'StopController');
     
     Route::get('routes/data', 'RouteController@anyData')->name('routes.data');
+    Route::get('routes/view_detail/{id}', 'RouteController@viewDetail');
     Route::post('routes/store', 'RouteController@store');
     Route::resource('routes', 'RouteController');
     
     Route::get('duties/data', 'DutyController@anyData')->name('duties.data');
     Route::post('duties/store', 'DutyController@store');
+    Route::get('duties/sort_order/{id}', 'DutyController@sortOrder');
+    Route::get('duties/view_detail/{id}', 'DutyController@viewDetail');
+    Route::get('duties/order_list', 'DutyController@orderList');
     Route::resource('duties', 'DutyController');
     
     Route::get('targets/data', 'TargetController@anyData')->name('targets.data');
@@ -152,15 +164,20 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('crew_details/store', 'CrewDetailController@store');
     Route::get('crew_details/view_detail/{id}', 'CrewDetailController@viewDetail');
     Route::resource('crew_details', 'CrewDetailController');
+    
+    Route::get('ETM_details/data', 'ETMDetailController@anyData')->name('ETM_details.data');
+    Route::get('ETM_details/view_detail/{id}', 'ETMDetailController@viewDetail');
+    Route::resource('ETM_details', 'ETMDetailController');
     /* ROLES */
+    Route::get('roles/data', 'RolesController@anyData')->name('roles.data');
+    Route::get('roles/view_detail/{id}', 'RolesController@viewDetail');
     Route::resource('roles', 'RolesController');
+     
     Route::resource('permissions', 'PermissionsController');
     Route::post('permissions/savemenuall', 'PermissionsController@saveMenuAll');
     Route::patch('settings/permissionsUpdate', 'SettingsController@permissionsUpdate');
     Route::resource('settings', 'SettingsController');
     Route::post('changepasswords/update', 'ChangepasswordsController@updatePassword');
     Route::resource('changepasswords', 'ChangepasswordsController');
-    
-    
     
 });

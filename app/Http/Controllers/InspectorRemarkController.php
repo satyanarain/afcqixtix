@@ -224,8 +224,14 @@ class InspectorRemarkController extends Controller {
      * * @Author created by satya 4.2.2018
      */
     public function update($id, UpdateInspectorRemarkRequest $request) {
-        $this->inspector_remarks->update($id, $request);
+   $inspector_remark = $request->inspector_remark;
+     $sql=inspectorRemark::where([['inspector_remark',$inspector_remark],['id','!=',$id]])->first();
+     if(count($sql)>0)
+     {
+       return redirect()->back()->withErrors(['Inspector remark has already been taken.']);
+      } else { 
+          $this->inspector_remarks->update($id, $request);
         return redirect()->route('inspector_remarks.index');
     }
- 
+    }
 }

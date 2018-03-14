@@ -104,8 +104,15 @@ class CrewDetailController extends Controller
      */
     public function update($id, UpdateCrewDetailRequest $request)
     {
-        $this->crew_details->update($id, $request);
+       $crew_id = $request->crew_id;
+      $sql=CrewDetail::where([['crew_id',$crew_id],['id','!=',$id]])->first();
+     if(count($sql)>0)
+     {
+       return redirect()->back()->withErrors(['This crew ID has already been taken.']);
+      } else {
+       $this->crew_details->update($id, $request);
         return redirect()->route('crew_details.index');
+    }
     }
 
    /**
@@ -116,14 +123,13 @@ class CrewDetailController extends Controller
      */
     
       public function viewDetail($id) {
-           $value = DB::table('crew_details')->select('*','crew_details.id as id','depots.id as depot_id')
+           $value = DB::table('crew_details')->select('*','crew_details.id as id','depots.id as depot_id','crew_details.created_at as created_at','crew_details.updated_at as updated_at')
             ->leftjoin('depots','depots.id','crew_details.depot_id')
+                      ->leftjoin('users', 'users.id', '=', 'crew_details.user_id')
             ->leftjoin('countries','countries.id','crew_details.country_id')
             ->where('crew_details.id',$id)
             ->orderBy('crew_details.id','desc')
                ->first();
-           
-           
           
         ?>
       <div class="modal-dialog">
@@ -201,7 +207,7 @@ class CrewDetailController extends Controller
                         <td><b>Date of Leaving</b></td>
                         <td class="table_normal"><?php echo $this->dateView($value->date_of_leaving); ?></td>
                     </tr>
-                    
+                     <?php $this->userHistory($value->user_name,$value->created_at,$value->updated_at) ; ?>
                   </table>  
                   <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -212,7 +218,4 @@ class CrewDetailController extends Controller
     </div>
     <?php   
     }
-    
-    
-    
- }
+  }

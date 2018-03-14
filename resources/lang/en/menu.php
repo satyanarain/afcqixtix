@@ -31,8 +31,15 @@ return [
         'title' => 'Settings',
         'overall' => 'Miscellaneous Settings',
         'roles' => 'Role Management',
-        'permissions' => 'Permission Management',
+        'permissions' => 'Role and permission',
      ],
+   'ETM_details' =>  [
+        'title' => 'ETM details',
+     
+     ],
+    
+    
+    
     'vehicles' =>  [
         'title' => 'Vehicle',
      

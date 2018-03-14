@@ -97,33 +97,6 @@ $child_ticket_amount = $requestData->child_ticket_amount;
 $luggage_ticket_amount = $requestData->luggage_ticket_amount;
 $service_id = $requestData->service_id;
 
-$input = $requestData->all();
-
-$userid = Auth::id();
-$input['adult_ticket_amount'] = '';
-$input['adult_ticket_amount'] = '';
-$input['luggage_ticket_amount'] = '';
-$input['stage'] = '';
-$input['user_id'] = $userid;
-$input['service_id'] = $requestData->service_id;
-$fare_service_id=DB::table('fares')->where('service_id',$service_id)->first();
-if(count($fare_service_id)==0)
-{
-$fares = Fare::create($input);
-}
-else
-{  
-    
-  $update = Fare::findorFail($fare_service_id->id);
-            $input = $requestData->all();
-            $input['adult_ticket_amount'] = '';
-            $input['adult_ticket_amount'] = '';
-            $input['luggage_ticket_amount'] = '';
-            $input['stage'] = '';
-            $input['user_id'] = $userid;
-            $update->fill($input)->update();   
-}
-
 $delete=DB::table('fare_details')->where('service_id',$service_id)->get();
 
 if(count($delete)>0)

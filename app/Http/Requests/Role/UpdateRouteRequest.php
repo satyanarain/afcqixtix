@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Permission;
+namespace App\Http\Requests\Role;
 
 use App\Http\Requests\Request;
 
-class StorePermissionRequest extends Request
+class UpdateRoleRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class StorePermissionRequest extends Request
      */
     public function authorize()
     {
-        return auth()->user()->hasRole('administrator');
+        return true;
     }
 
     /**
@@ -21,11 +21,15 @@ class StorePermissionRequest extends Request
      *
      * @return array
      */
-    public function rules()
+      public function rules()
     {
-        return [
-            'name' => 'required|unique:permissions',
-            'description' => 'required'
-        ];
+        
+            return [
+                   'route' => 'required',
+                   'source' => 'required',
+                   'direction' => 'required'
+             ];
+        
     }
+
 }

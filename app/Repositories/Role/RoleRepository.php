@@ -2,7 +2,7 @@
 namespace App\Repositories\Role;
 
 use App\Models\Role;
-use App\Models\Permission;
+
 
 class RoleRepository implements RoleRepositoryContract
 {
@@ -12,22 +12,19 @@ class RoleRepository implements RoleRepositoryContract
         return Role::pluck('display_name', 'id');
     }
 
-    public function allPermissions()
-    {
-        return Permission::all();
-    }
-
     public function allRoles()
     {
-        return Role::all();
+        return Roles::all();
     }
+
 
     public function permissionsUpdate($requestData)
     {
         $allowed_permissions = [];
 
         if ($requestData->input('permissions') != null) {
-            foreach ($requestData->input('permissions') as $permissionId => $permission) {
+            foreach ($requestData->input('permissions')
+            as $permissionId => $permission) {
                 if ($permission === '1') {
                     $allowed_permissions[] = (int)$permissionId;
                 }
@@ -44,22 +41,48 @@ class RoleRepository implements RoleRepositoryContract
 
     public function create($requestData)
     {
-        $roleName = $requestData->name;
-        $roleDescription = $requestData->description;
-        Role::create([
-            'name' => strtolower($roleName),
-            'display_name' => ucfirst($roleName),
-             'description' => $roleDescription
-             ]);
+        
+        
+        $input= $request->all();
+            $user_id=  Auth::id();
+            $input['user_id'] = $user_id;
+            $input['users'] = implode(',', $request->users);
+            $input['changepasswords'] = implode(',', $request->changepasswords);
+            $input['permissions'] = implode(',', $request->permissions);
+            $input['depots'] = implode(',', $request->depots);
+            $input['bus_types'] = implode(',', $request->bus_types);
+            $input['services'] = implode(',', $request->services);
+            $input['vehicles'] = implode(',', $request->vehicles);
+            $input['shifts'] = implode(',', $request->shifts);
+            $input['stops'] = implode(',', $request->stops);
+            $input['routes'] = implode(',', $request->routes);
+            $input['duties'] = implode(',', $request->duties);
+            $input['targets'] = implode(',', $request->targets);
+            $input['fares'] = implode(',', $request->fares);
+            $input['concession_fare_slabs'] = implode(',', $request->concession_fare_slabs);
+            $input['concessions'] = implode(',', $request->concessions);
+            $input['trip_cancellation_reasons'] = implode(',', $request->trip_cancellation_reasons);
+            $input['inspector_remarks'] = implode(',', $request->inspector_remarks);
+            $input['payout_reasons'] = implode(',', $request->payout_reasons);
+            $input['denominations'] = implode(',', $request->denominations);
+            $input['pass_types'] = implode(',', $request->pass_types);
+            $input['crew_details'] = implode(',', $request->crew_details);
+            $input['ETM_details'] = implode(',', $request->ETM_details);
+           $roles= Role::create($input);
+            
+             Session::flash('flash_message', "Role Created Successfully."); //Snippet in Master.blade.php
+       return $roles;
+            
+            
     }
 
     public function destroy($id)
     {
-        $role = Role::findorFail($id);
-        if ($role->id !== 1) {
-            $role->delete();
+        $permission = Role::findorFail($id);
+        if ($permission->id !== 1) {
+            $permission->delete();
         } else {
-            Session()->flash('flash_message_warning', 'Can not delete Administrator role');
+            Session()->flash('flash_message_warning', 'Can not delete Administrator permission');
         }
     }
 }

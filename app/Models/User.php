@@ -21,8 +21,9 @@ class User extends Authenticatable
      * @var string
      */
     protected $table = 'users';
-    protected $guarded = ['status'];
-    /**
+   protected $fillable = ['name', 'user_name', 'email', 'address', 'country', 'city', 'password', 'mobile', 'date_of_birth', 'image_path', 'set_password_token', 'remember_token', 'status', 'created_at', 'updated_at'];
+  
+   /**
      * The attributes that are mass assignable.
      *
      * @var array

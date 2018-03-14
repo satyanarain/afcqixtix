@@ -1,6 +1,7 @@
 <?php
 error_reporting(0);
 use App\Models\Permission;
+use App\Models\PermissionDetail;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -209,8 +210,16 @@ function PopUpheadingMain($result) {
 ?>
 <?php
 
-function displayList($table = '', $fieldname = '') {
-    $result = DB::table($table)->pluck($fieldname, 'id');
+function displayList($table = '', $fieldname = '', $orderby_fieldname='',$asc_dsc='') {
+    
+        if($orderby_fieldname!='')
+         {
+            $result = DB::table($table)->orderBy($orderby_fieldname,$asc_dsc)->pluck($fieldname, 'id');
+         }else
+         {
+          $result = DB::table($table)->pluck($fieldname, 'id');    
+         }
+            
     return $result;
 }
 
@@ -230,7 +239,7 @@ function dispalyImage($imagepath = '', $imagename, $class = '', $alt = '', $styl
     }
 }
 
-function actionEdit($action = '', $id = '') {
+function actionEdit($action = '', $id = '',$status='') {
     $segments = '';
     $segments = Request::segments();
     
@@ -243,7 +252,20 @@ function actionEdit($action = '', $id = '') {
                <button  class="btn btn-small btn-primary"  data-toggle="modal" data-target="#<?php echo $id ?>"  onclick="viewDetails(<?php echo $id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span>&nbsp;View</button>&nbsp;&nbsp;&nbsp;&nbsp;
               <?php } ?>
               <?php if($segments[0]=='users'){?>
-             <div  class="btn btn-small btn-success"   id="<?php echo $id; ?>" onclick="statusUpdate(this.id)"><i class="fa fa-check-circle"></i>&nbsp;<span id="<?php echo "ai".$id; ?>">Active</span></div>
+             <div 
+                 <?php if($status==1)
+                 { ?>
+                 class="btn btn-small btn-success" 
+               <?php }else{ ?>
+                    class="btn btn-small btn-danger" 
+              <?php } ?>
+                 id="<?php echo $id; ?>" onclick="statusUpdate(this.id)">
+                   <?php if($status==1)
+                 { ?>
+                    <span id="<?php echo "ai".$id; ?>"><i class="fa fa-check-circle"></i>&nbsp;Active</span>
+               <?php }else{ ?>
+                     <span id="<?php echo "ai".$id; ?>"><i class="fa fa-times-circle"></i>&nbsp;Inctive</span>
+              <?php } ?></div>
           <?php } ?>
         </td>
 
@@ -275,7 +297,7 @@ function createButton($action = '', $title='',$order='',$order_id='',$privious='
    $segments = Request::segments();
    $menu_dis = $segments[0];
    $userid_menu = Auth::id();
-   $sql = Permission::where('user_id', '=', $userid_menu)->first();
+   $sql = PermissionDetail::where('user_id', '=', $userid_menu)->first();
    $dem_menu=$result = $sql[$menu_dis];  
    $array_menu= explode(',', $dem_menu);
    
@@ -297,7 +319,7 @@ function pagePermissionView($result)
     $segments = Request::segments();
     $userid_menu = Auth::id();
     $menu_dis = $segments[0];
-    $sql = Permission::where('user_id', '=', $userid_menu)->first();
+    $sql = PermissionDetail::where('user_id', '=', $userid_menu)->first();
     return $result = $sql[$menu_dis];
 }
 
@@ -305,14 +327,14 @@ function menuCreate($controllerName,$create='',$edit='',$view='',$id='',$control
 { ?>
 
    <tr>
-     <td align="center">
+     <td align="center" width="15%">
        <input type="checkbox" id="<?php echo "checkAll".$controllerName . $id; ?>" onclick="checkAll(this,this.id);">&nbsp;
       
          <?php
                   $array=array('_','-');
                  $controllerName_heading= str_replace($array,' ', $controllerName);
                ?></td>
-                <td>
+                <td width="30%">
                     <b>
                    <input  class="<?php echo "checkAll". $controllerName . $id; ?>" type="checkbox" name="<?php echo $controllerName . "[]"; ?>" value="<?php echo $controllerName;?>" <?php if (in_array($controllerName, explode(',', $controllerName_Value))) { ?> checked <?php } ?> onchange="showMenu(this.id)" id="<?php echo $controllerName . $id; ?>">
                    &nbsp;&nbsp;
@@ -326,8 +348,8 @@ function menuCreate($controllerName,$create='',$edit='',$view='',$id='',$control
                    echo ucwords(substr($controllerName_heading,0,-1)); 
                   }
                    ?></b>
-                </td>
-                 <td align="left" valign="top">
+   </td>
+                 <td align="left" valign="top" width="55%">
                     <span id="<?php echo "show" . $controllerName . $id; ?>"<?php if (in_array($controllerName, explode(',', $controllerName_Value))) { ?>  <?php } else { ?>class="display_none"<?php } ?>>
                      <table class="table_normal_100">
                        <tr>
@@ -341,7 +363,7 @@ function menuCreate($controllerName,$create='',$edit='',$view='',$id='',$control
                           <?php  } ?>
                               <?php if($view!='')
                            { ?>
-                          <td><input class="<?php echo "checkAll".$controllerName . $id; ?>" type="checkbox" name="<?php echo $controllerName . "[]" ?>" value="<?php echo $view; ?>" checked="checked" readonly="readonly">&nbsp;&nbsp;View</td>
+                          <td><input class="<?php echo "checkAll".$controllerName . $id; ?>" type="checkbox" name="<?php echo $controllerName . "[]" ?>" value="<?php echo $view; ?>"  <?php if (in_array('view', explode(',', $controllerName_Value))) { ?> checked="checked" <?php } ?> id="<?php echo "showview" . $controllerName . $id; ?>">&nbsp;&nbsp;View</td>
                            <?php  } ?>
                        </tr>   
                    </table>  

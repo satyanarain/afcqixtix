@@ -186,7 +186,8 @@ return [
          Zizaco\Entrust\EntrustServiceProvider::class,
          App\Providers\HelperServiceProvider::class,
          App\Providers\ValidationServiceProvider::class,
-        
+         App\Services\Validation\ValidationServiceProvider::class,  
+         Felixkiss\UniqueWithValidator\ServiceProvider::class,
       ],
 
     /*

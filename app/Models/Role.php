@@ -1,23 +1,33 @@
 <?php
-
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Model;
-
-class Role extends Model {
-
-    protected $table = "roles";
- //protected $table = "permissions";
+class Role extends Model
+{
+  /**
+     * The database table used by the model.
+     *
+     * @var string
+     */
+    protected $table = 'roles';
     protected $guarded = [];
-
-    public function userRole()
+      public function user()
     {
-        return $this->hasMany(Role::class, 'user_id', 'id');
+        return $this->belongsTo('App\Models\User');
+    }
+      public function stop()
+    {
+        return $this->belongsTo('App\Models\Stop');
     }
 
-    public function permissions()
-    {
-        return $this->belongsToMany(Permission::class, 'permission_role', 'role_id', 'permission_id');
-    }
-
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    /**
+     * The attributes excluded from the model's JSON form.
+     *
+     * @var array
+     */
+    
 }

@@ -4,17 +4,11 @@
 {{BreadCrumb()}}
 @stop
 @section('content')
-<div class="row">
-    <div class="col-xs-12">
-   
-        <div class="box">
-            <div class="box-header">
-                <h3 class="box-title">{{headingMain()}}</h3>
-                </div>
-            <!-- /.box-header -->
-            <div class="box-body">
+@include('partials.form_header')
                 {!! Form::open([
                 'route' => 'concession_fare_slabs.store',
+                   'class'=>'form-horizontal',
+                   'autocomplete'=>'0ff',
                 'files'=>true,
                 'enctype' => 'multipart/form-data'
                  ]) !!}

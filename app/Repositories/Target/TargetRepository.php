@@ -18,9 +18,12 @@ use DB;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TargetCreated;
 use App\Traits\FormatDates;
+use App\Traits\activityLog;
 
 class TargetRepository implements TargetRepositoryContract {
    use FormatDates;
+   use activityLog;
+   
     public function find($id) {
         return Target::join('routes', 'users.user_type', '=', 'roles.id')->first(1);
     }
@@ -39,13 +42,7 @@ class TargetRepository implements TargetRepositoryContract {
     }
 
     public function update($id, $requestData) {
-//       $targets_log = Target::where('id', '=', $id )->get()->toArray();
-//     unset($targets_log['id']);
-//         foreach ($targets_log as $item) 
-//        {
-//              TargetLog::create($item);
-//        }
-        
+    $this->createLog('App\Models\Target','App\Models\TargetLog',$id);
         $targets = Target::findorFail($id);
         $input = $requestData->all();
         $userid = Auth::id();

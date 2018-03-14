@@ -28,32 +28,26 @@
         <!-- bootstrap wysihtml5 - text editor -->
         <link rel="stylesheet" href="{{ asset(elixir('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')) }}">
         <script src="{{ URL::asset('plugins/chartjs/Chart.min.js') }}"></script>
-
+        <link rel="stylesheet" src="https://cdn.datatables.net/buttons/1.5.1/css/buttons.jqueryui.min.css">
+<!--        <link rel="stylesheet" src="https://cdn.datatables.net/1.10.16/css/dataTables.jqueryui.min.css">-->
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
         <link rel="stylesheet" href="{{URL::asset('plugins/datatables/dataTables.bootstrap.css')}}">
-         <link rel="stylesheet" href="{{URL::asset('css/AdminLTE.min.css')}}">
-      <link rel="stylesheet" href="{{URL::asset('css/custom.css')}}">
-      <script src="{{ asset('js/custom.js') }}"></script>
-    <script>    
-     
- window.Laravel = <?php echo json_encode([
-
-            'csrfToken' => csrf_token(),
-            ]); 
+        <link rel="stylesheet" href="{{URL::asset('css/AdminLTE.min.css')}}">
+        <link rel="stylesheet" href="{{URL::asset('css/custom.css')}}">
+        <script src="{{ asset('js/custom.js') }}"></script>
+        <script>    
+ window.Laravel = <?php
+echo json_encode([
+    'csrfToken' => csrf_token(),
+]);
 ?>
-</script>
+        </script>
     </head>
     <body class="hold-transition skin-blue sidebar-mini">
      <div id="map1">
      <div id="map">
      <div class="loading_bar">
-	<div></div>
-	<div></div>
-	<div></div>
-	<div></div>
-	<div></div>
-	<div></div>
-	<div></div>
-	<div></div>
+	{{ HTML::image('images/bus_loader.gif', 'alt text', array('class' => 'css-class')) }}
      </div>
     
  </div>
@@ -62,7 +56,6 @@
   
 <div class="wrapper">
     <header class="main-header">   
-             
             <!-- Logo -->
             <a href="index2.html" class="logo">
              
@@ -70,7 +63,7 @@
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top">
-                <!-- Sidebar toggle button-->
+                  <!-- Sidebar toggle button-->
                 <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                     <span class="sr-only">Toggle navigation</span>
                 </a>
@@ -79,16 +72,16 @@
                     <ul class="nav navbar-nav">
                         <!-- Messages: style can be found in dropdown.less-->
                         <li class="dropdown messages-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+<!--                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="fa fa-envelope-o"></i>
                                 <span class="label label-success">4</span>
-                            </a>
+                            </a>-->
                             <ul class="dropdown-menu">
                                 <li class="header">You have 4 messages</li>
                                 <li>
                                     <!-- inner menu: contains the actual data -->
                                     <ul class="menu">
-                                        <li><!-- start message -->
+<!--                                        <li> start message 
                                             <a href="#">
                                                 <div class="pull-left">
                                                     <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
@@ -99,9 +92,9 @@
                                                 </h4>
                                                 <p>Why not buy a new awesome theme?</p>
                                             </a>
-                                        </li>
+                                        </li>-->
                                         <!-- end message -->
-                                        <li>
+<!--                                        <li>
                                             <a href="#">
                                                 <div class="pull-left">
                                                     <img src="dist/img/user3-128x128.jpg" class="img-circle" alt="User Image">
@@ -128,7 +121,7 @@
                                         <li>
                                             <a href="#">
                                                 <div class="pull-left">
-                                                    <img src="<?php echo \URL::to('') . '/img/user3-128x128.jpg' ?>" class="img-circle" alt="User Image">
+                                                    <img src="<?php //echo \URL::to('') . '/img/user3-128x128.jpg' ?>" class="img-circle" alt="User Image">
                                                 </div>
                                                 <h4>
                                                     Sales Department
@@ -140,7 +133,7 @@
                                         <li>
                                             <a href="#">
                                                 <div class="pull-left">
-                                                    <img src="<?php echo \URL::to('') . '/img/user4-128x128.jpg' ?>" class="img-circle" alt="User Image">
+                                                    <img src="<?php //echo \URL::to('') . '/img/user4-128x128.jpg' ?>" class="img-circle" alt="User Image">
                                                 </div>
                                                 <h4>
                                                     Reviewers
@@ -148,14 +141,14 @@
                                                 </h4>
                                                 <p>Why not buy a new awesome theme?</p>
                                             </a>
-                                        </li>
+                                        </li>-->
                                     </ul>
                                 </li>
                                 <li class="footer"><a href="#">See All Messages</a></li>
                             </ul>
                         </li>
                         <!-- Notifications: style can be found in dropdown.less -->
-                        <li class="dropdown notifications-menu">
+<!--                        <li class="dropdown notifications-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="fa fa-bell-o"></i>
                                 <span class="label label-warning">10</span>
@@ -163,7 +156,7 @@
                             <ul class="dropdown-menu">
                                 <li class="header">You have 10 notifications</li>
                                 <li>
-                                    <!-- inner menu: contains the actual data -->
+                                     inner menu: contains the actual data 
                                     <ul class="menu">
                                         <li>
                                             <a href="#">
@@ -195,9 +188,9 @@
                                 </li>
                                 <li class="footer"><a href="#">View all</a></li>
                             </ul>
-                        </li>
+                        </li>-->
                         <!-- Tasks: style can be found in dropdown.less -->
-                        <li class="dropdown tasks-menu">
+<!--                        <li class="dropdown tasks-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="fa fa-flag-o"></i>
                                 <span class="label label-danger">9</span>
@@ -205,9 +198,9 @@
                             <ul class="dropdown-menu">
                                 <li class="header">You have 9 tasks</li>
                                 <li>
-                                    <!-- inner menu: contains the actual data -->
+                                     inner menu: contains the actual data 
                                     <ul class="menu">
-                                        <li><!-- Task item -->
+                                        <li> Task item 
                                             <a href="#">
                                                 <h3>
                                                     Design some buttons
@@ -220,8 +213,8 @@
                                                 </div>
                                             </a>
                                         </li>
-                                        <!-- end task item -->
-                                        <li><!-- Task item -->
+                                         end task item 
+                                        <li> Task item 
                                             <a href="#">
                                                 <h3>
                                                     Create a nice theme
@@ -234,8 +227,8 @@
                                                 </div>
                                             </a>
                                         </li>
-                                        <!-- end task item -->
-                                        <li><!-- Task item -->
+                                         end task item 
+                                        <li> Task item 
                                             <a href="#">
                                                 <h3>
                                                     Some task I need to do
@@ -248,8 +241,8 @@
                                                 </div>
                                             </a>
                                         </li>
-                                        <!-- end task item -->
-                                        <li><!-- Task item -->
+                                         end task item 
+                                        <li> Task item 
                                             <a href="#">
                                                 <h3>
                                                     Make beautiful transitions
@@ -262,47 +255,40 @@
                                                 </div>
                                             </a>
                                         </li>
-                                        <!-- end task item -->
+                                         end task item 
                                     </ul>
                                 </li>
                                 <li class="footer">
                                     <a href="#">View all tasks</a>
                                 </li>
                             </ul>
-                        </li>
-                        <!-- User Account: style can be found in dropdown.less -->
-                        <li class="dropdown user user-menu">
+                        </li>-->
+                        <li class="dropdown user user-menu" >
+
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
 
-                      @if(Auth::user()->image_path)
-
-                      {{Html::image('/images/photo/'.Auth::user()->image_path,'',array('class'=>"user-image"))}}
-                       @else
-                           <img src="<?php echo \URL::to('') . '/img/user2-160x160.jpg'?>" class="user-image">
-                      @endif
-                         <span class="hidden-xs">{{{ isset(Auth::user()->salutation) ? Auth::user()->salutation : '' }}} {{{ isset(Auth::user()->name) ? Auth::user()->name : '' }}}!</span>
-                            </a>
+                                @if(Auth::user()->image_path)
+                                {{Html::image('/images/photo/'.Auth::user()->image_path,'',array('class'=>"user-image"))}}
+                                @else
+                                <img src="<?php echo \URL::to('') . '/img/user2-160x160.jpg' ?>" class="user-image">
+                                @endif
+                                <span class="hidden-xs">{{{ isset(Auth::user()->salutation) ? Auth::user()->salutation : '' }}} {{{ isset(Auth::user()->name) ? Auth::user()->name : '' }}}!</span>
+                                <b class="caret"></b>
+                            </a>           
                             <ul class="dropdown-menu">
-                                <!-- User image -->
-                                <li class="user-header">
-                                  {{  dispalyImage('/images/photo/',Auth::user()->image_path,'img-circle',$alt='')}}
-                                    
-                                    <p>
-                                       {{{ isset(Auth::user()->salutation) ? Auth::user()->salutation : '' }}} {{{ isset(Auth::user()->name) ? Auth::user()->name : '' }}}!
-                                        <small>Member since {{ date('F jS, Y', strtotime(Auth::user()->created_at))}}</small>
-                                    </p>
+                                <li>
+                                    <a href="{{ url('/users/'.Auth::user()->id) }}" class="glyphicon glyphicon-user">Profile</a>
+                                </li>
+                                <li>
+                                    <a href="{{ url('/changepasswords/create/') }}" class="glyphicon glyphicon-user">Change password</a>
+                                </li>
+                                <li>
+                                    <a href="{{ url('/logout') }}" class="glyphicon glyphicon-log-out">Sign out</a>
                                 </li>
 
-                                <li class="user-footer">
-                                    <div class="pull-left">
-                                        <a href="{{ url('/users/'.Auth::user()->id) }}" class="btn btn-default btn-flat">Profile</a>
-                                    </div>
-                                    <div class="pull-right">
-                                       <a href="{{ url('/logout') }}" class="btn btn-default btn-flat"><span class="glyphicon glyphicon-log-out"></span> Sign out</a>
-                                    </div>
-                                </li>
                             </ul>
                         </li>
+                        
                         <!-- Control Sidebar Toggle Button -->
                         <li>
                             <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
@@ -419,7 +405,22 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                              
                          </ul>
                     </li>
-               @php $pem=menuDisplayByUser($result, 'permissions','view'); @endphp
+                    @php $pem=menuDisplayByUser($result, 'ETM_details','view'); @endphp
+                    @if($pem=='true')
+                     <li  @if($segments_var[0]=='ETM_details') class="treeview active" @else class="treeview" @endif>
+                        <a href="#">
+                            <i class="fa fa-calculator" aria-hidden="true"></i> <span>@lang('menu.ETM_details.title')</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul @if($segments_var[0]=='ETM_details') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
+                         <li @if($segments_var[0]=='ETM_details') class="active" @endif><a href="{{route('ETM_details.index')}}"><i class="fa fa-calculator"></i>@lang('menu.ETM_details.title')</a>
+                            </li>
+                         </ul>
+                    </li>
+                    @endif
+                 @php $pem=menuDisplayByUser($result, 'permissions','view'); @endphp
                     @if($pem=='true')
                      <li  @if($segments_var[0]=='roles' || $segments_var[0]=='permissions' || $segments_var[0]=='settings') class="treeview active" @else class="treeview" @endif>
                         <a href="#">
@@ -429,7 +430,7 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                             </span>
                         </a>
                         <ul @if($segments_var[0]=='roles' || $segments_var[0]=='permissions' || $segments_var[0]=='settings') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
-                         <li @if($segments_var[0]=='permissions') class="active" @endif><a href="{{route('permissions.index')}}"><i class="fa fa-key"></i>@lang('menu.settings.permissions')</a>
+                         <li @if($segments_var[0]=='roles') class="active" @endif><a href="{{route('permissions.index')}}"><i class="fa fa-key"></i>@lang('menu.settings.permissions')</a>
                             </li>
                          </ul>
                     </li>
@@ -448,18 +449,14 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                 <section class="content">
                     
                     @if($errors->any())
-                    <ul class="list-group"> 
+                    <ul class="list-group" id='error_message_red'> 
                         @foreach($errors->all() as $error)
                         <li class="list-group-item alert alert-danger">{{ $error }}</li>
                         @endforeach
                     </ul>
                     @endif
                     @yield('content')
-                    
-                  
-                    
-                    
-<div class="modal fade" id="common_details" role="dialog">
+  <div class="modal fade" id="common_details" role="dialog">
   <div class="modal-dialog">
         <!-- Modal content-->
         <div class="modal-content">
@@ -491,13 +488,6 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
 </div>
                     
 @include('partials.depot_addnew')
-                    
-                    
-                    
-                    
-                    
-                    
-             
 </section>
 </div>
  </section>
@@ -538,15 +528,31 @@ $.widget.bridge('uibutton', $.ui.button);
 <script src="{{ asset(elixir('js/app.min.js')) }}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{ asset(elixir('js/pages/dashboard2.js')) }}"></script>
-<script src="{{ asset(elixir('plugins/datatables/jquery.dataTables.min.js')) }}"></script>
-<script src="{{ asset(elixir('plugins/datatables/dataTables.bootstrap.min.js')) }}"></script>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+
 <script src="{{ asset(elixir('js/demo.js')) }}"></script>
 <script src="{{ asset(elixir('js/jQueryRotate.js')) }}"></script>
+<script src="{{ asset(elixir('plugins/datatables/dataTables.bootstrap.min.js')) }}"></script>
 
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://www.datatables.net/rss.xml">
+<!--<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css">-->
 
-<script>
- $('body').on('focus',".multiple_date", function(){
+ <link rel="stylesheet" href="{{ asset('css/buttons.dataTables.min.css') }}">
+<style type="text/css" class="init"></style>
+<script type="text/javascript" src="jquery-1.12.0.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/tabletools/2.2.4/js/dataTables.tableTools.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/tabletools/2.2.2/swf/copy_csv_xls_pdf.swf"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.colVis.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.1.2/js/buttons.flash.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.1.2/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.1.2/js/buttons.print.min.js"></script>
+<script type="text/javascript">
+$('body').on('focus',".multiple_date", function(){
          $(this).datepicker({
               dateFormat: 'dd-mm-yy',
                startView: "year", 
@@ -568,7 +574,6 @@ function removeLoader(){
   });  
 }  
 </script>
-
 @stack('scripts')
 </body>
 </html>

@@ -38,17 +38,11 @@ class DepotRepository implements DepotRepositoryContract {
        $this->createLog('App\Models\Depot','App\Models\DepotLog',$id);
        $depot = Depot::findorFail($id);
        $input = $requestData->all();
-      $name = $requestData->name;
-      $sql=Depot::where([['name',$name],['id','!=',$id]])->first();
-     if(count($sql)>0)
-     {
-       return redirect()->back()->withErrors(['Name has already been taken.']);
-      } else {
-        $input['user_id'] = Auth::id();
+       $input['user_id'] = Auth::id();
        $depot->fill($input)->save();
        Session::flash('flash_message', "$depot->name Depot Updated Successfully.");
        return $depot;
-    }
+
     }
 
 

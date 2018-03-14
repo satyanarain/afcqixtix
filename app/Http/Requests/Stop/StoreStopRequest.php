@@ -25,8 +25,8 @@ class StoreStopRequest extends Request
     public function rules()
     {
             return [
-                  'stop' => 'required',
-                   'stop_id' => 'required',
+                  'stop' => 'required|unique:stops,stop',
+                   'stop_id' => 'required|unique:stops,stop_id',
                    'abbreviation' => 'required',
                    'short_name' => 'required'
              ];

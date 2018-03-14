@@ -128,18 +128,22 @@ class AccessServiceProvider extends ServiceProvider
             \App\Repositories\CrewDetail\CrewDetailRepository::class
         );
         
-        
-        
-        
-        /*
         $this->app->bind(
-            \App\Repositories\Stop\StopRepositoryContract::class,
-            \App\Repositories\Stop\StopRepository::class
+            \App\Repositories\ETMDetail\ETMDetailRepositoryContract::class,
+            \App\Repositories\ETMDetail\ETMDetailRepository::class
         );
+        
+        
         $this->app->bind(
-            \App\Repositories\Route\RouteRepositoryContract::class,
-            \App\Repositories\Route\RouteRepository::class
+            \App\Repositories\Permission\PermissionRepositoryContract::class,
+            \App\Repositories\Permission\PermissionRepository::class
         );
+    
+        $this->app->bind(
+            \App\Repositories\Role\RoleRepositoryContract::class,
+            \App\Repositories\Role\RoleRepository::class
+        );
+            /*
         $this->app->bind(
             \App\Repositories\Duty\DutyRepositoryContract::class,
             \App\Repositories\Duty\DutyRepository::class

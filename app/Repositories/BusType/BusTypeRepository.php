@@ -29,17 +29,11 @@ class BusTypeRepository implements BusTypeRepositoryContract {
        $this->createLog('App\Models\BusType','App\Models\BusTypeLog',$id);
        $bustype = BusType::findorFail($id);
        $input = $requestData->all();
-        $bus_type = $requestData->bus_type;
-      $sql=BusType::where([['bus_type',$bus_type],['id','!=',$id]])->first();
-     if(count($sql)>0)
-     {
-       return redirect()->back()->withErrors(['Name has already been taken.']);
-      } else {
-          $input['user_id'] = Auth::id();
+       $input['user_id'] = Auth::id();
        $bustype->fill($input)->save();
        Session::flash('flash_message', "$bustype->bus_type Bus Type Updated Successfully.");
        return $bustype;
-      }
+     
     }
 
 

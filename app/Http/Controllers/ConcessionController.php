@@ -267,9 +267,12 @@ $k=1;
      * @return Response
      */
     public function show($id) {
-                $concessions = DB::table('concessions')->select('*','concessions.id as id','users.name as username','services.name as name')
+                $concessions = DB::table('concessions')->select('*','concessions.id as id','users.name as username','concession_provider_masters.name as concession_provider_master_id','services.name as name','concession_masters.name as con_name','concessions.order_number as order_number')
                 ->leftjoin('users', 'users.id', '=', 'concessions.user_id')
                 ->leftjoin('services', 'concessions.service_id', '=', 'services.id')
+                ->leftjoin('concession_provider_masters', 'concession_provider_masters.id', '=', 'concessions.concession_provider_master_id')
+                ->leftjoin('concession_masters', 'concession_masters.id', '=', 'concessions.concession_master_id')
+                 ->orderby('concessions.order_number')       
                 ->get();
                  return view('concessions.index')->withConcessions($concessions);
     }
@@ -294,8 +297,15 @@ $k=1;
      * * @Author created by satya 31-01-2018 
      */
     public function update($id, UpdateConcessionRequest $request) {
+          $sql=Concession::where([['service_id',$request->service_id],['id','!=',$id]])->first();
+     if(count($sql)>0)
+     {
+      return redirect('concessions/'.$id.'/edit')->withErrors(['This Service has already been taken.']);
+      } else {
+        
         $this->concessions->update($id, $request);
         return redirect()->route('concessions.index');
+      }
     }
     public function getDuty($id) {
         if($id!='')

@@ -13,7 +13,8 @@ class StoreRoleRequest extends Request
      */
     public function authorize()
     {
-        return auth()->user()->hasRole('administrator');
+        return true;
+        //return auth()->user()->can('user-create');
     }
 
     /**
@@ -23,9 +24,11 @@ class StoreRoleRequest extends Request
      */
     public function rules()
     {
-        return [
-            'name' => 'required|unique:roles',
-            'description' => 'required'
-        ];
+        
+            return [
+                   'bus_type' => 'required|unique:roles',
+                   'description' => 'required'                
+             ];
+        
     }
 }

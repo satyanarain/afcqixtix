@@ -34,7 +34,10 @@ class StopController extends Controller
      */
     public function index()
     {
-    $stops = Stop::all();
+    $stops = DB::table('stops')->select('*','stops.id as id','stops.created_at as created_at','stops.updated_at as updated_at')
+      ->leftjoin('users','users.id','stops.user_id')
+      ->orderBy('stops.id','desc')->get();
+  
     return view('stops.index')->withStops($stops);
    
     }

@@ -1,25 +1,44 @@
 <div class="form-group">
-         {!! Form::label('inspector_remark', Lang::get('Inspector Remark'), ['class' => 'control-label required']) !!}
-         {!! Form::text('inspector_remark', null, ['class' => 'form-control','required' => 'required']) !!}
+         {!! Form::label('inspector_remark', Lang::get('Inspector Remark'), ['class' => 'col-md-3 control-label']) !!}
+          <div class="col-md-7 col-sm-12 required">
+         {!! Form::text('inspector_remark', null, ['class' => 'col-md-6 form-control','required' => 'required']) !!}
+</div>
 </div>
 <div class="form-group">
-         {!! Form::label('short_remark', Lang::get('Short Remark'), ['class' => 'control-label required']) !!}
-         {!! Form::text('short_remark', null, ['class' => 'form-control','required' => 'required']) !!}
+         {!! Form::label('short_remark', Lang::get('Short Remark'), ['class' => 'col-md-3 control-label']) !!}
+          <div class="col-md-7 col-sm-12 required">
+         {!! Form::text('short_remark', null, ['class' => 'col-md-6 form-control','required' => 'required']) !!}
+</div>
 </div>
 <div class="form-group">
-         {!! Form::label('remark_description', Lang::get('Remark Description'), ['class' => 'control-label required']) !!}
-         {!! Form::text('remark_description', null, ['class' => 'form-control','required' => 'required']) !!}
+         {!! Form::label('remark_description', Lang::get('Remark Description'), ['class' => 'col-md-3 control-label']) !!}
+          <div class="col-md-7 col-sm-12 required">
+         {!! Form::text('remark_description', null, ['class' => 'col-md-6 form-control','required' => 'required']) !!}
 </div>
+</div>
+
 <div class="form-group">
-    <div class="form-group">
     @if($inspector_remarks->order_number!='')
-     {!! Form::label('order_number', Lang::get('Order Number'), ['class' => 'control-label required']) !!}
-    {!! Form::text('order_number',null, ['class' => 'form-control','readonly'=>readonly]) !!}
-     @else
-    @php $sql= maxId('inspector_remarks','order_number') @endphp
-     {!! Form::label('order_number', Lang::get('Order Number'), ['class' => 'control-label required']) !!}
-    {!! Form::text('order_number', $sql, ['class' => 'form-control','readonly'=>readonly]) !!}
-  @endif
+    {!! Form::label('order_number', Lang::get('Order Number'), ['class' => 'col-md-3 control-label']) !!}
+    <div class="col-md-7 col-sm-12 required">
+        {!! Form::text('order_number',null, ['class' => 'col-md-6 form-control','readonly'=>readonly]) !!}
     </div>
+    @else
+    @php $sql= maxId('inspector_remarks','order_number') @endphp
+    {!! Form::label('order_number', Lang::get('Order Number'), ['class' => 'col-md-3 control-label']) !!}
+    <div class="col-md-7 col-sm-12 required">
+        {!! Form::text('order_number', $sql, ['class' => 'col-md-6 form-control','readonly'=>readonly]) !!}
+    </div>
+    @endif
 </div>
-{!! Form::submit(Lang::get('common.titles.save'), ['class' => 'btn btn-success']) !!}
+
+<div class="form-group">
+    <div class="col-md-3" style="margin-right: 15px;"></div>
+    {{ Form::submit('Save', array('class' => 'btn btn-success pull-left','required' => 'required')) }}
+    <div class="col-md-9">
+        <div class="col-md-7 col-sm-12">
+        </div>
+        <div class="col-md-9" style="padding-left: 0px;">
+        </div>
+    </div>
+</div> 

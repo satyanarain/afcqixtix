@@ -59,8 +59,16 @@ class ServiceController extends Controller
      */
     public function store(StoreServiceRequest $servicesRequest)
     {
+  
+       $sql=Service::where([['bus_type_id',$servicesRequest->bus_type_id],['name',$servicesRequest->name]])->first();
+     if(count($sql)>0)
+     {
+       return redirect()->back()->withErrors(['Bus type and service name has already been taken.']);
+      } else {    
+        
         $getInsertedId = $this->services->create($servicesRequest);
         return redirect()->route('services.index');         
+    }
     }
     /**
      * Display the specified resource.
@@ -83,8 +91,9 @@ class ServiceController extends Controller
      */
     public function edit($id)
     {
-       $services=Service::findOrFail($id);
+      $services=Service::findOrFail($id);
       return view('services.edit')->withServices($services);
+    
     }
     /**
      * Update the specified resource in storage.
@@ -94,8 +103,14 @@ class ServiceController extends Controller
      */
     public function update($id, UpdateServiceRequest $request)
     {
-        $this->services->update($id, $request);
+        $sql=Service::where([['bus_type_id',$request->bus_type_id],['name',$request->name],['id','!=',$id]])->first();
+     if(count($sql)>0)
+     {
+       return redirect()->back()->withErrors(['Bus type and service name has already been taken.']);
+      } else {    
+          $this->services->update($id, $request);
         return redirect()->route('services.index');
+      }
     }
 
     /**

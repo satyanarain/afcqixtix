@@ -93,11 +93,17 @@ class BusTypesController extends Controller
      */
     public function update($id, UpdateBusTypeRequest $request)
     {
+    $bus_type = $request->bus_type;
+     $sql=BusType::where([['bus_type',$bus_type],['id','!=',$id]])->first();
+     if(count($sql)>0)
+     {
+       return redirect()->back()->withErrors(['Bus type has already been taken.']);
+      } else { 
+        
         $this->bustypes->update($id, $request);
         return redirect()->route('bus_types.index');
     }
-    
-    
+    } 
     public function sortOrder($id) {
         $array = explode(',', $id);
        $k=1;

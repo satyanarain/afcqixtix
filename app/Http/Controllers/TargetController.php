@@ -61,10 +61,17 @@ class TargetController extends Controller {
      * @return Response
      */
     public function store(StoreTargetRequest $targetsRequest) {
-        $getInsertedId = $this->targets->create($targetsRequest);
+     
+      $sql=Target::where([['route_id',$targetsRequest->route_id],['duty_id',$targetsRequest->duty_id],['shift_id',$targetsRequest->shift_id]])->first();
+    
+     if(count($sql)>0)
+     {
+     return view('targets.create')->withErrors(['This route,duty number and shift has already been taken.']);
+      } else {
+          $getInsertedId = $this->targets->create($targetsRequest);
         return redirect()->route('targets.index');
     }
-
+    }
     /**
      * Display the specified resource.
      *
@@ -100,18 +107,29 @@ class TargetController extends Controller {
      * @return Response
      */
     public function update($id, UpdateTargetRequest $request) {
+  $sql=Target::where([['route_id',$request->route_id],['duty_id',$request->duty_id],['shift_id',$request->shift_id],['id','!=',$id]])->first();
+ 
+     if(count($sql)>0)
+     {
+      return redirect('targets/'.$id.'/edit')->withErrors(['This route and duty number has already been taken.']);
+      } else {
+         
         $this->targets->update($id, $request);
         return redirect()->route('targets.index');
+      }
     }
     public function getDuty($id) {
-        if($id!='')
+               if($id!='')
         {
         $sql = DB::table('duties')->select('*')->where('route_id', '=', $id)->get();
+         $sql_shift = DB::table('shifts')->select('*')->get();
         if(count($sql)>0)
         {
 ?>
-         <label class="required">Duty</label>
-        <select class="form-control" name="duty_id">
+<div class="form-group">
+<label class="col-md-3 control-label">Duty</label>
+         <div class="col-md-7 col-sm-12 required">
+        <select class="col-md-6 form-control" name="duty_id">
         <?php
         foreach ($sql as $value) {
         ?>
@@ -119,8 +137,9 @@ class TargetController extends Controller {
 
         <?php } ?>
                </select> 
-
-        <?php
+</div>
+</div>
+ <?php
     }
     }
     }

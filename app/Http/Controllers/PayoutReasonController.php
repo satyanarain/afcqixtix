@@ -224,8 +224,15 @@ class PayoutReasonController extends Controller {
      * * @Author created by satya 5.2.2018
      */
     public function update($id, UpdatePayoutReasonRequest $request) {
+           $payout_reason = $request->payout_reason;
+      $sql=PayoutReason::where([['payout_reason',$payout_reason],['id','!=',$id]])->first();
+     if(count($sql)>0)
+     {
+       return redirect()->back()->withErrors(['Payout reason has already been taken.']);
+      } else { 
         $this->payout_reasons->update($id, $request);
         return redirect()->route('payout_reasons.index');
+    }
     }
  
 }

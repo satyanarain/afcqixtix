@@ -17,9 +17,12 @@ use DB;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\DutyCreated;
 use App\Traits\FormatDates;
+use App\Traits\activityLog;
 
 class DutyRepository implements DutyRepositoryContract {
    use FormatDates;
+   use activityLog;
+   
     public function find($id) {
         return Duty::join('routes', 'users.user_type', '=', 'roles.id')->first(1);
     }
@@ -38,6 +41,7 @@ class DutyRepository implements DutyRepositoryContract {
     }
 
     public function update($id, $requestData) {
+        $this->createLog('App\Models\Duty','App\Models\DutyLog',$id);
         $duties = Duty::findorFail($id);
         $input = $requestData->all();
         $userid = Auth::id();

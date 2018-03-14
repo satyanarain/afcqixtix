@@ -10,7 +10,7 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{headingMain()}}</h3>
-             {{ createButton('create','Add') }}
+             {{-- createButton('create','Add') --}}
             </div>
            @include('partials.message')
             <!-- /.box-header -->

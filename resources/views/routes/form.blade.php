@@ -1,43 +1,173 @@
-<div class="form-group">
-        {!! Form::label('route', Lang::get('Route'), ['class' => 'control-label required']) !!}
-        {!! Form::text('route', null, ['class' => 'form-control','required' => 'required']) !!}
+<div class="input-group col-md-12">
+   {!! Form::label('route', Lang::get('Route'), ['class' => 'control-label','style'=>"margin-bottom:10px;"]) !!}
+   <div class="input-group col-md-12 required">
+   {!! Form::text('route', null, ['class' => 'form-control','required' => 'required']) !!}
+   </div>
 </div>
-<div class="form-group">
-        {!! Form::label('path', Lang::get('Path'), ['class' => 'control-label required']) !!}
-        {!! Form::text('path', null, ['class' => 'form-control','required' => 'required']) !!}
-</div>
-<div class="form-group">
-    {!! Form::label('direction', Lang::get('Direction'), ['class' => 'control-label required']) !!}<br>
-    {!! Form::radio('direction', 1, ['class' => 'form-control']) !!} Up&nbsp;
-    {!! Form::radio('direction', 0, ['class' => 'form-control']) !!} Down
-    
-</div>
-<div class="form-group">
-        {!! Form::label('default_path', Lang::get('Default Path'), ['class' => 'control-label']) !!}<br>
-        {!! Form::checkbox('default_path',1,isset($routes->default_path) ? $routes->default_path : checked, ['class' => 'form-control1']) !!}
-</div>
-@php $stops=displayList('stops','stop')@endphp
-<div class="form-group">
-        {!! Form::label('stop_id', Lang::get('Stops'), ['class' => 'control-label required']) !!}
-        {!! Form::select('stop_id',$stops,isset($routes->stop_id) ? $routes->stop_id : selected,['class' => 'form-control','required' => 'required']) !!}
 
+<div class="path-section">
+    <p class="path-section-heading">Path</p>
+     <div class="path-section-content">
+        <div class="input-group col-md-12">
+            {!! Form::label('source', Lang::get('Source'), ['class' => 'control-label','style'=>"margin-bottom:10px;"]) !!}
+            @php $stops=displayList('stops','stop','stop','asc')@endphp
+            
+            {!! Form::select('source',$stops,isset($routes->source) ? $routes->source : selected,['class' => 'form-control required','required' => 'required','placeholder'=>'Select Source']) !!}
+        </div>   
+        <div class="input-group col-md-12">
+            {!! Form::label('destination', Lang::get('Destination'), ['class' => 'control-label','style'=>"margin-bottom:10px;"]) !!}
+            @php $stops=displayList('stops','stop','stop','asc') @endphp
+            {!! Form::select('destination',$stops,isset($routes->destination) ? $routes->destination : selected,['class' => 'form-control required','required' => 'required','placeholder'=>'Select Destination','onchange'=>'checkDest(this.value)']) !!}
+        </div>   
+        <div class="input-group col-md-12">
+            {!! Form::label('via', Lang::get('Via'), ['class' => 'control-label','style'=>"margin-bottom:10px;"]) !!}
+            @php $stops=displayList('stops','stop','stop','asc') @endphp
+            {!! Form::select('via',$stops,isset($routes->via) ? $routes->via : selected,['class' => 'form-control required','required' => 'required','placeholder'=>'Select Via','onchange'=>'checkDest_via(this.value)']) !!}
+        </div> 
+
+    </div>
 </div>
-<div class="form-group">
-        {!! Form::label('stage_number', Lang::get('Stage Number'), ['class' => 'control-label required']) !!}
-        {!! Form::text('stage_number', null, ['class' => 'form-control','required' => 'required']) !!}
+
+<div class="input-group col-md-12">
+      <div class="col-md-12" style="padding:0px;  margin-bottom:10px;">
+            {!! Form::label('route', Lang::get('Default Path'), ['class' => 'control-label','style'=>"margin-bottom:10px;"]) !!}</br>
+            <input type="checkbox" value='Yes' name="default_path"  > 
+          
 </div>
-<div class="form-group">
-    {!! Form::label('distance', Lang::get('Distance(km)'), ['class' => 'control-label required']) !!}
-    {!! Form::text('distance', null, ['class' => 'form-control']) !!}
 </div>
-<div class="form-group">
-    {!! Form::label('hot_key', Lang::get('Hot Key'), ['class' => 'control-label required']) !!}
-    {!! Form::text('hot_key', null, ['class' => 'form-control']) !!}
+
+<div class="input-group col-md-12">
+<div class="col-md-12" style="padding:0px;  margin-bottom:10px;">
+  {!! Form::label('route', Lang::get('Direction'), ['class' => 'control-label','style'=>"margin-bottom:10px;"]) !!}</br>
+ {!! Form::select('direction',array('Up'=>'Up','Down'=>'Down',),isset($routes->direction) ? $routes->direction : selected,['class' => 'form-control required','required' => 'required','placeholder'=>'Select Direction']) !!}
 </div>
-<div class="form-group">
-    {!! Form::label('is_this_by', Lang::get('Is this via stop of the path? '), ['class' => 'control-label required']) !!}<br>
-    {!! Form::radio('is_this_by', 0, ['class' => 'form-control']) !!} No&nbsp;
-    {!! Form::radio('is_this_by', 1, ['class' => 'form-control']) !!} Yes
+</div>
+
+<div class="path-section">
+    <p class="path-section-heading">Stop Details</p>
+
+    <div class="path-section-content">
+<div class="input-group col-md-12">
+<div class="row" id="after-add-more">
+  <div class="form-group ">
+   <div class="col-md-9" style="padding:0px 0px 0px 30px;">
+            <div class="btn btn-success add-more pull-left" type="button" id="add_field_button_classes"><i class="glyphicon glyphicon-plus" ></i> Add</div>
+            <div class="col-md-9" style="padding-left: 0px;">
+           </div>
+        </div>
+      
+    </div> 
+</div>
+<div id="control-group" style="padding-left:0px;" class="col-md-12" >
+     <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;">Stop</div>
+       <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;">Stage Number</div>
+       <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;">Distance(km.)</div>
+       <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;">Hot Key</div>
+      
+</div>
+<div id="fare_list">
+<div class="copy show" id="input_fields_wrap_classes">
+       <div id="control-group" style="padding-left:0px;  margin-bottom:10px;" class="col-md-12" >
+       <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;">
+           @php $stops=displayList('stops','stop','stop','asc')@endphp
+            {!! Form::select('stop_id[]',$stops,isset($routes->stop_id) ? $routes->stop_id : selected,['class' => 'form-control','required' => 'required','placeholder'=>'Select Stop']) !!}
+        </div>
+       <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="stage_number[]" class="form-control" placeholder="Stage Number" required="required" onkeypress="return isIntegerKey(event)"></div>
+       <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="distance[]" class="form-control" placeholder="Distance(km)" required="required" onkeypress="return isNumberKey(event)"></div>
+       <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="hot_key[]" class="form-control" placeholder="Hot Key" required="required" onkeypress="return isIntegerKey(event)"></div>
+      
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="input-group col-md-12">
+<div class="col-md-12" style="padding:0px;  margin-bottom:10px;">
+  {!! Form::label('is_this_by', Lang::get('Is this via stop of the path ?'), ['class' => 'control-label','style'=>"margin-bottom:10px;"]) !!}</br>
+ {!! Form::select('is_this_by',array('Yes'=>'Yes','No'=>'No'),isset($routes->is_this_by) ? $routes->is_this_by: selected,['class' => 'form-control','required' => 'required','placeholder'=>'Select is this via stop of the path ?']) !!}
+</div>
+</div>
+<div class="input-group col-md-12" id="button">
+  {!! Form::submit(Lang::get('common.titles.save'), ['class' => 'btn btn-success']) !!}
+</div>
+ </div>
+
+<script type="text/javascript">
+function checkDest(id)
+{
+var source= $("#source").val();
+var destination= $("#destination").val();
+  if(source==id)
+  {
+   alert("Please select source and destination different.");  
+   $("#destination").val('');
+  }
+ }
+function checkDest_via(id)
+{
+var source= $("#source").val();
+var destination= $("#destination").val();
+  if(source==id)
+  {
+   alert("Please select source and via different.");  
+    $("#via").val('');
+  }else if(destination==id)
+  {
+   alert("Please select destination and via different.");  
+   $("#via").val('');
+  }
+ }
+ 
+ 
+ 
+ 
+ 
+function fareList(id)
+{
+
+if(id!='')
+{
+  $.ajax({
+          type: "get",
+               url:'/routes/fare_list/'+id,
+            success:function(data)
+            {
+               // alert(data);
+              $('#fare_list').html(data);
+            }
+            
+        });
+   
+   }   
+}
     
-</div>
-{!! Form::submit(Lang::get('common.titles.save'), ['class' => 'btn btn-success']) !!}
+ $(document).ready(function() {
+    var max_fields      = 10000; //maximum input boxes allowed
+    var wrapper         = $("#input_fields_wrap_classes"); //Fields wrapper
+    var add_button      = $("#add_field_button_classes"); //Add button ID
+    var add_button      = $("#add_field_button_classes");
+ 
+    var x = 1;  
+  $("#add_field_button_classes").click(function(e){ //on add input button click
+     
+        e.preventDefault();
+         if(x < max_fields){ //max input box allowed
+            x++; //text box increment
+$("#input_fields_wrap_classes").append('<div id="div_remove_field'+ x +'" style="padding-left:0px;  margin-bottom:10px;" class="col-md-12">\n\
+ <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;">{!! Form::select('stop_id[]',$stops,isset($routes->stop_id) ? $routes->stop_id : selected,['class' => 'form-control','required' => 'required','placeholder'=>'Select Stop']) !!}</div>\n\
+  <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="stage_number[]" class="form-control" placeholder="Stage Number" required="required" onkeypress="return isIntegerKey(event)"></div>\n\
+<div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="distance[]" class="form-control" placeholder="Distance(km)" required="required" onkeypress="return isNumberKey(event)"></div>\n\
+<div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="hot_key[]" class="form-control" placeholder="Hot Key" required="required" onkeypress="return isIntegerKey(event)"></div>\n\
+<button class="btn btn-danger remove" type="button" id="remove_field'+ x+'" onclick="removeFunction(this.id)"><i class="glyphicon glyphicon-remove"></i> Remove</button></div>'); //add input box
+   }
+ });
+});
+function removeFunction(id)
+{
+
+       $("#"+id).parent('div').remove();
+      $("#div_"+id).remove();
+    
+}
+</script>

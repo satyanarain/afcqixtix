@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Route;
 
 use App\Http\Requests\Request;
-
+use Illuminate\Validation\Validation;
 class StoreRouteRequest extends Request
 {
     /**
@@ -26,16 +26,17 @@ class StoreRouteRequest extends Request
     public function rules()
     {
             return [
-                   'route' => 'required',
-                   'path' => 'required',
+                //   'route' => 'required',
+                   'source' => 'required',
                    'direction' => 'required',
+                    'route' => 'unique_with:routes, route,direction',
                    //'default_path' => 'required',
                    //'default_path' => 'required',
-                   'stop_id' => 'required',
-                   'stage_number' => 'required',
-                   'distance' => 'required',
-                   'hot_key' => 'required',
-                   'is_this_by' => 'required'
+//                   'stop_id' => 'required',
+//                   'stage_number' => 'required',
+//                   'distance' => 'required',
+//                   'hot_key' => 'required',
+//                   'is_this_by' => 'required'
              ];
         
     }

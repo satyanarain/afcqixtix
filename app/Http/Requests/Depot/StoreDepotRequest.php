@@ -30,7 +30,7 @@ class StoreDepotRequest extends Request
                     'depot_id' => 'required|unique:depots,depot_id',
                    'short_name' => 'required',
                    'depot_location' => 'required',
-                   'default_service' => 'required'
+                   'service_id' => 'required'
              ];
         
     }

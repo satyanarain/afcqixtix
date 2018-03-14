@@ -25,6 +25,7 @@
                         <td><b>Short Name</b></td>
                         <td class="table_normal">{{ $value->short_name }}</td>
                     </tr>
+                      @include('partials.userhistory')
                 </table>  
 
                 <div class="modal-footer">

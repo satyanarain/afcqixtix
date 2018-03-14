@@ -21,7 +21,7 @@
                         <td><b>Bus Type</b></td>
                         <td class="table_normal">{{ $value->bus_type }}</td>
                     </tr>
-                    
+                    @include('partials.userhistory')
                 </table>  
 
                 <div class="modal-footer">

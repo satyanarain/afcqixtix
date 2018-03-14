@@ -45,6 +45,17 @@ function dateView($date_blank) {
         ;
     }
 }
+
+function displayIdBaseName($table = '', $id = '', $fieldname = '') {
+    echo $sql = DB::table($table)->where('id', '=', $id)->first();
+    if ($sql->$fieldname != '') {
+        echo $sql->$fieldname;
+    } else {
+        echo "N/A";
+    }
+}
+
+
 function userHistory($user='',$created_at='',$updated_at='')
 { ?>
 <tr>
@@ -62,6 +73,60 @@ function userHistory($user='',$created_at='',$updated_at='')
 <?php
 
 }
+
+
+function menuCreate($controllerName,$create='',$edit='',$view='',$id='',$controllerName_Value)
+{ ?>
+
+   <tr>
+     <td align="center" width="15%">
+       <input type="checkbox" id="<?php echo "checkAll".$controllerName . $id; ?>" onclick="checkAll(this,this.id);">&nbsp;
+      
+         <?php
+                  $array=array('_','-');
+                 $controllerName_heading= str_replace($array,' ', $controllerName);
+               ?></td>
+                <td width="30%">
+                    <b>
+                   <input  class="<?php echo "checkAll". $controllerName . $id; ?>" type="checkbox" name="<?php echo $controllerName . "[]"; ?>" value="<?php echo $controllerName;?>" <?php if (in_array($controllerName, explode(',', $controllerName_Value))) { ?> checked <?php } ?> onchange="showMenu(this.id)" id="<?php echo $controllerName . $id; ?>">
+                   &nbsp;&nbsp;
+                  <?php
+                  $array=array('_','-');
+                 $controllerName_heading= str_replace($array,' ', $controllerName);
+                 if($controllerName_heading=='Changepassword')
+                 {
+                    echo  "Change Password";
+                 }else{
+                   echo ucwords(substr($controllerName_heading,0,-1)); 
+                  }
+                   ?></b>
+   </td>
+                 <td align="left" valign="top" width="55%">
+                    <span id="<?php echo "show" . $controllerName . $id; ?>"<?php if (in_array($controllerName, explode(',', $controllerName_Value))) { ?>  <?php } else { ?>class="display_none"<?php } ?>>
+                     <table class="table_normal_100">
+                       <tr>
+                           <?php if($create!='')
+                           { ?>
+                          <td><input class="<?php echo "checkAll".$controllerName . $id; ?>" type="checkbox" name="<?php echo $controllerName . "[]" ?>" value="<?php echo $create; ?>" <?php if (in_array('create', explode(',', $controllerName_Value))) { ?> checked="checked" <?php } ?>>&nbsp;&nbsp;Add</td>
+                         <?php  } ?>
+                           <?php if($edit!='')
+                           { ?>
+                          <td><input class="<?php echo "checkAll".$controllerName . $id; ?>" type="checkbox" name="<?php echo $controllerName . "[]" ?>" value="<?php echo $edit; ?>" <?php if (in_array('edit', explode(',', $controllerName_Value))) { ?> checked="checked" <?php } ?>>&nbsp;&nbsp;Edit</td>
+                          <?php  } ?>
+                              <?php if($view!='')
+                           { ?>
+                          <td><input class="<?php echo "checkAll".$controllerName . $id; ?>" type="checkbox" name="<?php echo $controllerName . "[]" ?>" value="<?php echo $view; ?>"  <?php if (in_array('view', explode(',', $controllerName_Value))) { ?> checked="checked" <?php } ?> id="<?php echo "showview" . $controllerName . $id; ?>">&nbsp;&nbsp;View</td>
+                           <?php  } ?>
+                       </tr>   
+                   </table>  
+               </span>
+           </td>
+       </tr>  
+    
+    <?php
+}
+
+
         
 }
 

@@ -38,8 +38,9 @@ class DepotsController extends Controller
     public function index()
     {
  
-      $depot = DB::table('depots')->select('*','depots.id as id','depots.created_at as created_at','depots.updated_at as updated_at')
+      $depot = DB::table('depots')->select('*','depots.id as id','depots.name as name','services.name as service_name','depots.created_at as created_at','depots.updated_at as updated_at')
       ->leftjoin('users','users.id','depots.user_id')
+      ->leftjoin('services','depots.service_id','services.id')
       ->orderBy('depots.id','desc')->get();
       return view('depots.index')->withDepots($depot);
    
@@ -74,7 +75,11 @@ class DepotsController extends Controller
      */
    public function show($id)
    {
-   $depot=Depot::findOrFail($id);
+      $depot = DB::table('depots')->select('*','depots.id as id','depots.name as name','services.name as service_name','depots.created_at as created_at','depots.updated_at as updated_at')
+      ->leftjoin('users','users.id','depots.user_id')
+      ->leftjoin('services','depots.service_id','services.id')
+       ->where('depots.id',$id)       
+      ->orderBy('depots.id','desc')->first();
     return view('depots.show')->withDepot($depot);
      }
 
@@ -86,7 +91,11 @@ class DepotsController extends Controller
      */
     public function edit($id)
     {
-       $depot=Depot::findOrFail($id);
+     $depot = DB::table('depots')->select('*','depots.name as name','services.name as service_name','depots.created_at as created_at','depots.updated_at as updated_at','depots.id as id')
+      ->leftjoin('users','users.id','depots.user_id')
+      ->leftjoin('services','depots.service_id','services.id')
+       ->where('depots.id',$id)       
+      ->orderBy('depots.id','desc')->first();
       return view('depots.edit')->withDepot($depot);
     }
 
@@ -98,8 +107,19 @@ class DepotsController extends Controller
      */
     public function update($id, UpdateDepotRequest $request)
     {
-        $this->depots->update($id, $request);
+      $name = $request->name;
+      $depot_id = $request->depot_id;
+      $sql=Depot::where([['name',$name],['id','!=',$id]])->first();
+      $depot_id=Depot::where([['depot_id',$depot_id],['id','!=',$id]])->first();
+       if(count($sql)>0)
+     {
+       return redirect()->back()->withErrors(['Depot name has already been taken.']);
+      } else if($depot_id>0){
+       return redirect()->back()->withErrors(['Depot ID has already been taken.']);
+     } else { 
+         $this->depots->update($id, $request);
         return redirect()->route('depots.index');
+    }
     }
 
     /**

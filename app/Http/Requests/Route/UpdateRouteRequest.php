@@ -26,15 +26,8 @@ class UpdateRouteRequest extends Request
         
             return [
                    'route' => 'required',
-                   'path' => 'required',
-                   'direction' => 'required',
-                   //'default_path' => 'required',
-                   //'default_path' => 'required',
-                   'stop_id' => 'required',
-                   'stage_number' => 'required',
-                   'distance' => 'required',
-                   'hot_key' => 'required',
-                   'is_this_by' => 'required'
+                   'source' => 'required',
+                   'direction' => 'required'
              ];
         
     }

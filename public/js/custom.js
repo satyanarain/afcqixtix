@@ -1,8 +1,36 @@
+ function showHide(id) {
+
+    	var ele = document.getElementById("form"+id);
+
+    	var text = document.getElementById("plusminusbutton"+id);
+
+    	if(ele.style.display == "block") {
+
+        		ele.style.display = "none";
+
+    		text.innerHTML = "+";
+
+      	}
+
+    	else {
+
+    		ele.style.display = "block";
+
+    		text.innerHTML = "-";
+}
+} 
+
 $(document).ready(function(){	
      setTimeout(function() {
           $('#successMessage').fadeOut('fast');
         }, 5000); // <-- time in milliseconds
       });
+$(document).ready(function(){	
+     setTimeout(function() {
+          $('#error_message_red').fadeOut('fast');
+        }, 5000); // <-- time in milliseconds
+      });
+      
 function findDuty(id)
  {
  if(id!='')    
@@ -12,6 +40,7 @@ function findDuty(id)
    url:"/targets/getduties/"+id,
    success:function(data)
    {
+     //  alert(data);
     $("#duty").show();  
     $("#duty").html(data);
        

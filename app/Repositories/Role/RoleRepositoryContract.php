@@ -6,7 +6,6 @@ interface RoleRepositoryContract
     
     public function listAllRoles();
 
-    public function allPermissions();
 
     public function allRoles();
 

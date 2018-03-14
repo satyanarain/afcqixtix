@@ -4,20 +4,14 @@
 {{BreadCrumb()}}
 @stop
 @section('content')
-<div class="row">
-    <div class="col-xs-12">
-   
-        <div class="box">
-            <div class="box-header">
-              <h3 class="box-title">{{headingMain()}}</h3>
-           </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-               {!! Form::model($trip_cancellation_reasons, [
+ @include('partials.form_header')
+       {!! Form::model($trip_cancellation_reasons, [
         'method' => 'PATCH',
         'route' => ['trip_cancellation_reasons.update', $trip_cancellation_reasons->id],
         'files'=>true,
-        'enctype' => 'multipart/form-data'
+        'enctype' => 'multipart/form-data',
+         'class'=>'form-horizontal',
+         'autocomplete'=>'0ff'
         ]) !!}
                @include('trip_cancellation_reasons.form', ['submitButtonText' => Lang::get('user.headers.update_submit')])
 

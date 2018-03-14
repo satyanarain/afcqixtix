@@ -1,23 +1,38 @@
 @php $services=displayList('services','name')@endphp
 <div class="form-group">
-        {!! Form::label('service_id', Lang::get('Service'), ['class' => 'control-label required']) !!}
-        {!! Form::select('service_id',$services,isset($concession_fare_slabs->service_id) ? $concession_fare_slabs->service_id : selected,['class' => 'form-control','required' => 'required','onchange'=>'findDuty(this.value)','placeholder'=>"Select Service"]) !!}
+        {!! Form::label('service_id', Lang::get('Service'), ['class' => 'col-md-3 control-label']) !!}
+           <div class="col-md-7 col-sm-12 required">
+        {!! Form::select('service_id',$services,isset($concession_fare_slabs->service_id) ? $concession_fare_slabs->service_id : selected,['class' => 'col-md-6 form-control','required' => 'required','onchange'=>'findDuty(this.value)','placeholder'=>"Select Service"]) !!}
 
 </div>
-<div class="form-group">
-        {!! Form::label('percentage', Lang::get('Percentage'), ['class' => 'control-label required']) !!}<br>
-         {!! Form::number('percentage', null, ['class' => 'form-control','required' => 'required','onkeypress'=>'return isNumberKey(event)']) !!}
 </div>
 <div class="form-group">
-        {!! Form::label('stage_from', Lang::get('Stage From'), ['class' => 'control-label required','onkeypress'=>'return isNumberKey(event)']) !!}<br>
-         {!! Form::text('stage_from', null, ['class' => 'form-control','required' => 'required','onkeypress'=>'return isNumberKey(event)']) !!}
+        {!! Form::label('percentage', Lang::get('Percentage'), ['class' => 'col-md-3 control-label']) !!}   <div class="col-md-7 col-sm-12 required">
+         {!! Form::number('percentage', null, ['class' => 'col-md-6 form-control','required' => 'required','onkeypress'=>'return isNumberKey(event)']) !!}
+</div>
 </div>
 <div class="form-group">
-        {!! Form::label('stage_to', Lang::get('Stage To'), ['class' => 'control-label required','onkeypress'=>'return isNumberKey(event)']) !!}<br>
-         {!! Form::text('stage_to', null, ['class' => 'form-control','required' => 'required','onkeypress'=>'return isNumberKey(event)']) !!}
+        {!! Form::label('stage_from', Lang::get('Stage From'), ['class' => 'col-md-3 control-label','onkeypress'=>'return isNumberKey(event)']) !!}   <div class="col-md-7 col-sm-12 required">
+         {!! Form::text('stage_from', null, ['class' => 'col-md-6 form-control','required' => 'required','onkeypress'=>'return isIntegerKey(event)']) !!}
+</div>
 </div>
 <div class="form-group">
-        {!! Form::label('fare', Lang::get('Fare'), ['class' => 'control-label required','onkeypress'=>'return isNumberKey(event)']) !!}<br>
-         {!! Form::text('fare', null, ['class' => 'form-control','required' => 'required','onkeypress'=>'return isNumberKey(event)']) !!}
+        {!! Form::label('stage_to', Lang::get('Stage To'), ['class' => 'col-md-3 control-label','onkeypress'=>'return isNumberKey(event)']) !!}   <div class="col-md-7 col-sm-12 required">
+         {!! Form::text('stage_to', null, ['class' => 'col-md-6 form-control','required' => 'required','onkeypress'=>'return isIntegerKey(event)']) !!}
 </div>
-{!! Form::submit(Lang::get('common.titles.save'), ['class' => 'btn btn-success']) !!}
+</div>
+<div class="form-group">
+        {!! Form::label('fare', Lang::get('Fare'), ['class' => 'col-md-3 control-label','onkeypress'=>'return isNumberKey(event)']) !!}   <div class="col-md-7 col-sm-12 required">
+         {!! Form::text('fare', null, ['class' => 'col-md-6 form-control','required' => 'required','onkeypress'=>'return isNumberKey(event)']) !!}
+</div>
+</div>
+<div class="form-group">
+    <div class="col-md-3" style="margin-right: 15px;"></div>
+    {{ Form::submit('Save', array('class' => 'btn btn-success pull-left','required' => 'required')) }}
+    <div class="col-md-9">
+        <div class="col-md-7 col-sm-12">
+        </div>
+        <div class="col-md-9" style="padding-left: 0px;">
+        </div>
+    </div>
+</div> 

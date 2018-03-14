@@ -151,8 +151,15 @@ class DenominationController extends Controller {
      * * @Author created by satya 5.2.2018
      */
     public function update($id, UpdateDenominationRequest $request) {
+           $denomination_master_id = $request->denomination_master_id;
+      $sql=Denomination::where([['denomination_master_id',$denomination_master_id],['id','!=',$id]])->first();
+     if(count($sql)>0)
+     {
+       return redirect()->back()->withErrors(['Denomination has already been taken.']);
+      } else { 
         $this->denominations->update($id, $request);
         return redirect()->route('denominations.index');
+    }
     }
  
 }

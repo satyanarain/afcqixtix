@@ -231,8 +231,15 @@ class TripCancellationReasonController extends Controller {
      * * @Author created by satya 4.2.2018
      */
     public function update($id, UpdateTripCancellationReasonRequest $request) {
-        $this->trip_cancellation_reasons->update($id, $request);
+        
+        $trip_cancellation_reason_category_master_id = $request->trip_cancellation_reason_category_master_id;
+     $sql=TripCancellationReason::where([['trip_cancellation_reason_category_master_id',$trip_cancellation_reason_category_master_id],['id','!=',$id]])->first();
+     if(count($sql)>0)
+     {
+       return redirect()->back()->withErrors(['This trip cancellation reason has already been taken.']);
+      } else { 
+          $this->trip_cancellation_reasons->update($id, $request);
         return redirect()->route('trip_cancellation_reasons.index');
     }
- 
+    }
 }
