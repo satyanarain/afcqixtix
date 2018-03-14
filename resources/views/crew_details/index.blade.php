@@ -50,7 +50,7 @@ function statusUpdate(id)
 {
  $.ajax({
     type:'get',
-    url:'/user/statusupdate/'+id,
+    url:'/crew_details/statusupdate/'+id,
    success:function(data)
     {
    

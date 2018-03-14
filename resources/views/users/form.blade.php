@@ -1,7 +1,7 @@
 <div class="col-md-12">
     <div class="nav-tabs-custom">
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#activity" data-toggle="tab">Role</a></li>
+            <li class="active"><a href="#activity" data-toggle="tab">Information</a></li>
              @if($user>id!='')
              <li><a href="#timeline" data-toggle="tab" 
                      @if($user>id!='')
@@ -12,7 +12,7 @@
                     id="activetab">Permission</a></li>
             @else
             <li><a href="#timeline" data-toggle="tab" style='display:none;' id="activetab">Permission</a></li>
-            <li><a   style='display:block;' id="inactivetab" onclick="activeTabWarning()" style="margin-top:10px;">Permission</a></li>
+            <li><a  id="inactivetab" onclick="activeTabWarning()" style="margin-top:10px;cursor:pointer;display:block;">Permission</a></li>
             @endif
         </ul>
 <div class="tab-content">
@@ -46,7 +46,7 @@
 </div>
 <div class="form-group">
     {!! Form::label('address', Lang::get('user.headers.address'), ['class' => 'col-md-3 control-label']) !!}
-     <div class="col-md-7 col-sm-12 required">
+     <div class="col-md-7 col-sm-12">
     {!! Form::text('address', null, ['class' => 'col-md-6 form-control']) !!}
 </div>
 </div>
@@ -61,7 +61,7 @@
 <div class="form-group">
     {!! Form::label('city', Lang::get('user.headers.city'), ['class' => 'col-md-3 control-label']) !!}
      <div class="col-md-7 col-sm-12 required">
-    {!! Form::text('city',  null, ['class' => 'col-md-6 form-control']) !!}
+    {!! Form::text('city',  null, ['class' => 'col-md-6 form-control','required' => 'required']) !!}
 </div> 
 </div> 
 <div class="form-group">
@@ -78,7 +78,7 @@
  @endphp
 <div class="form-group">
     {!! Form::label('date_of_birth', Lang::get('user.headers.date_of_birth'), ['class' => 'col-md-3 control-label']) !!}
- <div class="col-md-7 col-sm-12 required">
+ <div class="col-md-7 col-sm-12">
     <div class="input-group date">
         <div class="input-group-addon">
             <i class="fa fa-calendar"></i>
@@ -88,39 +88,35 @@
       </div>
     <!-- /.input group -->
 </div>
-@if($user->image_path!='')
+  @if($user->image_path!='')
 <div class="form-group">
 @if($user->image_path!='')
 {!! Form::label('image_path', Lang::get('Existing Image'), ['class' => 'col-md-3 control-label']) !!}
- <div class="col-md-7 col-sm-12 required">
+  <div class="col-md-7 col-sm-12 required">
 {{Html::image('images/photo/'.$user->image_path, 'a picture', array('width' => '100','height'=>'100'))}}
 </div>
 @else
 {!! Form::label('image_path', Lang::get('Existing Image'), ['class' => 'col-md-3 control-label']) !!}
- <div class="col-md-7 col-sm-12 required">
+  <div class="col-md-7 col-sm-12 required">
 {{Html::image('images/photo/noimage.png', 'a picture', array('width' => '100','height'=>'100'))}}
 </div>
 @endif
 </div>
 @endif
-
+ 
 <div class="form-group">
     {!! Form::label('image_path', Lang::get('user.headers.image_path'), ['class' => 'col-md-3 control-label']) !!}
-     <div class="col-md-7 col-sm-12 required">
-    {!! Form::file('image_path',['class' => 'col-md-6 form-control','onchange'=>'loadFile(event)']) !!}
+     <div class="col-md-7 col-sm-12">
+    {!! Form::file('image_path',['class' => 'col-md-6 form-control','onchange'=>'loadFile(event)',]) !!}
 </div>
 </div>
-<div class="form-group">
+ <div class="form-group" style="display:none;" id="output_display">
     {!! Form::label('image_path', Lang::get('&nbsp;'), ['class' => 'col-md-3 control-label']) !!}
      <div class="col-md-7 col-sm-12 required">
    <img id="output" width="100" height="100"/>
 </div>
 </div>
  
- 
- 
- <?php //echo $user->role_id; ?>
-
 <div class="form-group">
        @php $role=displayList('permissions','role');@endphp
     {!! Form::label('role_id', Lang::get('Role'), ['class' => 'col-md-3 control-label']) !!}
@@ -148,7 +144,7 @@ function activeTab(id)
     {
     $("#inactivetab").hide();
     $("#activetab").show();
-    alert(id);
+    //alert(id);
     $.ajax({
     type:'get',
     url:"/users/roleupdate/"+id,
@@ -172,6 +168,7 @@ $('#image_path').change(function () {
   var ext = $('#image_path').val().split('.').pop().toLowerCase();
  if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1) {
     $("#output").hide();
+    $("#output_display").hide();
     alert('Only JPG, JPEG, PNG &amp; GIF files are allowed.' );
     return false;
     
@@ -179,7 +176,10 @@ $('#image_path').change(function () {
 
 });
  var loadFile = function(event) {
+     
+       $("#output_display").show();
        $("#output").show();
+       
     var output = document.getElementById('output');
     output.src = URL.createObjectURL(event.target.files[0]);
   };  

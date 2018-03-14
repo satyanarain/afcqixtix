@@ -23,9 +23,12 @@
         <div class="col-md-9" style="padding-left: 0px;">
         </div>
     </div>
+</div>  </br>   
+    </div>
 </div> 
-                </br>
+        
  {!! Form::close() !!}
+      
   </div>
             <!-- /.box-body -->
   </div>

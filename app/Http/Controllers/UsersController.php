@@ -23,7 +23,7 @@ use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Repositories\User\UserRepositoryContract;
 use App\Repositories\Role\RoleRepositoryContract;
-use App\Repositories\Setting\SettingRepositoryContract;
+//use App\Repositories\Setting\SettingRepositoryContract;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -35,15 +35,15 @@ class UsersController extends Controller
     protected $users;
     protected $roles;
     protected $departments;
-    protected $settings;
+   // protected $settings;
     public function __construct(
         UserRepositoryContract $users,
-        RoleRepositoryContract $roles,
-        SettingRepositoryContract $settings
+        RoleRepositoryContract $roles
+       // SettingRepositoryContract $settings
     ) {
         $this->users = $users;
         $this->roles = $roles;
-        $this->settings = $settings;
+      //  $this->settings = $settings;
       
     }
 
@@ -202,7 +202,7 @@ class UsersController extends Controller
             if (!is_dir(public_path() . '/images/' . $companyname)) {
                 mkdir(public_path() . '/images/' . $companyname, 0777, true);
             }
-            $settings = Settings::findOrFail(1);
+           // $settings = Settings::findOrFail(1);
             $file = $requestData->file('image_path');
             $destinationPath = public_path() . '/images/' . $companyname;
             $filename = str_random(8) . '_' . $file->getClientOriginalName();

@@ -1,10 +1,3 @@
-https://jsfiddle.net/urd5gquc/3/
-datatables show hide columns checkbox
-//https://stackoverflow.com/questions/32789976/toggle-column-visibility-by-using-names-instead-of-index-number
-jquery datatables hide column
-//https://demo.snipeitapp.com/users/create#tab_1
-//DataTables example - Export options - column selector
-http://jsfiddle.net/rahularyansharma/t6V6J/5/
 <div id="b" style="position:absolute; top:50px"><i class="fa fa-bus" style="font-size:48px;color:red"></i></div>-->
 <script type="text/javascript">
 $(document).ready(function() {
