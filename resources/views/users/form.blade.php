@@ -128,7 +128,6 @@
     {!! Form::select('role_id',$role,isset($user->role_id) ? $user->role_id : selected,['class' => 'col-md-6 form-control','onchange'=>'loadFile(event)','onchange'=>'activeTab(this.value)','placeholder'=>'Please select role','required'=>'required']) !!}
 </div>
 </div>
-
 </div>
     <?php print_r($value); ?>
 <div class="tab-pane" id="timeline">
