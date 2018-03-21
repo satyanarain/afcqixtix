@@ -4,46 +4,33 @@
 {{BreadCrumb()}}
 @stop
 @section('content')
+
 <div class="row">
     <div class="col-xs-12">
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{headingMain()}}</h3>
-             @if(Entrust::hasRole('administrator'))
-                <a href="{{ route('stops.create')}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>   @lang('common.titles.add')</button></a>
-           @endif
+             {{createButton('create','Add')}}
             </div>
+           @include('partials.message')
             <!-- /.box-header -->
             <div class="box-body">
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                          <tr>
-                            <th>@lang('Stop')</th>
-                            <th>@lang('Stop ID')</th>
-                            <th>@lang('Abbreviation')</th>
-                            <th>@lang('View')</th>
-                          
-                             @if(Entrust::hasRole('administrator'))
-                            <th>@lang('user.headers.edit')</th>
-                            @endif
+                            <th>@lang('Route')</th>
+                           <th>@lang('Duty')</th>
+                           <th>@lang('Shift')</th>
+                          {{  actionHeading('Action', $newaction='') }}
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($stops as $value)
-                        <tr class="nor_f    ">
-                            <td>{{$value->stop}}</td>
-                            <td>{{$value->stop_id}}
-                            </td>
-                            <td>{{$value->short_name}}
-                            </td>
-                           <td> <a  class="btn btn-primary" href="{{ route('stops.show', $value->id) }}"><span class="glyphicon glyphicon-search"></span>View</a>
-                          </td>
-                              @if(Entrust::hasRole('administrator'))
-                            <td>
-                                <a  href="{{ route('stops.edit', $value->id) }}" class="btn btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span> Edit</a>
-                            </td>
-                            @endif
-                            
+                         @foreach($trips as $value)
+                        <tr class="nor_f">
+                            <td>{{displayIdBaseName('routes',$value->route_id,'route')}}</td>
+                            <td>{{$value->duty_number}}</td>
+                            <td>{{$value->shift}}</td>
+                             {{ actionEdit('edit',$value->id)}}
                         </tr>
                         @endforeach
                         </tbody>
@@ -56,17 +43,27 @@
     <!-- /.col -->
 </div>
 <!-- /.row -->
-
+<div class="modal fade" id="view_detail" role="dialog">
+ </div>
 <script>
-    $(function () {
-        $("#example1").DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false
-    });
-    });
- </script>  
+   function viewDetails(id,view_detail)
+   {
+   var urldata=   '/trips/' + view_detail + '/' +id;
+  //  alert(urldata)
+    $.ajax({
+		type: "GET",
+		url: urldata,
+		cache: false,
+		success: function(data){
+              //  alert(data);
+                 $("#" + view_detail).modal('show');
+                  $("#"+view_detail).html(data);
+		}
+	});
+  
+   }
+</script>
+
+
+@include('partials.table_script')
 @stop

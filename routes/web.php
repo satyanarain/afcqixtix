@@ -44,11 +44,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('users/roleupdate/{id}', 'UsersController@roleUpdate');
     Route::post('users/store', 'UsersController@store');
     Route::resource('users', 'UsersController');
-    
-    
-    
-    
-    Route::post('users/changeprofileimage', 'UsersController@changeProfileImage')->middleware('user.changeprofileimage')->name('changeprofileimage');
+     Route::post('users/changeprofileimage', 'UsersController@changeProfileImage')->middleware('user.changeprofileimage')->name('changeprofileimage');
     /*     * **********************masters created by satya 22-11-2017 depot***************************** */
     Route::get('depots/data', 'DepotsController@anyData')->name('depots.data');
     Route::post('depots/store', 'DepotsController@store');
@@ -104,8 +100,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('targets', 'TargetController');
     
     Route::get('trips/data', 'TripController@anyData')->name('trips.data');
+    Route::get('trips/getsubcat/{id}', 'TripController@getSubCat');
+    Route::get('trips/view_detail/{id}', 'TripController@viewDetail');
     Route::post('trips/store', 'TripController@store');
     Route::resource('trips', 'TripController');
+    
     Route::get('fares/previous', 'FaresController@Previous')->name('fares.previous');
     Route::post('fares/data', 'FaresController@anyData')->name('fares.data');
     Route::get('fares/fare_list/{id}','FaresController@fareList');
@@ -178,6 +177,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::patch('settings/permissionsUpdate', 'SettingsController@permissionsUpdate');
     Route::resource('settings', 'SettingsController');
     Route::post('changepasswords/update', 'ChangepasswordsController@updatePassword');
+    Route::get('trip_cancellation_reasons/order_list', 'TripCancellationReasonController@orderList');
+    
+    
     Route::resource('changepasswords', 'ChangepasswordsController');
     
 });

@@ -5,32 +5,38 @@
 @stop
 @section('content')
 <div class="row">
-    <div class="col-xs-12">
-   
-        <div class="box">
-            <div class="box-header">
-              <h3 class="box-title">{{headingMain()}}</h3>
-                @if(Entrust::hasRole('administrator'))
-                <a href="{{ route('stops.create')}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>   @lang('common.titles.add')</button></a>
-            @endif
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-               {!! Form::model($stops, [
-        'method' => 'PATCH',
-        'route' => ['stops.update', $stops->id],
-        'files'=>true,
-        'enctype' => 'multipart/form-data'
-        ]) !!}
-               @include('stops.form', ['submitButtonText' => Lang::get('user.headers.update_submit')])
-
-                {!! Form::close() !!}
-            </div>
-            <!-- /.box-body -->
-        </div>
-        <!-- /.box -->
+<div class="col-md-12">
+    <div class="callout callout-info">
+        {{headingMain()}}
     </div>
-    <!-- /.col -->
 </div>
+  <div class="col-md-8 col-md-offset-2">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">
+                    </h3>
+                    <div class="box-tools pull-right">
+                        <button class="slideout-menu-toggle btn btn-box-tool btn-box-tool-lg" data-toggle="tooltip" title="Help"><i class="fa fa-question"></i></button>
+                    </div>
+                </div><!-- /.box-header -->
+
+                <div class="box-body">
+                   {!! Form::model($trips, [
+        'method' => 'PATCH',
+        'route' => ['trips.update', $trips->id],
+        'files'=>true,
+        'class'=>'form-horizontal',
+        'enctype' => 'multipart/form-data',
+         'autocomplete'=>'off'
+        ]) !!}
+                    <!-- Warranty -->
+                    @include('trips.form1', ['submitButtonText' => Lang::get('user.headers.create_submit')])
+
+                    {!! Form::close() !!}
+                </div>
+            </div>
+        </div>
+       
 
 @stop
+

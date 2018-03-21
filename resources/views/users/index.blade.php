@@ -14,12 +14,13 @@
              @include('partials.message')
             <!-- /.box-header -->
             <div class="panel-body">
-               <table id="data-table" class="table table-bordered table-striped">
+               <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th class="display_none"></th>
                             <th>@lang('user.headers.name')</th>
                             <th>@lang('User Name')</th>
+                            <th>@lang('Role')</th>
                             <th>@lang('user.headers.email')</th>
                              {{  actionHeading('Action', $newaction='') }}
                         </tr>
@@ -30,6 +31,7 @@
                             <th class="display_none"></th>
                             <td>{{$value->name}}</td>
                             <td>{{$value->user_name}}</td>
+                            <td>{{$value->role}}</td>
                             <td>{{$value->email}}</td>
                             {{ actionEdit('edit',$value->id,$value->status)}}
                          </tr>
@@ -42,38 +44,7 @@
 </div>
 
 <script type="text/javascript">
-    $(function () {
-        var productListVM = {
-            dt: null,
- 
-            init: function () {
-                dt = $('#data-table').DataTable({
-                    "serverSide": true,
-                    "processing": true,
-                    "ajax": "/home/datatableget",
-                    "columns": [
-                        { "title": "Product Id", "data": "ProductId", "searchable": false },
-                        { "title": "Name", "data": "Name" },
-                        { "title": "Description", "data": "Description" },
-                        { "title": "Category", "data": "Category" }
-                    ],
-                    "lengthMenu": [[2, 5, 10, 25], [2, 5, 10, 25]]
-                });
-            },
- 
-            refresh: function () {
-                dt.ajax.reload();
-            }
-        }
- 
-        $('#refresh-button').on("click", productListVM.refresh);
- 
-        /////////////////////////////////////////////////////////////////
-        // Let's kick it all off
-        productListVM.init();
-    })
-    
-  function statusUpdate(id)
+ function statusUpdate(id)
 {
  $.ajax({
     type:'get',
@@ -99,6 +70,5 @@
     
 </script>
 <!-- /.row -->
-@include('partials.routesheader')
 @include('partials.table_script') 
 @stop

@@ -126,7 +126,15 @@ function menuCreate($controllerName,$create='',$edit='',$view='',$id='',$control
     <?php
 }
 
-
+function displayPath($fieldname = '',$path_id='',$deviated_path='') {
+ $routes = DB::table('routes')
+        ->select('*','route_details.stop_id','routes.route','stops.stop','routes.id as id')
+        ->leftjoin('route_details', 'route_details.stop_id', '=', 'routes.id')
+        ->leftjoin('stops', 'route_details.stop_id', '=', 'stops.id')->get();
         
-}
+?>
+<?php echo htmlentities($value->route); ?><?php echo ucfirst(substr($value->direction,0,1));?> : <?php htmlentities(displayIdBaseName('stops',$value->source,'stop')); ?> - <?php htmlentities(displayIdBaseName('stops',$value->destination,'stop')); ?> via- <?php htmlentities(displayIdBaseName('stops',$value->via,'stop')); ?>
+        
+<?php }
 
+}

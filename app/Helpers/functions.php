@@ -2,7 +2,6 @@
 error_reporting(0);
 use App\Models\Permission;
 use App\Models\PermissionDetail;
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -222,35 +221,71 @@ function displayList($table = '', $fieldname = '', $orderby_fieldname='',$asc_ds
             
     return $result;
 }
+function displayPath($fieldname = '',$path_id='',$deviated_path='') {
+    if($path_id!='')
+    {
+     $selected= $path_id;  
+    }
+     if($deviated_path!='')
+    {
+     $selected= $deviated_path;  
+    }
+    
+   //$selected;
+        $routes = DB::table('routes')
+        ->select('*','route_details.stop_id','routes.route','stops.stop','routes.id as id')
+        ->leftjoin('route_details', 'route_details.stop_id', '=', 'routes.id')
+        ->leftjoin('stops', 'route_details.stop_id', '=', 'stops.id')->get();
+        
+?>
+<select name="<?php echo htmlentities($fieldname); ?>" class="form-control"><option value="">Select Path</option><?php foreach($routes as $value){ ?><option value="<?php echo $value->id; ?>"<?php if($value->id==$selected){ ?>selected="selected"<?php } ?>><?php echo htmlentities($value->route); ?><?php echo ucfirst(substr($value->direction,0,1));?> : <?php htmlentities(displayIdBaseName('stops',$value->source,'stop')); ?> - <?php htmlentities(displayIdBaseName('stops',$value->destination,'stop')); ?> via- <?php htmlentities(displayIdBaseName('stops',$value->via,'stop')); ?></option> <?php } ?></select><?php   }
 
 function dispalyImage($imagepath = '', $imagename, $class = '', $alt = '', $style = '') {
-    if (file_exists($imagepath . Auth::user()->image_path)) {
-        if (Auth::user()->image_path) {
-            ?>
-            <img src="<?php echo $imagepath . Auth::user()->image_path; ?>" class="<?php echo $class; ?>" alt="<?php echo $alt; ?>" style="<?php echo $style; ?>">
-        <?php } else { ?>
-            <img src="/images/photo/no_image.png" class="<?php echo $class; ?>" alt="<?php echo $alt; ?>" style="<?php echo $style; ?>">
-        <?php
+ if (file_exists($path)) {
+         if ($imagename) {
+            
+            echo Html::image($imagepath .$imagename,'',array('class'=>$class,'alt'=>$alt,'style'=>$style));
+            } else { 
+            echo Html::image('images/photo/no_image.png','',array('class'=>$class,'alt'=>$alt,'style'=>$style));
         }
     } else {
-        ?>
-        <img src="/images/photo/no_image.png" class="<?php echo $class; ?>" alt="<?php echo $alt; ?>" style="<?php echo $style; ?>">
-        <?php
+        echo Html::image('images/photo/no_image.png','',array('class'=>$class,'alt'=>$alt,'style'=>$style));
     }
 }
 
+
+function menuPermission($controllerName) {
+ $user_id = Auth::id();
+ $result= DB::table('permission_details')->where('user_id',$user_id)->first();
+ $array_all=explode(',',$result->$controllerName);
+if(in_array('view',$array_all)){ 
+ return true;
+} else {
+ return false;
+}
+}
+
 function actionEdit($action = '', $id = '',$status='') {
-    $segments = '';
-    $segments = Request::segments();
-    
-        ?>
+ $segments = '';
+ $segments = Request::segments();
+ $user= $segments[0];
+ $user_id = Auth::id();
+ $result= DB::table('permission_details')->where('user_id',$user_id)->first();
+ $array_all=explode(',',$result->$user);
+ ?>
         <td>
+          <?php  if(in_array('edit',$array_all)){ ?>
              <a  href="<?php echo route($segments[0] . "." . $action, $id) ?>" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
-             <?php if($segments[0]=='users'){?>
+          <?php } ?>
+    <?php if($segments[0]=='users'){?>
+               <?php  if(in_array('view',$array_all)){ ?>
               <a  class="btn btn-small btn-primary" href="<?php echo route('users.show', $id); ?>" ><span class="glyphicon glyphicon-search"></span>&nbsp;View</a>&nbsp;&nbsp;&nbsp;&nbsp;
-             <?php }else{ ?>
+                      <?php } ?>
+                  <?php }else{ ?>
+                <?php  if(in_array('view',$array_all)){ ?>
                <button  class="btn btn-small btn-primary"  data-toggle="modal" data-target="#<?php echo $id ?>"  onclick="viewDetails(<?php echo $id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span>&nbsp;View</button>&nbsp;&nbsp;&nbsp;&nbsp;
               <?php } ?>
+               <?php } ?>
               <?php if($segments[0]=='users'){?>
              <div 
                  <?php if($status==1)

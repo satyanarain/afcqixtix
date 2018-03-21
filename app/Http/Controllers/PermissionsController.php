@@ -136,6 +136,7 @@ class PermissionsController extends Controller
             $input['routes'] = implode(',', $request->routes);
             $input['duties'] = implode(',', $request->duties);
             $input['targets'] = implode(',', $request->targets);
+            $input['trips'] = implode(',', $request->trips);
             $input['fares'] = implode(',', $request->fares);
             $input['concession_fare_slabs'] = implode(',', $request->concession_fare_slabs);
             $input['concessions'] = implode(',', $request->concessions);
@@ -175,6 +176,7 @@ class PermissionsController extends Controller
             $input['routes'] = implode(',', $request->routes);
             $input['duties'] = implode(',', $request->duties);
             $input['targets'] = implode(',', $request->targets);
+            $input['trips'] = implode(',', $request->trips);
             $input['fares'] = implode(',', $request->fares);
             $input['concession_fare_slabs'] = implode(',', $request->concession_fare_slabs);
             $input['concessions'] = implode(',', $request->concessions);

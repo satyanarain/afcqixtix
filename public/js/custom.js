@@ -131,3 +131,19 @@ var string_length="&table_name="+table_name+"&field_name="+field_name+"&placehol
     
     
 }
+
+function formValidation(){
+var tm = document.voiceavpn.time;
+if(validateTime(tm)){
+}
+return false;
+}
+
+function validateTime(tm){
+var newreg =  /^(([0-1][0-9])|(2[0-3])):[0-5][0-9]$/;
+ if(tm.exec(newreg)){
+        alert("Invalid time format\n The valid format is hh:mm\n");
+        return false;
+        }
+        return true;
+}

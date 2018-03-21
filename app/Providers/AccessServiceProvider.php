@@ -79,6 +79,10 @@ class AccessServiceProvider extends ServiceProvider
             \App\Repositories\Route\RouteRepository::class
         );
         $this->app->bind(
+            \App\Repositories\Trip\TripRepositoryContract::class,
+            \App\Repositories\Trip\TripRepository::class
+        );
+        $this->app->bind(
             \App\Repositories\Duty\DutyRepositoryContract::class,
             \App\Repositories\Duty\DutyRepository::class
         );

@@ -39,6 +39,7 @@
                                 {{ menuCreate('routes','create','edit','view',$value->id,$value->routes)}}
                                 {{ menuCreate('duties','create','edit','view',$value->id,$value->duties)}}
                                 {{ menuCreate('targets','create','edit','view',$value->id,$value->targets)}}
+                                {{ menuCreate('trips','create','edit','view',$value->id,$value->trips)}}
                                 {{ menuCreate('fares','create','edit','view',$value->id,$value->fares)}}
                                 {{ menuCreate('concession_fare_slabs','create','edit','view',$value->id,$value->concession_fare_slabs)}}
                                 {{ menuCreate('concessions','create','edit','view',$value->id,$value->concessions)}}

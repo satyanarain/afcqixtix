@@ -32,6 +32,7 @@
                                 {{ menuCreate('routes','create','edit','view',$permissions->id,$permissions->routes)}}
                                 {{ menuCreate('duties','create','edit','view',$permissions->id,$permissions->duties)}}
                                 {{ menuCreate('targets','create','edit','view',$permissions->id,$permissions->targets)}}
+                                {{ menuCreate('trips','create','edit','view',$permissions->id,$permissions->trips)}}
                                 {{ menuCreate('fares','create','edit','view',$permissions->id,$permissions->fares)}}
                                 {{ menuCreate('concession_fare_slabs','create','edit','view',$permissions->id,$permissions->concession_fare_slabs)}}
                                 {{ menuCreate('concessions','create','edit','view',$permissions->id,$permissions->concessions)}}

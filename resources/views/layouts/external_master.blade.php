@@ -465,7 +465,10 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                                    <h1>Create Password</h1>
-                                     {{BreadCrumb()}}
+                                       <ol class="breadcrumb">
+        <li><a href="/login"><i class="fa fa-dashboard"></i>Home</a></li>
+        <li><a href="#"><i class="fa fa-dashboard"></i>Create Password</a></li>
+        </ol>
                 </section>
 
                 <section class="content">
@@ -526,7 +529,7 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                                         </div> 
                                         <div class="form-group">
                                             <div class="col-md-3" style="margin-right: 15px;"></div>
-                                            {{ Form::hidden('id',$users->id, array('class' => 'btn btn-success pull-left','required' => 'required')) }}
+                                            {{ Form::hidden('set_password_token',$users->set_password_token, array('class' => 'col-md-6 form-control')) }}
                                             {{ Form::submit('Save', array('class' => 'btn btn-success pull-left','required' => 'required')) }}
 
                                             <div class="col-md-9">

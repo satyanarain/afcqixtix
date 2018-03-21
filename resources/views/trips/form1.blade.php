@@ -3,15 +3,17 @@
     {!! Form::label('route_id', Lang::get('Route'), ['class' => 'control-label','style'=>"margin-bottom:10px;" ]) !!}
     
     <div class="input-group col-md-12 required">
-  {!! Form::select('route_id',$routes,isset($duties->route_id) ? $duties->route_id : selected,['class' => 'form-control','required' => 'required','onchange'=>"getSubCate(this.value,'duties','returned_id')",'placeholder'=>'Select route']) !!}
+  {!! Form::select('route_id',$routes,isset($trips->route_id) ? $trips->route_id : selected,['class' => 'form-control','required' => 'required','onchange'=>"getSubCate(this.value,'duties','returned_id')",'placeholder'=>'Select route']) !!}
 </div>
 
 </div>
-<div class="input-group col-md-12" id="returned_id_show" style="display:none">
+<div class="input-group col-md-12" id="returned_id_show">
     @php $duties=displayList('duties','duty_number')@endphp
     {!! Form::label('duty_id', Lang::get('Duty'), ['class' => 'control-label','style'=>"margin-bottom:10px;"]) !!}
      <div class="input-group col-md-12 required">
-             <span id='returned_id'></span>
+         <span id='returned_id'>
+            {!! Form::select('duty_id',$duties,isset($trips->duty_id) ? $trips->duty_id : selected,['class' => 'form-control','required' => 'required','placeholder'=>'Select duty']) !!}   
+         </span>
       </div>
    
 </div>
@@ -48,19 +50,28 @@
       @php $routes=displayList('routes','route')@endphp
 <div id="fare_list">
 <div class="copy show" id="input_fields_wrap_classes">
-       <div id="control-group" style="padding-left:0px;  margin-bottom:10px;" class="col-md-12" >
-       <div class="col-md-1" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="trip_no[]" class="form-control" placeholder="Trip No." required="required" onkeypress="return isIntegerKey(event)"></div>
+    
+    <?php //print_r($trip_details); ?>
+    
+    @foreach($trip_details as $value)
+    <?php //echo $value->trip_no; ?>
+     <div id="control-group" style="padding-left:0px;  margin-bottom:10px;" class="col-md-12" id="div_remove_field{{$value->id}}">
+       <div class="col-md-1" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="trip_no[]" class="form-control" placeholder="Trip No." required="required" onkeypress="return isIntegerKey(event)" value="{{$value->trip_no}}"></div>
        <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"  data-placement="right" data-align="top" data-autoclose="true">
            <div class="input-group col-md-12">
                <div class="input-group col-md-12" data-placement="right" data-align="top" data-autoclose="true">
-                   <input type="text" class="form-control clockpicker1" value="" name="start_time[]" plcacholder="Start Time">
+                   <input type="text" class="form-control clockpicker1"  name="start_time[]" plcacholder="Start Time" value="{{$value->start_time}}">
                    <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span></div>
            </div>
        </div>
-        <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;">{{ displayPath('path_route_id[]')}}</div>
-       <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;">{!! Form::select('deviated_route[]',$routes,isset($trips->deviated_route) ? $trips->deviated_route : selected,['class' => 'form-control','placeholder'=>'Select deviated route']) !!}</div>
-       <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;">{{ displayPath('deviated_path[]')}}</div>
+        <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;">{{ displayPath('path_route_id[]',$value->path_route_id,'')}}</div>
+       <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;">{!! Form::select('deviated_route[]',$routes,isset($value->deviated_route) ? $value->deviated_route : selected,['class' => 'form-control','placeholder'=>'Select deviated route']) !!}</div>
+       <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;">{{ displayPath('deviated_path[]','',$value->path_route_id)}}</div>
+       <button class="btn btn-danger remove" type="button" id="remove_field{{$value->id}}" onclick="removeFunction(this.id)"><i class="glyphicon glyphicon-remove"></i> Remove</button>
 </div>
+ @endforeach 
+    
+    
 </div>
 </div>
 </div>

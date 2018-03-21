@@ -54,7 +54,10 @@ class UsersController extends Controller
      */
     public function index()
     {
-    $user = DB::table('users')->select('*')->orderBy('id','desc')->get();
+    $user = DB::table('users')->select('*','users.id as id')
+            ->leftjoin('permission_details','permission_details.user_id','users.id')
+            ->leftjoin('permissions','permission_details.role_id','permissions.id')
+            ->orderBy('users.id','desc')->get();
     return view('users.index')->withUsers($user);
    
     }
@@ -129,9 +132,12 @@ class UsersController extends Controller
      */
    public function show($id)
    {
-  $user=DB::table('users')->select('*','users.id as id')->leftjoin('permission_details','permission_details.user_id','users.id')->where('users.id',$id)->first();
-    return view('users.show')->withUser($user);
-     }
+       $value = DB::table('users')->select('*', 'users.id as id')
+                        ->leftjoin('permission_details', 'permission_details.user_id', 'users.id')
+                        ->leftjoin('permissions', 'permission_details.role_id', 'permissions.id')
+                        ->where('users.id', $id)->first();
+        return view('users.show')->withValue($value);
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -174,6 +180,7 @@ class UsersController extends Controller
             $routes = implode(',', $requestData->routes);
             $duties = implode(',', $requestData->duties);
             $targets = implode(',', $requestData->targets);
+            $trips = implode(',', $requestData->trips);
             $fares = implode(',', $requestData->fares);
             $concession_fare_slabs = implode(',', $requestData->concession_fare_slabs);
             $concessions = implode(',', $requestData->concessions);
@@ -185,8 +192,8 @@ class UsersController extends Controller
             $crew_details = implode(',', $requestData->crew_details);
             $ETM_details = implode(',', $requestData->ETM_details);
            PermissionDetail::where('user_id',$id)->update(['role_id' => $requestData->role_id,'created_by'=>$created_by,'users'=>$users,'changepasswords'=>$changepasswords,'permissions'=>$permissions,'depots'=>$depots,'bus_types'=>$bus_types,'services'=>$services,'vehicles'=>$vehicles
-            ,'shifts'=>$shifts,'stops'=>$stops,'routes'=>$routes,'duties'=>$duties,'targets'=>$targets,'fares'=>$fares,'concession_fare_slabs'=>$concession_fare_slabs,'concessions'=>$concessions,'trip_cancellation_reasons'=>$trip_cancellation_reasons
-           ,'inspector_remarks'=>$inspector_remarks,'payout_reasons'=>$payout_reasons,'denominations'=>$denominations,'pass_types'=>$pass_types,'crew_details'=>'crew_details','ETM_details'=>$ETM_details]);     
+            ,'shifts'=>$shifts,'stops'=>$stops,'routes'=>$routes,'duties'=>$duties,'targets'=>$targets,'trips'=>$trips,'fares'=>$fares,'concession_fare_slabs'=>$concession_fare_slabs,'concessions'=>$concessions,'trip_cancellation_reasons'=>$trip_cancellation_reasons
+           ,'inspector_remarks'=>$inspector_remarks,'payout_reasons'=>$payout_reasons,'denominations'=>$denominations,'pass_types'=>$pass_types,'crew_details'=>$crew_details,'ETM_details'=>$ETM_details]);     
            //  $permission->fill($input)->save();
       
        $user = User::findorFail($id);
@@ -256,6 +263,7 @@ public function roleupdate($id, Request $request)
                                 <?php menuCreate('routes','create','edit','view',$permissions->id,$permissions->routes); ?>
                                 <?php menuCreate('duties','create','edit','view',$permissions->id,$permissions->duties); ?>
                                 <?php menuCreate('targets','create','edit','view',$permissions->id,$permissions->targets); ?>
+                                <?php menuCreate('trips','create','edit','view',$permissions->id,$permissions->trips); ?>
                                 <?php menuCreate('fares','create','edit','view',$permissions->id,$permissions->fares); ?>
                                 <?php menuCreate('concession_fare_slabs','create','edit','view',$permissions->id,$permissions->concession_fare_slabs); ?>
                                 <?php menuCreate('concessions','create','edit','view',$permissions->id,$permissions->concessions); ?>

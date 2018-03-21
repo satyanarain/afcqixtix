@@ -28,7 +28,7 @@
                          @foreach($routes as $value)
                         <tr class="nor_f">
                             <td>{{$value->route}}</td>
-                            <td>{{displayIdBaseName('stops',$value->source,'stop')}} - {{displayIdBaseName('stops',$value->destination,'stop')}} via- {{displayIdBaseName('stops',$value->via,'stop')}}</td>
+                            <td>{{$value->route}}{{ucfirst(substr($value->direction,0,1))}} : {{displayIdBaseName('stops',$value->source,'stop')}} - {{displayIdBaseName('stops',$value->destination,'stop')}} via- {{displayIdBaseName('stops',$value->via,'stop')}}</td>
                             <td>{{$value->direction}}</td>
                              {{ actionEdit('edit',$value->id)}}
                         </tr>

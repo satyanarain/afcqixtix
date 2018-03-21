@@ -111,8 +111,8 @@ class ETMDetailController extends Controller
      */
     public function update($id, UpdateETMDetailRequest $request)
     {
-       $etm_no = $request->etm_no;
-      $sql=ETMDetail::where([['etm_no',$etm_no],['id','!=',$id]])->first();
+     $etm_no = $request->etm_no;
+     $sql=ETMDetail::where([['etm_no',$etm_no],['id','!=',$id]])->first();
      if(count($sql)>0)
      {
        return redirect()->back()->withErrors(['This ETM no has already been taken.']);
@@ -137,8 +137,6 @@ class ETMDetailController extends Controller
             ->where('ETM_details.id',$id)
              ->orderBy('ETM_details.id','desc')
           ->first();
-              
-             
         ?>
       <div class="modal-dialog">
         <!-- Modal content-->

@@ -30,7 +30,7 @@
    
       {!! Form::label('service_id', Lang::get('Default Service'), ['class' => 'col-md-3 control-label']) !!}
        <div class="col-md-7 col-sm-12 required">
-       {!! Form::select('service_id',$services_value,isset($depot->service_id) ? $depot->service_id : selected,['class' => 'form-control required','required' => 'required','onchange'=>'fareList(this.value)','placeholder'=>"Select Service"]) !!}
+       {!! Form::select('service_id',$services_value,isset($depot->service_id) ? $depot->service_id : selected,['class' => 'form-control','required' => 'required','onchange'=>'fareList(this.value)','placeholder'=>"Select Service"]) !!}
 </div> 
 </div> 
 <div class="form-group">

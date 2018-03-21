@@ -31,6 +31,8 @@
         <link rel="stylesheet" src="https://cdn.datatables.net/buttons/1.5.1/css/buttons.jqueryui.min.css">
 <!--        <link rel="stylesheet" src="https://cdn.datatables.net/1.10.16/css/dataTables.jqueryui.min.css">-->
         <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/clockpicker/0.0.7/bootstrap-clockpicker.css" />
+
         <link rel="stylesheet" href="{{URL::asset('plugins/datatables/dataTables.bootstrap.css')}}">
         <link rel="stylesheet" href="{{URL::asset('css/AdminLTE.min.css')}}">
         <link rel="stylesheet" href="{{URL::asset('css/custom.css')}}">
@@ -72,197 +74,19 @@ echo json_encode([
                     <ul class="nav navbar-nav">
                         <!-- Messages: style can be found in dropdown.less-->
                         <li class="dropdown messages-menu">
-<!--                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-envelope-o"></i>
-                                <span class="label label-success">4</span>
-                            </a>-->
+                        
                             <ul class="dropdown-menu">
                                 <li class="header">You have 4 messages</li>
                                 <li>
                                     <!-- inner menu: contains the actual data -->
                                     <ul class="menu">
-<!--                                        <li> start message 
-                                            <a href="#">
-                                                <div class="pull-left">
-                                                    <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-                                                </div>
-                                                <h4>
-                                                    Support Team
-                                                    <small><i class="fa fa-clock-o"></i> 5 mins</small>
-                                                </h4>
-                                                <p>Why not buy a new awesome theme?</p>
-                                            </a>
-                                        </li>-->
-                                        <!-- end message -->
-<!--                                        <li>
-                                            <a href="#">
-                                                <div class="pull-left">
-                                                    <img src="dist/img/user3-128x128.jpg" class="img-circle" alt="User Image">
-                                                </div>
-                                                <h4>
-                                                    AdminLTE Design Team
-                                                    <small><i class="fa fa-clock-o"></i> 2 hours</small>
-                                                </h4>
-                                                <p>Why not buy a new awesome theme?</p>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <div class="pull-left">
-                                                    <img src="dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
-                                                </div>
-                                                <h4>
-                                                    Developers
-                                                    <small><i class="fa fa-clock-o"></i> Today</small>
-                                                </h4>
-                                                <p>Why not buy a new awesome theme?</p>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <div class="pull-left">
-                                                    <img src="<?php //echo \URL::to('') . '/img/user3-128x128.jpg' ?>" class="img-circle" alt="User Image">
-                                                </div>
-                                                <h4>
-                                                    Sales Department
-                                                    <small><i class="fa fa-clock-o"></i> Yesterday</small>
-                                                </h4>
-                                                <p>Why not buy a new awesome theme?</p>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <div class="pull-left">
-                                                    <img src="<?php //echo \URL::to('') . '/img/user4-128x128.jpg' ?>" class="img-circle" alt="User Image">
-                                                </div>
-                                                <h4>
-                                                    Reviewers
-                                                    <small><i class="fa fa-clock-o"></i> 2 days</small>
-                                                </h4>
-                                                <p>Why not buy a new awesome theme?</p>
-                                            </a>
-                                        </li>-->
+
                                     </ul>
                                 </li>
                                 <li class="footer"><a href="#">See All Messages</a></li>
                             </ul>
                         </li>
-                        <!-- Notifications: style can be found in dropdown.less -->
-<!--                        <li class="dropdown notifications-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-bell-o"></i>
-                                <span class="label label-warning">10</span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li class="header">You have 10 notifications</li>
-                                <li>
-                                     inner menu: contains the actual data 
-                                    <ul class="menu">
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-users text-aqua"></i> 5 new members joined today
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-warning text-yellow"></i> Very long description here that may not fit into the
-                                                page and may cause design problems
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-users text-red"></i> 5 new members joined
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-shopping-cart text-green"></i> 25 sales made
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-user text-red"></i> You changed your username
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="footer"><a href="#">View all</a></li>
-                            </ul>
-                        </li>-->
-                        <!-- Tasks: style can be found in dropdown.less -->
-<!--                        <li class="dropdown tasks-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-flag-o"></i>
-                                <span class="label label-danger">9</span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li class="header">You have 9 tasks</li>
-                                <li>
-                                     inner menu: contains the actual data 
-                                    <ul class="menu">
-                                        <li> Task item 
-                                            <a href="#">
-                                                <h3>
-                                                    Design some buttons
-                                                    <small class="pull-right">20%</small>
-                                                </h3>
-                                                <div class="progress xs">
-                                                    <div class="progress-bar progress-bar-aqua" style="width: 20%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                                                        <span class="sr-only">20% Complete</span>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </li>
-                                         end task item 
-                                        <li> Task item 
-                                            <a href="#">
-                                                <h3>
-                                                    Create a nice theme
-                                                    <small class="pull-right">40%</small>
-                                                </h3>
-                                                <div class="progress xs">
-                                                    <div class="progress-bar progress-bar-green" style="width: 40%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                                                        <span class="sr-only">40% Complete</span>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </li>
-                                         end task item 
-                                        <li> Task item 
-                                            <a href="#">
-                                                <h3>
-                                                    Some task I need to do
-                                                    <small class="pull-right">60%</small>
-                                                </h3>
-                                                <div class="progress xs">
-                                                    <div class="progress-bar progress-bar-red" style="width: 60%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                                                        <span class="sr-only">60% Complete</span>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </li>
-                                         end task item 
-                                        <li> Task item 
-                                            <a href="#">
-                                                <h3>
-                                                    Make beautiful transitions
-                                                    <small class="pull-right">80%</small>
-                                                </h3>
-                                                <div class="progress xs">
-                                                    <div class="progress-bar progress-bar-yellow" style="width: 80%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                                                        <span class="sr-only">80% Complete</span>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </li>
-                                         end task item 
-                                    </ul>
-                                </li>
-                                <li class="footer">
-                                    <a href="#">View all tasks</a>
-                                </li>
-                            </ul>
-                        </li>-->
+                      
                         <li class="dropdown user user-menu" >
 
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -311,7 +135,7 @@ echo json_encode([
                     @if($pem=='true')
                   <li @if($segments_var[0]=='users') class="treeview active" @else class="treeview" @endif>
                         <a href="#">
-                            <i class="fa fa-user"></i> <span>Profiles</span>
+                            <i class="fa fa-user"></i> <span>User Management</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
@@ -320,10 +144,7 @@ echo json_encode([
                             <li @if($segments_var[0]=='users') class="active" @endif><a href="{{route('users.index')}}">
                                     <i class="fa fa-users"></i> @lang('menu.users.user') 
                                 </a></li>
-                            <li @if($segments_var[0]=='changepasswords') class="active" @endif><a href="{{route('changepasswords.create')}}">
-                                    <i class="fa fa-key"></i> @lang('menu.users.changepassword') 
-                                </a></li>   
-                         </ul>
+                          </ul>
                     </li>
                     @endif
                     
@@ -339,70 +160,109 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
 ,'concessions','trip_cancellation_reasons','inspector_remarks','payout_reasons','denominations','pass_types','crew_details','')
                        @endphp
                         <ul @if(in_array($segments_var[0],$array)) class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
-                            <li @if($segments_var[0]=='depots') class="active" @endif><a href="{{route('depots.index')}}">
-                                    <i class="fa fa-bus"></i> @lang('menu.depots.title') 
+                             
+                          @if(menuPermission('depots')==1)
+                          <li @if($segments_var[0]=='depots') class="active" @endif><a href="{{route('depots.index')}}">
+                                    <i class="fa fa-bus"></i> @lang('menu.depots.title')
                              </a>
                            </li>
+                           @endif
+                            @if(menuPermission('bus_types')==1)
                             <li @if($segments_var[0]=='bus_types') class="active" @endif><a href="{{route('bus_types.index')}}">
                                     <i class="fa fa-bus"></i> @lang('menu.bus_types.title') 
                             </a>
                            </li>
+                            @endif
+                            @if(menuPermission('services')==1)
                             <li @if($segments_var[0]=='services') class="active" @endif><a href="{{route('services.index')}}">
                                     <i class="fa fa-briefcase"></i> @lang('menu.services.title') 
                             </a>
                             </li>
+                           @endif
+                            @if(menuPermission('vehicles')==1)
+                             
                             <li @if($segments_var[0]=='vehicles') class="active" @endif><a href="{{route('vehicles.index')}}">
                                     <i class="fa fa-bus"></i> @lang('menu.vehicles.title') 
                             </a>
                             </li>
+                                @endif
+                            @if(menuPermission('shifts')==1)
                             <li @if($segments_var[0]=='shifts') class="active" @endif><a href="{{route('shifts.index')}}">
                                     <i class="fa fa-calendar"></i> @lang('menu.shifts.title') 
                             </a>
+                                     @endif
+                            @if(menuPermission('stops')==1)
                             <li @if($segments_var[0]=='stops') class="active" @endif><a href="{{route('stops.index')}}">
                                     <i class="fa fa-bus"></i> @lang('menu.stops.title') 
                             </a>
+                                     @endif
+                            @if(menuPermission('routes')==1)
                             <li @if($segments_var[0]=='routes') class="active" @endif><a href="{{route('routes.index')}}">
                                     <i class="fa fa-map-marker"></i> @lang('menu.routes.title') 
                             </a>
                              </li>
+                                 @endif
+                            @if(menuPermission('duties')==1)
                             <li @if($segments_var[0]=='duties') class="active" @endif><a href="{{route('duties.index')}}">
                                     <i class="fa fa-file"></i> @lang('menu.duties.title') 
                             </a>
                             </li>
-                            
+                                @endif
+                            @if(menuPermission('targets')==1)
                             <li @if($segments_var[0]=='targets') class="active" @endif><a href="{{route('targets.index')}}">
                                     <i class="fa fa-bullseye"></i> @lang('menu.targets.title') 
                             </a>
-                                 
+                            @endif
+                            @if(menuPermission('trips')==1)
+                            <li @if($segments_var[0]=='trips') class="active" @endif><a href="{{route('trips.index')}}">
+                                    <i class="fa fa-tripadvisor"></i> @lang('menu.trips.title') 
+                            </a>
+                            @endif
+                            @if(menuPermission('fares')==1)   
                             <li @if($segments_var[0]=='fares') class="active" @endif><a href="{{route('fares.index')}}">
                                     <i class="fa fa-inr"></i> @lang('menu.fares.title') </a>
                            </li>
+                               @endif
+                            @if(menuPermission('concession_fare_slabs')==1)
                            <li @if($segments_var[0]=='concession_fare_slabs') class="active" @endif><a href="{{route('concession_fare_slabs.index')}}">
                                     <i class="fa fa-inr"></i> @lang('menu.concession_fare_slabs.title') </a>
                            </li>
+                               @endif
+                            @if(menuPermission('concessions')==1)
                            <li @if($segments_var[0]=='concessions') class="active" @endif><a href="{{route('concessions.index')}}">
                                     <i class="fa fa-inr"></i> @lang('menu.concessions.title') </a>
                            </li>
+                               @endif
+                            @if(menuPermission('trip_cancellation_reasons')==1)
                            <li @if($segments_var[0]=='trip_cancellation_reasons') class="active" @endif><a href="{{route('trip_cancellation_reasons.index')}}">
                                     <i class="fa fa-inr"></i> @lang('menu.trip_cancellation_reason.title') </a>
                            </li>
+                            @endif
+                            @if(menuPermission('inspector_remarks')==1)
                            <li @if($segments_var[0]=='inspector_remarks') class="active" @endif><a href="{{route('inspector_remarks.index')}}">
                                     <i class="fa fa-user"></i> @lang('menu.inspector_remarks.title') </a>
                            </li>
-                           
+                            @endif
+                            @if(menuPermission('payout_reasons')==1)
                            <li @if($segments_var[0]=='payout_reasons') class="active" @endif><a href="{{route('payout_reasons.index')}}">
                                     <i class="fa fa-cc-mastercard"></i> @lang('menu.payout_reasons.title') </a>
                            </li>
+                               @endif
+                            @if(menuPermission('denominations')==1)
                            <li @if($segments_var[0]=='denominations') class="active" @endif><a href="{{route('denominations.index')}}">
                                     <i class="fa fa-plus"></i> @lang('menu.denominations.title') </a>
                            </li>
+                               @endif
+                            @if(menuPermission('pass_types')==1)
                            <li @if($segments_var[0]=='pass_types') class="active" @endif><a href="{{route('pass_types.index')}}">
                                     <i class="fa fa-lock"></i> @lang('menu.pass_types.title') </a>
                            </li>
+                               @endif
+                            @if(menuPermission('crew_details')==1)
                            <li @if($segments_var[0]=='crew_details') class="active" @endif><a href="{{route('crew_details.index')}}">
                                     <i class="fa fa-eye"></i> @lang('menu.crew_details.title') </a>
                            </li>
-                             
+                             @endif
                          </ul>
                     </li>
                     @php $pem=menuDisplayByUser($result, 'ETM_details','view'); @endphp
@@ -429,9 +289,16 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
-                        <ul @if($segments_var[0]=='roles' || $segments_var[0]=='permissions' || $segments_var[0]=='settings') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
+                        <ul @if($segments_var[0]=='changepasswords' || $segments_var[0]=='permissions' || $segments_var[0]=='settings') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
                          <li @if($segments_var[0]=='roles') class="active" @endif><a href="{{route('permissions.index')}}"><i class="fa fa-key"></i>@lang('menu.settings.permissions')</a>
                             </li>
+                              <li @if($segments_var[0]=='changepasswords') class="active" @endif><a href="{{route('changepasswords.create')}}">
+                                    <i class="fa fa-key"></i> @lang('menu.users.changepassword') 
+                                </a></li>  
+                            
+                            
+                            
+                            
                          </ul>
                     </li>
                     @endif
@@ -533,10 +400,12 @@ $.widget.bridge('uibutton', $.ui.button);
 
 <script src="{{ asset(elixir('js/demo.js')) }}"></script>
 <script src="{{ asset(elixir('js/jQueryRotate.js')) }}"></script>
+
 <script src="{{ asset(elixir('plugins/datatables/dataTables.bootstrap.min.js')) }}"></script>
 
 <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://www.datatables.net/rss.xml">
 <!--<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css">-->
+
 
  <link rel="stylesheet" href="{{ asset('css/buttons.dataTables.min.css') }}">
 <style type="text/css" class="init"></style>
@@ -551,7 +420,10 @@ $.widget.bridge('uibutton', $.ui.button);
 <script type="text/javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.1.2/js/buttons.html5.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.1.2/js/buttons.print.min.js"></script>
+
+
 <script type="text/javascript">
+  
 $('body').on('focus',".multiple_date", function(){
          $(this).datepicker({
               dateFormat: 'dd-mm-yy',
