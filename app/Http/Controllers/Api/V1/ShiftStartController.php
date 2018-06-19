@@ -22,10 +22,10 @@ class ShiftStartController extends Controller
     		'start_timestamp' => 'required',
     	]);
 
-    	if($validator->fails())
+    	/*if($validator->fails())
     	{
     		return response()->json(['statusCode'=>'Error', 'data'=>$validator->errors()]);
-    	}
+    	}*/
 
     	$shiftStart = ShiftStart::create($request->all());
 
