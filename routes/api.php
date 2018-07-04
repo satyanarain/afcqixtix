@@ -15,4 +15,5 @@ use Illuminate\Http\Request;
 
 Route::group(['namespace'=>'Api\V1', 'prefix'=>'v1'], function(){
 	Route::post('shiftstart', 'ShiftStartController@store');
+	Route::get('getsqlitedbname', 'CommonController@getSqliteDbName');
 });
