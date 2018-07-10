@@ -9,7 +9,7 @@ class RouteDetail extends Model
      * @var string
      */
     protected $table = 'route_details';
-    protected $guarded = [];
+    protected $guarded = ['is_this_by'];
       public function user()
     {
         return $this->belongsTo('App\Models\User');

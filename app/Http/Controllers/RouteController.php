@@ -60,6 +60,7 @@ class RouteController extends Controller {
      * @return Response
      */
     public function store(StoreRouteRequest $routesRequest) {
+      
         $routesRequest->route;
         
 //      $sql=  Route::where([['route',$routesRequest->route],['direction',$routesRequest->direction]]);

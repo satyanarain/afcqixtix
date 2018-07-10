@@ -48,9 +48,7 @@ $stage_number = $requestData->stage_number;
 $distance = $requestData->distance;
 $hot_key = $requestData->hot_key;
 
-//echo "<pre>";
-//print_r($_POST);
-//exit();
+
 
 
 foreach($stop_id as $key => $n ) 
