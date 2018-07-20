@@ -56,7 +56,7 @@ if($maxid->$fieldname!='')
 }
 } else {
 
- return  $maxid;
+ return  $maxid;  
 }
 
 
@@ -64,26 +64,26 @@ if($maxid->$fieldname!='')
 
 function orderList($table='',$id='',$field1='',$field2='',$field3='',$field4='',$t1='',$t1_id='',$t2='',$t2_id='')
 {
-
-     if($t1!='')
+    
+     if($t1!='') 
      {
        $sql = DB::table('concessions')->select('*','concessions.id as id','users.name as username','concession_provider_masters.name as concession_provider_master_id','services.name as name','concession_masters.name as con_name','concessions.order_number as order_number')
                 ->leftjoin('users', 'users.id', '=', 'concessions.user_id')
                 ->leftjoin('services', 'concessions.service_id', '=', 'services.id')
                 ->leftjoin('concession_provider_masters', 'concession_provider_masters.id', '=', 'concessions.concession_provider_master_id')
                 ->leftjoin('concession_masters', 'concession_masters.id', '=', 'concessions.concession_master_id')
-                ->orderby('concessions.order_number')
+                ->orderby('concessions.order_number')       
                 ->get();
-     }
+     } 
      else {
       $sql = DB::table($table)->select('*')->orderby('order_number')->get() ;
      }
-
+            
     ?>
-    <?php foreach($sql as $value)
+    <?php foreach($sql as $value) 
       { ?>
         <li id="<?php echo "order".$value->$id; ?>" class="list-group-order-sub">
-
+                        
              <?php
              if($field1!='')
              { ?>
@@ -93,11 +93,11 @@ function orderList($table='',$id='',$field1='',$field2='',$field3='',$field4='',
              if($field2!='')
              { ?>
         <a href="javascript:void(0);"><?php echo $value->$field2; ?></a>
-
-        <?php }
+       
+        <?php } 
              if($field3!='')
              { ?>
-
+       
         <a href="javascript:void(0);"><?php echo $value->$field3; ?></a>
            <?php
              }
@@ -106,9 +106,9 @@ function orderList($table='',$id='',$field1='',$field2='',$field3='',$field4='',
        <a href="javascript:void(0);"><?php echo $value->$field4; ?></a>
          <?php } ?>
        </li>
-
-      <?php } ?>
-
+		
+      <?php } ?>   
+       
 <?php
 }
 
@@ -121,7 +121,7 @@ function BreadCrumb() {
         <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
     <?php
     if ($segments[0] != '') {
-
+        
         ?>
             <li><a href="<?php echo route($segments[0] . '.index') ?>"><?php echo ucwords($segments_value); ?></a></li>
         <?php } ?>
@@ -134,7 +134,7 @@ function BreadCrumb() {
                     <li class="active"><?php echo substr(ucwords($segments_value), 0, -1) ?> Update</li>
                 <?php } else { ?>
                     <li class="active"><?php echo substr(ucwords($segments_value), 0, -1) ?> Profile</li>
-                <?php } ?>
+                <?php } ?>   
             <?php
             } else {
                 $segments_value = str_replace("_", "&nbsp", $segments[0]);
@@ -143,7 +143,7 @@ function BreadCrumb() {
                 <li class="active"><?php echo ucwords($segments[1]) . " " . substr(ucwords($segments_value), 0, -1) ?></li>
             <?php }
         }
-        ?>
+        ?>     
     </ol>
         <?php } ?>
         <?php
@@ -154,11 +154,11 @@ function BreadCrumb() {
             $segments_value = str_replace("_", " ", $segments[0]);
              if(is_numeric(end($segments)) && empty($segments[2]) && $segments[0]=='users')
              {
-                 echo substr(ucwords($segments_value), 0, -1)."&nbsp;Profile ";
+                 echo substr(ucwords($segments_value), 0, -1)."&nbsp;Profile ";     
              } else {
               echo "Manage ".substr(ucwords($segments_value), 0, -1);
              }
-            ?>
+            ?> 
     <?php
 }
 
@@ -174,7 +174,7 @@ function headingMain() {
             echo ucwords($segments[1]) . " " . substr(ucwords($segments_value), 0, -1);
         }
     } else {
-
+        
         $segments_value = str_replace("_", " ", $segments[0]);
         echo "List of All " . ucwords($segments_value);
     }
@@ -191,7 +191,7 @@ function headingMainOrder() {
             echo ucwords($segments[1]) . " " . substr(ucwords($segments_value), 0, -1);
         }
     } else {
-
+        
         $segments_value = str_replace("_", " ", $segments[0]);
         echo substr(ucwords($segments_value),0,-1);
     }
@@ -200,52 +200,52 @@ function headingMainOrder() {
 function PopUpheadingMain($result) {
     $segments = '';
     $segments = Request::segments();
-
+ 
         $areay=array('-','_');
         $segments_value = str_replace($areay, " ", $segments[0]);
        return $result= substr(ucwords($segments_value), 0, -1);
-
+  
 }
 ?>
 <?php
 
 function displayList($table = '', $fieldname = '', $orderby_fieldname='',$asc_dsc='') {
-
+    
         if($orderby_fieldname!='')
          {
             $result = DB::table($table)->orderBy($orderby_fieldname,$asc_dsc)->pluck($fieldname, 'id');
          }else
          {
-          $result = DB::table($table)->pluck($fieldname, 'id');
+          $result = DB::table($table)->pluck($fieldname, 'id');    
          }
-
+            
     return $result;
 }
 function displayPath($fieldname = '',$path_id='',$deviated_path='') {
     if($path_id!='')
     {
-     $selected= $path_id;
+     $selected= $path_id;  
     }
      if($deviated_path!='')
     {
-     $selected= $deviated_path;
+     $selected= $deviated_path;  
     }
-
+    
    //$selected;
         $routes = DB::table('routes')
         ->select('*','route_details.stop_id','routes.route','stops.stop','routes.id as id')
         ->leftjoin('route_details', 'route_details.stop_id', '=', 'routes.id')
         ->leftjoin('stops', 'route_details.stop_id', '=', 'stops.id')->get();
-
+        
 ?>
 <select name="<?php echo htmlentities($fieldname); ?>" class="form-control"><option value="">Select Path</option><?php foreach($routes as $value){ ?><option value="<?php echo $value->id; ?>"<?php if($value->id==$selected){ ?>selected="selected"<?php } ?>><?php echo htmlentities($value->route); ?><?php echo ucfirst(substr($value->direction,0,1));?> : <?php htmlentities(displayIdBaseName('stops',$value->source,'stop')); ?> - <?php htmlentities(displayIdBaseName('stops',$value->destination,'stop')); ?> via- <?php htmlentities(displayIdBaseName('stops',$value->via,'stop')); ?></option> <?php } ?></select><?php   }
 
 function dispalyImage($imagepath = '', $imagename, $class = '', $alt = '', $style = '') {
  if (file_exists($path)) {
          if ($imagename) {
-
+            
             echo Html::image($imagepath .$imagename,'',array('class'=>$class,'alt'=>$alt,'style'=>$style));
-            } else {
+            } else { 
             echo Html::image('images/photo/no_image.png','',array('class'=>$class,'alt'=>$alt,'style'=>$style));
         }
     } else {
@@ -258,7 +258,7 @@ function menuPermission($controllerName) {
  $user_id = Auth::id();
  $result= DB::table('permission_details')->where('user_id',$user_id)->first();
  $array_all=explode(',',$result->$controllerName);
-if(in_array('view',$array_all)){
+if(in_array('view',$array_all)){ 
  return true;
 } else {
  return false;
@@ -287,12 +287,12 @@ function actionEdit($action = '', $id = '',$status='') {
               <?php } ?>
                <?php } ?>
               <?php if($segments[0]=='users'){?>
-             <div
+             <div 
                  <?php if($status==1)
                  { ?>
-                 class="btn btn-small btn-success"
+                 class="btn btn-small btn-success" 
                <?php }else{ ?>
-                    class="btn btn-small btn-danger"
+                    class="btn btn-small btn-danger" 
               <?php } ?>
                  id="<?php echo $id; ?>" onclick="statusUpdate(this.id)">
                    <?php if($status==1)
@@ -315,7 +315,7 @@ function actionHeading($action = '', $newaction='') {
 
 function menuDisplayByUser($result,$menuname='',$action='') {
  $userid_menu = Auth::id();
-     $sql = DB::table('users')->select('*', 'users.id as id')->leftjoin('permission_details', 'users.id', '=', 'permission_details.user_id')
+     $sql = DB::table('users')->select('*', 'users.id as id')->leftjoin('permissions', 'users.id', '=', 'permissions.user_id')
             ->where('users.id', '=', $userid_menu)
             ->first();
     $array_value = $sql->$menuname;
@@ -333,9 +333,9 @@ function createButton($action = '', $title='',$order='',$order_id='',$privious='
    $menu_dis = $segments[0];
    $userid_menu = Auth::id();
    $sql = PermissionDetail::where('user_id', '=', $userid_menu)->first();
-   $dem_menu=$result = $sql[$menu_dis];
+   $dem_menu=$result = $sql[$menu_dis];  
    $array_menu= explode(',', $dem_menu);
-
+   
   if(in_array('create',$array_menu) && in_array($segments[0],$array_menu)){
   ?>
    <a href="<?php  echo route($segments[0].".".$action) ?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;<?php echo $title; ?></button></a>
@@ -343,9 +343,9 @@ function createButton($action = '', $title='',$order='',$order_id='',$privious='
  </br>
  </br>
       <button  class="btn btn-primary pull-left"  onclick="orderList('order_id','order_list')"><span class="fa fa-sort-desc"></span>&nbsp;Update Order</button>&nbsp;&nbsp;&nbsp;&nbsp;
- <?php
+ <?php 
    }
-}
+}   
 }
 
 function pagePermissionView($result)
@@ -364,7 +364,7 @@ function menuCreate($controllerName,$create='',$edit='',$view='',$id='',$control
    <tr>
      <td align="center" width="15%">
        <input type="checkbox" id="<?php echo "checkAll".$controllerName . $id; ?>" onclick="checkAll(this,this.id);">&nbsp;
-
+      
          <?php
                   $array=array('_','-');
                  $controllerName_heading= str_replace($array,' ', $controllerName);
@@ -380,7 +380,7 @@ function menuCreate($controllerName,$create='',$edit='',$view='',$id='',$control
                  {
                     echo  "Change Password";
                  }else{
-                   echo ucwords(substr($controllerName_heading,0,-1));
+                   echo ucwords(substr($controllerName_heading,0,-1)); 
                   }
                    ?></b>
    </td>
@@ -400,11 +400,11 @@ function menuCreate($controllerName,$create='',$edit='',$view='',$id='',$control
                            { ?>
                           <td><input class="<?php echo "checkAll".$controllerName . $id; ?>" type="checkbox" name="<?php echo $controllerName . "[]" ?>" value="<?php echo $view; ?>"  <?php if (in_array('view', explode(',', $controllerName_Value))) { ?> checked="checked" <?php } ?> id="<?php echo "showview" . $controllerName . $id; ?>">&nbsp;&nbsp;View</td>
                            <?php  } ?>
-                       </tr>
-                   </table>
+                       </tr>   
+                   </table>  
                </span>
            </td>
-       </tr>
-
+       </tr>  
+    
     <?php
 }
