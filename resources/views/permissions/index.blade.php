@@ -27,8 +27,9 @@
                         <tr>
                             <td>{{$value->role}}</td>
                             <td>{{$value->description}}</td>
-                            
-                        {{ actionEdit('edit',$value->id)}}
+                            <td>
+                                {{ actionEdit('edit',$value->id)}}
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>

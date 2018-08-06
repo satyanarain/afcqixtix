@@ -33,7 +33,9 @@
                             <td>{{$value->user_name}}</td>
                             <td>{{$value->role}}</td>
                             <td>{{$value->email}}</td>
-                            {{ actionEdit('edit',$value->id,$value->status)}}
+                            <td>
+                                {{ actionEdit('edit',$value->id,$value->status)}}
+                            </td>
                          </tr>
                         @endforeach
                         </tbody>

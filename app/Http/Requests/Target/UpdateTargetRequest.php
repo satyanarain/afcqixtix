@@ -25,8 +25,8 @@ class UpdateTargetRequest extends Request
     {
         
             return [
-                   'route_id' => 'required',
-                   'duty_id' => 'required',
+                   //'route_id' => 'required',
+                   //'duty_id' => 'required',
                    'shift_id' => 'required',
                    'epkm' => 'required',
                     'trip' => 'required'                   

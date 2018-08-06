@@ -27,14 +27,14 @@ class StoreFareRequest extends Request
     {
         $regex = "/^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$/";
            return [
-                   'service_id' => 'required'
+                   //'service_id' => 'required'
               ];
         
     }
   public function messages()
 {
     return [
-        'service_id.required' => 'Service name required',
+        //'service_id.required' => 'Service name required',
         'service_id.unique' => 'The service name has already been taken.',
     ];
 }

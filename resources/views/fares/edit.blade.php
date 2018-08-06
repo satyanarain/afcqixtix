@@ -1,7 +1,13 @@
 @extends('layouts.master')
 @section('header')
 <h1>{{headingBold()}}</h1>
-{{BreadCrumb()}}
+<ol class="breadcrumb">
+    <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li><a href="/bus_types">Bus Types</a></li>
+    <li><a href="{{route('bus_types.services.index',$bus_type_id,$service_id)}}">Services</a></li>
+    <li><a href="{{route('bus_types.services.fares.index',[$bus_type_id,$service_id])}}">Fares</a></li>
+    <li class="active">Update Fare</li>
+</ol>
 @stop
 @section('content')
 <div class="row">
@@ -23,7 +29,7 @@
                 <div class="box-body">
                    {!! Form::model($fares, [
         'method' => 'PATCH',
-        'route' => ['fares.update', $fares->id],
+        'route' => ['bus_types.services.fares.update',$bus_type_id,$service_id,$fare_details[0]->id],
         'files'=>true,
         'class'=>'form-horizontal',
         'enctype' => 'multipart/form-data'

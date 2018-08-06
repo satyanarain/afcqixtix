@@ -1,7 +1,12 @@
 @extends('layouts.master')
 @section('header')
 <h1>Duty Management {{--headingBold()--}}</h1>
-{{BreadCrumb()}}
+<ol class="breadcrumb">
+    <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li><a href="{{route('routes.index')}}">Routes</a></li>
+    <li><a href="{{route('routes.duties.index',$route_id)}}">Duties</a></li>
+    <li class="active">Update Duty</li>
+</ol>
 @stop
 @section('content')
 <div class="col-md-12">
@@ -22,7 +27,7 @@
             <div class="box-body">
                {!! Form::model($duties, [
         'method' => 'PATCH',
-        'route' => ['duties.update', $duties->id],
+        'route' => ['routes.duties.update',$route_id,$duties->id],
         'files'=>true,
         'class'=>'form-horizontal',
         'enctype' => 'multipart/form-data'

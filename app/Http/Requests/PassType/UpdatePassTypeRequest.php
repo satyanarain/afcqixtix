@@ -24,8 +24,8 @@ class UpdatePassTypeRequest extends Request
   public function rules()
     {
            return [
-                  'service_id' => 'required',
-                   'service_id' => 'required',
+                  //'service_id' => 'required',
+                   //'service_id' => 'required',
                    'concession_provider_master_id' => 'required',
                    'short_description' => 'required',
                    'info_message' => 'required',

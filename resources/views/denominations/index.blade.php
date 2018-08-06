@@ -29,7 +29,9 @@
                             <td>{{$value->denomination_master_id}}</td>
                              <td>{{$value->description}}</td>
                             <td>{{$value->price}}</td>
+                            <td>
                              {{ actionEdit('edit',$value->id)}}
+                            </td>
                         </tr>
                         @endforeach
                         </tbody>

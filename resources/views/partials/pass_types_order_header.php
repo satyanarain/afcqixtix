@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header-view" >
 <!--                <button type="button" class="close" data-dismiss="modal"><font class="white">&times;</font></button>-->
-                <h4 class="viewdetails_details"><span class="fa fa-ins"></span>&nbsp;<?php echo headingMainOrder(); ?></h4>
+                <h4 class="viewdetails_details"><span class="fa fa-ins"></span>&nbsp;Update Pass Type Order</h4>
             </div>
             <div class="modal-body-view">
                 <div class="alert-new-success" id="successMessage_order" style="display:none">
@@ -25,7 +25,7 @@
          </ul>
          </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="Close()">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -36,9 +36,9 @@
 <div class="modal fade" id="view_detail" role="dialog">
  </div>
 <script>
- function orderList(order_id,order_list)
+ function orderList(order_id,order_list,service_id)
    {
-   var urldata=   '/pass_types/' + order_list;
+   var urldata=   '/pass_types/' + order_list+"/"+service_id;
    // alert(urldata)
     $.ajax({
 		type: "GET",
@@ -92,13 +92,13 @@ function updateOrder() {
 	var order_string = item_order;
 	$.ajax({
 		type: "GET",
-		url: "/pass_types/sort_order/"+order_string,
+		url: "/pass_types/sort_order/"+order_string+"/"+$("#service_id").val()+"/"+$("#bus_type_id").val(),
 		data: order_string,
 		cache: false,
 		success: function(data){
                   $("#successMessage_order").show();
                   $("#success_order").html("Order Number Updated successfully.");
-                  $("#example1").html(data);
+                  $("#example10").html(data);
                   setTimeout(function() {
                   $('#successMessage_order').fadeOut('fast');
         }, 5000); // <-- time in milliseconds 

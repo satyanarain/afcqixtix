@@ -128,8 +128,8 @@ class BusTypesController extends Controller
                                 <td><?php echo $value->bus_type; ?></td>
                                 <td><?php echo $value->order_number; ?></td>
                                 <td><?php echo $value->abbreviation ?></td>
-                                <td><a  href="<?php echo route("bus_types.edit", $value->id) ?>" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <button  class="btn btn-small btn-primary"  data-toggle="modal" onclick="viewDetails(<?php echo $value->id ?>,'view_detail')"><span class="glyphicon glyphicon-search"></span>&nbsp;View</button>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                <td><a  href="<?php echo route("bus_types.edit", $value->id) ?>" class="" ><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a style="cursor: pointer;" data-toggle="modal" onclick="viewDetails(<?php echo $value->id ?>,'view_detail')"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;</td>
                             </tr>
             <?php } ?>
                 </tbody>

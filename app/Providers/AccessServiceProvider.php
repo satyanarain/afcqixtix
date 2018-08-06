@@ -128,8 +128,8 @@ class AccessServiceProvider extends ServiceProvider
         );
         
         $this->app->bind(
-            \App\Repositories\CrewDetail\CrewDetailRepositoryContract::class,
-            \App\Repositories\CrewDetail\CrewDetailRepository::class
+            \App\Repositories\Crew\CrewRepositoryContract::class,
+            \App\Repositories\Crew\CrewRepository::class
         );
         
         $this->app->bind(

@@ -35,13 +35,17 @@ class ConcessionFareSlabController extends Controller {
      *
      * @return Response
      */
- public function index() {
-                $concession_fare_slabs = DB::table('concession_fare_slabs')->select('*','concession_fare_slabs.id as id','users.name as username','services.name as name')
-                ->leftjoin('users', 'users.id', '=', 'concession_fare_slabs.user_id')
-                ->leftjoin('services', 'concession_fare_slabs.service_id', '=', 'services.id')
-                ->get();
-                 return view('concession_fare_slabs.index')->withConcessionFareSlabs($concession_fare_slabs);
-    }
+ public function index($bus_type_id,$service_id)
+{
+    $concessionFareSlabs = DB::table('concession_fare_slabs')
+    ->select('*','concession_fare_slabs.id as id','users.name as username','services.name as name')
+    ->leftjoin('users', 'users.id', '=', 'concession_fare_slabs.user_id')
+    ->leftjoin('services', 'concession_fare_slabs.service_id', '=', 'services.id')
+    ->where('service_id', $service_id)
+    ->get();
+    //echo '<pre>';print_r($concession_fare_slabs);die;
+     return view('concession_fare_slabs.index',compact('concessionFareSlabs','bus_type_id','service_id'));
+}
  public function Previous() {
     $concession_fare_slabs = DB::table('fare_logs')->select('*','fare_logs.id as id')
                 ->leftjoin('services', 'fare_logs.service_id', '=', 'services.id')
@@ -49,8 +53,8 @@ class ConcessionFareSlabController extends Controller {
         return view('concession_fare_slabs.previous')->withConcessionFareSlabs($concession_fare_slabs);
     }
 
-    public function create() {
-     return view('concession_fare_slabs.create');
+    public function create($bus_type_id,$service_id,Request $request) {
+        return view('concession_fare_slabs.create',compact('bus_type_id','service_id'));
     }
 
     /**
@@ -64,9 +68,10 @@ class ConcessionFareSlabController extends Controller {
      * @param ConcessionFareSlab $concession_fare_slabs
      * @return Response
      */
-    public function store(StoreConcessionFareSlabRequest $concession_fare_slabsRequest) {
+    public function store($bus_type_id,$service_id,StoreConcessionFareSlabRequest $concession_fare_slabsRequest) {
+        $concession_fare_slabsRequest->request->add(['service_id'=> $service_id]);
         $getInsertedId = $this->concession_fare_slabs->create($concession_fare_slabsRequest);
-        return redirect()->route('concession_fare_slabs.index');
+        return redirect()->route('bus_types.services.concession_fare_slabs.index',[$bus_type_id,$service_id]);
     }
 
     /**
@@ -89,9 +94,9 @@ class ConcessionFareSlabController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function edit($id) {
+    public function edit($bus_type_id,$service_id,$id) {
         $concession_fare_slabs = ConcessionFareSlab::findOrFail($id);
-        return view('concession_fare_slabs.edit',compact('concession_fare_slabs'));
+        return view('concession_fare_slabs.edit',compact('concession_fare_slabs','service_id','bus_type_id'));
     }
 
     /**
@@ -100,9 +105,10 @@ class ConcessionFareSlabController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function update($id, UpdateConcessionFareSlabRequest $request) {
+    public function update($bus_type_id,$service_id,$id, UpdateConcessionFareSlabRequest $request) {
+        $request->request->add(['service_id'=> $service_id]);
         $this->concession_fare_slabs->update($id, $request);
-        return redirect()->route('concession_fare_slabs.index');
+        return redirect()->route('bus_types.services.concession_fare_slabs.index',[$bus_type_id,$service_id]);
     }
     public function getDuty($id) {
         if($id!='')

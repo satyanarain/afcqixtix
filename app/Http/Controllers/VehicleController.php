@@ -33,21 +33,22 @@ class VehicleController extends Controller
      *
      * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
-     $vehicles = DB::table('vehicles')->select('vehicles.vehicle_registration_number','vehicles.depot_id','vehicles.bus_type_id','vehicles.vehicle_registration_number','depots.id','depots.name as name','bus_types.id','bus_types.bus_type','vehicles.created_at as created_at','vehicles.updated_at as updated_at','vehicles.id as id','vehicles.user_id as user_id','users.user_name as user_name')
+        $depot_id = $request->depot_id;
+        $vehicles = DB::table('vehicles')->select('vehicles.vehicle_registration_number','vehicles.depot_id','vehicles.bus_type_id','vehicles.vehicle_registration_number','depots.id','depots.name as name','bus_types.id','bus_types.bus_type','vehicles.created_at as created_at','vehicles.updated_at as updated_at','vehicles.id as id','vehicles.user_id as user_id','users.user_name as user_name')
             ->leftjoin('depots', 'depots.id', '=', 'vehicles.depot_id')
             ->leftjoin('users', 'users.id', '=', 'vehicles.user_id')
-         ->leftjoin('bus_types', 'bus_types.id', '=', 'vehicles.bus_type_id')
+            ->leftjoin('bus_types', 'bus_types.id', '=', 'vehicles.bus_type_id')
+            ->where('vehicles.depot_id',$request->depot_id)  
             ->get();
-
-    return view('vehicles.index')->withVehicles($vehicles);
-   
+        return view('vehicles.index',compact('vehicles','depot_id'));
     }
-    public function create()
+    public function create(Request $request)
     {
-     //$vehicles = Vehicle::findOrFail();
-     return view('vehicles.create');
+        $depot_id = $request->depot_id;
+        //$vehicles = Vehicle::findOrFail();
+        return view('vehicles.create',compact('depot_id'));
     }
  
     /**
@@ -61,11 +62,16 @@ class VehicleController extends Controller
      * @param Vehicle $vehicles
      * @return Response
      */
-    public function store(StoreVehicleRequest $vehiclesRequest)
+    public function store($depot_id,StoreVehicleRequest $vehiclesRequest)
     {
-     
+        //echo $depot_id;die;
+        
+        //$depot_id = $vehiclesRequest->depot_id;die;
+        //$vehiclesRequest->depot_id = $depot_id;
+        $vehiclesRequest->request->add(['depot_id'=> $depot_id]);
+        //echo '<pre>';print_r($vehiclesRequest->all());die('fdfd');
         $getInsertedId = $this->vehicles->create($vehiclesRequest);
-        return redirect()->route('vehicles.index');         
+        return redirect()->route('depots.vehicles.index',$depot_id);         
     }
     /**
      * Display the specified resource.
@@ -89,11 +95,11 @@ class VehicleController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function edit($id)
+    public function edit($depot_id,$id)
     {
-      
+      //die($id);
        $vehicles=Vehicle::findOrFail($id);
-      return view('vehicles.edit')->withVehicles($vehicles);
+      return view('vehicles.edit',compact('vehicles','depot_id'));
     }
     /**
      * Update the specified resource in storage.
@@ -101,15 +107,21 @@ class VehicleController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function update($id, UpdateVehicleRequest $request)
+    public function update($depot_id,$id, UpdateVehicleRequest $request)
     {
+         //echo $depot_id;die;
+        
+        //$depot_id = $vehiclesRequest->depot_id;die;
+        //$vehiclesRequest->depot_id = $depot_id;
+        //$request->request->add(['depot_id'=> $depot_id]);
+        //echo '<pre>';print_r($request->all());die('fdfd');
          $sql=Vehicle::where([['vehicle_registration_number',$request->vehicle_registration_number],['id','!=',$id]])->first();
      if(count($sql)>0)
      {
        return redirect()->back()->withErrors(['Vehicle registration number has already been taken.']);
       } else {   
           $this->vehicles->update($id, $request);
-        return redirect()->route('vehicles.index');
+        return redirect()->route('depots.vehicles.index',$depot_id);   
       }
     }
 

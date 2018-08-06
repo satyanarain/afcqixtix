@@ -32,7 +32,10 @@
                             </td>
                             <td>{{$value->abbreviation}}
                             </td>
-                            {{ actionEdit('edit',$value->id)}}
+                            <td>
+                                {{ actionEdit('edit',$value->id)}}
+                                <a href="<?php echo route('bus_types.services.index',$value->id)?>" title="Manage Services" class="" ><span class="fa fa-briefcase"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </td>
                          </tr>
                         @endforeach
                         </tbody>

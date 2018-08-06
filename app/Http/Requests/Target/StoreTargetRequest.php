@@ -26,8 +26,8 @@ class StoreTargetRequest extends Request
     public function rules()
     {
             return [
-                   'route_id' => 'required',
-                   'duty_id' => 'required',
+                   //'route_id' => 'required',
+                   //'duty_id' => 'required',
                    'shift_id' => 'required',
                    'epkm' => 'required',
                     'trip' => 'required'   

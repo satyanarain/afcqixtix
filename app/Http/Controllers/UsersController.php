@@ -34,7 +34,6 @@ class UsersController extends Controller
     use activityLog;
     protected $users;
     protected $roles;
-    protected $departments;
    // protected $settings;
     public function __construct(
         UserRepositoryContract $users,
@@ -189,11 +188,11 @@ class UsersController extends Controller
             $payout_reasons = implode(',', $requestData->payout_reasons);
             $denominations = implode(',', $requestData->denominations);
             $pass_types = implode(',', $requestData->pass_types);
-            $crew_details = implode(',', $requestData->crew_details);
+            $crew = implode(',', $requestData->crew);
             $ETM_details = implode(',', $requestData->ETM_details);
            PermissionDetail::where('user_id',$id)->update(['role_id' => $requestData->role_id,'created_by'=>$created_by,'users'=>$users,'changepasswords'=>$changepasswords,'permissions'=>$permissions,'depots'=>$depots,'bus_types'=>$bus_types,'services'=>$services,'vehicles'=>$vehicles
             ,'shifts'=>$shifts,'stops'=>$stops,'routes'=>$routes,'duties'=>$duties,'targets'=>$targets,'trips'=>$trips,'fares'=>$fares,'concession_fare_slabs'=>$concession_fare_slabs,'concessions'=>$concessions,'trip_cancellation_reasons'=>$trip_cancellation_reasons
-           ,'inspector_remarks'=>$inspector_remarks,'payout_reasons'=>$payout_reasons,'denominations'=>$denominations,'pass_types'=>$pass_types,'crew_details'=>$crew_details,'ETM_details'=>$ETM_details]);     
+           ,'inspector_remarks'=>$inspector_remarks,'payout_reasons'=>$payout_reasons,'denominations'=>$denominations,'pass_types'=>$pass_types,'crew'=>$crew,'ETM_details'=>$ETM_details]);     
            //  $permission->fill($input)->save();
       
        $user = User::findorFail($id);
@@ -272,7 +271,7 @@ public function roleupdate($id, Request $request)
                                 <?php menuCreate('payout_reasons','create','edit','view',$permissions->id,$permissions->payout_reasons); ?>
                                 <?php menuCreate('denominations','create','edit','view',$permissions->id,$permissions->denominations); ?>
                                 <?php menuCreate('pass_types','create','edit','view',$permissions->id,$permissions->pass_types); ?>
-                                <?php menuCreate('crew_details','create','edit','view',$permissions->id,$permissions->crew_details); ?>
+                                <?php menuCreate('crew','create','edit','view',$permissions->id,$permissions->crew); ?>
                                
                             </table> 
                         </div>

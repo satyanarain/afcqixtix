@@ -26,7 +26,7 @@ class StoreVehicleRequest extends Request
     {
         
             return [
-                  'depot_id' => 'required',
+                  //'depot_id' => 'required',
                    'vehicle_registration_number' => 'required|unique:vehicles,vehicle_registration_number',
                    'bus_type_id' => 'required'
              ];

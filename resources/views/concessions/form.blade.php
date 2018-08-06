@@ -1,11 +1,3 @@
-@php $services=displayList('services','name')@endphp
-<div class="form-group">
-        {!! Form::label('service_id', Lang::get('Service'), ['class' => 'col-md-3 control-label']) !!}
-         <div class="col-md-7 col-sm-12 required">
-        {!! Form::select('service_id',$services,isset($concessions->service_id) ? $concessions->service_id : selected,['class' => 'col-md-6 form-control','required' => 'required','placeholder'=>"Select Service"]) !!}
-</div>
-</div>
-
 <div class="form-group">
     @php $concession_provider_masters=displayList('concession_provider_masters','name')@endphp
     {!! Form::label('concession_provider_master_id', Lang::get('Concession Provider'), ['class' => 'col-md-3 control-label']) !!}
@@ -34,7 +26,7 @@
     {!! Form::text('order_number',null, ['class' => 'col-md-6 form-control','readonly'=>readonly]) !!}
      </div>
      @else
-    @php $concessions_order= maxId('concessions','order_number') @endphp
+    @php $concessions_order= maxId1('concessions','order_number','service_id',$service_id) @endphp
      {!! Form::label('order_number', Lang::get('Order Number'), ['class' => 'col-md-3 control-label']) !!}
       <div class="col-md-7 col-sm-12 required">
     {!! Form::text('order_number', $concessions_order, ['class' => 'col-md-6 form-control','readonly'=>readonly]) !!}

@@ -24,7 +24,7 @@ class UpdateConcessionRequest extends Request
   public function rules()
     {
            return [
-                   'service_id' => 'required',
+                   //'service_id' => 'required',
                    'concession_master_id' => 'required',
                    'description' => 'required',
                    'order_number' => 'required',

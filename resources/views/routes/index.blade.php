@@ -30,7 +30,10 @@
                             <td>{{$value->route}}</td>
                             <td>{{$value->route}}{{ucfirst(substr($value->direction,0,1))}} : {{displayIdBaseName('stops',$value->source,'stop')}} - {{displayIdBaseName('stops',$value->destination,'stop')}} via- {{displayIdBaseName('stops',$value->via,'stop')}}</td>
                             <td>{{$value->direction}}</td>
+                            <td>
                              {{ actionEdit('edit',$value->id)}}
+                             <a href="<?php echo route('routes.duties.index',$value->id)?>" title="Manage Duty" class="" ><span class="fa fa-briefcase"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </td>
                         </tr>
                         @endforeach
                         </tbody>

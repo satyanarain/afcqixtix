@@ -21,7 +21,7 @@
             </div><!-- /.box-header -->
             <div class="box-body">
                 {!! Form::open([
-                'route' => 'duties.store',
+                'route' => ['routes.duties.store',$route_id],
                 'files'=>true,
                 'class'=>'form-horizontal',
                 'enctype' => 'multipart/form-data'

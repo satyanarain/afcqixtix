@@ -33,9 +33,9 @@
 <div class="modal fade" id="view_detail" role="dialog">
  </div>
 <script>
- function orderList(order_id,order_list)
+ function orderList(order_id,order_list,service_id)
    {
-   var urldata=   '/concessions/' + order_list;
+   var urldata=   '/concessions/' + order_list+"/"+service_id;
     
     $.ajax({
 		type: "GET",
@@ -87,7 +87,7 @@ function updateOrder() {
 	var order_string = item_order;
 	$.ajax({
 		type: "GET",
-		url: "/concessions/sort_order/"+order_string,
+		url: "/concessions/sort_order/"+order_string+"/"+$("#service_id").val()+"/"+$("#bus_type_id").val(),
 		data: order_string,
 		cache: false,
 		success: function(data){

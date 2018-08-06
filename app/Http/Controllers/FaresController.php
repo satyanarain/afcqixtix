@@ -36,9 +36,15 @@ class FaresController extends Controller {
      *
      * @return Response
      */
- public function index() {
-        $service = Service::all();
-        return view('fares.index')->withFares($service);
+ public function index($bus_type_id,$service_id,Request $request) {
+     //print_r($request->all());
+//     echo $bus_type_id;
+//     echo $service_id;
+//     echo $bus_type_id = $request->bus_type_id;die;
+    $fares = DB::table('fares')->where('service_id', $service_id)->get();
+    return view('fares.index',compact('fares','bus_type_id','service_id'));
+        //$service = Service::all();
+        //return view('fares.index')->withFares($service);
     }
 
     public function Previous() {
@@ -48,8 +54,9 @@ class FaresController extends Controller {
         return view('fares.previous')->withFares($fares);
     }
 
-    public function create() {
-        return view('fares.create');
+    public function create($bus_type_id,$service_id,Request $request) 
+    {
+        return view('fares.create',compact('bus_type_id','service_id'));
     }
 
     /**
@@ -63,9 +70,20 @@ class FaresController extends Controller {
      * @param Fare $fares
      * @return Response
      */
-    public function store(StoreFareRequest $faresRequest) {
-        $getInsertedId = $this->fares->create($faresRequest);
-        return redirect()->route('fares.index');
+    public function store($bus_type_id,$service_id,StoreFareRequest $faresRequest) {
+        $faresRequest->request->add(['service_id'=> $service_id]);
+        //echo '<pre>';print_r($faresRequest->all());die;
+        foreach($faresRequest->stage as $key=>$stage)
+        {
+            $data = array();
+            $data['stage'] = $stage;
+            $data['adult_ticket_amount'] = $faresRequest->adult_ticket_amount[$key];
+            $data['child_ticket_amount'] = $faresRequest->child_ticket_amount[$key];
+            $data['luggage_ticket_amount'] = $faresRequest->luggage_ticket_amount[$key];
+            $data['service_id'] = $service_id;
+            $getInsertedId = $this->fares->create($data);
+        }
+        return redirect()->route('bus_types.services.fares.index',[$bus_type_id,$service_id]);
     }
 
     /**
@@ -90,16 +108,17 @@ class FaresController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function edit($id) {
-          $fares = Service::findOrFail($id);
-        
-         $fare_details = DB::table('fare_details')->where('service_id',$id)->get();
-         return view('fares.edit',compact('fare_details'))->withFares($fares);
+    public function edit($bus_type_id,$service_id,$id) {
+        //$fares = Fare::findOrFail($id);
+        //echo '<pre>';print_r($fares);die;
+        $fare_details = DB::table('fares')->where('id',$id)->get();
+        //echo '<pre>';print_r($fare_details);die;
+        return view('fares.edit',compact('service_id','bus_type_id','fare_details'));
     }
     
     public function fareList($id) {
-        $fare_details = DB::table('fare_details')->where('service_id', $id)->get();
-        $maxstage = DB::table('fare_details')->select(DB::raw('max(stage) as stage'))->where('service_id', $id)->first();
+        $fare_details = DB::table('fares')->where('service_id', $id)->get();
+        $maxstage = DB::table('fares')->select(DB::raw('max(stage) as stage'))->where('service_id', $id)->first();
         
         
         if (count($fare_details) > 0) {
@@ -136,8 +155,8 @@ class FaresController extends Controller {
      */
     
        public function viewDetail($id) {
-        $service = Service::find($id);
-        $sql = DB::table('fare_details')->where('service_id', $id)->get();
+        //$service = Service::find($id);
+        $sql = DB::table('fares')->where('id', $id)->get();
        ?>
        <div class="modal-dialog">
                 <!-- Modal content-->
@@ -148,10 +167,10 @@ class FaresController extends Controller {
                     </div>
                     <div class="modal-body-view">
                          <table class="table table-responsive.view">
-                            <tr>       
+<!--                            <tr>       
                                 <td colspan="2"><b>Service Name</b></td>
                                 <td class="table_normal"><?php echo $service->name; ?></span></td>
-                            </tr>
+                            </tr>-->
                             <tr> <td colspan="4">
                                             <div class="path-section">
                                                 <p class="path-section-heading">Fare Details</p>
@@ -192,29 +211,10 @@ class FaresController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function update($id, UpdateFareRequest $request) {
+    public function update($bus_type_id,$service_id,$id, UpdateFareRequest $request) {
+        //die($id);
+        $request->request->add(['service_id'=> $service_id]);
         $this->fares->update($id, $request);
-        return redirect()->route('fares.index');
-    }
-    public function getDuty($id) {
-        if($id!='')
-        {
-        $sql = DB::table('duties')->select('*')->where('route_id', '=', $id)->get();
-        if(count($sql)>0)
-        {
-?>
-         <label class="required">Duty</label>
-        <select class="form-control" name="duty_id">
-        <?php
-        foreach ($sql as $value) {
-        ?>
-                    <option value="<?php echo $value->id; ?>"><?php echo $value->duty_number; ?></option>
-
-        <?php } ?>
-               </select> 
-
-        <?php
-    }
-    }
+        return redirect()->route('bus_types.services.fares.index',[$bus_type_id,$service_id]);
     }
 }

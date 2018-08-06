@@ -22,7 +22,7 @@
 
                 <div class="box-body">
                     {!! Form::open([
-                    'route' => 'trips.store',
+                    'route' => ['routes.duties.trips.store',$route_id,$duty_id],
                     'files'=>true,
                     'enctype' => 'multipart/form-data',
                     'id'=>'create-form',

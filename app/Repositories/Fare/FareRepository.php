@@ -40,15 +40,15 @@ $child_ticket_amount = $requestData->child_ticket_amount;
 $luggage_ticket_amount = $requestData->luggage_ticket_amount;
 $service_id = $requestData->service_id;
 
-$input = $requestData->all();
+$input = $requestData;
 
 $userid = Auth::id();
-$input['adult_ticket_amount'] = '';
-$input['adult_ticket_amount'] = '';
-$input['luggage_ticket_amount'] = '';
-$input['stage'] = '';
+//$input['adult_ticket_amount'] = '';
+//$input['adult_ticket_amount'] = '';
+//$input['luggage_ticket_amount'] = '';
+//$input['stage'] = '';
 $input['user_id'] = $userid;
-$input['service_id'] = $requestData->service_id;
+$input['service_id'] = $requestData['service_id'];
 $fare_service_id=DB::table('fares')->where('service_id',$service_id)->first();
 if(count($fare_service_id)==0)
 {
@@ -67,7 +67,7 @@ else
             $update->fill($input)->update();   
 }
 
-$delete=DB::table('fare_details')->where('service_id',$service_id)->get();
+$delete=DB::table('fares')->where('service_id',$service_id)->get();
 
 if(count($delete)>0)
 {
@@ -80,43 +80,54 @@ foreach($delete as $delete_id)
 
 foreach($stage as $key => $n ) 
 {
-$id = DB::table('fare_details')->insertGetId(
+$id = DB::table('fares')->insertGetId(
     ['service_id' =>$service_id,'user_id' =>$userid, 'stage' => $stage[$key],'adult_ticket_amount'=>$adult_ticket_amount[$key],'child_ticket_amount'=>$child_ticket_amount[$key],'luggage_ticket_amount'=>$luggage_ticket_amount[$key]]
 );
 
 }	
- Session::flash('flash_message', "Fare Updated Successfully."); //Snippet in Master.blade.php
+ Session::flash('flash_message', "Fare Added Successfully."); //Snippet in Master.blade.php
  return $id;
  
     }
  public function update($id, $requestData) {
-$stage=  $requestData->stage;
-$userid = Auth::id();
-$adult_ticket_amount = $requestData->adult_ticket_amount;
-$child_ticket_amount = $requestData->child_ticket_amount;
-$luggage_ticket_amount = $requestData->luggage_ticket_amount;
-$service_id = $requestData->service_id;
+     
+     
+    $this->createLog('App\Models\Fare','App\Models\FareLog',$id);
+    $fares = Fare::findorFail($id);
+    $input = $requestData->all();
+    //echo '<pre>';print_r($input);die;
+    $input['user_id'] = Auth::id();
+    $fares->fill($input)->save();
+    Session::flash('flash_message', "Fare Updated Successfully.");
+    return $fares;
+    
+//$stage=  $requestData->stage;
+//$userid = Auth::id();
+//$adult_ticket_amount = $requestData->adult_ticket_amount;
+//$child_ticket_amount = $requestData->child_ticket_amount;
+//$luggage_ticket_amount = $requestData->luggage_ticket_amount;
+//$service_id = $requestData->service_id;
 
-$delete=DB::table('fare_details')->where('service_id',$service_id)->get();
+//$delete=DB::table('fares')->where('service_id',$service_id)->get();
 
-if(count($delete)>0)
-{
-foreach($delete as $delete_id) 
-{
-  $id= $delete_id->id;
-  FareDetail::destroy($id);
-}
-}
+//if(count($delete)>0)
+//{
+//foreach($delete as $delete_id) 
+//{
+//  $id= $delete_id->id;
+//  FareDetail::destroy($id);
+//}
+//}
 
-foreach($stage as $key => $n ) 
-{
-$id = DB::table('fare_details')->insertGetId(
-    ['service_id' =>$service_id,'user_id' =>$userid, 'stage' => $stage[$key],'adult_ticket_amount'=>$adult_ticket_amount[$key],'child_ticket_amount'=>$child_ticket_amount[$key],'luggage_ticket_amount'=>$luggage_ticket_amount[$key]]
-);
-
-}	
- Session::flash('flash_message', "Fare Created Successfully."); //Snippet in Master.blade.php
- return $id;
+//foreach($stage as $key => $n ) 
+//{
+//$id = DB::table('fares')->insertGetId(
+//    ['service_id' =>$service_id,'user_id' =>$userid, 'stage' => $stage[$key],'adult_ticket_amount'=>$adult_ticket_amount[$key],'child_ticket_amount'=>$child_ticket_amount[$key],'luggage_ticket_amount'=>$luggage_ticket_amount[$key]]
+//);
+//
+//}	
+// Session::flash('flash_message', "Fare Updated Successfully."); //Snippet in Master.blade.php
+// return $id;
  
 }
 }

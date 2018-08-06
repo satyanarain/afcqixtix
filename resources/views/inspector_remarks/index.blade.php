@@ -31,7 +31,9 @@
                             <td>{{$value->order_number}}</td>
                              <td>{{$value->short_remark}}</td>
                             <td>{{$value->remark_description}}</td>
+                            <td>
                              {{ actionEdit('edit',$value->id)}}
+                            </td>
                         </tr>
                         @endforeach
                         </tbody>

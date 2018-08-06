@@ -1,8 +1,3 @@
-@php $services=displayList('services','name')@endphp
-<div class="form-group">
-        {!! Form::label('service_id', Lang::get('Service'), ['class' => 'control-label required']) !!}
-        {!! Form::select('service_id',$services,isset($pass_types->service_id) ? $pass_types->service_id : selected,['class' => 'form-control','required' => 'required','placeholder'=>"Select Service"]) !!}
-</div>
 <div class="form-group">
     @php $concession_provider_masters=displayList('concession_provider_masters','name')@endphp
     {!! Form::label('concession_provider_master_id', Lang::get('Pass Provider'), ['class' => 'control-label required']) !!}
@@ -83,7 +78,7 @@
      {!! Form::label('order_number', Lang::get('Order Number'), ['class' => 'control-label required']) !!}
     {!! Form::text('order_number',null, ['class' => 'form-control','readonly'=>readonly]) !!}
      @else
-    @php $pass_types_order= maxId('pass_types','order_number') @endphp
+    @php $pass_types_order= maxId1('pass_types','order_number','service_id',$service_id) @endphp
      {!! Form::label('order_number', Lang::get('Order Number'), ['class' => 'control-label required']) !!}
     {!! Form::text('order_number', $pass_types_order, ['class' => 'form-control','readonly'=>readonly]) !!}
   @endif

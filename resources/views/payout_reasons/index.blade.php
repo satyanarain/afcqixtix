@@ -31,7 +31,7 @@
                             <td>{{$value->order_number}}</td>
                              <td>{{$value->short_reason}}</td>
                             <td>{{$value->reason_description}}</td>
-                             {{ actionEdit('edit',$value->id)}}
+                            <td>{{ actionEdit('edit',$value->id)}}</td>
                         </tr>
                         @endforeach
                         </tbody>

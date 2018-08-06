@@ -31,13 +31,13 @@ Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm
 Route::resource('create_passwords', 'CreatePasswordsController');
  
 Route::post('password/reset', 'Auth\ResetPasswordController@postReset')->name('password.reset');
-Route::get('notifications/markall', 'NotificationsController@markAll')->name('notifications.markall');
+//Route::get('notifications/markall', 'NotificationsController@markAll')->name('notifications.markall');
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/', 'PagesController@dashboard');
     Route::get('dashboard', 'PagesController@dashboard')->name('dashboard');
     Route::get('showdashboard', 'PagesController@showDashboard')->name('showdashboard');
-    Route::get('notifications/getall', 'NotificationsController@getAll')->name('notifications.get');
-    Route::post('notifications/markread', 'NotificationsController@markRead')->name('notifications.markread');
+//    Route::get('notifications/getall', 'NotificationsController@getAll')->name('notifications.get');
+//    Route::post('notifications/markread', 'NotificationsController@markRead')->name('notifications.markread');
 
     Route::get('users/data', 'UsersController@anyData')->name('users.data');
     Route::get('users/statusupdate/{id}', 'UsersController@statusUpdate');
@@ -48,27 +48,77 @@ Route::group(['middleware' => ['auth']], function () {
     /*     * **********************masters created by satya 22-11-2017 depot***************************** */
     Route::get('depots/data', 'DepotsController@anyData')->name('depots.data');
     Route::post('depots/store', 'DepotsController@store');
-        Route::get('depots/order_list', 'DepotsController@orderList');
+    Route::get('depots/order_list', 'DepotsController@orderList');
     Route::resource('depots', 'DepotsController');
     /************************masters created by satya 28-12-2017 depot***************************** */
+    /************************ Manage Depot Vehicle ***************************** */
+    Route::get('depots/{depot_id}/vehicles', 'VehicleController@index');
+    Route::get('depots/{depot_id}/vehicles/create', 'VehicleController@create');
+    Route::resource('depots.vehicles', 'VehicleController');
+    /************************ Manage Depot Vehicle ***************************** */
+    /************************ Manage Depot Crew ***************************** */
+    Route::get('crew/view_detail/{id}', 'CrewController@viewDetail');
+    Route::get('depots/{depot_id}/crew', 'CrewController@index');
+    Route::get('depots/{depot_id}/crew/create', 'CrewController@create');
+    Route::resource('depots.crew', 'CrewController');
+//    Route::get('crew_details/data', 'CrewDetailController@anyData')->name('crew_details.data');
+//    Route::post('crew_details/store', 'CrewDetailController@store');
+//    Route::resource('crew_details', 'CrewDetailController');
+    /************************ Manage Depot Crew ***************************** */
+    /************************ Manage Bus Types ***************************** */
     Route::get('bus_types/data', 'BusTypesController@anyData')->name('bustypes.data');
     Route::post('bus_types/store', 'BusTypesController@store');
     Route::get('bus_types/sort_order/{id}', 'BusTypesController@sortOrder');
     Route::get('bus_types/view_detail/{id}', 'BusTypesController@viewDetail');
     Route::get('bus_types/order_list', 'BusTypesController@orderList');
     Route::resource('bus_types', 'BusTypesController');
+    /************************ Manage Bus Types ***************************** */
+    /*************************Manage Bus Type Services********************** */
+    Route::get('services/view_detail/{id}', 'ServiceController@viewDetail');
+    Route::get('bus_types/{bus_type_id}/services', 'ServiceController@index');
+    Route::get('bus_types/{bus_type_id}/services/create', 'ServiceController@create');
+    Route::resource('bus_types.services', 'ServiceController');
+//    Route::get('services/data', 'ServiceController@anyData')->name('services.data');
+//    Route::post('services/store', 'ServiceController@store');
+    Route::get('services/sort_order/{id}/{bus_type_id}/', 'ServiceController@sortOrder');
+    Route::get('services/order_list/{bus_type_id}', 'ServiceController@orderList');
+//    Route::resource('services', 'ServiceController');
+     /*************************Manage Bus Type Services********************** */
+    /*************************Manage Bus Type Service Fares********************** */
+    Route::get('fares/previous', 'FaresController@Previous')->name('fares.previous');
+    Route::post('fares/data', 'FaresController@anyData')->name('fares.data');
+    Route::get('fares/fare_list/{id}','FaresController@fareList');
+    Route::get('fares/view_detail/{id}','FaresController@viewDetail');
+    Route::resource('bus_types.services.fares', 'FaresController');
+    //Route::resource('fares', 'FaresController');
+    /*************************Manage Bus Type Service Fare********************** */
+    /*************************Manage Bus Type Service Concession Fare********************** */
+    //Route::get('concession_fare_slabs/data', 'ConcessionFareSlabController@anyData')->name('concession_fare_slabs.data');
+    //Route::post('concession_fare_slabs/store', 'ConcessionFareSlabController@store');
+    //Route::resource('concession_fare_slabs', 'ConcessionFareSlabController');
+    Route::resource('bus_types.services.concession_fare_slabs', 'ConcessionFareSlabController');
+    /*************************Manage Bus Type Service Concession Fare********************** */
+    /*************************Manage Bus Type Service Concession********************** */
+//    Route::get('concessions/data', 'ConcessionController@anyData')->name('concessions.data');
+    Route::get('concessions/sort_order/{id}/{service_id}/{bus_type_id}/','ConcessionController@sortOrder');
+//    Route::post('concessions/store', 'ConcessionController@store');
+    Route::get('concessions/view_detail/{id}', 'ConcessionController@viewDetail');
+    Route::get('concessions/order_list/{service_id}', 'ConcessionController@orderList');
+    Route::resource('bus_types.services.concessions', 'ConcessionController');
+    /*************************Manage Bus Type Service Concession********************** */
+    /*************************Manage Bus Type Service Pass Type********************** */
+//    Route::get('pass_types/data', 'PassTypeController@anyData')->name('pass_types.data');
+//    Route::post('pass_types/store', 'PassTypeController@store');
+    Route::get('pass_types/sort_order/{id}/{service_id}/{bus_type_id}/', 'PassTypeController@sortOrder');
+    Route::get('pass_types/view_detail/{id}', 'PassTypeController@viewDetail');
+    Route::get('pass_types/order_list/{service_id}', 'PassTypeController@orderList');
+    Route::resource('bus_types.services.pass_types', 'PassTypeController');
+    /*************************Manage Bus Type Service Pass Type********************** */
     
     /************************masters created by satya 28-12-2017 depot***************************** */
-    Route::get('services/data', 'ServiceController@anyData')->name('services.data');
-    Route::post('services/store', 'ServiceController@store');
-    Route::get('services/sort_order/{id}', 'ServiceController@sortOrder');
-    Route::get('services/view_detail/{id}', 'ServiceController@viewDetail');
-    Route::get('services/order_list', 'ServiceController@orderList');
-    Route::resource('services', 'ServiceController');
-    /************************masters created by satya 28-12-2017 depot***************************** */
-    Route::get('vehicles/data', 'VehicleController@anyData')->name('services.data');
-    Route::post('vehicles/store', 'VehicleController@store');
-    Route::resource('vehicles', 'VehicleController');
+//    Route::get('vehicles/data', 'VehicleController@anyData')->name('services.data');
+//    Route::post('vehicles/store', 'VehicleController@store');
+//    Route::resource('vehicles', 'VehicleController');
     
     Route::get('shifts/data', 'ShiftController@anyData')->name('shifts.data');
     Route::post('shifts/store', 'ShiftController@store');
@@ -86,44 +136,33 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('routes/store', 'RouteController@store');
     Route::resource('routes', 'RouteController');
     
-    Route::get('duties/data', 'DutyController@anyData')->name('duties.data');
-    Route::post('duties/store', 'DutyController@store');
-    Route::get('duties/sort_order/{id}', 'DutyController@sortOrder');
+//    Route::get('duties/data', 'DutyController@anyData')->name('duties.data');
+//    Route::post('duties/store', 'DutyController@store');
+    
+    Route::get('duties/sort_order/{id}/{route_id}/', 'DutyController@sortOrder');
     Route::get('duties/view_detail/{id}', 'DutyController@viewDetail');
-    Route::get('duties/order_list', 'DutyController@orderList');
-    Route::resource('duties', 'DutyController');
+    Route::get('duties/order_list/{route_id}', 'DutyController@orderList');
+    Route::get('routes/{route_id}/duties', 'DutyController@index');
+    Route::get('routes/{route_id}/duties/create', 'DutyController@create');
+    Route::resource('routes.duties', 'DutyController');
     
-    Route::get('targets/data', 'TargetController@anyData')->name('targets.data');
-    Route::post('targets/store', 'TargetController@store');
-    Route::get('targets/getduties/{id}', 'TargetController@getDuty');
-    
-    Route::resource('targets', 'TargetController');
-    
-    Route::get('trips/data', 'TripController@anyData')->name('trips.data');
-    Route::get('trips/getsubcat/{id}', 'TripController@getSubCat');
+//    Route::get('trips/data', 'TripController@anyData')->name('trips.data');
+//    Route::get('trips/getsubcat/{id}', 'TripController@getSubCat');
     Route::get('trips/view_detail/{id}', 'TripController@viewDetail');
-    Route::post('trips/store', 'TripController@store');
-    Route::resource('trips', 'TripController');
+//    Route::post('trips/store', 'TripController@store');
+    Route::resource('routes.duties.trips', 'TripController');
     
-    Route::get('fares/previous', 'FaresController@Previous')->name('fares.previous');
-    Route::post('fares/data', 'FaresController@anyData')->name('fares.data');
-    Route::get('fares/fare_list/{id}','FaresController@fareList');
-     Route::get('fares/view_detail/{id}','FaresController@viewDetail');
-    Route::resource('fares', 'FaresController');
+    //Route::get('targets/data', 'TargetController@anyData')->name('targets.data');
+    //Route::post('targets/store', 'TargetController@store');
+    //Route::get('targets/getduties/{id}', 'TargetController@getDuty');
+    //Route::get('routes/{route_id}/targets', 'TargetController@index');
+    Route::resource('routes.duties.targets', 'TargetController');
+    
+    
+    
+    
   
-    Route::get('concession_fare_slabs/data', 'ConcessionFareSlabController@anyData')->name('concession_fare_slabs.data');
-    Route::post('concession_fare_slabs/store', 'ConcessionFareSlabController@store');
-    Route::resource('concession_fare_slabs', 'ConcessionFareSlabController');
     
-    Route::get('concessions/data', 'ConcessionController@anyData')->name('concessions.data');
-    Route::get('concessions/sort_order/{id}','ConcessionController@sortOrder');
-    Route::post('concessions/store', 'ConcessionController@store');
-    
-      Route::get('concessions/sort_order/{id}', 'ConcessionController@sortOrder');
-    Route::get('concessions/view_detail/{id}', 'ConcessionController@viewDetail');
-    Route::get('concessions/order_list', 'ConcessionController@orderList');
-    
-    Route::resource('concessions', 'ConcessionController');
     Route::get('trip_cancellation_reasons/data', 'TripCancellationReasonController@anyData')->name('trip_cancellation_reasons.data');
     Route::post('trip_cancellation_reasons/store', 'TripCancellationReasonController@store');
     Route::get('trip_cancellation_reasons/sort_order/{id}', 'TripCancellationReasonController@sortOrder');
@@ -152,17 +191,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('denominations', 'DenominationController');
    
     
-    Route::get('pass_types/data', 'PassTypeController@anyData')->name('pass_types.data');
-    Route::post('pass_types/store', 'PassTypeController@store');
-     Route::get('pass_types/sort_order/{id}', 'PassTypeController@sortOrder');
-    Route::get('pass_types/view_detail/{id}', 'PassTypeController@viewDetail');
-    Route::get('pass_types/order_list', 'PassTypeController@orderList');
-    Route::resource('pass_types', 'PassTypeController');
     
-    Route::get('crew_details/data', 'CrewDetailController@anyData')->name('crew_details.data');
-    Route::post('crew_details/store', 'CrewDetailController@store');
-    Route::get('crew_details/view_detail/{id}', 'CrewDetailController@viewDetail');
-    Route::resource('crew_details', 'CrewDetailController');
+    
+    
     
     Route::get('ETM_details/data', 'ETMDetailController@anyData')->name('ETM_details.data');
     Route::get('ETM_details/view_detail/{id}', 'ETMDetailController@viewDetail');

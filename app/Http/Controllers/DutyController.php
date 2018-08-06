@@ -34,18 +34,21 @@ class DutyController extends Controller {
      *
      * @return Response
      */
-    public function index() {
-
-        $duties = DB::table('duties')->select('*','duties.id as id','duties.start_time as start_time','shifts.shift as shift')
+    public function index(Request $request)
+    {
+        $route_id = $request->route_id;
+        $duties = DB::table('duties')->select('*','duties.id as id','duties.order_number as order_number','duties.end_time as end_time','duties.start_time as start_time','shifts.shift as shift')
                 ->leftjoin('shifts', 'duties.shift_id', '=', 'shifts.id')
                 ->leftjoin('routes', 'duties.route_id', '=', 'routes.id')
+                ->where('duties.route_id',$request->route_id)  
                 ->get();
-        return view('duties.index')->withDuties($duties);
+        return view('duties.index',compact('duties','route_id'));
     }
 
-    public function create() {
+    public function create(Request $request){
+        $route_id = $request->route_id;
         //$duties = Duty::findOrFail();
-        return view('duties.create');
+        return view('duties.create', compact('route_id'));
     }
 
     /**
@@ -59,15 +62,16 @@ class DutyController extends Controller {
      * @param Duty $duties
      * @return Response
      */
-    public function store(StoreDutyRequest $dutiesRequest) {
+    public function store($route_id,StoreDutyRequest $dutiesRequest) {
     
       $sql=Duty::where([['route_id',$dutiesRequest->route_id],['duty_number',$dutiesRequest->duty_number]])->first();
       if(count($sql)>0)
       {
        return view('duties.create')->withErrors(['This route and duty number has already been taken.']); 
       }else{
-       $getInsertedId = $this->duties->create($dutiesRequest);
-        return redirect()->route('duties.index');
+        $dutiesRequest->request->add(['route_id'=> $route_id]);
+        $getInsertedId = $this->duties->create($dutiesRequest);
+        return redirect()->route('routes.duties.index',$route_id);
     }
     }
 
@@ -94,9 +98,9 @@ class DutyController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function edit($id) {
+    public function edit($route_id,$id) {
         $duties = Duty::findOrFail($id);
-        return view('duties.edit')->withDuties($duties);
+        return view('duties.edit',compact('duties','route_id'));
     }
 
     /**
@@ -105,7 +109,7 @@ class DutyController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function update($id, UpdateDutyRequest $request) {
+    public function update($route_id,$id, UpdateDutyRequest $request) {
       $duties = Duty::findOrFail($id);
       $route = $request->route_id;
       $duty_number = $request->duty_number;
@@ -115,7 +119,7 @@ class DutyController extends Controller {
       return redirect('duties/'.$id.'/edit')->withErrors(['This route and duty number has already been taken.']);
       } else {
         $this->duties->update($id, $request);
-        return redirect()->route('duties.index');
+        return redirect()->route('routes.duties.index',$route_id);
       }
     }
 
@@ -124,7 +128,7 @@ class DutyController extends Controller {
      * @author
      * @return Response
      */
-      public function sortOrder($id) {
+      public function sortOrder($id,$route_id) {
         $array = explode(',', $id);
        $k=1;
         for ($i = 0; $i <= count($array); $i++) {
@@ -134,11 +138,12 @@ class DutyController extends Controller {
        $duties = DB::table('duties')->select('*','duties.id as id','duties.start_time as start_time','shifts.shift as shift','duties.order_number as order_number')
                 ->leftjoin('shifts', 'duties.shift_id', '=', 'shifts.id')
                 ->leftjoin('routes', 'duties.route_id', '=', 'routes.id')
+               ->where('duties.route_id',$route_id)  
                ->orderBy('duties.order_number')->get();
         ?>
                 <thead>
                    <tr>
-                            <th>Route</th>
+<!--                            <th>Route</th>-->
                             <th>Order Number</th>
                             <th>Duty Number</th>
                            <th>Start Time</th>
@@ -151,26 +156,29 @@ class DutyController extends Controller {
             <?php foreach ($duties as $value) {
                 ?>
                             <tr class="nor_f">
-                                <td><?php echo $value->route; ?></td>
+<!--                                <td><?php echo $value->route; ?></td>-->
                                 <td><?php echo $value->order_number; ?></td>
                                 <td><?php echo $value->duty_number ?></td>
                                 <td><?php echo $value->start_time ?></td>
                                 <td><?php echo $value->end_time ?></td>
                                 <td><?php echo $value->shift ?></td>
                                 
-                                <td><a  href="<?php echo route("duties.edit", $value->id) ?>" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <button  class="btn btn-small btn-primary"  data-toggle="modal" onclick="viewDetails(<?php echo $value->id ?>,'view_detail')"><span class="glyphicon glyphicon-search"></span>&nbsp;View</button>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                <td>
+                                    <a href="<?php echo route('routes.duties.edit',[$route_id,$value->id])?>" title="Edit Duty"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a style="cursor: pointer;" title="View Duty" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                </td>
                             </tr>
             <?php } ?>
                 </tbody>
         <?php
     }
     
-    public function orderList() {
+    public function orderList(Request $request) {
        
            $duties = DB::table('duties')->select('*', 'duties.id as id', 'duties.start_time as start_time', 'shifts.shift as shift', 'duties.order_number as order_number')
                         ->leftjoin('shifts', 'duties.shift_id', '=', 'shifts.id')
                         ->leftjoin('routes', 'duties.route_id', '=', 'routes.id')
+                        ->where('duties.route_id',$request->route_id)  
                         ->orderBy('duties.order_number')->get();
         ?>
                       
@@ -188,11 +196,11 @@ class DutyController extends Controller {
     }
    public function viewDetail($id) {
            $value = DB::table('duties')->select('*','duties.id as id','duties.start_time as start_time','shifts.shift as shift','duties.order_number as order_number','duties.created_at as created_at','duties.updated_at as updated_at')
-                   ->leftjoin('shifts', 'duties.shift_id', '=', 'shifts.id')
-                  ->leftjoin('routes', 'duties.route_id', '=', 'routes.id')
-                      ->leftjoin('users', 'users.id', '=', 'duties.user_id')
-                  ->orderBy('duties.order_number')
-                  ->where('duties.id',$id)->first();
+                    ->leftjoin('shifts', 'duties.shift_id', '=', 'shifts.id')
+                    ->leftjoin('routes', 'duties.route_id', '=', 'routes.id')
+                    ->leftjoin('users', 'users.id', '=', 'duties.user_id')
+                    ->orderBy('duties.order_number')
+                    ->where('duties.id',$id)->first();
         ?>
       <div class="modal-dialog">
         <!-- Modal content-->

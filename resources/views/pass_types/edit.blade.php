@@ -15,7 +15,7 @@
             <div class="box-body">
                {!! Form::model($pass_types, [
         'method' => 'PATCH',
-        'route' => ['pass_types.update', $pass_types->id],
+        'route' => ['bus_types.services.pass_types.update',$bus_type_id,$service_id,$pass_types->id],
         'files'=>true,
         'enctype' => 'multipart/form-data'
         ]) !!}

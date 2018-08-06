@@ -35,18 +35,20 @@ class ConcessionController extends Controller {
      ** @Author created by satya 31-01-2018 
      * @return Response
      */
- public function index() {
-                $concessions = DB::table('concessions')->select('*','concessions.id as id','users.name as username','concession_provider_masters.name as concession_provider_master_id','services.name as name','concession_masters.name as con_name','concessions.order_number as order_number','etm_hot_key_masters.name as etm_hot_key_master_id','pass_type_masters.name as pass_type_master_id','concessions.created_at as created_at','concessions.updated_at as updated_at')
-                ->leftjoin('users', 'users.id', '=', 'concessions.user_id')
-                ->leftjoin('services', 'concessions.service_id', '=', 'services.id')
-                ->leftjoin('concession_provider_masters', 'concession_provider_masters.id', '=', 'concessions.concession_provider_master_id')
-                ->leftjoin('concession_masters', 'concession_masters.id', '=', 'concessions.concession_master_id')
-                ->leftjoin('pass_type_masters', 'pass_type_masters.id', '=', 'concessions.pass_type_master_id')
-                ->leftjoin('etm_hot_key_masters', 'etm_hot_key_masters.id', '=', 'concessions.etm_hot_key_master_id')
-                ->orderby('concessions.order_number')       
-                ->get();
+ public function index($bus_type_id,$service_id) {
+        $concessions = DB::table('concessions')
+            ->select('*','concessions.id as id','users.name as username','concession_provider_masters.name as concession_provider_master_id','services.name as name','concession_masters.name as con_name','concessions.order_number as order_number','etm_hot_key_masters.name as etm_hot_key_master_id','pass_type_masters.name as pass_type_master_id','concessions.created_at as created_at','concessions.updated_at as updated_at')
+            ->leftjoin('users', 'users.id', '=', 'concessions.user_id')
+            ->leftjoin('services', 'concessions.service_id', '=', 'services.id')
+            ->leftjoin('concession_provider_masters', 'concession_provider_masters.id', '=', 'concessions.concession_provider_master_id')
+            ->leftjoin('concession_masters', 'concession_masters.id', '=', 'concessions.concession_master_id')
+            ->leftjoin('pass_type_masters', 'pass_type_masters.id', '=', 'concessions.pass_type_master_id')
+            ->leftjoin('etm_hot_key_masters', 'etm_hot_key_masters.id', '=', 'concessions.etm_hot_key_master_id')
+            ->where('service_id', $service_id)
+            ->orderby('concessions.order_number')       
+            ->get();
                 
-                 return view('concessions.index')->withConcessions($concessions);
+        return view('concessions.index',compact('concessions','bus_type_id','service_id'));
     }
     
  /**
@@ -56,7 +58,7 @@ class ConcessionController extends Controller {
      */    
     
 
-    public function orderList() {
+    public function orderList(Request $request) {
          $concessions = DB::table('concessions')->select('*','concessions.id as id','users.name as username','concession_provider_masters.name as concession_provider_master_id','services.name as name','concession_masters.name as con_name','concessions.order_number as order_number','etm_hot_key_masters.name as etm_hot_key_master_id','pass_type_masters.name as pass_type_master_id','concessions.created_at as created_at','concessions.updated_at as updated_at')
                 ->leftjoin('users', 'users.id', '=', 'concessions.user_id')
                 ->leftjoin('services', 'concessions.service_id', '=', 'services.id')
@@ -64,7 +66,8 @@ class ConcessionController extends Controller {
                 ->leftjoin('concession_masters', 'concession_masters.id', '=', 'concessions.concession_master_id')
                 ->leftjoin('pass_type_masters', 'pass_type_masters.id', '=', 'concessions.pass_type_master_id')
                 ->leftjoin('etm_hot_key_masters', 'etm_hot_key_masters.id', '=', 'concessions.etm_hot_key_master_id')
-                ->orderby('concessions.order_number')       
+                ->where('concessions.service_id',$request->service_id)
+                 ->orderby('concessions.order_number')       
                 ->get();
         ?>
                       
@@ -174,7 +177,8 @@ class ConcessionController extends Controller {
     }
     
     
-public function sortOrder($id) {
+public function sortOrder($id,$service_id,$bus_type_id) {
+    //echo $service_id;echo $bus_type_id;die;
 $array = explode(',', $id);
 $k=1;
         for ($i = 0; $i <= count($array); $i++) {
@@ -187,11 +191,13 @@ $k=1;
                 ->leftjoin('services', 'concessions.service_id', '=', 'services.id')
                 ->leftjoin('concession_provider_masters', 'concession_provider_masters.id', '=', 'concessions.concession_provider_master_id')
                 ->leftjoin('concession_masters', 'concession_masters.id', '=', 'concessions.concession_master_id')
-                 ->orderby('concessions.order_number')       
+                ->where('concessions.service_id',$service_id)
+                ->orderby('concessions.order_number')       
                 ->get();
         ?>
                 <thead>
-                    <tr>  <th>Service Name</th>
+                    <tr> 
+<!--                        <th>Service Name</th>-->
                         <th>Order Number</th>
                         <th>Concession Provider</th>
                         <th>Concession</th>
@@ -203,13 +209,13 @@ $k=1;
             <?php foreach ($sql as $value) {
                 ?>
                             <tr class="nor_f">
-                                <td><?php echo $value->name; ?></td>
+<!--                                <td><?php echo $value->name; ?></td>-->
                                 <td><?php echo $value->order_number; ?></td>
                                 <td><?php echo $value->concession_provider_master_id ?></td>
                                 <td><?php echo $value->con_name ?></td>
                                 <td><?php echo $value->description ?></td>
-                                <td><a  href="<?php echo route("concessions.edit", $value->id) ?>" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <button  class="btn btn-small btn-primary"  data-toggle="modal" onclick="viewDetails(<?php echo $value->id ?>,'view_detail')"><span class="glyphicon glyphicon-search"></span>&nbsp;View</button>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                <td><a  href="" class="" ><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a style="cursor: pointer;" title="View Concession Detail" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;</td>
                             </tr>
                            
             <?php } ?>
@@ -226,8 +232,8 @@ $k=1;
         return view('concessions.previous')->withConcessions($concessions);
     }
 
-    public function create() {
-     return view('concessions.create');
+    public function create($bus_type_id,$service_id) {
+     return view('concessions.create',compact('bus_type_id','service_id'));
     }
     /**
      * Show the form for creating a new resource.
@@ -255,9 +261,10 @@ $k=1;
      * @return Response
      * * @Author created by satya 31-01-2018 
      */
-    public function store(StoreConcessionRequest $concessionsRequest) {
+    public function store($bus_type_id,$service_id,StoreConcessionRequest $concessionsRequest) {
+        $concessionsRequest->request->add(['service_id'=> $service_id]);
         $getInsertedId = $this->concessions->create($concessionsRequest);
-        return redirect()->route('concessions.index');
+        return redirect()->route('bus_types.services.concessions.index',[$bus_type_id,$service_id]);
     }
 
     /**
@@ -284,9 +291,9 @@ $k=1;
      * * @Author created by satya 31-01-2018 
      * @return Response
      */
-    public function edit($id) {
+    public function edit($bus_type_id,$service_id,$id) {
         $concessions = Concession::findOrFail($id);
-        return view('concessions.edit',compact('concessions'));
+        return view('concessions.edit',compact('concessions','service_id','bus_type_id'));
     }
 
     /**
@@ -296,15 +303,15 @@ $k=1;
      * @return Response
      * * @Author created by satya 31-01-2018 
      */
-    public function update($id, UpdateConcessionRequest $request) {
+    public function update($bus_type_id,$service_id,$id, UpdateConcessionRequest $request) {
           $sql=Concession::where([['service_id',$request->service_id],['id','!=',$id]])->first();
      if(count($sql)>0)
      {
-      return redirect('concessions/'.$id.'/edit')->withErrors(['This Service has already been taken.']);
+        return redirect('concessions/'.$id.'/edit')->withErrors(['This Service has already been taken.']);
       } else {
         
         $this->concessions->update($id, $request);
-        return redirect()->route('concessions.index');
+        return redirect()->route('bus_types.services.concessions.index',[$bus_type_id,$service_id]);
       }
     }
     public function getDuty($id) {

@@ -66,7 +66,7 @@ class RoleRepository implements RoleRepositoryContract
             $input['payout_reasons'] = implode(',', $request->payout_reasons);
             $input['denominations'] = implode(',', $request->denominations);
             $input['pass_types'] = implode(',', $request->pass_types);
-            $input['crew_details'] = implode(',', $request->crew_details);
+            $input['crew'] = implode(',', $request->crew);
             $input['ETM_details'] = implode(',', $request->ETM_details);
            $roles= Role::create($input);
             

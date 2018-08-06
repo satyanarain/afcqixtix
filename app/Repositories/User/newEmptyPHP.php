@@ -259,8 +259,8 @@
 
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
 
-                                                                <img src="http://localhost:8000/images/photo/WbYejmIF_Screenshot from 2017-04-06 13-12-51.png" class="user-image" alt="">
-                                                                <span class="hidden-xs"> Satya!</span>
+                                                                
+                                                                <span class="hidden-xs"> Satyas!</span>
                                 <b class="caret"></b>
                             </a>           
                             <ul class="dropdown-menu">

@@ -42,13 +42,7 @@ class UserRepository implements UserRepositoryContract {
     public function getAllUsersCount() {
         return User::where('group_company_id', 'like', '%' . session('companyId') . '%')->get()->count();
     }
-  public function getAllUsersWithDepartments() {
-        return User::select(array('users.name', 'users.id',
-                            DB::raw('CONCAT(users.name, " (", departments.name, ")") AS full_name')))
-                        ->join('department_user', 'users.id', '=', 'department_user.user_id')
-                        ->join('departments', 'department_user.department_id', '=', 'departments.id')
-                        ->pluck('full_name', 'id');
-    }
+  
 
     public function create($requestData) {
         $settings = Settings::first();
@@ -103,7 +97,7 @@ class UserRepository implements UserRepositoryContract {
             $input['payout_reasons'] = implode(',', $requestData->payout_reasons);
             $input['denominations'] = implode(',', $requestData->denominations);
             $input['pass_types'] = implode(',', $requestData->pass_types);
-            $input['crew_details'] = implode(',', $requestData->crew_details);
+            $input['crew'] = implode(',', $requestData->crew);
             $input['ETM_details'] = implode(',', $requestData->ETM_details);
             //echo "<pre>";
            // print_r($input);
@@ -153,7 +147,7 @@ class UserRepository implements UserRepositoryContract {
             $input['payout_reasons'] = implode(',', $requestData->payout_reasons);
             $input['denominations'] = implode(',', $requestData->denominations);
             $input['pass_types'] = implode(',', $requestData->pass_types);
-            $input['crew_details'] = implode(',', $requestData->crew_details);
+            $input['crew'] = implode(',', $requestData->crew);
             $input['ETM_details'] = implode(',', $requestData->ETM_details);
             $permission->fill($input)->save();
          

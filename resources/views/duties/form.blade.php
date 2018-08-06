@@ -1,4 +1,8 @@
-@php $routes=displayList('routes','route')@endphp
+@php 
+    $segment = Request::segments();
+    $routes=displayList('routes','route')
+@endphp
+@if($segment[4]==="edit")
 <div class="form-group">
         {!! Form::label('route_id', Lang::get('Route'), ['class' => 'col-md-3 control-label']) !!}
              <div class="col-md-7 col-sm-12 required">
@@ -6,6 +10,7 @@
 
 </div>
 </div>
+@endif
 <div class="form-group">
         {!! Form::label('duty_number', Lang::get('Duty Number'), ['class' => 'col-md-3 control-label']) !!}
              <div class="col-md-7 col-sm-12 required">
@@ -47,7 +52,7 @@
         {!! Form::text('order_number', null, ['class' => 'col-md-6 form-control','readonly' => 'readonly']) !!}
         </div>
          @else
-         @php $duties_value= maxId('duties','order_number') @endphp
+         @php $duties_value= maxId1('duties','order_number','route_id',$route_id) @endphp
          {!! Form::label('order_number', Lang::get('Order Number'), ['class' => 'col-md-3 control-label']) !!}
          <div class="col-md-7 col-sm-12 required">
         {!! Form::text('order_number', $duties_value, ['class' => 'col-md-6 form-control','readonly' => 'readonly',]) !!}

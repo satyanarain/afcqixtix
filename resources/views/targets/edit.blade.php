@@ -7,7 +7,7 @@
  @include('partials.form_header')
                {!! Form::model($targets, [
         'method' => 'PATCH',
-        'route' => ['targets.update', $targets->id],
+        'route' => ['routes.duties.targets.update',$route_id,$duty_id,$targets->id],
         'files'=>true,
          'class'=>'form-horizontal',
         'enctype' => 'multipart/form-data'
