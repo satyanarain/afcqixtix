@@ -27,7 +27,7 @@ class UpdatePayoutReasonRequest extends Request
 // SELECT `id`, `payout_reason`, `short_reason`, `reason_description`, `order_number`, `created_at`, `updated_at` FROM `payout_reasons` WHERE 1
           $regex = "/^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$/";
            return [
-                     'payout_reason' => 'required',
+                    // 'payout_reason' => 'required',
                     'short_reason' => 'required',
                     'reason_description' => 'required'
                   

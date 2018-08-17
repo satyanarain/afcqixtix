@@ -1,10 +1,4 @@
 <div class="form-group">
-         {!! Form::label('inspector_remark', Lang::get('Inspector Remark'), ['class' => 'col-md-3 control-label']) !!}
-          <div class="col-md-7 col-sm-12 required">
-         {!! Form::text('inspector_remark', null, ['class' => 'col-md-6 form-control','required' => 'required']) !!}
-</div>
-</div>
-<div class="form-group">
          {!! Form::label('short_remark', Lang::get('Short Remark'), ['class' => 'col-md-3 control-label']) !!}
           <div class="col-md-7 col-sm-12 required">
          {!! Form::text('short_remark', null, ['class' => 'col-md-6 form-control','required' => 'required']) !!}

@@ -4,7 +4,7 @@ namespace App\Http\Requests\Setting;
 
 use App\Http\Requests\Request;
 
-class UpdateSettingOverallRequest extends Request
+class UpdateSettingRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class UpdateSettingOverallRequest extends Request
      */
     public function authorize()
     {
-        return auth()->user()->hasRole('administrator');
+        return true;
     }
 
     /**
@@ -24,10 +24,8 @@ class UpdateSettingOverallRequest extends Request
     public function rules()
     {
         return [
-            'task_complete_allowed' => 'required',
-            'task_assign_allowed'   => 'required',
-            'lead_complete_allowed' => 'required',
-            'lead_assign_allowed'   => 'required'
+            'setting_name' => 'required',
+            'setting_value'   => 'required',
         ];
     }
 }

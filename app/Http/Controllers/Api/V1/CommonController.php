@@ -10,7 +10,7 @@ class CommonController extends Controller
 {
     public function getSqliteDbName()
     {
-    	$fileName = @DB::table('sqlite_db_name')->first()->name;
+    	$fileName = @DB::table('sqlite_db_name')->orderBy('id','desc')->first()->name;
 
     	if($fileName)
     	{

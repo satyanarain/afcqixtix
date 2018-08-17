@@ -205,12 +205,19 @@ Route::group(['middleware' => ['auth']], function () {
      
     Route::resource('permissions', 'PermissionsController');
     Route::post('permissions/savemenuall', 'PermissionsController@saveMenuAll');
-    Route::patch('settings/permissionsUpdate', 'SettingsController@permissionsUpdate');
-    Route::resource('settings', 'SettingsController');
+    //Route::patch('settings/permissionsUpdate', 'SettingsController@permissionsUpdate');
+    //Route::resource('settings', 'SettingsController');
     Route::post('changepasswords/update', 'ChangepasswordsController@updatePassword');
     Route::get('trip_cancellation_reasons/order_list', 'TripCancellationReasonController@orderList');
     
     
     Route::resource('changepasswords', 'ChangepasswordsController');
     
+    
+    //Route::get('versions/data', 'VersionController@anyData')->name('stops.data');
+    //Route::post('stops/store', 'StopController@store');
+    Route::get('versions/view_detail/{id}', 'VersionController@viewDetail');
+    Route::resource('versions', 'VersionController');
+    Route::get('settings/view_detail/{id}', 'SettingController@viewDetail');
+    Route::resource('settings', 'SettingController');
 });

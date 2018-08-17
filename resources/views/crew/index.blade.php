@@ -24,7 +24,7 @@
 <!--                            <th>@lang('Depot Name')</th>-->
                             <th>@lang('Crew Name')</th>
                             <th>@lang('Crew ID')</th>
-                            <th>@lang('Role')</th>
+                            <th>@lang('Role ')</th>
                            
                              {{  actionHeading('Action', $newaction='') }}
                         </tr>
@@ -36,7 +36,7 @@
 <!--                            <td>{{$value->name}}</td>-->
                             <td>{{$value->crew_name}}</td>
                             <td>{{$value->crew_id}}</td>
-                            <td>{{$value->crew_id}}</td>
+                            <td>{{$value->role}}</td>
                             <td>
                                 <a href="<?php echo route('depots.crew.edit',[$depot_id,$value->id])?>" title="Edit Crew"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
                                 <a style="cursor: pointer;" title="View" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>

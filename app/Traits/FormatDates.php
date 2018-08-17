@@ -2,8 +2,6 @@
 
 namespace App\Traits;
 
-use App\Brand;
-
 trait FormatDates {
 
 	function DateFormat($date='')

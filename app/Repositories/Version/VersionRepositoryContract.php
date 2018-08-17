@@ -1,10 +1,10 @@
 <?php
-namespace App\Repositories\Setting;
-interface SettingRepositoryContract
+namespace App\Repositories\Version;
+interface VersionRepositoryContract
 {
     
     public function find($id);
-    public function getAllSettings();
+    public function getAllVersions();
     public function create($requestData);
     public function update($id, $requestData);
 

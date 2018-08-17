@@ -6,10 +6,9 @@
 </div>
 </div>
 <div class="form-group">
-    @php $concession_masters=displayList('concession_masters','name')@endphp
     {!! Form::label('concession_master_id', Lang::get('Concession'), ['class' => 'col-md-3 control-label']) !!}
      <div class="col-md-7 col-sm-12 required">
-  {!! Form::select('concession_master_id',$concession_masters, isset($concessions->concession_master_id) ? $concessions->concession_master_id :selected,['class' => 'col-md-6 form-control','placeholder'=>'Select Concession','required'=>'required']) !!}
+  {!! Form::text('concession_master_id',null, ['class' => 'col-md-6 form-control','required'=>'required']) !!}
 </div>
 </div>
 <div class="form-group">
@@ -41,7 +40,7 @@
 </div>
 </div>
 <div class="form-group">
-     @php $pass_type_masters=displayList('pass_type_masters','name')@endphp
+     @php $pass_type_masters=displayList('pass_types','pass_type_master_id')@endphp
       {!! Form::label('pass_type_master_id', Lang::get('Pass Type'), ['class' => 'col-md-3 control-label']) !!}
       <div class="col-md-7 col-sm-12">
          {!! Form::select('pass_type_master_id',$pass_type_masters, isset($concessions->pass_type_master_id) ? $concessions->pass_type_master_id :selected,['class' => 'col-md-6 form-control','placeholder'=>'Select Pass Type']) !!}

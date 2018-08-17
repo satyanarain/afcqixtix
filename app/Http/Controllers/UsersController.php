@@ -56,6 +56,7 @@ class UsersController extends Controller
     $user = DB::table('users')->select('*','users.id as id')
             ->leftjoin('permission_details','permission_details.user_id','users.id')
             ->leftjoin('permissions','permission_details.role_id','permissions.id')
+            ->where('permission_details.role_id','!=',1)
             ->orderBy('users.id','desc')->get();
     return view('users.index')->withUsers($user);
    
@@ -163,6 +164,7 @@ class UsersController extends Controller
             $permission = PermissionDetail::where('user_id',$id);
             $user_id=  Auth::id();
             $input = $requestData->all();
+            //echo '<pre>';print_r($input);die;
             $created_by=  Auth::id();
             //$input['user_id'] = $userid;
             $role_id = $requestData->role_id;

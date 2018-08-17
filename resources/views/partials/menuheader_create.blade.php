@@ -42,17 +42,27 @@
                                 {{ menuCreate('denominations','create','edit','view',$permissions->id,$permissions->denominations)}}
                                 {{ menuCreate('pass_types','create','edit','view',$permissions->id,$permissions->pass_types)}}
                                 {{ menuCreate('crew_details','create','edit','view',$permissions->id,$permissions->crew_details)}}
-                               
+                                
                             </table> 
                         </div>
                     </div>
                     <div   class="formmain" onclick="showHide(this.id)" id="ACC2{{$permissions->id}}">
                         <div class="plusminusbutton" id="plusminusbuttonACC2{{$permissions->id}}">+</div>&nbsp;&nbsp;ETM Details
                     </div>
-                     <div class="row1"  id="formACC2{{$permissions->id}}" style="display:none;">
+                    <div class="row1"  id="formACC2{{$permissions->id}}" style="display:none;">
                         <div class="row">  
                             <table class="table table-responsive.view">
                                  {{ menuCreate('ETM_details','create','edit','view',$permissions->id,$permissions->ETM_details)}}
+                        </table> 
+                        </div>
+                    </div>
+                    <div   class="formmain" onclick="showHide(this.id)" id="ACC3{{$permissions->id}}">
+                        <div class="plusminusbutton" id="plusminusbuttonACC3{{$permissions->id}}">+</div>&nbsp;&nbsp;Miscellaneous
+                    </div>
+                    <div class="row1"  id="formACC3{{$permissions->id}}" style="display:none;">
+                        <div class="row">  
+                            <table class="table table-responsive.view">
+                                 {{ menuCreate('versions','create','edit','view',$value->id,$value->versions)}}
                         </table> 
                         </div>
                     </div>
@@ -91,6 +101,7 @@
             $("#showview" + id).prop('checked', true);
          } else {
             $("#show" + id).hide();
+            $("#showview" + id).prop('checked', false);
 
         }
 

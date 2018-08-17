@@ -476,3 +476,25 @@ function getCurrentLabel($table = '',$idname = '',$id='',$columnname)
     $result = DB::table($table)->select($table.'.'.$columnname)->where($idname,$id)->first();
     return $result->$columnname;
 }
+
+function checkPermission($module='',$action='') {
+    $user_id = Auth::id();
+    $sql = PermissionDetail::where('user_id', '=', $user_id)->first();
+    $result = $sql[$module];  
+    $array_menu= explode(',', $result);
+    if(in_array($action,$array_menu))
+        return true;
+    else
+        return false;
+}
+
+function getAllModulePermission($module='') {
+    $user_id = Auth::id();
+    $sql = PermissionDetail::where('user_id', '=', $user_id)->first();
+    $result = $sql[$module];  
+    return $array_menu= explode(',', $result);
+//    if(in_array($action,$array_menu))
+//        return true;
+//    else
+//        return false;
+}

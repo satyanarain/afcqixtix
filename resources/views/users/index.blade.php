@@ -9,7 +9,11 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{headingMain()}}</h3>
-              {{ createButton('create','Add') }}
+                <?php $permission_status = checkPermission('users','create');
+                    if($permission_status)
+                        createButton('create','Add');
+                ?>    
+                
             </div>
              @include('partials.message')
             <!-- /.box-header -->
@@ -34,7 +38,19 @@
                             <td>{{$value->role}}</td>
                             <td>{{$value->email}}</td>
                             <td>
-                                {{ actionEdit('edit',$value->id,$value->status)}}
+                                <?php $permission = getAllModulePermission('users');
+                                if(in_array('edit',$permission))
+                                    echo '<a  href="'.route("users.edit",$value->id).'" class="" title="Edit" ><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
+                                if(in_array('view',$permission))
+                                    echo '<a  class="btn btn-small btn-primary" href="'.route('users.show', $value->id).'" title="View" ><span class="glyphicon glyphicon-search"></span>&nbsp;View</a>&nbsp;&nbsp;&nbsp;&nbsp;';
+                                if(in_array('edit',$permission))
+                                {
+                                    if($value->status){
+                                        echo '<div class="btn btn-small btn-success" id="'.$value->id.'" onclick="statusUpdate(this.id)"><span id="ai'.$value->id.'"><i class="fa fa-check-circle"></i>&nbsp;Active</span></div>';
+                                    }else{
+                                        echo '<div class="btn btn-small btn-danger" id="'.$value->id.'" onclick="statusUpdate(this.id)"><span id="ai'.$value->id.'"><i class="fa fa-times-circle"></i>&nbsp;Inctive</span></div>';
+                                    }
+                                }?>
                             </td>
                          </tr>
                         @endforeach

@@ -4,9 +4,9 @@
   {!! Form::select('concession_provider_master_id',$concession_provider_masters, isset($pass_types->concession_provider_master_id) ? $pass_types->concession_provider_master_id :selected,['class' => 'form-control','placeholder'=>'Select Pass Provider','required'=>'required']) !!}
 </div>
 <div class="form-group">
-     @php $pass_type_masters=displayList('pass_type_masters','name')@endphp
+     @php $pass_type_masters=displayList('pass_types','pass_type_master_id')@endphp
       {!! Form::label('pass_type_master_id', Lang::get('Pass Type'), ['class' => 'control-label']) !!}<br>
-         {!! Form::select('pass_type_master_id',$pass_type_masters, isset($pass_types->pass_type_master_id) ? $pass_types->pass_type_master_id :selected,['class' => 'form-control','placeholder'=>'Select Pass Type']) !!}
+         {!! Form::text('pass_type_master_id',null,['class' => 'form-control','required' => 'required']) !!}
 </div>
 <div class="form-group">
          {!! Form::label('description', Lang::get('Description'), ['class' => 'control-label required']) !!}

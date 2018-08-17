@@ -3,11 +3,11 @@ error_reporting(1);
 echo '<pre>';
 $vals=array();
 
-$pdoMy=new PDO('mysql:dbname=afcqixtix','root','') or die("can't connect to $myDb");
-$pdoLi=new PDO('sqlite:data.sqlite') or die("can't connect to $liDb");
+$pdoMy=new PDO('mysql:dbname=afcqixtix','root','') or die("can't connect to afc");
+$pdoLi=new PDO('sqlite:data.sqlite') or die("can't connect to data1");
 
 $tbls=array('bus_types','concessions','concession_fare_slabs','concession_masters','concession_provider_masters',
-            'countries','crew','denominations','depots','duties','fares','inspector_remarks',
+            'countries','crew','denominations','depots','duties','fare_details','inspector_remarks',
             'pass_types','pass_type_masters','payout_reasons','routes','route_details','services','shifts',
             'stops','targets','trips','trip_cancellation_reasons','trip_cancellation_reason_category_masters',
             'trip_details','trip_start','vehicles');

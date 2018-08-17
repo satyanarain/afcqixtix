@@ -37,11 +37,11 @@ class PassTypeController extends Controller {
      */
  public function index($bus_type_id,$service_id) {
                 $pass_types = DB::table('pass_types')
-                ->select('*','services.name as name','pass_types.order_number as order_number','pass_types.id as id','pass_type_masters.name as type_name','concession_provider_masters.name as concession_provider_master_id')
+                ->select('*','services.name as name','pass_types.order_number as order_number','pass_types.id as id','concession_provider_masters.name as concession_provider_master_id')
                 ->leftjoin('users', 'users.id', '=', 'pass_types.user_id')
                 ->leftjoin('services', 'pass_types.service_id', '=', 'services.id')
                 ->leftjoin('concession_provider_masters', 'concession_provider_masters.id', '=', 'pass_types.concession_provider_master_id')
-                ->leftjoin('pass_type_masters', 'pass_type_masters.id', '=', 'pass_types.pass_type_master_id')
+                //->leftjoin('pass_type_masters', 'pass_type_masters.id', '=', 'pass_types.pass_type_master_id')
                 ->where('service_id', $service_id)
                 ->orderby('pass_types.order_number')       
                 ->get();
@@ -57,11 +57,11 @@ class PassTypeController extends Controller {
     
 
     public function orderList(Request $request) {
-          $sql = DB::table('pass_types')->select('*','pass_types.order_number as order_number','pass_types.id as id','pass_type_masters.name as type_name','concession_provider_masters.name as concession_provider_master_id','services.name as servicename')
+          $sql = DB::table('pass_types')->select('*','pass_types.order_number as order_number','pass_types.id as id','concession_provider_masters.name as concession_provider_master_id','services.name as servicename')
                 ->leftjoin('users', 'users.id', '=', 'pass_types.user_id')
                 ->leftjoin('services', 'pass_types.service_id', '=', 'services.id')
                 ->leftjoin('concession_provider_masters', 'concession_provider_masters.id', '=', 'pass_types.concession_provider_master_id')
-                ->leftjoin('pass_type_masters', 'pass_type_masters.id', '=', 'pass_types.pass_type_master_id')
+                //->leftjoin('pass_type_masters', 'pass_type_masters.id', '=', 'pass_types.pass_type_master_id')
                 ->where('pass_types.service_id',$request->service_id)
                 ->orderby('pass_types.order_number')       
                 ->get();
@@ -82,11 +82,11 @@ class PassTypeController extends Controller {
     
     public function viewDetail($id) {
        // die($id);
-           $value = DB::table('pass_types')->select('*','pass_types.order_number as order_number','pass_type_masters.name as type_name','concession_provider_masters.name as concession_provider_master_id','services.name as name')
+           $value = DB::table('pass_types')->select('*','pass_types.order_number as order_number','concession_provider_masters.name as concession_provider_master_id','services.name as name')
                 ->leftjoin('users', 'users.id', '=', 'pass_types.user_id')
                 ->leftjoin('services', 'pass_types.service_id', '=', 'services.id')
                 ->leftjoin('concession_provider_masters', 'concession_provider_masters.id', '=', 'pass_types.concession_provider_master_id')
-                ->leftjoin('pass_type_masters', 'pass_type_masters.id', '=', 'pass_types.pass_type_master_id')
+                //->leftjoin('pass_type_masters', 'pass_type_masters.id', '=', 'pass_types.pass_type_master_id')
                 ->where('pass_types.id',$id)
                 ->orderby('pass_types.order_number')       
                 ->first();
@@ -170,11 +170,11 @@ $k=1;
           $k++;  
         }
         
-     $sql = DB::table('pass_types')->select('*','services.name as name','pass_types.id as id','pass_types.order_number as order_number','pass_type_masters.name as type_name','concession_provider_masters.name as concession_provider_master_id')
+     $sql = DB::table('pass_types')->select('*','services.name as name','pass_types.id as id','pass_types.order_number as order_number','concession_provider_masters.name as concession_provider_master_id')
                 ->leftjoin('users', 'users.id', '=', 'pass_types.user_id')
                 ->leftjoin('services', 'pass_types.service_id', '=', 'services.id')
                 ->leftjoin('concession_provider_masters', 'concession_provider_masters.id', '=', 'pass_types.concession_provider_master_id')
-                ->leftjoin('pass_type_masters', 'pass_type_masters.id', '=', 'pass_types.pass_type_master_id')
+                //->leftjoin('pass_type_masters', 'pass_type_masters.id', '=', 'pass_types.pass_type_master_id')
                 ->where('pass_types.service_id',$service_id)
                 ->orderby('pass_types.order_number')       
                 ->get();

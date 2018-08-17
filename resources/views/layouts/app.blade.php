@@ -245,9 +245,8 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                         <ul @if($segments_var[0]=='changepasswords' || $segments_var[0]=='permissions' || $segments_var[0]=='settings') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
                          <li @if($segments_var[0]=='roles' || $segments_var[0]=='permissions') class="active" @endif><a href="{{route('permissions.index')}}"><i class="fa fa-key"></i>@lang('menu.settings.permissions')</a>
                             </li>
-                              <li @if($segments_var[0]=='changepasswords') class="active" @endif><a href="{{route('changepasswords.create')}}">
-                                    <i class="fa fa-key"></i> @lang('menu.users.changepassword') 
-                                </a></li>  
+                         <li @if($segments_var[0]=='settings') class="active" @endif><a href="{{route('settings.index')}}"><i class="fa fa-cog"></i>@lang('Settings')</a>
+                            </li>     
                             
                             
                             
@@ -255,7 +254,14 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                          </ul>
                     </li>
                     @endif
-                   
+                    <li @if($segments_var[0]=='versions') class="treeview active" @else class="treeview" @endif>
+                       <a href="{{route('versions.index')}}">
+                            <i class="fa fa-dashboard"></i> <span>Version</span>
+                        </a>
+                    </li>
+                    <li @if($segments_var[0]=='changepasswords') class="active" @endif><a href="{{route('changepasswords.create')}}">
+                                    <i class="fa fa-key"></i> @lang('menu.users.changepassword') 
+                                </a></li>  
                     </ul>
             </section>
             <!-- /.sidebar -->
@@ -384,6 +390,16 @@ $('body').on('focus',".multiple_date", function(){
               yearRange: "-80Y:-0Y",
 minDate: "-80Y",
 maxDate: "-0Y"
+          });
+      }); 
+$('body').on('focus',".multiple_date1", function(){
+         $(this).datepicker({
+              dateFormat: 'dd-mm-yy',
+               startView: "year", 
+                changeYear: true,
+              
+minDate: 0,
+
           });
       }); 
   $('#map1').append('<div style="" id="map"><div class="loading_bar"></div></div>');

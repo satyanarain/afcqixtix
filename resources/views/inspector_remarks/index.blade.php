@@ -17,7 +17,7 @@
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                          <tr>
-                            <th>@lang('Inspector Remarks')</th>
+                      
                            <th>@lang('Order Number')</th>
                             <th>@lang('Short Remarks')</th>
                             <th>@lang('Remarks Description')</th>
@@ -27,7 +27,7 @@
                     <tbody>
                          @foreach($inspector_remarks as $value)
                         <tr class="nor_f">
-                            <td>{{$value->inspector_remark}}</td>
+                       
                             <td>{{$value->order_number}}</td>
                              <td>{{$value->short_remark}}</td>
                             <td>{{$value->remark_description}}</td>

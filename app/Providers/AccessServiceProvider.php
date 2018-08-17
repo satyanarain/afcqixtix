@@ -147,31 +147,11 @@ class AccessServiceProvider extends ServiceProvider
             \App\Repositories\Role\RoleRepositoryContract::class,
             \App\Repositories\Role\RoleRepository::class
         );
-            /*
+           
+        
         $this->app->bind(
-            \App\Repositories\Duty\DutyRepositoryContract::class,
-            \App\Repositories\Duty\DutyRepository::class
+            \App\Repositories\Version\VersionRepositoryContract::class,
+            \App\Repositories\Version\VersionRepository::class
         );
-        $this->app->bind(
-            \App\Repositories\Torget\TorgetRepositoryContract::class,
-            \App\Repositories\Torget\TorgetRepository::class
-        );
-        $this->app->bind(
-            \App\Repositories\Trip\TripRepositoryContract::class,
-            \App\Repositories\Trip\TripRepository::class
-        );
-        $this->app->bind(
-            \App\Repositories\Fare\FareRepositoryContract::class,
-            \App\Repositories\Fare\FareRepository::class
-        );
-        $this->app->bind(
-            \App\Repositories\ConcessionFareSlab\ConcessionFareSlabRepositoryContract::class,
-            \App\Repositories\ConcessionFareSlab\ConcessionFareSlabRepository::class
-        );
-        $this->app->bind(
-            \App\Repositories\Concession\ConcessionRepositoryContract::class,
-            \App\Repositories\Concession\ConcessionRepository::class
-        );
-        */
     }
 }

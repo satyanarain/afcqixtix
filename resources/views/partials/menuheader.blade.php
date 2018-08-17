@@ -49,7 +49,8 @@
                                 {{ menuCreate('denominations','create','edit','view',$value->id,$value->denominations)}}
                                 {{ menuCreate('pass_types','create','edit','view',$value->id,$value->pass_types)}}
                                 {{ menuCreate('crew_details','create','edit','view',$value->id,$value->crew_details)}}
-                               
+                                {{ menuCreate('versions','create','edit','view',$value->id,$value->versions)}}
+                                
                             </table> 
                         </div>
                     </div>

@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Traits;
-use App\Models\Fare;
 
-trait activityLog {
+
+trait checkPermission {
 
 	function createLog($controllerModel='',$controllerModelLog='',$id='')
 	{

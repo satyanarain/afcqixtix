@@ -41,7 +41,7 @@
 <!--                            <td>{{$value->name}}</td>-->
                              <td>{{$value->order_number}}</td>
                             <td>{{$value->concession_provider_master_id}}</td>
-                            <td>{{$value->con_name}}</td>
+                            <td>{{$value->concession_master_id}}</td>
                             <td>{{$value->description}}</td>
                             <td>
                              <a href="<?php echo route('bus_types.services.concessions.edit',[$bus_type_id,$service_id,$value->id])?>" title="Edit Concession"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
