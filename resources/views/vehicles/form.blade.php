@@ -1,14 +1,18 @@
 <!--SELECT `id`, `name`, `depot_id`, `short_name`, `depot_location`, `default_service`, `created_at`, `updated_at` FROM `vehicles` WHERE 1-->
+@php
+    $segment = Request::segments();
+    $depot_id = displayList('depots','name');
+@endphp
+@if($segment[4]==="edit")
+    <div class="form-group">
+        {!! Form::label('depot_id', Lang::get('Depot'), ['class' => 'col-md-3 control-label']) !!}
+        <div class="col-md-7 col-sm-12 required">
+            {!! Form::select('depot_id',$depot_id,isset($vehicles->depot_id) ? $vehicles->depot_id : selected,['class' => 'col-md-6 form-control', 'placeholder'=>'Select Depot']) !!}
+        </div> 
+    </div>
+@endif
 
-<div class="form-group">
-    @php
-    $depot_id=displayList('depots','name')
-    @endphp
-    {!! Form::label('depot_id', Lang::get('Depot'), ['class' => 'col-md-3 control-label']) !!}
-    <div class="col-md-7 col-sm-12 required">
-        {!! Form::select('depot_id',$depot_id,isset($vehicles->depot_id) ? $vehicles->depot_id : selected,['class' => 'col-md-6 form-control', 'placeholder'=>'Select Depot','required' => 'required']) !!}
-    </div> 
-</div> 
+
 <div class="form-group">
     {!! Form::label('vehicle_registration_number', Lang::get('Vehicles Registration Number'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12 required">

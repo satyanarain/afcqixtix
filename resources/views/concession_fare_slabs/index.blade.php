@@ -1,15 +1,20 @@
 @extends('layouts.master')
 @section('header')
 <h1>{{headingBold()}}</h1>
-{{BreadCrumb()}}
+<ol class="breadcrumb">
+    <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li><a href="/bus_types">Bus Types</a></li>
+    <li><a href="{{route('bus_types.services.index',$bus_type_id,$service_id)}}">Services</a></li>
+    <li class="active">Concession Fare Slab</li>
+</ol>
 @stop
 @section('content')
 <div class="row">
     <div class="col-xs-12">
       <div class="box">
             <div class="box-header">
-               <h3 class="box-title">{{headingMain()}}</h3>
-             {{ createButton('create','Add') }}
+               <h3 class="box-title">{{getCurrentLabel('services','id',$service_id,'name')}} :- {{headingMain()}}</h3>
+             <a href="{{route('bus_types.services.concession_fare_slabs.create',[$bus_type_id,$service_id])}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
             </div>
            @include('partials.message')
             <!-- /.box-header -->
@@ -17,7 +22,7 @@
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                          <tr>
-                            <th>@lang('Service Name')</th>
+<!--                            <th>@lang('Service Name')</th>-->
                            <th>@lang('Percetage')</th>
                             <th>@lang('From Stage')</th>
                             <th>@lang('To Stage')</th>
@@ -28,12 +33,15 @@
                     <tbody>
                          @foreach($concessionFareSlabs as $value)
                         <tr class="nor_f">
-                            <td>{{$value->name}}</td>
+<!--                            <td>{{$value->name}}</td>-->
                              <td>{{$value->percentage}}</td>
                             <td>{{$value->stage_from}}</td>
                             <td>{{$value->stage_to}}</td>
                             <td>{{$value->fare}}</td>
-                             {{ actionEdit('edit',$value->id)}}
+                            <td>
+                                <a href="<?php echo route('bus_types.services.concession_fare_slabs.edit',[$bus_type_id,$service_id,$value->id])?>" title="Edit Concession Fare Slab"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a style="cursor: pointer;" title="View Service" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </td>    
                         </tr>
                         @endforeach
                         </tbody>

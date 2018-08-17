@@ -1,23 +1,31 @@
 @extends('layouts.master')
 @section('header')
 <h1>Duty Management {{--headingBold()--}}</h1>
-{{BreadCrumb()}}
+<ol class="breadcrumb">
+    <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li><a href="/routes">Routes</a></li>
+    <li class="active">Duties</li>
+</ol>
 @stop
 @section('content')
 <div class="row">
     <div class="col-xs-12">
       <div class="box">
             <div class="box-header">
-               <h3 class="box-title">{{headingMain()}}</h3>
-            {{ createButton('create','Add','order','order_id') }}
+               <h3 class="box-title">{{getCurrentLabel('routes','id',$route_id,'route')}} :- List of All Duties</h3>
+                <a href="<?php echo route('routes.duties.create',$route_id)?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
+            </br>
+            </br>
+            <button  class="btn btn-primary pull-left"  onclick="orderList('order_id','order_list',{{$route_id}})"><span class="fa fa-sort-desc"></span>&nbsp;Update Order</button>&nbsp;&nbsp;&nbsp;&nbsp;
             </div>
+          <input type="hidden" id="route_id" value="{{$route_id}}" disabled="disabled">
           @include('partials.message')
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="example10" class="table table-bordered table-striped">
                     <thead>
                          <tr>
-                            <th>@lang('Route')</th>
+<!--                            <th>@lang('Route')</th>-->
                             <th>@lang('Order Number')</th>
                             <th>@lang('Duty Number')</th>
                            <th>@lang('Start Time')</th>
@@ -29,13 +37,18 @@
                     <tbody>
                          @foreach($duties as $value)
                         <tr class="nor_f">
-                            <td>{{$value->route}}</td>
+<!--                            <td>{{$value->route}}</td>-->
                             <td>{{$value->order_number}}</td>
                             <td>{{$value->duty_number}}</td>
                             <td>{{$value->start_time}}</td>
                             <td>{{$value->end_time}}</td>
                             <td>{{$value->shift}}</td>
-                            {{ actionEdit('edit',$value->id)}}
+                            <td>
+                                <a href="<?php echo route('routes.duties.edit',[$route_id,$value->id])?>" title="Edit Duty"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a style="cursor: pointer;" title="View Duty" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="<?php echo route('routes.duties.trips.index',[$route_id,$value->id])?>" title="Manage {{$value->duty_number}} Trips"><span class="fa fa-tripadvisor"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="<?php echo route('routes.duties.targets.index',[$route_id,$value->id])?>" title="Manage Targets" class="" ><span class="fa fa-bullseye"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </td>
                          </tr>
                         @endforeach
                         </tbody>

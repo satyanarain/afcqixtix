@@ -27,9 +27,9 @@ class StoreTripRequest extends Request
     {
             return [
                 //   'route' => 'required',
-                   'route_id' => 'required',
+                   //'route_id' => 'required',
                    'shift_id' => 'required',
-                    'duty_id' => 'required'
+                    //'duty_id' => 'required'
                    //'default_path' => 'required',
                    //'default_path' => 'required',
 //                   'stop_id' => 'required',

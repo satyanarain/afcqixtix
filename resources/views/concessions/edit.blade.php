@@ -7,7 +7,7 @@
   @include('partials.form_header')
                {!! Form::model($concessions, [
         'method' => 'PATCH',
-        'route' => ['concessions.update', $concessions->id],
+        'route' => ['bus_types.services.concessions.update',$bus_type_id,$service_id,$concessions->id],  
         'files'=>true,
               'class'=>'form-horizontal',
         'enctype' => 'multipart/form-data'

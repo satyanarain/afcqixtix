@@ -8,7 +8,7 @@ class FareLog extends Model
      *
      * @var string
      */
-    protected $table = 'fare_logs';
+    protected $table = 'fares_logs';
     protected $guarded = [];
     
     

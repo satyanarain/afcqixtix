@@ -1,23 +1,4 @@
 <div class="input-group col-md-12">
-    @php $routes=displayList('routes','route')@endphp
-    {!! Form::label('route_id', Lang::get('Route'), ['class' => 'control-label','style'=>"margin-bottom:10px;" ]) !!}
-    
-    <div class="input-group col-md-12 required">
-  {!! Form::select('route_id',$routes,isset($trips->route_id) ? $trips->route_id : selected,['class' => 'form-control','required' => 'required','onchange'=>"getSubCate(this.value,'duties','returned_id')",'placeholder'=>'Select route']) !!}
-</div>
-
-</div>
-<div class="input-group col-md-12" id="returned_id_show">
-    @php $duties=displayList('duties','duty_number')@endphp
-    {!! Form::label('duty_id', Lang::get('Duty'), ['class' => 'control-label','style'=>"margin-bottom:10px;"]) !!}
-     <div class="input-group col-md-12 required">
-         <span id='returned_id'>
-            {!! Form::select('duty_id',$duties,isset($trips->duty_id) ? $trips->duty_id : selected,['class' => 'form-control','required' => 'required','placeholder'=>'Select duty']) !!}   
-         </span>
-      </div>
-   
-</div>
-<div class="input-group col-md-12">
     @php $shifts=displayList('shifts','shift')@endphp
     {!! Form::label('shift_id', Lang::get('Shift'), ['class' => 'control-label','style'=>"margin-bottom:10px;"]) !!}
    <div class="input-group col-md-12 required">

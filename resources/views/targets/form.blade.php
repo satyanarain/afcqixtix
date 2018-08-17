@@ -1,24 +1,3 @@
-@php $routes=displayList('routes','route')@endphp
-<div class="form-group">
-        {!! Form::label('route_id', Lang::get('Route'), ['class' => 'col-md-3 control-label']) !!}
-         <div class="col-md-7 col-sm-12 required">
-        {!! Form::select('route_id',$routes,isset($targets->route_id) ? $targets->route_id : selected,['class' => 'col-md-6 form-control','required' => 'required','onchange'=>'findDuty(this.value)','placeholder'=>"Select Route"]) !!}
-
-</div>
-</div>
-@php $duties=displayList('duties','duty_number')@endphp
-@if($targets->duty_id!='')
-<div class="form-group">
-        {!! Form::label('duty_id', Lang::get('Duty'), ['class' => 'col-md-3 control-label']) !!}
-           <div class="col-md-7 col-sm-12 required">
-        {!! Form::select('duty_id',$duties,isset($targets->duty_id) ? $targets->duty_id : selected,['class' => 'col-md-6 form-control','required' => 'required']) !!}
-
-</div>
-</div>
-@else
-<span  id='duty' style="display:none;">
-</span>
-@endif
 @php $shifts=displayList('shifts','shift')@endphp
 <div class="form-group" id=''>
         {!! Form::label('shift_id', Lang::get('Shift'), ['class' => 'col-md-3 control-label']) !!}

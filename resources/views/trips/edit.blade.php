@@ -23,7 +23,7 @@
                 <div class="box-body">
                    {!! Form::model($trips, [
         'method' => 'PATCH',
-        'route' => ['trips.update', $trips->id],
+        'route' => ['routes.duties.trips.update',$route_id,$duty_id,$trips->id],
         'files'=>true,
         'class'=>'form-horizontal',
         'enctype' => 'multipart/form-data',

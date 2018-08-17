@@ -32,7 +32,9 @@
                             <td>{{$value->etm_no}}</td>
                             <td>{{$value->evm_status_master_id}}</td>
                             <td>{{$value->sim_no}}</td>
+                            <td>
                             {{ actionEdit('edit',$value->id)}}
+                            </td>
                          </tr>
                         @endforeach
                         </tbody>

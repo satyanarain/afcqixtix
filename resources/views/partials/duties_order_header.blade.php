@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header-view" >
 <!--                <button type="button" class="close" data-dismiss="modal"><font class="white">&times;</font></button>-->
-                <h4 class="viewdetails_details"><span class="fa fa-bus"></span>&nbsp;{{ PopUpheadingMain($result) }}</h4>
+                <h4 class="viewdetails_details"><span class="fa fa-bus"></span>&nbsp;Update Duty Service Order</h4>
             </div>
             <div class="modal-body-view">
                 <div class="alert-new-success" id="successMessage_order" style="display:none;">
@@ -33,10 +33,10 @@
  </div>
 <script>
     
-   function orderList(order_id,order_list)
+   function orderList(order_id,order_list,route_id)
    {
      
-   var urldata=   '/duties/' + order_list;
+   var urldata=   '/duties/' + order_list+'/'+route_id;
     
     $.ajax({
 		type: "GET",
@@ -87,13 +87,13 @@ function updateOrder() {
 	var order_string = item_order;
 	$.ajax({
 		type: "GET",
-		url: "/duties/sort_order/"+order_string,
+		url: "/duties/sort_order/"+order_string+"/"+$("#route_id").val(),
 		data: order_string,
 		cache: false,
 		success: function(data){
                   $("#successMessage_order").show();
                   $("#success_order").html("Order Number Updated successfully.");
-                  $("#example1").html(data);
+                  $("#example10").html(data);
                   setTimeout(function() {
                   $('#successMessage_order').fadeOut('fast');
         }, 5000); // <-- time in milliseconds 

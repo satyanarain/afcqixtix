@@ -62,7 +62,7 @@ class InspectorRemarkController extends Controller {
                 ->get();
         ?>
                 <thead>
-                    <tr>  <th>Inspector Remarks</th>
+                    <tr>  
                         <th>Order Number</th>
                         <th>Short Remarks</th>
                         <th>Remarks Description</th>
@@ -73,7 +73,6 @@ class InspectorRemarkController extends Controller {
             <?php foreach ($sql as $value) {
                 ?>
                             <tr class="nor_f">
-                              <td><?php echo $value->inspector_remark; ?></td>
                                 <td><?php echo $value->order_number; ?></td>
                                 <td><?php echo $value->short_remark ?></td>
                                 <td><?php echo $value->remark_description ?></td>
@@ -94,7 +93,7 @@ class InspectorRemarkController extends Controller {
         <?php foreach ($sql as $value) {
         ?>
                     <li id="<?php echo "order" . $value->id; ?>" class="list-group-order-sub">
-                    <a href="javascript:void(0);" ><?php echo $value->inspector_remark; ?></a>
+                    
                     <a href="javascript:void(0);"><?php echo $value->order_number; ?></a>
                     <a href="javascript:void(0);"><?php echo $value->short_remark; ?></a>
                     <a href="javascript:void(0);"><?php echo $value->remark_description; ?></a>
@@ -120,10 +119,7 @@ class InspectorRemarkController extends Controller {
             </div>
             <div class="modal-body-view">
                  <table class="table table-responsive.view">
-                    <tr>       
-                        <td><b>Inspector Remark</b></td>
-                        <td class="table_normal"><?php  echo $value->inspector_remark; ?></span></td>
-                    </tr>
+                   
                     <tr>
                         <td><b>Short Remarks</b></td>
                         <td class="table_normal"><?php  echo $value->short_remark; ?></span></td>
@@ -224,8 +220,8 @@ class InspectorRemarkController extends Controller {
      * * @Author created by satya 4.2.2018
      */
     public function update($id, UpdateInspectorRemarkRequest $request) {
-   $inspector_remark = $request->inspector_remark;
-     $sql=inspectorRemark::where([['inspector_remark',$inspector_remark],['id','!=',$id]])->first();
+   $inspector_remark = $request->short_remark;
+     $sql=inspectorRemark::where([['short_remark',$inspector_remark],['id','!=',$id]])->first();
      if(count($sql)>0)
      {
        return redirect()->back()->withErrors(['Inspector remark has already been taken.']);

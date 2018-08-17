@@ -1,25 +1,25 @@
-<?php
+<?php 
 
-$segments_var = '';
-$segments_var = Request::segments();
-
-$segments_var[0];
-$segments_var[1];
+//$segments_var = '';
+//$segments_var = Request::segments();
+//
+//$segments_var[0];
+//$segments_var[1];
 $testerere= Config::get('app.locales');
 $testerere[0];
 App::setLocale($testerere[0]);
 Config::get('app.timezone');
-$dem_menu= pagePermissionView($result);
-$array_menu= explode(',', $dem_menu);
-if($segments_var[2]=='edit')
-{
-  unset($segments_var[1]); 
-  
-}
+//$dem_menu= pagePermissionView($result);
+//$array_menu= explode(',', $dem_menu);
+//if($segments_var[2]=='edit')
+//{
+//  unset($segments_var[1]); 
+//
+//}
 
 ?>
-
-@if(is_numeric(end($segments_var)) && empty($segments_var[2]) && $segments_var[0]=='users')
+@include('layouts.app')
+{{--@if(is_numeric(end($segments_var)) && empty($segments_var[2]) && $segments_var[0]=='users')
     @include('layouts.app')
 @else
     @if($segments_var[1]=='previous')
@@ -43,4 +43,4 @@ if($segments_var[2]=='edit')
             @endif
         @endif
     @endif
-@endif
+@endif--}}

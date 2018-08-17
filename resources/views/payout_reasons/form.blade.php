@@ -1,11 +1,4 @@
 <div class="form-group">
-    {!! Form::label('payout_reason', Lang::get('Payout Reason'), ['class' => 'col-md-3 control-label']) !!}
-    <div class="col-md-7 col-sm-12 required">
-        {!! Form::text('payout_reason', null, ['class' => 'col-md-6 form-control','required' => 'required']) !!}
-
-    </div>
-</div>
-<div class="form-group">
     {!! Form::label('short_reason', Lang::get('Short Reason'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12 required">
         {!! Form::text('short_reason', null, ['class' => 'col-md-6 form-control','required' => 'required']) !!}

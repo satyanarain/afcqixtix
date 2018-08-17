@@ -1,3 +1,4 @@
+
 @extends('layouts.master')
 @section('header')
 <h1>{{headingBold()}}</h1>
@@ -38,7 +39,10 @@
                             <td>{{$value->service_name}}</td>
                             <td>{{$value->depot_location}}
                             </td>
-                          {{ actionEdit('edit',$value->id)}}
+                            <td>{{ actionEdit('edit',$value->id)}}
+                                <a href="<?php echo route('depots.vehicles.index',$value->id)?>" title="Manage Vehicle" class="" ><span class="fa fa-bus"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="<?php echo route('depots.crew.index',$value->id)?>" title="Manage Crew" class="" ><i class="glyphicon glyphicon-user"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                </td>
                            </tr>
                         @endforeach
                         </tbody>

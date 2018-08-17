@@ -17,7 +17,7 @@
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                          <tr>
-                            <th>@lang('Payout Reason')</th>
+                           
                            <th>@lang('Order Number')</th>
                             <th>@lang('Short Reason')</th>
                             <th>@lang('Reason Description')</th>
@@ -27,11 +27,11 @@
                     <tbody>
                          @foreach($payout_reasons as $value)
                         <tr class="nor_f">
-                            <td>{{$value->payout_reason}}</td>
+                            
                             <td>{{$value->order_number}}</td>
                              <td>{{$value->short_reason}}</td>
                             <td>{{$value->reason_description}}</td>
-                             {{ actionEdit('edit',$value->id)}}
+                            <td>{{ actionEdit('edit',$value->id)}}</td>
                         </tr>
                         @endforeach
                         </tbody>

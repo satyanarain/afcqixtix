@@ -35,18 +35,18 @@ class TargetController extends Controller {
      *
      * @return Response
      */
-    public function index() {
-
+    public function index($route_id,$duty_id,Request $request)
+    {
         $targets = DB::table('targets')->select('*','targets.id as id')
                 ->leftjoin('duties', 'targets.duty_id', '=', 'duties.id')
                 ->leftjoin('shifts', 'targets.shift_id', '=', 'shifts.id')
                 ->leftjoin('routes', 'targets.route_id', '=', 'routes.id')
                 ->get();
-        return view('targets.index')->withTargets($targets);
+        return view('targets.index',compact('targets','route_id','duty_id'));
     }
 
-    public function create() {
-     return view('targets.create');
+    public function create($route_id,$duty_id){
+        return view('targets.create', compact('route_id','duty_id'));
     }
 
     /**
@@ -60,7 +60,7 @@ class TargetController extends Controller {
      * @param Target $targets
      * @return Response
      */
-    public function store(StoreTargetRequest $targetsRequest) {
+    public function store($route_id,$duty_id,StoreTargetRequest $targetsRequest) {
      
       $sql=Target::where([['route_id',$targetsRequest->route_id],['duty_id',$targetsRequest->duty_id],['shift_id',$targetsRequest->shift_id]])->first();
     
@@ -68,8 +68,10 @@ class TargetController extends Controller {
      {
      return view('targets.create')->withErrors(['This route,duty number and shift has already been taken.']);
       } else {
+          $targetsRequest->request->add(['route_id'=> $route_id]);
+          $targetsRequest->request->add(['duty_id'=> $duty_id]);
           $getInsertedId = $this->targets->create($targetsRequest);
-        return redirect()->route('targets.index');
+        return redirect()->route('routes.duties.targets.index',[$route_id,$duty_id]);
     }
     }
     /**
@@ -95,9 +97,9 @@ class TargetController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function edit($id) {
+    public function edit($route_id,$duty_id,$id) {
         $targets = Target::findOrFail($id);
-        return view('targets.edit')->withTargets($targets);
+        return view('targets.edit',compact('targets','route_id','duty_id'));
     }
 
     /**
@@ -106,7 +108,7 @@ class TargetController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function update($id, UpdateTargetRequest $request) {
+    public function update($route_id,$duty_id,$id, UpdateTargetRequest $request) {
   $sql=Target::where([['route_id',$request->route_id],['duty_id',$request->duty_id],['shift_id',$request->shift_id],['id','!=',$id]])->first();
  
      if(count($sql)>0)
@@ -115,7 +117,7 @@ class TargetController extends Controller {
       } else {
          
         $this->targets->update($id, $request);
-        return redirect()->route('targets.index');
+        return redirect()->route('routes.duties.targets.index',['route_id','duty_id']);
       }
     }
     public function getDuty($id) {

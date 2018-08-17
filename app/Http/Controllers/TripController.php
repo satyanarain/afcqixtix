@@ -34,18 +34,18 @@ class TripController extends Controller {
      *
      * @return Response
      */
-    public function index() {
-
+    public function index($route_id,$duty_id,Request $request) {
+       
         $trips = DB::table('trips')->select('*','trips.id as id')
                  ->leftjoin('duties', 'duties.id', '=', 'trips.duty_id')
                  ->leftjoin('shifts', 'shifts.id', '=', 'trips.shift_id')
                  ->get();
-        return view('trips.index')->withTrips($trips);
+        return view('trips.index',compact('trips','route_id','duty_id'));
     }
 
-    public function create() {
+    public function create($route_id,$duty_id) {
         //$trips = Trip::findOrFail();
-        return view('trips.create');
+        return view('trips.create',compact('route_id','duty_id'));
     }
 
     /**
@@ -59,10 +59,12 @@ class TripController extends Controller {
      * @param Trip $trips
      * @return Response
      */
-    public function store(StoreTripRequest $tripsRequest) {
+    public function store($route_id,$duty_id,StoreTripRequest $tripsRequest) {
         $tripsRequest->route;
-         $getInsertedId = $this->trips->create($tripsRequest);
-        return redirect()->route('trips.index');
+        $tripsRequest->request->add(['route_id'=> $route_id]);
+        $tripsRequest->request->add(['duty_id'=> $duty_id]);
+        $getInsertedId = $this->trips->create($tripsRequest);
+        return redirect()->route('routes.duties.trips.index',[$route_id,$duty_id]);
        // }
     }
 
@@ -194,10 +196,11 @@ $duties = DB::table($table_name)->select('*')->where('route_id',$id)->get();
      * @param  int  $id
      * @return Response
      */
-    public function edit($id) {
+    public function edit($route_id,$duty_id,$id) {
+        
         $trips = Trip::findOrFail($id);
          $trip_details = DB::table('trip_details')->select('*')->where('trip_id', $id)->get();
-        return view('trips.edit',compact('trips','trip_details'));
+        return view('trips.edit',compact('trips','trip_details','route_id','duty_id'));
     }
 
     /**
@@ -206,13 +209,15 @@ $duties = DB::table($table_name)->select('*')->where('route_id',$id)->get();
      * @param  int  $id
      * @return Response
      */
-    public function update($id, UpdateTripRequest $request) {
+    public function update($route_id,$duty_id,$id, UpdateTripRequest $request) {
 //      $sql = Trip::where([['route', $request->route], ['direction', $request->direction], ['id', '!=', $id]])->first();
 //        if (count($sql) > 0) {
 //            return redirect()->back()->withErrors(['This route and direction has already been taken.']);
 //        } else {
+            $request->request->add(['route_id'=> $route_id]);
+            $request->request->add(['duty_id'=> $duty_id]);
             $this->trips->update($id, $request);
-            return redirect()->route('trips.index');
+            return redirect()->route('routes.duties.trips.index',['route_id','duty_id']);
        // }
     }
 

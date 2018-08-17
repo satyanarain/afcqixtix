@@ -145,7 +145,7 @@ class PermissionsController extends Controller
             $input['payout_reasons'] = implode(',', $request->payout_reasons);
             $input['denominations'] = implode(',', $request->denominations);
             $input['pass_types'] = implode(',', $request->pass_types);
-            $input['crew_details'] = implode(',', $request->crew_details);
+            $input['crew'] = implode(',', $request->crew);
             $input['ETM_details'] = implode(',', $request->ETM_details);
            $roles= Permission::create($input);
            Session::flash('flash_message', "Role Created Successfully."); //Snippet in Master.blade.php
@@ -185,7 +185,7 @@ class PermissionsController extends Controller
             $input['payout_reasons'] = implode(',', $request->payout_reasons);
             $input['denominations'] = implode(',', $request->denominations);
             $input['pass_types'] = implode(',', $request->pass_types);
-            $input['crew_details'] = implode(',', $request->crew_details);
+            $input['crew'] = implode(',', $request->crew);
             $input['ETM_details'] = implode(',', $request->ETM_details);
             $permission->fill($input)->save();
            Session::flash('flash_message', "Role Updated Successfully."); 

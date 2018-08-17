@@ -62,6 +62,28 @@ if($maxid->$fieldname!='')
 
 }
 
+function maxId1($table='',$fieldname='',$wherecol='',$whereval='')
+{
+    //DB::enableQueryLog();
+$maxid = DB::table($table)->where($fieldname, DB::raw("(select max($fieldname) from $table where $wherecol=$whereval)"))->first();
+//dd(DB::getQueryLog());
+//echo $maxid->$fieldname;die;
+if($fieldname!='')
+{
+if($maxid->$fieldname!='')
+{
+   return $maxid->$fieldname+1;
+} else {
+ return $maxid->$fieldname=1;
+}
+} else {
+
+ return  $maxid;  
+}
+
+
+}
+
 function orderList($table='',$id='',$field1='',$field2='',$field3='',$field4='',$t1='',$t1_id='',$t2='',$t2_id='')
 {
     
@@ -116,68 +138,87 @@ function BreadCrumb() {
     $segments = '';
     $segments = Request::segments();
     $segments_value = str_replace("_", " ", $segments[0]);
-    ?>
-    <ol class="breadcrumb">
-        <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-    <?php
+   echo '<ol class="breadcrumb">
+            <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>';
     if ($segments[0] != '') {
-        
-        ?>
-            <li><a href="<?php echo route($segments[0] . '.index') ?>"><?php echo ucwords($segments_value); ?></a></li>
-        <?php } ?>
-        <?php
-        if ($segments[1] != '') {
-            if (is_numeric($segments[1])) {
-                ?>
-                <?php if ($segments[2] == 'edit') {
-                    ?>
-                    <li class="active"><?php echo substr(ucwords($segments_value), 0, -1) ?> Update</li>
-                <?php } else { ?>
-                    <li class="active"><?php echo substr(ucwords($segments_value), 0, -1) ?> Profile</li>
-                <?php } ?>   
-            <?php
-            } else {
-                $segments_value = str_replace("_", "&nbsp", $segments[0]);
-                ?>
-
-                <li class="active"><?php echo ucwords($segments[1]) . " " . substr(ucwords($segments_value), 0, -1) ?></li>
-            <?php }
+        echo '<li><a href="'.route($segments[0] . '.index').'">'.ucwords($segments_value).'</a></li>';
+    }
+    if ($segments[1] != '') {
+        if (is_numeric($segments[1])) {
+            if ($segments[2] == 'edit') {
+                echo '<li class="active">'.substr(ucwords($segments_value), 0, -1).' Update</li>';
+            } else{
+                echo '<li class="active">'.substr(ucwords($segments_value), 0, -1).' Profile</li>';
+            }
+        }else{
+            $segments_value = str_replace("_", "&nbsp", $segments[0]);
+            echo '<li class="active">'.ucwords($segments[1]) . " " . substr(ucwords($segments_value), 0, -1).'</li>';
         }
-        ?>     
-    </ol>
-        <?php } ?>
-        <?php
+    }
+    echo '</ol>';
+} 
 
-        function headingBold() {
-            $segments = '';
-            $segments = Request::segments();
-            $segments_value = str_replace("_", " ", $segments[0]);
-             if(is_numeric(end($segments)) && empty($segments[2]) && $segments[0]=='users')
-             {
-                 echo substr(ucwords($segments_value), 0, -1)."&nbsp;Profile ";     
-             } else {
-              echo "Manage ".substr(ucwords($segments_value), 0, -1);
-             }
-            ?> 
-    <?php
+function headingBold() 
+{
+    $segments = '';
+    $segments = Request::segments();
+    $seg_count = count($segments);
+//    echo '<pre>';print_r($segments);
+//    echo end($segments);
+//    die;
+    if(is_numeric(end($segments)) || end($segments)=="create")
+        $segments_value = str_replace("_", " ", $segments[$seg_count-2]);
+    elseif(end($segments)=="edit")
+        $segments_value = str_replace("_", " ", $segments[$seg_count-3]);
+    else
+        $segments_value = str_replace("_", " ", $segments[$seg_count-1]);
+    if(is_numeric(end($segments)) && empty($segments[2]) && $segments[0]=='users')
+    {
+       echo substr(ucwords($segments_value), 0, -1)."&nbsp;Profile ";     
+    }else{
+       echo "Manage ".substr(ucwords($segments_value), 0, -1);
+    }
 }
 
 function headingMain() {
     $segments = '';
     $segments = Request::segments();
-    if (count($segments) >= 2) {
-        if (is_numeric($segments[1])) {
-            $segments_value = str_replace("_", " ", $segments[0]);
-        echo substr(ucwords($segments_value), 0, -1) . " Update";
-        } else {
-            $segments_value = str_replace("_", " ", $segments[0]);
-            echo ucwords($segments[1]) . " " . substr(ucwords($segments_value), 0, -1);
-        }
-    } else {
-        
-        $segments_value = str_replace("_", " ", $segments[0]);
-        echo "List of All " . ucwords($segments_value);
+    $seg_count = count($segments);
+    //echo '<pre>';print_r($segments);
+    //echo end($segments);
+    if(is_numeric(end($segments)))
+    {
+        echo $segments_value = str_replace("_", " ", $segments[$seg_count-2]);
+    }elseif(end($segments)=="create")
+    {
+        if($segments[$seg_count-2]=="crew")
+            echo $segments_value = 'Create '.ucwords(str_replace("_", " ", $segments[$seg_count-2]));
+        else
+            echo $segments_value = 'Create '.substr(ucwords(str_replace("_", " ", $segments[$seg_count-2])), 0, -1);
+    }elseif(end($segments)=="edit")
+    {
+        if($segments[$seg_count-2]=="crew")
+            echo $segments_value = ucwords(str_replace("_", " ", $segments[$seg_count-3])). " Update";
+        else
+            echo $segments_value = substr(ucwords(str_replace("_", " ", $segments[$seg_count-3])), 0, -1). " Update";
+    }else
+    {
+        echo $segments_value = "List of All " .substr(ucwords(str_replace("_", " ", $segments[$seg_count-1])), 0, -1);
     }
+//    die;
+//    if (count($segments) >= 2) {
+//        if (is_numeric($segments[1])) {
+//            $segments_value = str_replace("_", " ", $segments[0]);
+//        echo substr(ucwords($segments_value), 0, -1) . " Update";
+//        } else {
+//            $segments_value = str_replace("_", " ", $segments[0]);
+//            echo ucwords($segments[1]) . " " . substr(ucwords($segments_value), 0, -1);
+//        }
+//    } else {
+//        
+//        $segments_value = str_replace("_", " ", $segments[0]);
+//        echo "List of All " . ucwords($segments_value);
+//    }
 }
 function headingMainOrder() {
     $segments = '';
@@ -209,16 +250,15 @@ function PopUpheadingMain($result) {
 ?>
 <?php
 
-function displayList($table = '', $fieldname = '', $orderby_fieldname='',$asc_dsc='') {
-    
-        if($orderby_fieldname!='')
-         {
-            $result = DB::table($table)->orderBy($orderby_fieldname,$asc_dsc)->pluck($fieldname, 'id');
-         }else
-         {
-          $result = DB::table($table)->pluck($fieldname, 'id');    
-         }
-            
+function displayList($table = '', $fieldname = '', $orderby_fieldname='',$asc_dsc='') 
+{
+    if($orderby_fieldname!='')
+    {
+       $result = DB::table($table)->orderBy($orderby_fieldname,$asc_dsc)->pluck($fieldname, 'id');
+    }else
+    {
+     $result = DB::table($table)->pluck($fieldname, 'id');    
+    }
     return $result;
 }
 function displayPath($fieldname = '',$path_id='',$deviated_path='') {
@@ -268,22 +308,23 @@ if(in_array('view',$array_all)){
 function actionEdit($action = '', $id = '',$status='') {
  $segments = '';
  $segments = Request::segments();
+ //print_r($segments);die;
  $user= $segments[0];
  $user_id = Auth::id();
  $result= DB::table('permission_details')->where('user_id',$user_id)->first();
  $array_all=explode(',',$result->$user);
  ?>
-        <td>
+        
           <?php  if(in_array('edit',$array_all)){ ?>
-             <a  href="<?php echo route($segments[0] . "." . $action, $id) ?>" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a  href="<?php echo route($segments[0] . "." . $action, $id) ?>" class="" title="Edit" ><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
           <?php } ?>
     <?php if($segments[0]=='users'){?>
                <?php  if(in_array('view',$array_all)){ ?>
-              <a  class="btn btn-small btn-primary" href="<?php echo route('users.show', $id); ?>" ><span class="glyphicon glyphicon-search"></span>&nbsp;View</a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a  class="btn btn-small btn-primary" href="<?php echo route('users.show', $id); ?>" title="View" ><span class="glyphicon glyphicon-search"></span>&nbsp;View</a>&nbsp;&nbsp;&nbsp;&nbsp;
                       <?php } ?>
                   <?php }else{ ?>
                 <?php  if(in_array('view',$array_all)){ ?>
-               <button  class="btn btn-small btn-primary"  data-toggle="modal" data-target="#<?php echo $id ?>"  onclick="viewDetails(<?php echo $id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span>&nbsp;View</button>&nbsp;&nbsp;&nbsp;&nbsp;
+<a style="cursor: pointer;" title="View" data-toggle="modal" data-target="#<?php echo $id ?>"  onclick="viewDetails(<?php echo $id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
               <?php } ?>
                <?php } ?>
               <?php if($segments[0]=='users'){?>
@@ -302,7 +343,7 @@ function actionEdit($action = '', $id = '',$status='') {
                      <span id="<?php echo "ai".$id; ?>"><i class="fa fa-times-circle"></i>&nbsp;Inctive</span>
               <?php } ?></div>
           <?php } ?>
-        </td>
+        
 
     <?php
 }
@@ -348,14 +389,17 @@ function createButton($action = '', $title='',$order='',$order_id='',$privious='
 }   
 }
 
-function pagePermissionView($result)
+function pagePermissionView($module)
 {
     $segments = '';
     $segments = Request::segments();
     $userid_menu = Auth::id();
-    $menu_dis = $segments[0];
+    if($module=="edit" || $module=="view" || $module=="add")
+        $menu_dis = $segments[0];
+    else
+        $menu_dis = $module;
     $sql = PermissionDetail::where('user_id', '=', $userid_menu)->first();
-    return $result = $sql[$menu_dis];
+    return $sql[$menu_dis];
 }
 
 function menuCreate($controllerName,$create='',$edit='',$view='',$id='',$controllerName_Value)
@@ -407,4 +451,50 @@ function menuCreate($controllerName,$create='',$edit='',$view='',$id='',$control
        </tr>  
     
     <?php
+}
+
+function depotSubModuleButton($action = '', $id = '',$status='') {
+    $segments = '';
+    $segments = Request::segments();
+    //echo '<pre>';print_r($segments);
+    $routes = '';
+    foreach($segments as $segment)
+        $routes.= $segment.'/';
+    $user= $segments[0];
+    $user_id = Auth::id();
+    $result= DB::table('permission_details')->where('user_id',$user_id)->first();
+    //echo $routes;
+    //print_r($result);die;
+    $array_all=explode(',',$result->$user);
+    if(in_array('edit',$array_all)){ 
+     echo '<a  href="'.env('APP_URL').$routes.$id.'/'.$action.'" title="Manage Vehicle" class="" ><span class="fa fa-bus"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
+   } 
+}
+
+function getCurrentLabel($table = '',$idname = '',$id='',$columnname) 
+{
+    $result = DB::table($table)->select($table.'.'.$columnname)->where($idname,$id)->first();
+    return $result->$columnname;
+}
+
+function checkPermission($module='',$action='') {
+    $user_id = Auth::id();
+    $sql = PermissionDetail::where('user_id', '=', $user_id)->first();
+    $result = $sql[$module];  
+    $array_menu= explode(',', $result);
+    if(in_array($action,$array_menu))
+        return true;
+    else
+        return false;
+}
+
+function getAllModulePermission($module='') {
+    $user_id = Auth::id();
+    $sql = PermissionDetail::where('user_id', '=', $user_id)->first();
+    $result = $sql[$module];  
+    return $array_menu= explode(',', $result);
+//    if(in_array($action,$array_menu))
+//        return true;
+//    else
+//        return false;
 }

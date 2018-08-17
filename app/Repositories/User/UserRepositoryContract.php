@@ -8,8 +8,6 @@ interface UserRepositoryContract
     
     public function getAllUsers();
 
-    public function getAllUsersWithDepartments();
-
     public function create($requestData);
 
     public function update($id, $requestData);

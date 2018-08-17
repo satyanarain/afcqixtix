@@ -22,9 +22,9 @@
     <section class="error-wrapper">
         <i class="icon-404"></i>
         <div class="text-center">
-            <h2 class="purple-bg">Access Denied</h2>
+            <h2 class="purple-bg">Page Not Found</h2>
         </div>
-        <p>You don't have permission to view this page, please contact your system administrator to request access</p>
+        <p>Resource You are looking for is not available, please contact your system administrator.</p>
         <a href="{{ url('/') }}" class="back-btn" style="text-decoration:  none;">Back to Home</a>
     </section>
 

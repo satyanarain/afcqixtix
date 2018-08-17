@@ -33,7 +33,9 @@
                             </td>
                             <td>{{displayView($value->end_time)}}
                             </td>
-                            {{ actionEdit('edit',$value->id)}}
+                            <td>
+                                {{ actionEdit('edit',$value->id)}}
+                            </td>
                         </tr>
                         @endforeach
                         </tbody>

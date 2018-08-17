@@ -1,15 +1,20 @@
 @extends('layouts.master')
 @section('header')
 <h1>{{headingBold()}}</h1>
-{{BreadCrumb()}}
+<ol class="breadcrumb">
+    <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li><a href="/routes/">Routes</a></li>
+    <li><a href="{{route('routes.duties.index',$route_id,$duty_id)}}">Duty</a></li>
+    <li class="active">Trips</li>
+</ol>
 @stop
 @section('content')
 <div class="row">
     <div class="col-xs-12">
       <div class="box">
             <div class="box-header">
-               <h3 class="box-title">{{headingMain()}}</h3>
-             {{createButton('create','Add')}}
+               <h3 class="box-title">{{getCurrentLabel('duties','id',$duty_id,'duty_number')}} :- {{headingMain()}}</h3>
+             <a href="{{route('routes.duties.trips.create',[$route_id,$duty_id])}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
             </div>
            @include('partials.message')
             <!-- /.box-header -->
@@ -29,7 +34,10 @@
                             <td>{{displayIdBaseName('routes',$value->route_id,'route')}}</td>
                             <td>{{$value->duty_number}}</td>
                             <td>{{$value->shift}}</td>
-                             {{ actionEdit('edit',$value->id)}}
+                            <td>
+                                <a href="<?php echo route('routes.duties.trips.edit',[$route_id,$duty_id,$value->id])?>" title="Edit Trip"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a style="cursor: pointer;" title="View Trip" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </td>
                         </tr>
                         @endforeach
                         </tbody>

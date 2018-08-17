@@ -1,11 +1,5 @@
 
 <div class="input-group col-md-12" >
-<div class="input-group col-md-12">
-@php $services=displayList('services','name')@endphp
-        {!! Form::label('service_id', Lang::get('Service'), ['class' => 'control-label','style'=>"margin-bottom:10px;"]) !!}</br>
-        {!! Form::select('service_id',$services,isset($fares->service_id) ? $fares->service_id : selected,['class' => 'form-control required','required' => 'required','onchange'=>'fareList(this.value)','placeholder'=>"Select Service"]) !!}
-</div>
-</br>
 <div class="row" id="after-add-more">
   <div class="form-group ">
    <div class="col-md-9" style="padding:0px 0px 0px 30px;">

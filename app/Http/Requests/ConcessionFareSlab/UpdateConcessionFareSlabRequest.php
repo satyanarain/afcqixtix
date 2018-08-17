@@ -36,7 +36,7 @@ class UpdateConcessionFareSlabRequest extends Request
    
           $regex = "/^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$/";
            return [
-                    'service_id' => 'required',
+                   //'service_id' => 'required',
                    'percentage' => 'required|integer',
                    'stage_from' => 'required|integer',
                    'stage_to' => 'required|integer',

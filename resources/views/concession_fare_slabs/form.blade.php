@@ -1,11 +1,3 @@
-@php $services=displayList('services','name')@endphp
-<div class="form-group">
-        {!! Form::label('service_id', Lang::get('Service'), ['class' => 'col-md-3 control-label']) !!}
-           <div class="col-md-7 col-sm-12 required">
-        {!! Form::select('service_id',$services,isset($concession_fare_slabs->service_id) ? $concession_fare_slabs->service_id : selected,['class' => 'col-md-6 form-control','required' => 'required','onchange'=>'findDuty(this.value)','placeholder'=>"Select Service"]) !!}
-
-</div>
-</div>
 <div class="form-group">
         {!! Form::label('percentage', Lang::get('Percentage'), ['class' => 'col-md-3 control-label']) !!}   <div class="col-md-7 col-sm-12 required">
          {!! Form::number('percentage', null, ['class' => 'col-md-6 form-control','required' => 'required','onkeypress'=>'return isNumberKey(event)']) !!}

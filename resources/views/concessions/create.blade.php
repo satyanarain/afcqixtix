@@ -1,12 +1,18 @@
 @extends('layouts.master')
 @section('header')
 <h1>{{headingBold()}}</h1>
-{{BreadCrumb()}}
+<ol class="breadcrumb">
+    <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li><a href="/bus_types">Bus Types</a></li>
+    <li><a href="{{route('bus_types.services.index',$bus_type_id,$service_id)}}">Services</a></li>
+    <li><a href="{{route('bus_types.services.concessions.index',[$bus_type_id,$service_id])}}">Concessions</a></li>
+    <li class="active">Add Concessions</li>
+</ol>
 @stop
 @section('content')
   @include('partials.form_header')
                 {!! Form::open([
-                'route' => 'concessions.store',
+                'route' => ['bus_types.services.concessions.store',$bus_type_id,$service_id],
                 'files'=>true,
                 'class'=>'form-horizontal',
                 'enctype' => 'multipart/form-data'

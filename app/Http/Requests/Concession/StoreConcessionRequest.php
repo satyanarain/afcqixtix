@@ -27,7 +27,7 @@ class StoreConcessionRequest extends Request
     {  
            return [
                 // 'name' => 'required|unique:depots,name',
-                   'service_id' => 'required|unique:concessions,service_id',
+                   //'service_id' => 'required|unique:concessions,service_id',
                    'concession_master_id' => 'required',
                    'description' => 'required',
                    'order_number' => 'required',

@@ -1,11 +1,3 @@
-@php $services=displayList('services','name')@endphp
-<div class="form-group">
-        {!! Form::label('service_id', Lang::get('Service'), ['class' => 'col-md-3 control-label']) !!}
-         <div class="col-md-7 col-sm-12 required">
-        {!! Form::select('service_id',$services,isset($concessions->service_id) ? $concessions->service_id : selected,['class' => 'col-md-6 form-control','required' => 'required','placeholder'=>"Select Service"]) !!}
-</div>
-</div>
-
 <div class="form-group">
     @php $concession_provider_masters=displayList('concession_provider_masters','name')@endphp
     {!! Form::label('concession_provider_master_id', Lang::get('Concession Provider'), ['class' => 'col-md-3 control-label']) !!}
@@ -14,10 +6,9 @@
 </div>
 </div>
 <div class="form-group">
-    @php $concession_masters=displayList('concession_masters','name')@endphp
     {!! Form::label('concession_master_id', Lang::get('Concession'), ['class' => 'col-md-3 control-label']) !!}
      <div class="col-md-7 col-sm-12 required">
-  {!! Form::select('concession_master_id',$concession_masters, isset($concessions->concession_master_id) ? $concessions->concession_master_id :selected,['class' => 'col-md-6 form-control','placeholder'=>'Select Concession','required'=>'required']) !!}
+  {!! Form::text('concession_master_id',null, ['class' => 'col-md-6 form-control','required'=>'required']) !!}
 </div>
 </div>
 <div class="form-group">
@@ -34,7 +25,7 @@
     {!! Form::text('order_number',null, ['class' => 'col-md-6 form-control','readonly'=>readonly]) !!}
      </div>
      @else
-    @php $concessions_order= maxId('concessions','order_number') @endphp
+    @php $concessions_order= maxId1('concessions','order_number','service_id',$service_id) @endphp
      {!! Form::label('order_number', Lang::get('Order Number'), ['class' => 'col-md-3 control-label']) !!}
       <div class="col-md-7 col-sm-12 required">
     {!! Form::text('order_number', $concessions_order, ['class' => 'col-md-6 form-control','readonly'=>readonly]) !!}
@@ -49,7 +40,7 @@
 </div>
 </div>
 <div class="form-group">
-     @php $pass_type_masters=displayList('pass_type_masters','name')@endphp
+     @php $pass_type_masters=displayList('pass_types','pass_type_master_id')@endphp
       {!! Form::label('pass_type_master_id', Lang::get('Pass Type'), ['class' => 'col-md-3 control-label']) !!}
       <div class="col-md-7 col-sm-12">
          {!! Form::select('pass_type_master_id',$pass_type_masters, isset($concessions->pass_type_master_id) ? $concessions->pass_type_master_id :selected,['class' => 'col-md-6 form-control','placeholder'=>'Select Pass Type']) !!}

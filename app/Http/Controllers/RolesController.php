@@ -77,7 +77,7 @@ class RolesController extends Controller
             $permission->payout_reasons = implode(',', $request->payout_reasons);
             $permission->denominations = implode(',', $request->denominations);
             $permission->pass_types = implode(',', $request->pass_types);
-            $permission->crew_details = implode(',', $request->crew_details);
+            $permission->crew = implode(',', $request->crew);
             $permission->ETM_details = implode(',', $request->ETM_details);
             
             $permission->save();
@@ -105,7 +105,7 @@ class RolesController extends Controller
             $input['payout_reasons'] = implode(',', $request->payout_reasons);
             $input['denominations'] = implode(',', $request->denominations);
             $input['pass_types'] = implode(',', $request->pass_types);
-            $input['crew_details'] = implode(',', $request->crew_details);
+            $input['crew'] = implode(',', $request->crew);
             $permission->ETM_details = implode(',', $request->ETM_details);
             
             Role::create($input);

@@ -6,7 +6,7 @@
 @section('content')
  @include('partials.form_header')
                 {!! Form::open([
-                'route' => 'targets.store',
+                'route' => ['routes.duties.targets.store',$route_id,$duty_id],
                 'files'=>true,
                  'class'=>'form-horizontal',
                  'autocomplete'=>'off',

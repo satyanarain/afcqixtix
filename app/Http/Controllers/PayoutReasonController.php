@@ -62,7 +62,7 @@ class PayoutReasonController extends Controller {
                 ->get();
         ?>
                 <thead>
-                    <tr>  <th>Payout Reason</th>
+                    <tr> 
                         <th>Order Number</th>
                         <th>Short Reason</th>
                         <th>Reason Description</th>
@@ -73,7 +73,7 @@ class PayoutReasonController extends Controller {
             <?php foreach ($sql as $value) {
                 ?>
                             <tr class="nor_f">
-                              <td><?php echo $value->payout_reason; ?></td>
+                              
                                 <td><?php echo $value->order_number; ?></td>
                                 <td><?php echo $value->short_reason ?></td>
                                 <td><?php echo $value->reason_description ?></td>
@@ -94,7 +94,7 @@ class PayoutReasonController extends Controller {
         <?php foreach ($sql as $value) {
         ?>
                     <li id="<?php echo "order" . $value->id; ?>" class="list-group-order-sub">
-                    <a href="javascript:void(0);" ><?php echo $value->payout_reason; ?></a>
+                    
                     <a href="javascript:void(0);"><?php echo $value->order_number; ?></a>
                     <a href="javascript:void(0);"><?php echo $value->short_reason; ?></a>
                     <a href="javascript:void(0);"><?php echo $value->reason_description; ?></a>
@@ -120,10 +120,7 @@ class PayoutReasonController extends Controller {
             </div>
             <div class="modal-body-view">
                  <table class="table table-responsive.view">
-                    <tr>       
-                        <td><b>Payout Reason</b></td>
-                        <td class="table_normal"><?php  echo $value->payout_reason; ?></span></td>
-                    </tr>
+                    
                     <tr>
                         <td><b>Short Reason</b></td>
                         <td class="table_normal"><?php  echo $value->short_reason; ?></span></td>
@@ -224,8 +221,8 @@ class PayoutReasonController extends Controller {
      * * @Author created by satya 5.2.2018
      */
     public function update($id, UpdatePayoutReasonRequest $request) {
-           $payout_reason = $request->payout_reason;
-      $sql=PayoutReason::where([['payout_reason',$payout_reason],['id','!=',$id]])->first();
+           $payout_reason = $request->short_reason;
+      $sql=PayoutReason::where([['short_reason',$payout_reason],['id','!=',$id]])->first();
      if(count($sql)>0)
      {
        return redirect()->back()->withErrors(['Payout reason has already been taken.']);

@@ -55,7 +55,7 @@ echo json_encode([
  </div>
  </div>
 
-  
+<?php $segments_var = Request::segments();?>  
 <div class="wrapper">
     <header class="main-header">   
             <!-- Logo -->
@@ -125,7 +125,7 @@ echo json_encode([
      <section class="sidebar">
            <ul class="sidebar-menu">
                     <li class="header">MAIN NAVIGATION</li>
-                    <li class="active treeview">
+                    <li @if($segments_var[0]=='dashboard') class="treeview active" @else class="treeview" @endif>
                        <a href="{{route('dashboard')}}">
                             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                         </a>
@@ -157,7 +157,7 @@ echo json_encode([
                         </a>
                         @php
 $array= array('depots','bus_types','services','vehicles','shifts','stops','routes','duties','targets','trips','fares','concession_fare_slabs'
-,'concessions','trip_cancellation_reasons','inspector_remarks','payout_reasons','denominations','pass_types','crew_details','')
+,'concessions','trip_cancellation_reasons','inspector_remarks','payout_reasons','denominations','pass_types','crew','')
                        @endphp
                         <ul @if(in_array($segments_var[0],$array)) class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
                              
@@ -173,19 +173,8 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                             </a>
                            </li>
                             @endif
-                            @if(menuPermission('services')==1)
-                            <li @if($segments_var[0]=='services') class="active" @endif><a href="{{route('services.index')}}">
-                                    <i class="fa fa-briefcase"></i> @lang('menu.services.title') 
-                            </a>
-                            </li>
-                           @endif
-                            @if(menuPermission('vehicles')==1)
-                             
-                            <li @if($segments_var[0]=='vehicles') class="active" @endif><a href="{{route('vehicles.index')}}">
-                                    <i class="fa fa-bus"></i> @lang('menu.vehicles.title') 
-                            </a>
-                            </li>
-                                @endif
+                           
+                            
                             @if(menuPermission('shifts')==1)
                             <li @if($segments_var[0]=='shifts') class="active" @endif><a href="{{route('shifts.index')}}">
                                     <i class="fa fa-calendar"></i> @lang('menu.shifts.title') 
@@ -202,37 +191,11 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                             </a>
                              </li>
                                  @endif
-                            @if(menuPermission('duties')==1)
-                            <li @if($segments_var[0]=='duties') class="active" @endif><a href="{{route('duties.index')}}">
-                                    <i class="fa fa-file"></i> @lang('menu.duties.title') 
-                            </a>
-                            </li>
-                                @endif
-                            @if(menuPermission('targets')==1)
-                            <li @if($segments_var[0]=='targets') class="active" @endif><a href="{{route('targets.index')}}">
-                                    <i class="fa fa-bullseye"></i> @lang('menu.targets.title') 
-                            </a>
-                            @endif
-                            @if(menuPermission('trips')==1)
-                            <li @if($segments_var[0]=='trips') class="active" @endif><a href="{{route('trips.index')}}">
-                                    <i class="fa fa-tripadvisor"></i> @lang('menu.trips.title') 
-                            </a>
-                            @endif
-                            @if(menuPermission('fares')==1)   
-                            <li @if($segments_var[0]=='fares') class="active" @endif><a href="{{route('fares.index')}}">
-                                    <i class="fa fa-inr"></i> @lang('menu.fares.title') </a>
-                           </li>
-                               @endif
-                            @if(menuPermission('concession_fare_slabs')==1)
-                           <li @if($segments_var[0]=='concession_fare_slabs') class="active" @endif><a href="{{route('concession_fare_slabs.index')}}">
-                                    <i class="fa fa-inr"></i> @lang('menu.concession_fare_slabs.title') </a>
-                           </li>
-                               @endif
-                            @if(menuPermission('concessions')==1)
-                           <li @if($segments_var[0]=='concessions') class="active" @endif><a href="{{route('concessions.index')}}">
-                                    <i class="fa fa-inr"></i> @lang('menu.concessions.title') </a>
-                           </li>
-                               @endif
+                            
+                            
+                            
+                            
+                           
                             @if(menuPermission('trip_cancellation_reasons')==1)
                            <li @if($segments_var[0]=='trip_cancellation_reasons') class="active" @endif><a href="{{route('trip_cancellation_reasons.index')}}">
                                     <i class="fa fa-inr"></i> @lang('menu.trip_cancellation_reason.title') </a>
@@ -253,16 +216,6 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                                     <i class="fa fa-plus"></i> @lang('menu.denominations.title') </a>
                            </li>
                                @endif
-                            @if(menuPermission('pass_types')==1)
-                           <li @if($segments_var[0]=='pass_types') class="active" @endif><a href="{{route('pass_types.index')}}">
-                                    <i class="fa fa-lock"></i> @lang('menu.pass_types.title') </a>
-                           </li>
-                               @endif
-                            @if(menuPermission('crew_details')==1)
-                           <li @if($segments_var[0]=='crew_details') class="active" @endif><a href="{{route('crew_details.index')}}">
-                                    <i class="fa fa-eye"></i> @lang('menu.crew_details.title') </a>
-                           </li>
-                             @endif
                          </ul>
                     </li>
                     @php $pem=menuDisplayByUser($result, 'ETM_details','view'); @endphp
@@ -290,11 +243,10 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                             </span>
                         </a>
                         <ul @if($segments_var[0]=='changepasswords' || $segments_var[0]=='permissions' || $segments_var[0]=='settings') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
-                         <li @if($segments_var[0]=='roles') class="active" @endif><a href="{{route('permissions.index')}}"><i class="fa fa-key"></i>@lang('menu.settings.permissions')</a>
+                         <li @if($segments_var[0]=='roles' || $segments_var[0]=='permissions') class="active" @endif><a href="{{route('permissions.index')}}"><i class="fa fa-key"></i>@lang('menu.settings.permissions')</a>
                             </li>
-                              <li @if($segments_var[0]=='changepasswords') class="active" @endif><a href="{{route('changepasswords.create')}}">
-                                    <i class="fa fa-key"></i> @lang('menu.users.changepassword') 
-                                </a></li>  
+                         <li @if($segments_var[0]=='settings') class="active" @endif><a href="{{route('settings.index')}}"><i class="fa fa-cog"></i>@lang('Settings')</a>
+                            </li>     
                             
                             
                             
@@ -302,7 +254,14 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                          </ul>
                     </li>
                     @endif
-                   
+                    <li @if($segments_var[0]=='versions') class="treeview active" @else class="treeview" @endif>
+                       <a href="{{route('versions.index')}}">
+                            <i class="fa fa-dashboard"></i> <span>Version</span>
+                        </a>
+                    </li>
+                    <li @if($segments_var[0]=='changepasswords') class="active" @endif><a href="{{route('changepasswords.create')}}">
+                                    <i class="fa fa-key"></i> @lang('menu.users.changepassword') 
+                                </a></li>  
                     </ul>
             </section>
             <!-- /.sidebar -->
@@ -362,7 +321,7 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
     <div class="pull-right hidden-xs">
         <b>Version</b> 2.3.7
     </div>
-    <strong>Copyright &copy; 2014-2016 <a href="http://opiant.in">Opiant Tech Solutions Pvt. Ltd.</a>.</strong> All rights
+    <strong>Copyright &copy; 2014-2018 <a href="http://opiant.in">Opiant Tech Solutions Pvt. Ltd.</a>.</strong> All rights
     reserved.
 </footer>
 </div>
@@ -394,7 +353,7 @@ $.widget.bridge('uibutton', $.ui.button);
 <!-- AdminLTE App -->
 <script src="{{ asset(elixir('js/app.min.js')) }}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="{{ asset(elixir('js/pages/dashboard2.js')) }}"></script>
+<!--<script src="{{ asset(elixir('js/pages/dashboard2.js')) }}"></script>-->
 
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 
@@ -409,9 +368,8 @@ $.widget.bridge('uibutton', $.ui.button);
 
  <link rel="stylesheet" href="{{ asset('css/buttons.dataTables.min.css') }}">
 <style type="text/css" class="init"></style>
-<script type="text/javascript" src="jquery-1.12.0.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/tabletools/2.2.4/js/dataTables.tableTools.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/tabletools/2.2.2/swf/copy_csv_xls_pdf.swf"></script>
+<!--<script type="text/javascript" src="https://cdn.datatables.net/tabletools/2.2.2/swf/copy_csv_xls_pdf.swf"></script>-->
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.colVis.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.1.2/js/buttons.flash.min.js"></script>
@@ -432,6 +390,16 @@ $('body').on('focus',".multiple_date", function(){
               yearRange: "-80Y:-0Y",
 minDate: "-80Y",
 maxDate: "-0Y"
+          });
+      }); 
+$('body').on('focus',".multiple_date1", function(){
+         $(this).datepicker({
+              dateFormat: 'dd-mm-yy',
+               startView: "year", 
+                changeYear: true,
+              
+minDate: 0,
+
           });
       }); 
   $('#map1').append('<div style="" id="map"><div class="loading_bar"></div></div>');
