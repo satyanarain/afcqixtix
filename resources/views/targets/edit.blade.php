@@ -1,7 +1,13 @@
 @extends('layouts.master')
 @section('header')
 <h1>{{headingBold()}}</h1>
-{{BreadCrumb()}}
+<ol class="breadcrumb">
+    <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li><a href="/routes">Routes</a></li>
+    <li><a href="{{route('routes.duties.index',$route_id,$duty_id)}}">Duties</a></li>
+    <li><a href="{{route('routes.duties.targets.index',[$route_id,$duty_id])}}">Target</a></li>
+    <li class="active">Update Target</li>
+</ol>
 @stop
 @section('content')
  @include('partials.form_header')

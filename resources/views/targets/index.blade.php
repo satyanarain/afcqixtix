@@ -1,14 +1,19 @@
 @extends('layouts.master')
 @section('header')
 <h1>{{headingBold()}}</h1>
-{{BreadCrumb()}}
+<ol class="breadcrumb">
+    <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li><a href="/routes">Routes</a></li>
+    <li><a href="{{route('routes.duties.index',$route_id,$duty_id)}}">Duties</a></li>
+    <li class="active">Targets</li>
+</ol>
 @stop
 @section('content')
 <div class="row">
     <div class="col-xs-12">
       <div class="box">
             <div class="box-header">
-               <h3 class="box-title">{{getCurrentLabel('routes','id',$route_id,'route')}} :- {{headingMain()}}</h3>
+               <h3 class="box-title">{{getCurrentLabel('duties','id',$duty_id,'duty_number')}} :- {{headingMain()}}</h3>
              <a href="<?php echo route('routes.duties.targets.create',[$route_id,$duty_id])?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
             </div>
             <!-- /.box-header -->

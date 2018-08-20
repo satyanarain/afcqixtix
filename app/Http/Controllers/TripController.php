@@ -160,6 +160,8 @@ class TripController extends Controller {
         </div>
     <?php   
     }
+    
+    
  public function show($id) {
  $trips = DB::table('trips')->select('*','trip_details.stop_id','trips.route', 'trips.id', 'stops.stop')
                 ->leftjoin('trip_details', 'trip_details.stop_id', '=', 'trips.id')

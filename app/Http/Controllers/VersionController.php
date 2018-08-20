@@ -145,7 +145,7 @@ class VersionController extends Controller
 
         $tbls=array('bus_types','concessions','concession_fare_slabs','concession_masters','concession_provider_masters',
             'countries','crew','denominations','depots','duties','fares','inspector_remarks',
-            'pass_types','payout_reasons','routes','route_details','services','shifts',
+            'pass_types','payout_reasons','routes','route_details','stops','services','shifts',
             'versions','targets','trips','trip_cancellation_reasons','trip_cancellation_reason_category_masters',
             'trip_details','trip_start','vehicles');
             #Delete Old Table

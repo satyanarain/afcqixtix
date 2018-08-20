@@ -1,7 +1,12 @@
 @extends('layouts.master')
 @section('header')
 <h1>Duty Management {{--headingBold()--}}</h1>
-{{BreadCrumb()}}
+<ol class="breadcrumb">
+    <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li><a href="/routes">Routes</a></li>
+    <li><a href="{{route('routes.duties.index',$route_id,$duty_id)}}">Duties</a></li>
+    <li class="active">Create Duty</li>
+</ol>
 @stop
 @section('content')
 <div class="col-md-12">
