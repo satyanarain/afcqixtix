@@ -10,7 +10,10 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{headingMain()}}</h3>
-             {{createButton('create','Add')}}
+               <?php $permission_status = checkPermission('routes','create');
+                    if($permission_status)
+                        createButton('create','Add');
+                ?>
             </div>
            @include('partials.message')
             <!-- /.box-header -->
@@ -31,8 +34,17 @@
                             <td>{{$value->route}}{{ucfirst(substr($value->direction,0,1))}} : {{displayIdBaseName('stops',$value->source,'stop')}} - {{displayIdBaseName('stops',$value->destination,'stop')}} via- {{displayIdBaseName('stops',$value->via,'stop')}}</td>
                             <td>{{$value->direction}}</td>
                             <td>
-                             {{ actionEdit('edit',$value->id)}}
-                             <a href="<?php echo route('routes.duties.index',$value->id)?>" title="Manage Duty" class="" ><span class="fa fa-briefcase"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php $permission = getAllModulePermission('routes');
+                                if(in_array('edit',$permission)){?>
+                                <a href="<?php echo route('routes.edit',$value->id)?>" title="Edit Routes"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }
+                                if(in_array('view',$permission)){?>
+                                <a style="cursor: pointer;" title="View Routes" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }?>
+                                <?php $permission = getAllModulePermission('duties');
+                                if(in_array('view',$permission)){?>
+                                <a href="<?php echo route('routes.duties.index',$value->id)?>" title="Manage Duty" class="" ><span class="fa fa-briefcase"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                 <?php }?>
                             </td>
                         </tr>
                         @endforeach

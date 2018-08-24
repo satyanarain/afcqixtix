@@ -19,9 +19,9 @@ use App\Http\Requests\Target\StoreTargetRequest;
 use App\Repositories\Target\TargetRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-
+use App\Traits\checkPermission;
 class TargetController extends Controller {
-
+    use checkPermission;
     protected $targets;
 
     public function __construct(
@@ -37,6 +37,8 @@ class TargetController extends Controller {
      */
     public function index($route_id,$duty_id,Request $request)
     {
+        if(!$this->checkActionPermission('targets','view'))
+            return redirect()->route('401');
         $targets = DB::table('targets')->select('*','targets.id as id')
                 ->leftjoin('duties', 'targets.duty_id', '=', 'duties.id')
                 ->leftjoin('shifts', 'targets.shift_id', '=', 'shifts.id')
@@ -46,6 +48,8 @@ class TargetController extends Controller {
     }
 
     public function create($route_id,$duty_id){
+        if(!$this->checkActionPermission('targets','create'))
+            return redirect()->route('401');
         return view('targets.create', compact('route_id','duty_id'));
     }
 
@@ -61,7 +65,8 @@ class TargetController extends Controller {
      * @return Response
      */
     public function store($route_id,$duty_id,StoreTargetRequest $targetsRequest) {
-     
+     if(!$this->checkActionPermission('targets','create'))
+            return redirect()->route('401');
       $sql=Target::where([['route_id',$targetsRequest->route_id],['duty_id',$targetsRequest->duty_id],['shift_id',$targetsRequest->shift_id]])->first();
     
      if(count($sql)>0)
@@ -81,6 +86,8 @@ class TargetController extends Controller {
      * @return Response
      */
     public function show($id) {
+        if(!$this->checkActionPermission('targets','view'))
+            return redirect()->route('401');
         // $targets=Target::findOrFail($id);
                 $targets = DB::table('targets')->select('*','targets.id as id')
                 ->leftjoin('shifts', 'targets.shift_id', '=', 'shifts.id')
@@ -98,6 +105,8 @@ class TargetController extends Controller {
      * @return Response
      */
     public function edit($route_id,$duty_id,$id) {
+        if(!$this->checkActionPermission('targets','edit'))
+            return redirect()->route('401');
         $targets = Target::findOrFail($id);
         return view('targets.edit',compact('targets','route_id','duty_id'));
     }
@@ -109,6 +118,8 @@ class TargetController extends Controller {
      * @return Response
      */
     public function update($route_id,$duty_id,$id, UpdateTargetRequest $request) {
+        if(!$this->checkActionPermission('targets','edit'))
+            return redirect()->route('401');
   $sql=Target::where([['route_id',$request->route_id],['duty_id',$request->duty_id],['shift_id',$request->shift_id],['id','!=',$id]])->first();
  
      if(count($sql)>0)

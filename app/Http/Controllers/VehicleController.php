@@ -19,10 +19,11 @@ use App\Http\Requests\Vehicle\StoreVehicleRequest;
 use App\Repositories\Vehicle\VehicleRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-
+use App\Traits\checkPermission;
 class VehicleController extends Controller
 {
     protected $vehicles;
+    use checkPermission;
     public function __construct(
         VehicleRepositoryContract $vehicles
     ) {
@@ -35,6 +36,8 @@ class VehicleController extends Controller
      */
     public function index(Request $request)
     {
+        if(!$this->checkActionPermission('vehicles','view'))
+            return redirect()->route('401');
         $depot_id = $request->depot_id;
         $vehicles = DB::table('vehicles')->select('vehicles.vehicle_registration_number','vehicles.depot_id','vehicles.bus_type_id','vehicles.vehicle_registration_number','depots.id','depots.name as name','bus_types.id','bus_types.bus_type','vehicles.created_at as created_at','vehicles.updated_at as updated_at','vehicles.id as id','vehicles.user_id as user_id','users.user_name as user_name')
             ->leftjoin('depots', 'depots.id', '=', 'vehicles.depot_id')
@@ -46,6 +49,8 @@ class VehicleController extends Controller
     }
     public function create(Request $request)
     {
+        if(!$this->checkActionPermission('vehicles','create'))
+            return redirect()->route('401');
         $depot_id = $request->depot_id;
         //$vehicles = Vehicle::findOrFail();
         return view('vehicles.create',compact('depot_id'));
@@ -64,6 +69,8 @@ class VehicleController extends Controller
      */
     public function store($depot_id,StoreVehicleRequest $vehiclesRequest)
     {
+        if(!$this->checkActionPermission('vehicles','create'))
+            return redirect()->route('401');
         //echo $depot_id;die;
         
         //$depot_id = $vehiclesRequest->depot_id;die;
@@ -81,13 +88,15 @@ class VehicleController extends Controller
      */
    public function show($id)
    {
-  $vehicles = DB::table('vehicles')->select('vehicles.id','vehicles.vehicle_registration_number','vehicles.depot_id','vehicles.bus_type_id','vehicles.vehicle_registration_number','depots.id','depots.name as name','bus_types.id')
-            ->leftjoin('depots', 'depots.id', '=', 'vehicles.depot_id')
-            ->leftjoin('bus_types', 'bus_types.id', '=', 'vehicles.bus_type_id')
-           ->where('vehicles.id',$id)        
-          ->first();
+       if(!$this->checkActionPermission('vehicles','view'))
+            return redirect()->route('401');
+        $vehicles = DB::table('vehicles')->select('vehicles.id','vehicles.vehicle_registration_number','vehicles.depot_id','vehicles.bus_type_id','vehicles.vehicle_registration_number','depots.id','depots.name as name','bus_types.id')
+                ->leftjoin('depots', 'depots.id', '=', 'vehicles.depot_id')
+                ->leftjoin('bus_types', 'bus_types.id', '=', 'vehicles.bus_type_id')
+                ->where('vehicles.id',$id)        
+                ->first();
   
-    return view('vehicles.show')->withVehicles($vehicles);
+        return view('vehicles.show')->withVehicles($vehicles);
      }
     /**
      * Show the form for editing the specified resource.
@@ -97,6 +106,8 @@ class VehicleController extends Controller
      */
     public function edit($depot_id,$id)
     {
+        if(!$this->checkActionPermission('vehicles','edit'))
+            return redirect()->route('401');
       //die($id);
        $vehicles=Vehicle::findOrFail($id);
       return view('vehicles.edit',compact('vehicles','depot_id'));
@@ -109,6 +120,8 @@ class VehicleController extends Controller
      */
     public function update($depot_id,$id, UpdateVehicleRequest $request)
     {
+        if(!$this->checkActionPermission('vehicles','edit'))
+            return redirect()->route('401');
          //echo $depot_id;die;
         
         //$depot_id = $vehiclesRequest->depot_id;die;

@@ -9,7 +9,10 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{headingMain()}}</h3>
-             {{ createButton('create','Add','order','order_id') }}
+               <?php $permission_status = checkPermission('shifts','create');
+                    if($permission_status)
+                        createButton('create','Add','order','order_id');
+                ?>
             </div>
           @include('partials.message')
             <!-- /.box-header -->
@@ -34,7 +37,14 @@
                             <td>{{displayView($value->end_time)}}
                             </td>
                             <td>
-                                {{ actionEdit('edit',$value->id)}}
+                                <?php $permission = getAllModulePermission('shifts');
+                                if(in_array('edit',$permission)){?>
+                                <a href="<?php echo route('shifts.edit',$value->id)?>" title="Edit Shift"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }
+                                if(in_array('view',$permission)){?>
+                                <a style="cursor: pointer;" title="View Shift" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>
+                                <?php }?>
+                                
                             </td>
                         </tr>
                         @endforeach

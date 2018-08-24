@@ -18,11 +18,11 @@ use App\Http\Requests\Trip\StoreTripRequest;
 use App\Repositories\Trip\TripRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-
+use App\Traits\checkPermission;
 class TripController extends Controller {
 
     protected $trips;
-
+    use checkPermission;
     public function __construct(
     TripRepositoryContract $tripss
     ) {
@@ -35,7 +35,8 @@ class TripController extends Controller {
      * @return Response
      */
     public function index($route_id,$duty_id,Request $request) {
-       
+       if(!$this->checkActionPermission('trips','view'))
+            return redirect()->route('401');
         $trips = DB::table('trips')->select('*','trips.id as id')
                  ->leftjoin('duties', 'duties.id', '=', 'trips.duty_id')
                  ->leftjoin('shifts', 'shifts.id', '=', 'trips.shift_id')
@@ -44,6 +45,8 @@ class TripController extends Controller {
     }
 
     public function create($route_id,$duty_id) {
+        if(!$this->checkActionPermission('trips','create'))
+            return redirect()->route('401');
         //$trips = Trip::findOrFail();
         return view('trips.create',compact('route_id','duty_id'));
     }
@@ -60,6 +63,8 @@ class TripController extends Controller {
      * @return Response
      */
     public function store($route_id,$duty_id,StoreTripRequest $tripsRequest) {
+        if(!$this->checkActionPermission('trips','create'))
+            return redirect()->route('401');
         $tripsRequest->route;
         $tripsRequest->request->add(['route_id'=> $route_id]);
         $tripsRequest->request->add(['duty_id'=> $duty_id]);
@@ -76,6 +81,8 @@ class TripController extends Controller {
      */
     
           public function viewDetail($id) {
+              if(!$this->checkActionPermission('trips','view'))
+            return redirect()->route('401');
            $trips=Trip::find($id);
             $sql = DB::table('trip_details')->where('trip_id',$id)
              ->get();
@@ -163,6 +170,8 @@ class TripController extends Controller {
     
     
  public function show($id) {
+     if(!$this->checkActionPermission('trips','view'))
+            return redirect()->route('401');
  $trips = DB::table('trips')->select('*','trip_details.stop_id','trips.route', 'trips.id', 'stops.stop')
                 ->leftjoin('trip_details', 'trip_details.stop_id', '=', 'trips.id')
                 ->leftjoin('stops', 'trip_details.stop_id', '=', 'stops.id')
@@ -199,7 +208,8 @@ $duties = DB::table($table_name)->select('*')->where('route_id',$id)->get();
      * @return Response
      */
     public function edit($route_id,$duty_id,$id) {
-        
+        if(!$this->checkActionPermission('trips','edit'))
+            return redirect()->route('401');
         $trips = Trip::findOrFail($id);
          $trip_details = DB::table('trip_details')->select('*')->where('trip_id', $id)->get();
         return view('trips.edit',compact('trips','trip_details','route_id','duty_id'));
@@ -212,6 +222,8 @@ $duties = DB::table($table_name)->select('*')->where('route_id',$id)->get();
      * @return Response
      */
     public function update($route_id,$duty_id,$id, UpdateTripRequest $request) {
+        if(!$this->checkActionPermission('trips','edit'))
+            return redirect()->route('401');
 //      $sql = Trip::where([['route', $request->route], ['direction', $request->direction], ['id', '!=', $id]])->first();
 //        if (count($sql) > 0) {
 //            return redirect()->back()->withErrors(['This route and direction has already been taken.']);

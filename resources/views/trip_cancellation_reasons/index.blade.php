@@ -10,7 +10,10 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{headingMain()}}</h3>
-             {{ createButton('create','Add','Add'.'order_id') }}
+               <?php $permission_status = checkPermission('trip_cancellation_reasons','create');
+                    if($permission_status)
+                        createButton('create','Add','Add'.'order_id');
+                ?>
             </div>
            @include('partials.message')
             <!-- /.box-header -->
@@ -32,7 +35,15 @@
                             <td>{{$value->order_number}}</td>
                              <td>{{$value->short_reason}}</td>
                             <td>{{$value->reason_description}}</td>
-                            <td>{{ actionEdit('edit',$value->id)}}</td>
+                            <td>
+                                <?php $permission = getAllModulePermission('trip_cancellation_reasons');
+                                if(in_array('edit',$permission)){?>
+                                    <a href="<?php echo route('trip_cancellation_reasons.edit',$value->id)?>" title="Edit Trip Cancellation Reason"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }
+                                if(in_array('view',$permission)){?>
+                                    <a style="cursor: pointer;" title="View Trip Cancellation Reason" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }?>
+                            </td>
                         </tr>
                         @endforeach
                         </tbody>

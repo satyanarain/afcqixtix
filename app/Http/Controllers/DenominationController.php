@@ -19,11 +19,11 @@ use App\Http\Requests\Denomination\StoreDenominationRequest;
 use App\Repositories\Denomination\DenominationRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-
+use App\Traits\checkPermission;
 class DenominationController extends Controller {
 
     protected $denominations;
-
+    use checkPermission;
     public function __construct(
     DenominationRepositoryContract $denominations
     ) {
@@ -36,6 +36,8 @@ class DenominationController extends Controller {
      * @return Response
      */
  public function index() {
+    if(!$this->checkActionPermission('denominations','view'))
+        return redirect()->route('401');
                 $denominations = DB::table('denominations')->select('*','denominations.id as id','denomination_masters.name as denomination_master_id')
                 ->leftjoin('users', 'users.id', '=', 'denominations.user_id')
                 ->leftjoin('denomination_masters', 'denomination_masters.id', '=', 'denominations.denomination_master_id')
@@ -44,6 +46,8 @@ class DenominationController extends Controller {
                 return view('denominations.index',compact('denominations'));
     }
      public function create() {
+         if(!$this->checkActionPermission('denominations','create'))
+            return redirect()->route('401');
      return view('denominations.create');
     }
  /**
@@ -84,6 +88,8 @@ class DenominationController extends Controller {
      * * @Author created by satya 5.2.2018
      */
     public function store(StoreDenominationRequest $denominationsRequest) {
+        if(!$this->checkActionPermission('denominations','create'))
+            return redirect()->route('401');
         $getInsertedId = $this->denominations->create($denominationsRequest);
         return redirect()->route('denominations.index');
     }
@@ -95,6 +101,8 @@ class DenominationController extends Controller {
      * @return Response
      */
     public function show($id) {
+        if(!$this->checkActionPermission('denominations','view'))
+        return redirect()->route('401');
                        $denominations = DB::table('denominations')->select('*','denominations.id as id','denomination_masters.name as denomination_master_id')
                 ->leftjoin('users', 'users.id', '=', 'denominations.user_id')
                 ->leftjoin('denomination_masters', 'denomination_masters.id', '=', 'denominations.denomination_master_id')
@@ -111,11 +119,14 @@ class DenominationController extends Controller {
      * @return Response
      */
     public function edit($id) {
+        if(!$this->checkActionPermission('denominations','edit'))
+            return redirect()->route('401');
         $denominations = Denomination::findOrFail($id);
         return view('denominations.edit',compact('denominations'));
     }
     public function addNew(Request $request) {
-       
+       if(!$this->checkActionPermission('denominations','create'))
+        return redirect()->route('401');
         
         
         
@@ -151,6 +162,8 @@ class DenominationController extends Controller {
      * * @Author created by satya 5.2.2018
      */
     public function update($id, UpdateDenominationRequest $request) {
+        if(!$this->checkActionPermission('denominations','edit'))
+            return redirect()->route('401');
            $denomination_master_id = $request->denomination_master_id;
       $sql=Denomination::where([['denomination_master_id',$denomination_master_id],['id','!=',$id]])->first();
      if(count($sql)>0)

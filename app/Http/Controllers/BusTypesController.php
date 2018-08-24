@@ -19,9 +19,11 @@ use App\Repositories\BusType\BusTypeRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Traits\activityLog;
+use App\Traits\checkPermission;
 class BusTypesController extends Controller
 {
     use activityLog;
+    use checkPermission;
     protected $bustypes;
     public function __construct(
         BusTypeRepositoryContract $bustypes
@@ -35,13 +37,16 @@ class BusTypesController extends Controller
      */
     public function index()
     {
-        
+        if(!$this->checkActionPermission('bus_types','view'))
+            return redirect()->route('401');
     $bustypes = BusType::orderBy('order_number')->get();
     return view('bustypes.index')->withBustypes($bustypes);
    
     }
     public function create()
     {
+        if(!$this->checkActionPermission('bus_types','create'))
+            return redirect()->route('401');
      return view('bustypes.create');
     }
  
@@ -58,6 +63,8 @@ class BusTypesController extends Controller
      */
     public function store(StoreBusTypeRequest $bustypesRequest)
     {
+        if(!$this->checkActionPermission('bus_types','create'))
+            return redirect()->route('401');
         $getInsertedId = $this->bustypes->create($bustypesRequest);
         return redirect()->route('bus_types.index');         
     }
@@ -69,6 +76,8 @@ class BusTypesController extends Controller
      */
    public function show($id)
    {
+       if(!$this->checkActionPermission('bus_types','view'))
+            return redirect()->route('401');
    $bustypes=Bustype::findOrFail($id);
     return view('bustypes.show')->withBustypes($bustypes);
      }
@@ -81,6 +90,8 @@ class BusTypesController extends Controller
      */
     public function edit($id)
     {
+        if(!$this->checkActionPermission('bus_types','edit'))
+            return redirect()->route('401');
        $bustypes=Bustype::findOrFail($id);
        return view('bustypes.edit')->withBustypes($bustypes);
     }
@@ -93,6 +104,8 @@ class BusTypesController extends Controller
      */
     public function update($id, UpdateBusTypeRequest $request)
     {
+        if(!$this->checkActionPermission('bus_types','edit'))
+            return redirect()->route('401');
     $bus_type = $request->bus_type;
      $sql=BusType::where([['bus_type',$bus_type],['id','!=',$id]])->first();
      if(count($sql)>0)
@@ -152,6 +165,8 @@ class BusTypesController extends Controller
         <?php
     }
    public function viewDetail($id) {
+       if(!$this->checkActionPermission('bus_types','view'))
+            return redirect()->route('401');
           $value = DB::table('bus_types')->select("*",'bus_types.created_at','bus_types.updated_at','bus_types.id as id')
                   ->leftjoin('users','users.id','bus_types.user_id')
                   ->orderBy('bus_types.order_number')

@@ -13,7 +13,11 @@
         <div class="box">
             <div class="box-header">
                 <h3 class="box-title">{{getCurrentLabel('bus_types','id',$bus_type_id,'bus_type')}} :- {{headingMain()}}</h3>
-                 <a href="<?php echo route('bus_types.services.create',$bus_type_id)?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
+                <?php $permission_status = checkPermission('services','create');
+                    if($permission_status){?>                     
+                        <a href="<?php echo route('bus_types.services.create',$bus_type_id)?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
+                <?php }?> 
+                 
                  </br>
             </br>
             <button  class="btn btn-primary pull-left"  onclick="orderList('order_id','order_list',{{$bus_type_id}})"><span class="fa fa-sort-desc"></span>&nbsp;Update Order</button>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -40,13 +44,30 @@
                             <td>{{$value->order_number}}</td>
                             <td>{{$value->short_name}}</td>
                             <td>
+                                <?php $permission = getAllModulePermission('services');
+                                if(in_array('edit',$permission)){?>
                                 <a href="<?php echo route('bus_types.services.edit',[$bus_type_id,$value->id])?>" title="Edit Service"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }
+                                if(in_array('view',$permission)){?>
                                 <a style="cursor: pointer;" title="View Service" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
 <!--                                <a style="cursor: pointer;" title="View {{$value->name}} Fare" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewServiceFares(<?php echo $value->id ?>,'view_detail');"><span class="fa fa-inr"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;-->
+                                <?php }?>
+                                <?php $permission1 = getAllModulePermission('fares');
+                                if(in_array('view',$permission1)){?>
                                 <a href="<?php echo route('bus_types.services.fares.index',[$bus_type_id,$value->id])?>" title="Manage {{$value->name}} Fare"><span class="fa fa-inr"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }?>
+                                <?php $permission1 = getAllModulePermission('concession_fare_slabs');
+                                if(in_array('view',$permission1)){?>
                                 <a href="<?php echo route('bus_types.services.concession_fare_slabs.index',[$bus_type_id,$value->id])?>" title="Manage {{$value->name}} Concessions Fare Slab"><span class="fa fa-inr"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }?>
+                                <?php $permission1 = getAllModulePermission('concessions');
+                                if(in_array('view',$permission1)){?>
                                 <a href="<?php echo route('bus_types.services.concessions.index',[$bus_type_id,$value->id])?>" title="Manage {{$value->name}} Concession"><span class="fa fa-inr"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }?>
+                                <?php $permission1 = getAllModulePermission('pass_types');
+                                if(in_array('view',$permission1)){?>
                                 <a href="<?php echo route('bus_types.services.pass_types.index',[$bus_type_id,$value->id])?>" title="Manage {{$value->name}} Pass Types"><span class="fa fa-lock"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }?>
                             </td>
                         </tr>
                         @endforeach

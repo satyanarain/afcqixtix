@@ -14,7 +14,11 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{getCurrentLabel('services','id',$service_id,'name')}} :-  {{headingMain()}}</h3>
-           <a href="{{route('bus_types.services.concessions.create',[$bus_type_id,$service_id])}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
+               <?php $permission_status = checkPermission('concessions','create');
+                    if($permission_status){?>                     
+                        <a href="{{route('bus_types.services.concessions.create',[$bus_type_id,$service_id])}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
+                <?php }?> 
+               
             </br>
             </br>
             <button  class="btn btn-primary pull-left"  onclick="orderList('order_id','order_list',{{$service_id}})"><span class="fa fa-sort-desc"></span>&nbsp;Update Order</button>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -44,8 +48,13 @@
                             <td>{{$value->concession_master_id}}</td>
                             <td>{{$value->description}}</td>
                             <td>
-                             <a href="<?php echo route('bus_types.services.concessions.edit',[$bus_type_id,$service_id,$value->id])?>" title="Edit Concession"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                <a style="cursor: pointer;" title="View Concession Detail" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                 <?php $permission = getAllModulePermission('concessions');
+                                if(in_array('edit',$permission)){?>
+                                    <a href="<?php echo route('bus_types.services.concessions.edit',[$bus_type_id,$service_id,$value->id])?>" title="Edit Concession"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }
+                                if(in_array('view',$permission)){?>
+                                    <a style="cursor: pointer;" title="View Concession Detail" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }?>    
                             </td>
                         </tr>
                         @endforeach

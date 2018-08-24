@@ -20,8 +20,10 @@ use App\Repositories\Concession\ConcessionRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Traits\activityLog;
+use App\Traits\checkPermission;
 class ConcessionController extends Controller {
-  use activityLog;
+    use activityLog;
+    use checkPermission;
     protected $concessions;
 
     public function __construct(
@@ -36,6 +38,8 @@ class ConcessionController extends Controller {
      * @return Response
      */
  public function index($bus_type_id,$service_id) {
+     if(!$this->checkActionPermission('concessions','view'))
+            return redirect()->route('401');
         $concessions = DB::table('concessions')
             ->select('*','concessions.id as id','users.name as username','concession_provider_masters.name as concession_provider_master_id','services.name as name','concessions.order_number as order_number','etm_hot_key_masters.name as etm_hot_key_master_id','concessions.created_at as created_at','concessions.updated_at as updated_at')
             ->leftjoin('users', 'users.id', '=', 'concessions.user_id')
@@ -84,6 +88,8 @@ class ConcessionController extends Controller {
     }
     
     public function viewDetail($id) {
+        if(!$this->checkActionPermission('concessions','view'))
+            return redirect()->route('401');
          $value = DB::table('concessions')->select('*','concessions.id as id','users.name as username','concession_provider_masters.name as concession_provider_master_id','services.name as name','concession_masters.name as con_name','concessions.order_number as order_number','etm_hot_key_masters.name as etm_hot_key_master_id','concessions.created_at as created_at','concessions.updated_at as updated_at')
                 ->leftjoin('users', 'users.id', '=', 'concessions.user_id')
                 ->leftjoin('services', 'concessions.service_id', '=', 'services.id')
@@ -233,6 +239,8 @@ $k=1;
     }
 
     public function create($bus_type_id,$service_id) {
+        if(!$this->checkActionPermission('concessions','create'))
+            return redirect()->route('401');
      return view('concessions.create',compact('bus_type_id','service_id'));
     }
     /**
@@ -262,6 +270,8 @@ $k=1;
      * * @Author created by satya 31-01-2018 
      */
     public function store($bus_type_id,$service_id,StoreConcessionRequest $concessionsRequest) {
+        if(!$this->checkActionPermission('concessions','create'))
+            return redirect()->route('401');
         $concessionsRequest->request->add(['service_id'=> $service_id]);
         $getInsertedId = $this->concessions->create($concessionsRequest);
         return redirect()->route('bus_types.services.concessions.index',[$bus_type_id,$service_id]);
@@ -274,6 +284,8 @@ $k=1;
      * @return Response
      */
     public function show($id) {
+        if(!$this->checkActionPermission('concessions','view'))
+            return redirect()->route('401');
                 $concessions = DB::table('concessions')->select('*','concessions.id as id','users.name as username','concession_provider_masters.name as concession_provider_master_id','services.name as name','concession_masters.name as con_name','concessions.order_number as order_number')
                 ->leftjoin('users', 'users.id', '=', 'concessions.user_id')
                 ->leftjoin('services', 'concessions.service_id', '=', 'services.id')
@@ -292,6 +304,8 @@ $k=1;
      * @return Response
      */
     public function edit($bus_type_id,$service_id,$id) {
+        if(!$this->checkActionPermission('concessions','edit'))
+            return redirect()->route('401');
         $concessions = Concession::findOrFail($id);
         return view('concessions.edit',compact('concessions','service_id','bus_type_id'));
     }
@@ -304,6 +318,8 @@ $k=1;
      * * @Author created by satya 31-01-2018 
      */
     public function update($bus_type_id,$service_id,$id, UpdateConcessionRequest $request) {
+        if(!$this->checkActionPermission('concessions','edit'))
+            return redirect()->route('401');
           $sql=Concession::where([['service_id',$request->service_id],['id','!=',$id]])->first();
      if(count($sql)>0)
      {

@@ -18,10 +18,11 @@ use App\Repositories\Version\VersionRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use PDO;
-
+use App\Traits\checkPermission;
 class VersionController extends Controller
 {
     protected $versions;
+    use checkPermission;
     public function __construct(
         VersionRepositoryContract $versions
     ) {
@@ -34,6 +35,8 @@ class VersionController extends Controller
      */
     public function index()
     {
+        if(!$this->checkActionPermission('versions','view'))
+            return redirect()->route('401');
         $versions = DB::table('versions')->select('*')
       ->orderBy('id','desc')->get();
         //print_r($versions);die;
@@ -42,6 +45,8 @@ class VersionController extends Controller
     }
     public function create()
     {
+        if(!$this->checkActionPermission('versions','create'))
+            return redirect()->route('401');
         //$versions = Version::findOrFail();
         return view('versions.create');
     }
@@ -83,6 +88,8 @@ class VersionController extends Controller
 }
     public function store(StoreVersionRequest $versionsRequest)
     {
+        if(!$this->checkActionPermission('versions','create'))
+            return redirect()->route('401');
         //print_r($versionsRequest->all());die;
         $getInsertedId = $this->versions->create($versionsRequest);
         return redirect()->route('versions.index');         
@@ -95,6 +102,8 @@ class VersionController extends Controller
      */
    public function show($id)
    {
+       if(!$this->checkActionPermission('versions','view'))
+            return redirect()->route('401');
    $versions=Version::findOrFail($id);
     return view('versions.show')->withVersions($versions);
      }
@@ -107,6 +116,8 @@ class VersionController extends Controller
      */
     public function edit($id)
     {
+        if(!$this->checkActionPermission('versions','edit'))
+            return redirect()->route('401');
         //die('f');
        $versions=Version::findOrFail($id);
       return view('versions.edit')->withVersions($versions);
@@ -120,6 +131,8 @@ class VersionController extends Controller
      */
     public function update($id, UpdateVersionRequest $request)
     {
+        if(!$this->checkActionPermission('versions','edit'))
+            return redirect()->route('401');
         //print_r($request);die;
         //print_r($id);die;
         $this->versions->update($id, $request);
@@ -202,6 +215,8 @@ class VersionController extends Controller
     
     
      public function viewDetail($id) {
+         if(!$this->checkActionPermission('versions','view'))
+            return redirect()->route('401');
         //$service = Service::find($id);
         $sql = DB::table('versions')->where('id', $id)->get();
        ?>

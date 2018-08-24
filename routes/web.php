@@ -14,6 +14,9 @@
 Auth::routes();
 
 Route::get('login', ['as' => 'login', 'uses' => 'Auth\LoginController@showLoginForm']);
+Route::get('/401', function () {
+    return view('/errors/401');
+})->name('401');
 Route::post('login', ['as' => 'login.post', 'uses' => 'Auth\LoginController@login']);
 Route::post('logout', ['as' => 'logout', 'uses' => 'Auth\LoginController@logout']);
 Route::get('/logout', 'Auth\LoginController@logout');

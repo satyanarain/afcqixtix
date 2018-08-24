@@ -18,9 +18,10 @@ use App\Http\Requests\Stop\StoreStopRequest;
 use App\Repositories\Stop\StopRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-
+use App\Traits\checkPermission;
 class StopController extends Controller
 {
+    use checkPermission;
     protected $stops;
     public function __construct(
         StopRepositoryContract $stopss
@@ -34,6 +35,8 @@ class StopController extends Controller
      */
     public function index()
     {
+        if(!$this->checkActionPermission('stops','view'))
+            return redirect()->route('401');
     $stops = DB::table('stops')->select('*','stops.id as id','stops.created_at as created_at','stops.updated_at as updated_at')
       ->leftjoin('users','users.id','stops.user_id')
       ->orderBy('stops.id','desc')->get();
@@ -43,6 +46,8 @@ class StopController extends Controller
     }
     public function create()
     {
+        if(!$this->checkActionPermission('stops','create'))
+            return redirect()->route('401');
      //$stops = Stop::findOrFail();
      return view('stops.create');
     }
@@ -60,6 +65,8 @@ class StopController extends Controller
      */
     public function store(StoreStopRequest $stopsRequest)
     {
+        if(!$this->checkActionPermission('stops','create'))
+            return redirect()->route('401');
         $getInsertedId = $this->stops->create($stopsRequest);
         return redirect()->route('stops.index');         
     }
@@ -71,6 +78,8 @@ class StopController extends Controller
      */
    public function show($id)
    {
+       if(!$this->checkActionPermission('stops','view'))
+            return redirect()->route('401');
    $stops=Stop::findOrFail($id);
     return view('stops.show')->withStops($stops);
      }
@@ -83,6 +92,8 @@ class StopController extends Controller
      */
     public function edit($id)
     {
+        if(!$this->checkActionPermission('stops','edit'))
+            return redirect()->route('401');
        $stops=Stop::findOrFail($id);
       return view('stops.edit')->withStops($stops);
     }
@@ -95,6 +106,8 @@ class StopController extends Controller
      */
     public function update($id, UpdateStopRequest $request)
     {
+        if(!$this->checkActionPermission('stops','edit'))
+            return redirect()->route('401');
         $this->stops->update($id, $request);
         return redirect()->route('stops.index');
     }

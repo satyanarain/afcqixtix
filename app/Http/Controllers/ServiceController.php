@@ -20,9 +20,11 @@ use App\Repositories\Service\ServiceRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Traits\activityLog;
+use App\Traits\checkPermission;
 class ServiceController extends Controller
 {
     use activityLog;
+    use checkPermission;
     protected $services;
     public function __construct(
         ServiceRepositoryContract $services
@@ -36,6 +38,8 @@ class ServiceController extends Controller
      */
     public function index(Request $request)
     {
+        if(!$this->checkActionPermission('services','view'))
+            return redirect()->route('401');
         $bus_type_id = $request->bus_type_id;
         $services = DB::table('services')->select('services.id as id','services.name as name','services.order_number as order_number','services.short_name as short_name','bus_types.bus_type')
             ->leftjoin('bus_types', 'bus_types.id', '=', 'services.bus_type_id')
@@ -46,6 +50,8 @@ class ServiceController extends Controller
     }
     public function create(Request $request)
     {
+        if(!$this->checkActionPermission('services','create'))
+            return redirect()->route('401');
         $bus_type_id = $request->bus_type_id;
         return view('services.create',compact('bus_type_id'));
     }
@@ -63,7 +69,8 @@ class ServiceController extends Controller
      */
     public function store($bus_type_id,StoreServiceRequest $servicesRequest)
     {
-  
+        if(!$this->checkActionPermission('services','create'))
+            return redirect()->route('401');
         $sql=Service::where([['bus_type_id',$servicesRequest->bus_type_id],['name',$servicesRequest->name]])->first();
         if(count($sql)>0)
         {
@@ -95,6 +102,8 @@ class ServiceController extends Controller
      */
     public function edit($bus_type_id,$id)
     {
+        if(!$this->checkActionPermission('services','edit'))
+            return redirect()->route('401');
         $services=Service::findOrFail($id);
         return view('services.edit',compact('services','bus_type_id'));
         //return view('services.edit')->withServices($services);
@@ -108,6 +117,8 @@ class ServiceController extends Controller
      */
     public function update($bus_type_id,$id, UpdateServiceRequest $request)
     {
+        if(!$this->checkActionPermission('services','edit'))
+            return redirect()->route('401');
         $sql=Service::where([['bus_type_id',$request->bus_type_id],['name',$request->name],['id','!=',$id]])->first();
         if(count($sql)>0)
         {
@@ -193,6 +204,8 @@ class ServiceController extends Controller
     }
     
     public function viewDetail($id) {
+        if(!$this->checkActionPermission('services','view'))
+            return redirect()->route('401');
    $value = DB::table('services')->select('services.id as id','services.name as name','services.order_number as order_number','services.short_name as short_name','bus_types.bus_type','users.user_name','services.created_at','services.updated_at')
    ->leftjoin('users', 'users.id', '=', 'services.user_id')
     ->leftjoin('bus_types', 'bus_types.id', '=', 'services.bus_type_id')->where('services.id',$id)->first()
@@ -243,6 +256,8 @@ class ServiceController extends Controller
      */
    public function show($id)
    {
+       if(!$this->checkActionPermission('services','view'))
+            return redirect()->route('401');
     $services = DB::table('services')->select('services.id as id','services.name as name','services.order_number as order_number','services.short_name as short_name','bus_types.bus_type')
     ->leftjoin('bus_types', 'bus_types.id', '=', 'services.bus_type_id')->orderby('order_number')->get();
     return view('services.index')->withServices($services);

@@ -9,7 +9,10 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">List of All Role and Permissions</h3>
-            {{ createButton('create','Add') }}
+               <?php $permission_status = checkPermission('permissions','create');
+                    if($permission_status)
+                        createButton('create','Add');
+                ?>
             </div>
           @include('partials.message')
             <!-- /.box-header -->
@@ -28,7 +31,14 @@
                             <td>{{$value->role}}</td>
                             <td>{{$value->description}}</td>
                             <td>
-                                {{ actionEdit('edit',$value->id)}}
+                                <?php $permission = getAllModulePermission('permissions');
+                                if(in_array('edit',$permission)){?>
+                                <a href="<?php echo route('permissions.edit',$value->id)?>" title="Edit Permission"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }
+                                if(in_array('view',$permission)){?>
+                                <a style="cursor: pointer;" title="View Permission" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }?>
+                                
                             </td>
                         </tr>
                         @endforeach

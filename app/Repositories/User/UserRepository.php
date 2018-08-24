@@ -97,8 +97,10 @@ class UserRepository implements UserRepositoryContract {
             $input['payout_reasons'] = implode(',', $requestData->payout_reasons);
             $input['denominations'] = implode(',', $requestData->denominations);
             $input['pass_types'] = implode(',', $requestData->pass_types);
-            $input['crew'] = implode(',', $requestData->crew);
+            $input['crews'] = implode(',', $requestData->crews);
             $input['ETM_details'] = implode(',', $requestData->ETM_details);
+            $input['versions'] = implode(',', $requestData->versions);
+            $input['settings'] = implode(',', $requestData->settings);
             //echo "<pre>";
            // print_r($input);
             //exit();
@@ -147,8 +149,10 @@ class UserRepository implements UserRepositoryContract {
             $input['payout_reasons'] = implode(',', $requestData->payout_reasons);
             $input['denominations'] = implode(',', $requestData->denominations);
             $input['pass_types'] = implode(',', $requestData->pass_types);
-            $input['crew'] = implode(',', $requestData->crew);
+            $input['crews'] = implode(',', $requestData->crews);
             $input['ETM_details'] = implode(',', $requestData->ETM_details);
+            $input['settings'] = implode(',', $requestData->settings);
+            $input['versions'] = implode(',', $requestData->versions);
             $permission->fill($input)->save();
          
     

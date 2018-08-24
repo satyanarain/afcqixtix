@@ -41,7 +41,7 @@
                                 {{ menuCreate('payout_reasons','create','edit','view',$permissions->id,$permissions->payout_reasons)}}
                                 {{ menuCreate('denominations','create','edit','view',$permissions->id,$permissions->denominations)}}
                                 {{ menuCreate('pass_types','create','edit','view',$permissions->id,$permissions->pass_types)}}
-                                {{ menuCreate('crew_details','create','edit','view',$permissions->id,$permissions->crew_details)}}
+                                {{ menuCreate('crews','create','edit','view',$permissions->id,$permissions->crews)}}
                                 
                             </table> 
                         </div>
@@ -53,6 +53,7 @@
                         <div class="row">  
                             <table class="table table-responsive.view">
                                  {{ menuCreate('ETM_details','create','edit','view',$permissions->id,$permissions->ETM_details)}}
+                                 
                         </table> 
                         </div>
                     </div>
@@ -62,7 +63,8 @@
                     <div class="row1"  id="formACC3{{$permissions->id}}" style="display:none;">
                         <div class="row">  
                             <table class="table table-responsive.view">
-                                 {{ menuCreate('versions','create','edit','view',$value->id,$value->versions)}}
+                                 {{ menuCreate('versions','create','edit','view',$permissions->id,$permissions->versions)}}
+                                 {{ menuCreate('settings','create','edit','view',$permissions->id,$permissions->settings)}}
                         </table> 
                         </div>
                     </div>

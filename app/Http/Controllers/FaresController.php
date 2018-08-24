@@ -21,11 +21,11 @@ use App\Http\Requests\Fare\StoreFareRequest;
 use App\Repositories\Fare\FareRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-
+use App\Traits\checkPermission;
 class FaresController extends Controller {
 
     protected $fares;
-
+    use checkPermission;
     public function __construct(
     FareRepositoryContract $fares
     ) {
@@ -37,6 +37,8 @@ class FaresController extends Controller {
      * @return Response
      */
  public function index($bus_type_id,$service_id,Request $request) {
+     if(!$this->checkActionPermission('fares','view'))
+            return redirect()->route('401');
      //print_r($request->all());
 //     echo $bus_type_id;
 //     echo $service_id;
@@ -71,6 +73,8 @@ class FaresController extends Controller {
      * @return Response
      */
     public function store($bus_type_id,$service_id,StoreFareRequest $faresRequest) {
+        if(!$this->checkActionPermission('fares','create'))
+            return redirect()->route('401');
         $faresRequest->request->add(['service_id'=> $service_id]);
         //echo '<pre>';print_r($faresRequest->all());die;
         foreach($faresRequest->stage as $key=>$stage)
@@ -93,6 +97,8 @@ class FaresController extends Controller {
      * @return Response
      */
     public function show($id) {
+        if(!$this->checkActionPermission('fares','view'))
+            return redirect()->route('401');
                  $fares = DB::table('fares')->select('*','fares.id as id')
                 ->leftjoin('shifts', 'fares.shift_id', '=', 'shifts.id')
                 ->leftjoin('routes', 'fares.route_id', '=', 'routes.id')
@@ -109,6 +115,8 @@ class FaresController extends Controller {
      * @return Response
      */
     public function edit($bus_type_id,$service_id,$id) {
+        if(!$this->checkActionPermission('fares','edit'))
+            return redirect()->route('401');
         //$fares = Fare::findOrFail($id);
         //echo '<pre>';print_r($fares);die;
         $fare_details = DB::table('fares')->where('id',$id)->get();
@@ -155,6 +163,8 @@ class FaresController extends Controller {
      */
     
        public function viewDetail($id) {
+           if(!$this->checkActionPermission('fares','view'))
+            return redirect()->route('401');
         //$service = Service::find($id);
         $sql = DB::table('fares')->where('id', $id)->get();
        ?>
@@ -212,6 +222,8 @@ class FaresController extends Controller {
      * @return Response
      */
     public function update($bus_type_id,$service_id,$id, UpdateFareRequest $request) {
+        if(!$this->checkActionPermission('fares','edit'))
+            return redirect()->route('401');
         //die($id);
         $request->request->add(['service_id'=> $service_id]);
         $this->fares->update($id, $request);

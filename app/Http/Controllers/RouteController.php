@@ -18,11 +18,11 @@ use App\Http\Requests\Route\StoreRouteRequest;
 use App\Repositories\Route\RouteRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-
+use App\Traits\checkPermission;
 class RouteController extends Controller {
 
     protected $routes;
-
+    use checkPermission;
     public function __construct(
     RouteRepositoryContract $routess
     ) {
@@ -35,7 +35,8 @@ class RouteController extends Controller {
      * @return Response
      */
     public function index() {
-
+        if(!$this->checkActionPermission('routes','view'))
+            return redirect()->route('401');
         $routes = DB::table('routes')->select('*','route_details.stop_id','routes.route', 'routes.id', 'stops.stop')
                 ->leftjoin('route_details', 'route_details.stop_id', '=', 'routes.id')
                 ->leftjoin('stops', 'route_details.stop_id', '=', 'stops.id')
@@ -44,6 +45,8 @@ class RouteController extends Controller {
     }
 
     public function create() {
+        if(!$this->checkActionPermission('routes','create'))
+            return redirect()->route('401');
         //$routes = Route::findOrFail();
         return view('routes.create');
     }
@@ -60,7 +63,8 @@ class RouteController extends Controller {
      * @return Response
      */
     public function store(StoreRouteRequest $routesRequest) {
-      
+        if(!$this->checkActionPermission('routes','create'))
+            return redirect()->route('401');
         $routesRequest->route;
         
 //      $sql=  Route::where([['route',$routesRequest->route],['direction',$routesRequest->direction]]);
@@ -81,6 +85,8 @@ class RouteController extends Controller {
      */
     
           public function viewDetail($id) {
+              if(!$this->checkActionPermission('routes','view'))
+            return redirect()->route('401');
            $routes=Route::find($id);
             $sql = DB::table('route_details')->where('route_id',$id)
              ->get();
@@ -172,6 +178,8 @@ class RouteController extends Controller {
     
     
     public function show($id) {
+        if(!$this->checkActionPermission('routes','view'))
+            return redirect()->route('401');
  $routes = DB::table('routes')->select('*','route_details.stop_id','routes.route', 'routes.id', 'stops.stop')
                 ->leftjoin('route_details', 'route_details.stop_id', '=', 'routes.id')
                 ->leftjoin('stops', 'route_details.stop_id', '=', 'stops.id')
@@ -186,6 +194,8 @@ class RouteController extends Controller {
      * @return Response
      */
     public function edit($id) {
+        if(!$this->checkActionPermission('routes','edit'))
+            return redirect()->route('401');
         $routes = Route::findOrFail($id);
          $route_details = DB::table('route_details')->select('*')->where('route_id', $id)->get();
         return view('routes.edit',compact('routes','route_details'));
@@ -198,6 +208,8 @@ class RouteController extends Controller {
      * @return Response
      */
     public function update($id, UpdateRouteRequest $request) {
+        if(!$this->checkActionPermission('routes','edit'))
+            return redirect()->route('401');
       $sql = Route::where([['route', $request->route], ['direction', $request->direction], ['id', '!=', $id]])->first();
         if (count($sql) > 0) {
             return redirect()->back()->withErrors(['This route and direction has already been taken.']);

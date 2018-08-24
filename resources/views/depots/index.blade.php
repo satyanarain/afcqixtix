@@ -11,7 +11,10 @@
 
             <div class="box-header">
                 <h3 class="box-title">{{headingMain()}}</h3>
-               {{ createButton('create','Add') }}
+               <?php $permission_status = checkPermission('depots','create');
+                    if($permission_status)
+                        createButton('create','Add');
+                ?>
              </div>
            @include('partials.message')
             <!-- /.box-header -->
@@ -39,10 +42,23 @@
                             <td>{{$value->service_name}}</td>
                             <td>{{$value->depot_location}}
                             </td>
-                            <td>{{ actionEdit('edit',$value->id)}}
+                            <td>
+                                <?php $permission = getAllModulePermission('depots');
+                                if(in_array('edit',$permission)){?>
+                                    <a href="<?php echo route('depots.edit',$value->id)?>" title="Edit Depot"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }
+                                if(in_array('view',$permission)){?>
+                                    <a style="cursor: pointer;" title="View Depot" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }?>
+                                <?php $permission1 = getAllModulePermission('vehicles');
+                                if(in_array('view',$permission1)){?>
                                 <a href="<?php echo route('depots.vehicles.index',$value->id)?>" title="Manage Vehicle" class="" ><span class="fa fa-bus"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }?>
+                                <?php $permission2 = getAllModulePermission('crews');
+                                if(in_array('view',$permission2)){?>
                                 <a href="<?php echo route('depots.crew.index',$value->id)?>" title="Manage Crew" class="" ><i class="glyphicon glyphicon-user"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                </td>
+                                <?php }?>    
+                            </td>
                            </tr>
                         @endforeach
                         </tbody>

@@ -27,8 +27,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Redirec;
+use App\Traits\checkPermission;
 class ChangepasswordsController extends Controller
 {
+    use checkPermission;
     /**
      * Create a new controller instance.
      *
@@ -39,12 +41,16 @@ class ChangepasswordsController extends Controller
         $this->middleware('auth');
     }
  public function create() {
+     if(!$this->checkActionPermission('changepasswords','create'))
+            return redirect()->route('401');
         $id = Auth::user()->id;
         $user = User::findOrFail($id);
         return view('changepasswords.create')->withUser($user);
     }
 
     public function store(UpdateChangePasswordRequest $request) {
+        if(!$this->checkActionPermission('changepasswords','create'))
+            return redirect()->route('401');
         $user = Auth::user();
         $password = Auth::user()->password;
 

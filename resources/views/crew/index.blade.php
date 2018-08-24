@@ -13,7 +13,11 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{getCurrentLabel('depots','id',$depot_id,'name')}} :- List of All Crew</h3>
-               <a href="<?php echo route('depots.crew.create',$depot_id)?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
+               <?php $permission_status = checkPermission('crew','create');
+                    if($permission_status){?>                     
+                        <a href="<?php echo route('depots.crew.create',$depot_id)?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
+                <?php }?> 
+               
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -38,9 +42,13 @@
                             <td>{{$value->crew_id}}</td>
                             <td>{{$value->role}}</td>
                             <td>
-                                <a href="<?php echo route('depots.crew.edit',[$depot_id,$value->id])?>" title="Edit Crew"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                <a style="cursor: pointer;" title="View" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>
-                                
+                                <?php $permission = getAllModulePermission('crews');
+                                if(in_array('edit',$permission)){?>
+                                    <a href="<?php echo route('depots.crew.edit',[$depot_id,$value->id])?>" title="Edit Crew"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }
+                                if(in_array('view',$permission)){?>
+                                    <a style="cursor: pointer;" title="View" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>
+                                <?php }?>
                             </td>
                          </tr>
                         @endforeach

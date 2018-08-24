@@ -13,7 +13,11 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{getCurrentLabel('routes','id',$route_id,'route')}} :- List of All Duties</h3>
-                <a href="<?php echo route('routes.duties.create',$route_id)?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
+               <?php $permission_status = checkPermission('duties','create');
+                    if($permission_status){?>                     
+                        <a href="<?php echo route('routes.duties.create',$route_id)?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
+                <?php }?> 
+                
             </br>
             </br>
             <button  class="btn btn-primary pull-left"  onclick="orderList('order_id','order_list',{{$route_id}})"><span class="fa fa-sort-desc"></span>&nbsp;Update Order</button>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -44,10 +48,21 @@
                             <td>{{$value->end_time}}</td>
                             <td>{{$value->shift}}</td>
                             <td>
+                                <?php $permission = getAllModulePermission('duties');
+                                if(in_array('edit',$permission)){?>
                                 <a href="<?php echo route('routes.duties.edit',[$route_id,$value->id])?>" title="Edit Duty"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }
+                                if(in_array('view',$permission)){?>
                                 <a style="cursor: pointer;" title="View Duty" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }?>
+                                <?php $permission1 = getAllModulePermission('trips');
+                                if(in_array('view',$permission1)){?>
                                 <a href="<?php echo route('routes.duties.trips.index',[$route_id,$value->id])?>" title="Manage {{$value->duty_number}} Trips"><span class="fa fa-tripadvisor"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }?>
+                                <?php $permission2 = getAllModulePermission('targets');
+                                if(in_array('view',$permission2)){?>
                                 <a href="<?php echo route('routes.duties.targets.index',[$route_id,$value->id])?>" title="Manage Targets" class="" ><span class="fa fa-bullseye"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }?>    
                             </td>
                          </tr>
                         @endforeach

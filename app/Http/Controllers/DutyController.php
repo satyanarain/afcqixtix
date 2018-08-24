@@ -19,8 +19,10 @@ use App\Repositories\Duty\DutyRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Traits\activityLog;
+use App\Traits\checkPermission;
 class DutyController extends Controller {
     use activityLog;
+    use checkPermission;
     protected $duties;
 
     public function __construct(
@@ -36,6 +38,8 @@ class DutyController extends Controller {
      */
     public function index(Request $request)
     {
+        if(!$this->checkActionPermission('duties','view'))
+            return redirect()->route('401');
         $route_id = $request->route_id;
         $duties = DB::table('duties')->select('*','duties.id as id','duties.order_number as order_number','duties.end_time as end_time','duties.start_time as start_time','shifts.shift as shift')
                 ->leftjoin('shifts', 'duties.shift_id', '=', 'shifts.id')
@@ -46,6 +50,8 @@ class DutyController extends Controller {
     }
 
     public function create(Request $request){
+        if(!$this->checkActionPermission('duties','create'))
+            return redirect()->route('401');
         $route_id = $request->route_id;
         //$duties = Duty::findOrFail();
         return view('duties.create', compact('route_id'));
@@ -63,7 +69,8 @@ class DutyController extends Controller {
      * @return Response
      */
     public function store($route_id,StoreDutyRequest $dutiesRequest) {
-    
+        if(!$this->checkActionPermission('duties','create'))
+            return redirect()->route('401');
       $sql=Duty::where([['route_id',$dutiesRequest->route_id],['duty_number',$dutiesRequest->duty_number]])->first();
       if(count($sql)>0)
       {
@@ -82,6 +89,8 @@ class DutyController extends Controller {
      * @return Response
      */
     public function show($id) {
+        if(!$this->checkActionPermission('duties','view'))
+            return redirect()->route('401');
         // $duties=Duty::findOrFail($id);
          $duties = DB::table('duties')->select('*','duties.id as id')
                 ->leftjoin('shifts', 'duties.shift_id', '=', 'shifts.id')
@@ -99,6 +108,8 @@ class DutyController extends Controller {
      * @return Response
      */
     public function edit($route_id,$id) {
+        if(!$this->checkActionPermission('duties','edit'))
+            return redirect()->route('401');
         $duties = Duty::findOrFail($id);
         return view('duties.edit',compact('duties','route_id'));
     }
@@ -110,6 +121,8 @@ class DutyController extends Controller {
      * @return Response
      */
     public function update($route_id,$id, UpdateDutyRequest $request) {
+        if(!$this->checkActionPermission('duties','edit'))
+            return redirect()->route('401');
       $duties = Duty::findOrFail($id);
       $route = $request->route_id;
       $duty_number = $request->duty_number;
@@ -195,6 +208,8 @@ class DutyController extends Controller {
         <?php
     }
    public function viewDetail($id) {
+       if(!$this->checkActionPermission('duties','view'))
+            return redirect()->route('401');
            $value = DB::table('duties')->select('*','duties.id as id','duties.start_time as start_time','shifts.shift as shift','duties.order_number as order_number','duties.created_at as created_at','duties.updated_at as updated_at')
                     ->leftjoin('shifts', 'duties.shift_id', '=', 'shifts.id')
                     ->leftjoin('routes', 'duties.route_id', '=', 'routes.id')

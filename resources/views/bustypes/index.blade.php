@@ -9,7 +9,10 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{headingMain()}}</h3>
-                {{ createButton('create','Add','order','order_id') }}
+               <?php $permission_status = checkPermission('bus_types','create');
+                    if($permission_status)
+                        createButton('create','Add','order','order_id');
+                ?>
              </div>
             @include('partials.message')
             <!-- /.box-header -->
@@ -33,8 +36,16 @@
                             <td>{{$value->abbreviation}}
                             </td>
                             <td>
-                                {{ actionEdit('edit',$value->id)}}
-                                <a href="<?php echo route('bus_types.services.index',$value->id)?>" title="Manage Services" class="" ><span class="fa fa-briefcase"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php $permission = getAllModulePermission('bus_types');
+                                if(in_array('edit',$permission))
+                                    echo '<a  href="'.route("bus_types.edit",$value->id).'" class="" title="Edit" ><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
+                                if(in_array('view',$permission))
+                                    echo '<a style="cursor: pointer;" title="View" data-toggle="modal" data-target="#'.$value->id.'"  onclick="viewDetails('.$value->id.',\'view_detail\')"><span class="glyphicon glyphicon-search"></span></a>';
+                                ?>
+                                <?php $permission = getAllModulePermission('services');
+                                if(in_array('view',$permission)){?>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo route('bus_types.services.index',$value->id)?>" title="Manage Services" class="" ><span class="fa fa-briefcase"></span></a>
+                                <?php }?>
                             </td>
                          </tr>
                         @endforeach

@@ -29,9 +29,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\activityLog;
+use App\Traits\checkPermission;
 class UsersController extends Controller
 {
     use activityLog;
+    use checkPermission;
     protected $users;
     protected $roles;
    // protected $settings;
@@ -53,18 +55,23 @@ class UsersController extends Controller
      */
     public function index()
     {
-    $user = DB::table('users')->select('*','users.id as id')
-            ->leftjoin('permission_details','permission_details.user_id','users.id')
-            ->leftjoin('permissions','permission_details.role_id','permissions.id')
-            ->where('permission_details.role_id','!=',1)
-            ->orderBy('users.id','desc')->get();
-    return view('users.index')->withUsers($user);
+        if(!$this->checkActionPermission('users','view'))
+            return redirect()->route('401');
+        
+        $user = DB::table('users')->select('*','users.id as id')
+                ->leftjoin('permission_details','permission_details.user_id','users.id')
+                ->leftjoin('permissions','permission_details.role_id','permissions.id')
+                ->where('permission_details.role_id','!=',1)
+                ->orderBy('users.id','desc')->get();
+        return view('users.index')->withUsers($user);
    
     }
     public function create()
     {
-     $user = User::findOrFail(Auth::id());
-     return view('users.create')->withRoles($roles)->withCountries(Country::orderBy('country_name', 'asc')->pluck('country_name', 'id'));
+        if(!$this->checkActionPermission('users','create'))
+            return redirect()->route('401');
+        $user = User::findOrFail(Auth::id());
+        return view('users.create')->withRoles($roles)->withCountries(Country::orderBy('country_name', 'asc')->pluck('country_name', 'id'));
     }
 
 
@@ -99,6 +106,8 @@ class UsersController extends Controller
      */
     public function store(StoreUserRequest $userRequest)
     {
+        if(!$this->checkActionPermission('users','create'))
+            return redirect()->route('401');
         $getInsertedId = $this->users->create($userRequest);
         return redirect()->route('users.index');         
     }
@@ -147,9 +156,11 @@ class UsersController extends Controller
      */
     public function edit($id)
     {
-    $user=DB::table('users')->select('*','users.id as id')->leftjoin('permission_details','permission_details.user_id','users.id')->where('users.id',$id)->first();
-    $permissions=DB::table('users')->select('*','users.id as id')->leftjoin('permission_details','permission_details.user_id','users.id')->where('users.id',$id)->first();
-    return view('users.edit',compact('permissions'))->withUser($user);
+        if(!$this->checkActionPermission('users','edit'))
+            return redirect()->route('401');
+        $user=DB::table('users')->select('*','users.id as id')->leftjoin('permission_details','permission_details.user_id','users.id')->where('users.id',$id)->first();
+        $permissions=DB::table('users')->select('*','users.id as id')->leftjoin('permission_details','permission_details.user_id','users.id')->where('users.id',$id)->first();
+        return view('users.edit',compact('permissions'))->withUser($user);
     }
 
     /**
@@ -160,41 +171,44 @@ class UsersController extends Controller
      */
     public function update($id, Request $requestData)
     {
-      
-            $permission = PermissionDetail::where('user_id',$id);
-            $user_id=  Auth::id();
-            $input = $requestData->all();
-            //echo '<pre>';print_r($input);die;
-            $created_by=  Auth::id();
-            //$input['user_id'] = $userid;
-            $role_id = $requestData->role_id;
-            $created_by = $created_by;
-            $users = implode(',', $requestData->users);
-            $changepasswords = implode(',', $requestData->changepasswords);
-            $permissions = implode(',', $requestData->permissions);
-            $depots = implode(',', $requestData->depots);
-            $bus_types = implode(',', $requestData->bus_types);
-            $services = implode(',', $requestData->services);
-            $vehicles = implode(',', $requestData->vehicles);
-            $shifts = implode(',', $requestData->shifts);
-            $stops = implode(',', $requestData->stops);
-            $routes = implode(',', $requestData->routes);
-            $duties = implode(',', $requestData->duties);
-            $targets = implode(',', $requestData->targets);
-            $trips = implode(',', $requestData->trips);
-            $fares = implode(',', $requestData->fares);
-            $concession_fare_slabs = implode(',', $requestData->concession_fare_slabs);
-            $concessions = implode(',', $requestData->concessions);
-            $trip_cancellation_reasons = implode(',', $requestData->trip_cancellation_reasons);
-            $inspector_remarks = implode(',', $requestData->inspector_remarks);
-            $payout_reasons = implode(',', $requestData->payout_reasons);
-            $denominations = implode(',', $requestData->denominations);
-            $pass_types = implode(',', $requestData->pass_types);
-            $crew = implode(',', $requestData->crew);
-            $ETM_details = implode(',', $requestData->ETM_details);
+        if(!$this->checkActionPermission('users','edit'))
+            return redirect()->route('401');
+        $permission = PermissionDetail::where('user_id',$id);
+        $user_id=  Auth::id();
+        $input = $requestData->all();
+        //echo '<pre>';print_r($input);die;
+        $created_by=  Auth::id();
+        //$input['user_id'] = $userid;
+        $role_id = $requestData->role_id;
+        $created_by = $created_by;
+        $users = implode(',', $requestData->users);
+        $changepasswords = implode(',', $requestData->changepasswords);
+        $permissions = implode(',', $requestData->permissions);
+        $depots = implode(',', $requestData->depots);
+        $bus_types = implode(',', $requestData->bus_types);
+        $services = implode(',', $requestData->services);
+        $vehicles = implode(',', $requestData->vehicles);
+        $shifts = implode(',', $requestData->shifts);
+        $stops = implode(',', $requestData->stops);
+        $routes = implode(',', $requestData->routes);
+        $duties = implode(',', $requestData->duties);
+        $targets = implode(',', $requestData->targets);
+        $trips = implode(',', $requestData->trips);
+        $fares = implode(',', $requestData->fares);
+        $concession_fare_slabs = implode(',', $requestData->concession_fare_slabs);
+        $concessions = implode(',', $requestData->concessions);
+        $trip_cancellation_reasons = implode(',', $requestData->trip_cancellation_reasons);
+        $inspector_remarks = implode(',', $requestData->inspector_remarks);
+        $payout_reasons = implode(',', $requestData->payout_reasons);
+        $denominations = implode(',', $requestData->denominations);
+        $pass_types = implode(',', $requestData->pass_types);
+        $crews = implode(',', $requestData->crews);
+        $ETM_details = implode(',', $requestData->ETM_details);
+        $versions = implode(',', $requestData->versions);
+        $settings = implode(',', $requestData->settings);
            PermissionDetail::where('user_id',$id)->update(['role_id' => $requestData->role_id,'created_by'=>$created_by,'users'=>$users,'changepasswords'=>$changepasswords,'permissions'=>$permissions,'depots'=>$depots,'bus_types'=>$bus_types,'services'=>$services,'vehicles'=>$vehicles
             ,'shifts'=>$shifts,'stops'=>$stops,'routes'=>$routes,'duties'=>$duties,'targets'=>$targets,'trips'=>$trips,'fares'=>$fares,'concession_fare_slabs'=>$concession_fare_slabs,'concessions'=>$concessions,'trip_cancellation_reasons'=>$trip_cancellation_reasons
-           ,'inspector_remarks'=>$inspector_remarks,'payout_reasons'=>$payout_reasons,'denominations'=>$denominations,'pass_types'=>$pass_types,'crew'=>$crew,'ETM_details'=>$ETM_details]);     
+           ,'inspector_remarks'=>$inspector_remarks,'payout_reasons'=>$payout_reasons,'denominations'=>$denominations,'pass_types'=>$pass_types,'crews'=>$crews,'ETM_details'=>$ETM_details,'versions'=>$versions,'settings'=>$settings]);     
            //  $permission->fill($input)->save();
       
        $user = User::findorFail($id);
