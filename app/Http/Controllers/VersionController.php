@@ -153,7 +153,8 @@ class VersionController extends Controller
         
         //echo public_path();die;
         $vals=array();
-        $pdoMy=new PDO('mysql:dbname=afcqixtix','root','') or die("can't connect to afc");
+        //echo env(DB_USERNAME);die;
+        $pdoMy=new PDO('mysql:dbname='.env(DB_DATABASE),env(DB_USERNAME),env(DB_PASSWORD)) or die("can't connect to afc");
         $pdoLi=new PDO('sqlite:'.public_path().'/supportingdocs/data'.$version_id.'.sqlite') or die("can't connect to data1");
 
         $tbls=array('bus_types','concessions','concession_fare_slabs','concession_masters','concession_provider_masters',
