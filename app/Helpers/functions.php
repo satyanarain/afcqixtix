@@ -2,6 +2,7 @@
 error_reporting(0);
 use App\Models\Permission;
 use App\Models\PermissionDetail;
+use App\Models\Version;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -389,6 +390,26 @@ function createButton($action = '', $title='',$order='',$order_id='',$privious='
 }   
 }
 
+function createDisableButton($action = '', $title='',$order='',$order_id='',$privious='') {
+   $segments = '';
+   $segments = Request::segments();
+   $menu_dis = $segments[0];
+   $userid_menu = Auth::id();
+   $sql = PermissionDetail::where('user_id', '=', $userid_menu)->first();
+   $dem_menu=$result = $sql[$menu_dis];  
+   $array_menu= explode(',', $dem_menu);
+   
+  if(in_array('create',$array_menu) && in_array($segments[0],$array_menu)){
+  ?>
+   <a href="#"><button class="btn btn-primary pull-right disabled"><i class="fa fa-plus"></i>&nbsp;<?php echo $title; ?></button></a>
+   <?php if($order!=''){ ?>
+ </br>
+ </br>
+      <button  class="btn btn-primary pull-left disabled"  onclick="orderList('order_id','order_list')"><span class="fa fa-sort-desc"></span>&nbsp;Update Order</button>&nbsp;&nbsp;&nbsp;&nbsp;
+ <?php 
+   }
+}   
+}
 function pagePermissionView($module)
 {
     $segments = '';
@@ -487,7 +508,15 @@ function checkPermission($module='',$action='') {
     else
         return false;
 }
-
+function checkVersionOpen() {
+        $user_id = Auth::id();
+        $sql = Version::where('version_status', '=', 'o')->first();
+        
+        if($sql)
+            return true;
+        else
+            return false;
+    }
 function getAllModulePermission($module='') {
     $user_id = Auth::id();
     $sql = PermissionDetail::where('user_id', '=', $user_id)->first();

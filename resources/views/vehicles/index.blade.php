@@ -14,9 +14,11 @@
             <div class="box-header">
                <h3 class="box-title">{{getCurrentLabel('depots','id',$depot_id,'name')}} :- List of All Vehicles</h3>
                <?php $permission_status = checkPermission('vehicles','create');
-                    if($permission_status){?>                     
+                     $checkVersionOpen = checkVersionOpen();
+                    if($permission_status && $checkVersionOpen){?>                     
                         <a href="<?php echo route('depots.vehicles.create',$depot_id)?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
-                <?php }?>
+                <?php }elseif($permission_status)
+                        createDisableButton('create','Add');?>
                 
             </div>
             @include('partials.message')
@@ -41,8 +43,10 @@
                             </td>
                             <td>
                                 <?php $permission = getAllModulePermission('vehicles');
-                                if(in_array('edit',$permission)){?>
+                                if(in_array('edit',$permission) && $checkVersionOpen){?>
                                     <a href="<?php echo route('depots.vehicles.edit',[$depot_id,$value->id])?>" title="Edit Vehicle"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }elseif(in_array('edit',$permission)){?>
+                                        <a class="disabled"><span class="glyphicon glyphicon-pencil "></span></a>&nbsp;&nbsp;&nbsp;&nbsp;   
                                 <?php }
                                 if(in_array('view',$permission)){?>
                                     <a style="cursor: pointer;" title="View" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>

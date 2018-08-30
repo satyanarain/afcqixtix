@@ -15,9 +15,11 @@
             <div class="box-header">
                <h3 class="box-title">{{getCurrentLabel('duties','id',$duty_id,'duty_number')}} :- {{headingMain()}}</h3>
                <?php $permission_status = checkPermission('targets','create');
-                    if($permission_status){?>                     
+                     $checkVersionOpen = checkVersionOpen();
+                    if($permission_status && $checkVersionOpen){?>                     
                         <a href="<?php echo route('routes.duties.targets.create',[$route_id,$duty_id])?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
-                <?php }?>
+                <?php }elseif($permission_status)
+                        createDisableButton('create','Add');?>
              
             </div>
             <!-- /.box-header -->
@@ -45,8 +47,10 @@
                             </td>
                             <td>
                                 <?php $permission = getAllModulePermission('targets');
-                                if(in_array('edit',$permission)){?>
+                                if(in_array('edit',$permission) && $checkVersionOpen){?>
                                     <a href="<?php echo route('routes.duties.targets.edit',[$route_id,$duty_id,$value->id])?>" title="Edit Target"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }elseif(in_array('edit',$permission)){?>
+                                    <a class="disabled"><span class="glyphicon glyphicon-pencil "></span></a>&nbsp;&nbsp;&nbsp;&nbsp;   
                                 <?php }
                                 if(in_array('view',$permission)){?>
                                     <a style="cursor: pointer;" title="View Trip" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;

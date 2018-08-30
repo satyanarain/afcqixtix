@@ -12,8 +12,11 @@
             <div class="box-header">
                 <h3 class="box-title">{{headingMain()}}</h3>
                <?php $permission_status = checkPermission('depots','create');
-                    if($permission_status)
+                     $checkVersionOpen = checkVersionOpen();
+                    if($permission_status && $checkVersionOpen)
                         createButton('create','Add');
+                    elseif($permission_status)
+                        createDisableButton('create','Add');
                 ?>
              </div>
            @include('partials.message')
@@ -44,8 +47,10 @@
                             </td>
                             <td>
                                 <?php $permission = getAllModulePermission('depots');
-                                if(in_array('edit',$permission)){?>
+                                if(in_array('edit',$permission) && $checkVersionOpen){?>
                                     <a href="<?php echo route('depots.edit',$value->id)?>" title="Edit Depot"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }elseif(in_array('edit',$permission)){?>
+                                    <a class="disabled"><span class="glyphicon glyphicon-pencil "></span></a>&nbsp;&nbsp;&nbsp;&nbsp;   
                                 <?php }
                                 if(in_array('view',$permission)){?>
                                     <a style="cursor: pointer;" title="View Depot" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;

@@ -10,9 +10,11 @@
             <div class="box-header">
                <h3 class="box-title">{{headingMain()}}</h3>
                <?php $permission_status = checkPermission('bus_types','create');
-                    if($permission_status)
+                     $checkVersionOpen = checkVersionOpen();
+                    if($permission_status && $checkVersionOpen)
                         createButton('create','Add','order','order_id');
-                ?>
+                    elseif($permission_status)
+                        createDisableButton('create','Add');?>
              </div>
             @include('partials.message')
             <!-- /.box-header -->
@@ -37,8 +39,11 @@
                             </td>
                             <td>
                                 <?php $permission = getAllModulePermission('bus_types');
-                                if(in_array('edit',$permission))
+                                if(in_array('edit',$permission) && $checkVersionOpen){
                                     echo '<a  href="'.route("bus_types.edit",$value->id).'" class="" title="Edit" ><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
+                                }elseif(in_array('edit',$permission))?>
+                                        <a class="disabled"><span class="glyphicon glyphicon-pencil "></span></a>&nbsp;&nbsp;&nbsp;&nbsp;   
+                                <?php 
                                 if(in_array('view',$permission))
                                     echo '<a style="cursor: pointer;" title="View" data-toggle="modal" data-target="#'.$value->id.'"  onclick="viewDetails('.$value->id.',\'view_detail\')"><span class="glyphicon glyphicon-search"></span></a>';
                                 ?>

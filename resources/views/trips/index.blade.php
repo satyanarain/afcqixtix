@@ -15,9 +15,11 @@
             <div class="box-header">
                <h3 class="box-title">{{getCurrentLabel('duties','id',$duty_id,'duty_number')}} :- {{headingMain()}}</h3>
                <?php $permission_status = checkPermission('trips','create');
-                    if($permission_status){?>                     
+                     $checkVersionOpen = checkVersionOpen();
+                    if($permission_status && $checkVersionOpen){?>                     
                         <a href="{{route('routes.duties.trips.create',[$route_id,$duty_id])}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
-                <?php }?>
+                <?php }elseif($permission_status)
+                        createDisableButton('create','Add');?>
              
             </div>
            @include('partials.message')
@@ -40,8 +42,10 @@
                             <td>{{$value->shift}}</td>
                             <td>
                                 <?php $permission = getAllModulePermission('trips');
-                                if(in_array('edit',$permission)){?>
+                                if(in_array('edit',$permission) && $checkVersionOpen){?>
                                     <a href="<?php echo route('routes.duties.trips.edit',[$route_id,$duty_id,$value->id])?>" title="Edit Trip"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }elseif(in_array('edit',$permission)){?>
+                                    <a class="disabled"><span class="glyphicon glyphicon-pencil "></span></a>&nbsp;&nbsp;&nbsp;&nbsp;   
                                 <?php }
                                 if(in_array('view',$permission)){?>
                                     <a style="cursor: pointer;" title="View Trip" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;

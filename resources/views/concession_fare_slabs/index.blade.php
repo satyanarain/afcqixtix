@@ -15,9 +15,11 @@
             <div class="box-header">
                <h3 class="box-title">{{getCurrentLabel('services','id',$service_id,'name')}} :- {{headingMain()}}</h3>
                 <?php $permission_status = checkPermission('concession_fare_slabs','create');
-                    if($permission_status){?>                     
+                $checkVersionOpen = checkVersionOpen();
+                    if($permission_status && $checkVersionOpen){?>                     
                         <a href="{{route('bus_types.services.concession_fare_slabs.create',[$bus_type_id,$service_id])}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
-                <?php }?>        
+                <?php }elseif($permission_status)
+                        createDisableButton('create','Add');?>        
             </div>
            @include('partials.message')
             <!-- /.box-header -->
@@ -43,8 +45,10 @@
                             <td>{{$value->fare}}</td>
                             <td>
                                 <?php $permission = getAllModulePermission('concession_fare_slabs');
-                                if(in_array('edit',$permission)){?>
+                                if(in_array('edit',$permission) && $checkVersionOpen){?>
                                 <a href="<?php echo route('bus_types.services.concession_fare_slabs.edit',[$bus_type_id,$service_id,$value->id])?>" title="Edit Concession Fare Slab"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }elseif(in_array('edit',$permission)){?>
+                                    <a class="disabled"><span class="glyphicon glyphicon-pencil "></span></a>&nbsp;&nbsp;&nbsp;&nbsp;   
                                 <?php }
                                 if(in_array('view',$permission)){?>
                                 <a style="cursor: pointer;" title="View Service" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;

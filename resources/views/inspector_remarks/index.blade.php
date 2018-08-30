@@ -10,9 +10,11 @@
             <div class="box-header">
                <h3 class="box-title">{{headingMain()}}</h3>
                <?php $permission_status = checkPermission('inspector_remarks','create');
-                    if($permission_status)
+                     $checkVersionOpen = checkVersionOpen();
+                    if($permission_status && $checkVersionOpen)
                         createButton('create','Add','Add'.'order_id');
-                ?>
+                    elseif($permission_status)
+                        createDisableButton('create','Add');?>
             </div>
            @include('partials.message')
             <!-- /.box-header -->
@@ -36,8 +38,10 @@
                             <td>{{$value->remark_description}}</td>
                             <td>
                                 <?php $permission = getAllModulePermission('inspector_remarks');
-                                if(in_array('edit',$permission)){?>
+                                if(in_array('edit',$permission) && $checkVersionOpen){?>
                                     <a href="<?php echo route('inspector_remarks.edit',$value->id)?>" title="Edit Inspector Remarks"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }elseif(in_array('edit',$permission)){?>
+                                    <a class="disabled"><span class="glyphicon glyphicon-pencil "></span></a>&nbsp;&nbsp;&nbsp;&nbsp;   
                                 <?php }
                                 if(in_array('view',$permission)){?>
                                     <a style="cursor: pointer;" title="View Inspector Remarks" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;

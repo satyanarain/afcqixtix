@@ -14,9 +14,11 @@
             <div class="box-header">
                <h3 class="box-title">{{getCurrentLabel('routes','id',$route_id,'route')}} :- List of All Duties</h3>
                <?php $permission_status = checkPermission('duties','create');
-                    if($permission_status){?>                     
+                     $checkVersionOpen = checkVersionOpen();
+                    if($permission_status && $checkVersionOpen){?>                     
                         <a href="<?php echo route('routes.duties.create',$route_id)?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
-                <?php }?> 
+                <?php }elseif($permission_status)
+                        createDisableButton('create','Add');?>
                 
             </br>
             </br>
@@ -49,8 +51,10 @@
                             <td>{{$value->shift}}</td>
                             <td>
                                 <?php $permission = getAllModulePermission('duties');
-                                if(in_array('edit',$permission)){?>
+                                if(in_array('edit',$permission) && $checkVersionOpen){?>
                                 <a href="<?php echo route('routes.duties.edit',[$route_id,$value->id])?>" title="Edit Duty"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }elseif(in_array('edit',$permission)){?>
+                                    <a class="disabled"><span class="glyphicon glyphicon-pencil "></span></a>&nbsp;&nbsp;&nbsp;&nbsp;   
                                 <?php }
                                 if(in_array('view',$permission)){?>
                                 <a style="cursor: pointer;" title="View Duty" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;

@@ -216,23 +216,27 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                                     <i class="fa fa-plus"></i> @lang('menu.denominations.title') </a>
                            </li>
                                @endif
+                            @php $pem=menuDisplayByUser($result, 'ETM_details','view'); @endphp
+                            @if($pem=='true')
+                            <li @if($segments_var[0]=='ETM_details') class="active" @endif><a href="{{route('ETM_details.index')}}"><i class="fa fa-calculator"></i>@lang('menu.ETM_details.title')</a>
+                            </li>
+                            @endif
                          </ul>
                     </li>
-                    @php $pem=menuDisplayByUser($result, 'ETM_details','view'); @endphp
-                    @if($pem=='true')
-                     <li  @if($segments_var[0]=='ETM_details') class="treeview active" @else class="treeview" @endif>
+                    
+                     <li  @if($segments_var[0]=='inventories') class="treeview active" @else class="treeview" @endif>
                         <a href="#">
-                            <i class="fa fa-calculator" aria-hidden="true"></i> <span>@lang('menu.ETM_details.title')</span>
+                            <i class="fa fa-ticket" aria-hidden="true"></i> <span>@lang('Manage Inventory')</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
-                        <ul @if($segments_var[0]=='ETM_details') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
-                         <li @if($segments_var[0]=='ETM_details') class="active" @endif><a href="{{route('ETM_details.index')}}"><i class="fa fa-calculator"></i>@lang('menu.ETM_details.title')</a>
+                        <ul @if($segments_var[0]=='inventories') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
+                         <li @if($segments_var[0]=='inventories') class="active" @endif><a href=""><i class="fa fa-ticket"></i>@lang('Inventory')</a>
                             </li>
                          </ul>
                     </li>
-                    @endif
+                    
                  @php $pem=menuDisplayByUser($result, 'permissions','view'); @endphp
                     @if($pem=='true')
                      <li  @if($segments_var[0]=='roles' || $segments_var[0]=='permissions' || $segments_var[0]=='settings') class="treeview active" @else class="treeview" @endif>

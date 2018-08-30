@@ -84,6 +84,8 @@ class ETMDetailController extends Controller
      */
    public function show($id)
    {
+       if(!$this->checkActionPermission('ETM_details','view'))
+            return redirect()->route('401');
         $ETM_details = DB::table('ETM_details')->select('*','ETM_details.id as id','depots.name as name','evm_status_masters.name as evm_status_master_id')
             ->leftjoin('depots','depots.id','ETM_details.depot_id')
             ->leftjoin('evm_status_masters','evm_status_masters.id','ETM_details.evm_status_master_id')
@@ -141,6 +143,8 @@ class ETMDetailController extends Controller
      */
     
       public function viewDetail($id) {
+          if(!$this->checkActionPermission('ETM_details','view'))
+            return redirect()->route('401');
        $value = DB::table('ETM_details')->select('*','ETM_details.id as id','depots.name as name','evm_status_masters.name as evm_status_master_id','ETM_details.created_at as created_at','ETM_details.updated_at as updated_at')
             ->leftjoin('depots','depots.id','ETM_details.depot_id')
             ->leftjoin('users', 'users.id', '=', 'ETM_details.user_id')
