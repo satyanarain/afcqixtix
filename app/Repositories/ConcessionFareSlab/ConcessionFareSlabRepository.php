@@ -41,7 +41,7 @@ class ConcessionFareSlabRepository implements ConcessionFareSlabRepositoryContra
        
     }
  public function update($id, $requestData) {
-        $this->createLog('App\Models\ConcessionFareSlab','App\Models\ConcessionFareSlabLog',$id);
+        //$this->createLog('App\Models\ConcessionFareSlab','App\Models\ConcessionFareSlabLog',$id);
         $concession_fare_slabs = ConcessionFareSlab::findorFail($id);
         $input = $requestData->all();
         $userid = Auth::id();

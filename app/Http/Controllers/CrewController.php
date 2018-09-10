@@ -75,6 +75,8 @@ class CrewController extends Controller
     {
         if(!$this->checkActionPermission('crews','create'))
             return redirect()->route('401');
+        $version_id = $this->getCurrentVersion();
+        $depotRequest->request->add(['flag'=> 'a','version_id'=>$version_id]);
         $depotRequest->request->add(['depot_id'=> $depot_id]);
         //echo '<pre>';print_r($depotRequest);die;
         $getInsertedId = $this->crew->create($depotRequest);
@@ -128,8 +130,10 @@ class CrewController extends Controller
      {
        return redirect()->back()->withErrors(['This crew ID has already been taken.']);
       } else {
-       $this->crew->update($id, $request);
-        return redirect()->route('depots.crew.index',$depot_id); 
+            
+            $request->request->add(['flag'=> 'u']);
+            $this->crew->update($id, $request);
+            return redirect()->route('depots.crew.index',$depot_id); 
     }
     }
 

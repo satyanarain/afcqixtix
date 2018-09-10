@@ -200,6 +200,8 @@ class TripCancellationReasonController extends Controller {
     public function store(StoreTripCancellationReasonRequest $trip_cancellation_reasonsRequest) {
         if(!$this->checkActionPermission('trip_cancellation_reasons','create'))
             return redirect()->route('401');
+        $version_id = $this->getCurrentVersion();
+        $trip_cancellation_reasonsRequest->request->add(['flag'=> 'a','version_id'=>$version_id]);
         $getInsertedId = $this->trip_cancellation_reasons->create($trip_cancellation_reasonsRequest);
         return redirect()->route('trip_cancellation_reasons.index');
     }
@@ -250,7 +252,8 @@ class TripCancellationReasonController extends Controller {
      if(count($sql)>0)
      {
        return redirect()->back()->withErrors(['This trip cancellation reason has already been taken.']);
-      } else { 
+      } else {
+        $request->request->add(['flag'=> 'u']);   
           $this->trip_cancellation_reasons->update($id, $request);
         return redirect()->route('trip_cancellation_reasons.index');
     }

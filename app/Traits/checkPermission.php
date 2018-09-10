@@ -27,5 +27,16 @@ trait checkPermission {
         else
             return false;
     }
+    
+    function getCurrentVersion()
+    {
+        $user_id = Auth::id();
+        $sql = Version::where('version_status', '=', 'o')->first();
+        
+        if($sql)
+            return $sql->id;
+        else
+            return false;
+    }
 
 }

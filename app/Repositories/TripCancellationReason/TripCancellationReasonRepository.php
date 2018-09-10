@@ -41,7 +41,7 @@ class TripCancellationReasonRepository implements TripCancellationReasonReposito
        
     }
  public function update($id, $requestData) {
-         $this->createLog('App\Models\TripCancellationReason','App\Models\TripCancellationReasonLog',$id);
+         //$this->createLog('App\Models\TripCancellationReason','App\Models\TripCancellationReasonLog',$id);
          $concession = TripCancellationReason::findorFail($id);
          $input = $requestData->all();
          $userid = Auth::id();

@@ -24,7 +24,7 @@
                             <th class="display_none"></th>
                             <th>@lang('user.headers.name')</th>
                             <th>@lang('User Name')</th>
-                            <th>@lang('Role')</th>
+                            <th>@lang('Role/Designation')</th>
                             <th>@lang('user.headers.email')</th>
                              {{  actionHeading('Action', $newaction='') }}
                         </tr>

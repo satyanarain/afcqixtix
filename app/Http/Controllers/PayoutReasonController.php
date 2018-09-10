@@ -190,6 +190,8 @@ class PayoutReasonController extends Controller {
     public function store(StorePayoutReasonRequest $payout_reasonsRequest) {
         if(!$this->checkActionPermission('payout_reasons','create'))
             return redirect()->route('401');
+        $version_id = $this->getCurrentVersion();
+        $payout_reasonsRequest->request->add(['flag'=> 'a','version_id'=>$version_id]);
         $getInsertedId = $this->payout_reasons->create($payout_reasonsRequest);
         return redirect()->route('payout_reasons.index');
     }
@@ -239,6 +241,8 @@ class PayoutReasonController extends Controller {
      {
        return redirect()->back()->withErrors(['Payout reason has already been taken.']);
       } else { 
+        
+        $request->request->add(['flag'=> 'u']);
         $this->payout_reasons->update($id, $request);
         return redirect()->route('payout_reasons.index');
     }

@@ -49,7 +49,7 @@ class ConcessionRepository implements ConcessionRepositoryContract {
        
     }
  public function update($id, $requestData) {
-        $this->createLog('App\Models\Concession','App\Models\ConcessionLog',$id);
+        //$this->createLog('App\Models\Concession','App\Models\ConcessionLog',$id);
         $concession = Concession::findorFail($id);
          $input = $requestData->all();
         //        print_r($requestData->all());

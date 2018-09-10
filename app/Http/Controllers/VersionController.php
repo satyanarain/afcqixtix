@@ -91,7 +91,10 @@ class VersionController extends Controller
         if(!$this->checkActionPermission('versions','create'))
             return redirect()->route('401');
         //print_r($versionsRequest->all());die;
+        $versionsRequest->request->add(['version_open'=> date('Y-m-d H:i:s')]);
+        //echo '<pre>';print_r($versionsRequest->all());die;
         $getInsertedId = $this->versions->create($versionsRequest);
+        $this->openVersion();
         return redirect()->route('versions.index');         
     }
     /**
@@ -133,11 +136,24 @@ class VersionController extends Controller
     {
         if(!$this->checkActionPermission('versions','edit'))
             return redirect()->route('401');
-        //print_r($request);die;
-        //print_r($id);die;
-        $this->versions->update($id, $request);
+        
         if($request->version_status=="c")
-            $this->approveVersion($id);
+        {
+            $diff = $this->getAllDifferences();
+            if(count($diff))
+            {
+                Session::flash('error', "You can't Close the Version untill you Approve/Deny all changes.");
+                return redirect()->route('versions.edit',$id);
+            }else{
+                $this->approveVersion($id);
+                $request->request->add(['version_close'=> date('Y-m-d H:i:s')]);
+            }
+        }
+        $this->versions->update($id, $request);
+        if($request->version_status=="c" && count($diff)==0)
+        {
+            $this->closeVersion();
+        }
         return redirect()->route('versions.index');
     }
 
@@ -153,15 +169,17 @@ class VersionController extends Controller
         
         //echo public_path();die;
         $vals=array();
-        //echo env(DB_USERNAME);die;
-        $pdoMy=new PDO('mysql:dbname=afcqixtix','root','root@1234!') or die("can't connect to afc");
+        if(env(APP_ENV)=="local")
+            $pdoMy=new PDO('mysql:dbname=afcqixtix','root','') or die("can't connect to afc");
+        else
+            $pdoMy=new PDO('mysql:dbname=afcqixtix','root','root@1234!') or die("can't connect to afc");
         $pdoLi=new PDO('sqlite:'.public_path().'/supportingdocs/data'.$version_id.'.sqlite') or die("can't connect to data1");
 
-        $tbls=array('bus_types','concessions','concession_fare_slabs','concession_masters','concession_provider_masters',
-            'countries','crew','denominations','depots','duties','fares','inspector_remarks',
-            'pass_types','payout_reasons','routes','route_details','stops','services','shifts',
-            'versions','targets','trips','trip_cancellation_reasons','trip_cancellation_reason_category_masters',
-            'trip_details','trip_start','vehicles');
+        $tbls=array('depots','vehicles','crew','bus_types','services','fares','concession_fare_slabs','concessions',
+            'pass_types','shifts','stops','routes','route_details','duties','trips','trip_details',
+            'targets','trip_cancellation_reasons','inspector_remarks','payout_reasons','denominations',
+            'etm_details','versions','trip_cancellation_reason_category_masters',
+            'trip_start','concession_masters','concession_provider_masters','countries');
             #Delete Old Table
             //$deleted_extra_arr = array('ETM_detail_logs','ETM_details','abstractbills','bus_type_logs','concession_fare_slab_logs','concession_logs','concession_masters','concession_provider_masters','crew_detail_logs','denomination_logs','denomination_masters','departments','depot_logs','depots111','depots1111','dutie_logs','etm_hot_key_masters','evm_status_masters','fare_logs','fares_copy','inspector_remark_logs','migrations','pass_type_logs','password_resets','payout_reason_logs','permission_details','permission_modules','permissions','roles','route_logs','service_logs','settings','shift_logs','stop_logs','target_logs','trip_cancellation_reason_logs','trip_logs','users','vehicle_logs');
             foreach ($tbls as $table)
@@ -215,37 +233,39 @@ class VersionController extends Controller
     }
     
     
-     public function viewDetail($id) {
+    public function viewDetail($tablename,$id,$logtable) {
          if(!$this->checkActionPermission('versions','view'))
             return redirect()->route('401');
         //$service = Service::find($id);
-        $sql = DB::table('versions')->where('id', $id)->get();
+        $sql = DB::table($tablename)->where('id', $id)->first();//print_r($sql);die;
+        $prev_version_id = $sql->version_id-1;
+        $olddata = DB::table($logtable)->where('id', $sql->id)->where('version_id', $prev_version_id)->first();
+        //echo '<pre>'; print_r($sql);print_r($olddata);die;
+        
        ?>
        <div class="modal-dialog">
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header-view" >
         <!--                <button type="button" class="close" data-dismiss="modal"><font class="white">&times;</font></button>-->
-                        <h4 class="viewdetails_details">Version Details</h4>
+                        <h4 class="viewdetails_details"><?php echo strtoupper(str_replace('_',' ',$tablename))?> Details</h4>
                     </div>
                     <div class="modal-body-view">
                          <table class="table table-responsive.view">
-                            <?php foreach ($sql as $value) { ?>     
+                            <?php if($sql->flag=='u'){?>
+                             <tr>
+                                 <td></td>
+                                 <td>Current Value</td>
+                                 <td>Old Value</td>
+                             </tr>
+                            <?php }?>
+                            <?php foreach ($sql as $key=>$value) { ?>     
                             <tr>        
-                                <td>Version ID</td>
-                                <td class="table_normal"><?php echo $value->id; ?></td>
-                            </tr>
-                            <tr>
-                                <td>Download From</td>
-                                <td class="table_normal"><?php echo $value->downloading_wef; ?></td>
-                            </tr>
-                            <tr>
-                                <td>Version Status</td>
-                                <td class="table_normal"><?php echo $value->version_status; ?></td>
-                            </tr>
-                            <tr>
-                                <td>Reason</td>
-                                <td class="table_normal"><?php echo $value->reason; ?></td>
+                                <td><?=strtoupper(str_replace('_',' ',$key))?></td>
+                                <td class="table_normal"><?php echo $value; ?></td>
+                                <?php if($sql->flag=='u'){?>
+                                <td class="table_normal"><?php echo $olddata->$key; ?></td>
+                                <?php }?>
                             </tr>
                              <?php } ?>   
                                    
@@ -262,4 +282,358 @@ class VersionController extends Controller
                 
         <?php
     }
- }
+    
+    public function openVersion()
+    {
+        $version_id = $this->getCurrentVersion();
+        
+        //echo public_path();die;
+        $vals=array();
+        if(env(APP_ENV)=="local")
+            $pdoLi=new PDO('mysql:dbname=afcqixtix','root','') or die("can't connect to afc");
+        else
+            $pdoLi=new PDO('mysql:dbname=afcqixtix','root','root@1234!') or die("can't connect to afc");
+        
+        $result = $pdoLi->query('INSERT INTO bus_type_logs SELECT * FROM bus_types');
+        $result = $pdoLi->query('INSERT INTO concession_fare_slab_logs SELECT * FROM concession_fare_slabs');
+        $result = $pdoLi->query('INSERT INTO concession_logs SELECT * FROM concessions');
+        $result = $pdoLi->query('INSERT INTO crew_logs SELECT * FROM crew');
+        $result = $pdoLi->query('INSERT INTO denomination_logs SELECT * FROM denominations');
+        $result = $pdoLi->query('INSERT INTO depot_logs SELECT * FROM depots');
+        $result = $pdoLi->query('INSERT INTO dutie_logs SELECT * FROM duties');
+        $result = $pdoLi->query('INSERT INTO etm_detail_logs SELECT * FROM etm_details');
+        $result = $pdoLi->query('INSERT INTO fare_logs SELECT * FROM fares');
+        $result = $pdoLi->query('INSERT INTO inspector_remark_logs SELECT * FROM inspector_remarks');
+        $result = $pdoLi->query('INSERT INTO pass_type_logs SELECT * FROM pass_types');
+        $result = $pdoLi->query('INSERT INTO payout_reason_logs SELECT * FROM payout_reasons');
+        $result = $pdoLi->query('INSERT INTO route_detail_logs SELECT * FROM route_details');
+        $result = $pdoLi->query('INSERT INTO route_logs SELECT * FROM routes');
+        $result = $pdoLi->query('INSERT INTO service_logs SELECT * FROM services');
+        $result = $pdoLi->query('INSERT INTO shift_logs SELECT * FROM shifts');
+        $result = $pdoLi->query('INSERT INTO stop_logs SELECT * FROM stops');
+        $result = $pdoLi->query('INSERT INTO target_logs SELECT * FROM targets');
+        $result = $pdoLi->query('INSERT INTO trip_cancellation_reason_logs SELECT * FROM trip_cancellation_reasons');
+        $result = $pdoLi->query('INSERT INTO trip_detail_logs SELECT * FROM trip_details');
+        $result = $pdoLi->query('INSERT INTO trip_logs SELECT * FROM trips');
+        $result = $pdoLi->query('INSERT INTO vehicle_logs SELECT * FROM vehicles');
+        $query = DB::table('bus_types')->update(['version_id' => $version_id]);
+        $query = DB::table('concession_fare_slabs')->update(['version_id' => $version_id]);
+        $query = DB::table('concessions')->update(['version_id' => $version_id]);
+        $query = DB::table('crew')->update(['version_id' => $version_id]);
+        $query = DB::table('denominations')->update(['version_id' => $version_id]);
+        $query = DB::table('depots')->update(['version_id' => $version_id]);
+        $query = DB::table('duties')->update(['version_id' => $version_id]);
+        $query = DB::table('etm_details')->update(['version_id' => $version_id]);
+        $query = DB::table('fares')->update(['version_id' => $version_id]);
+        $query = DB::table('inspector_remarks')->update(['version_id' => $version_id]);
+        $query = DB::table('pass_types')->update(['version_id' => $version_id]);
+        $query = DB::table('payout_reasons')->update(['version_id' => $version_id]);
+        $query = DB::table('route_details')->update(['version_id' => $version_id]);
+        $query = DB::table('routes')->update(['version_id' => $version_id]);
+        $query = DB::table('services')->update(['version_id' => $version_id]);
+        $query = DB::table('shifts')->update(['version_id' => $version_id]);
+        $query = DB::table('stops')->update(['version_id' => $version_id]);
+        $query = DB::table('targets')->update(['version_id' => $version_id]);
+        $query = DB::table('trip_cancellation_reasons')->update(['version_id' => $version_id]);
+        $query = DB::table('trip_details')->update(['version_id' => $version_id]);
+        $query = DB::table('trips')->update(['version_id' => $version_id]);
+        $query = DB::table('vehicles')->update(['version_id' => $version_id]);
+        
+        
+            
+        
+        
+    }
+    
+    public function closeVersion()
+    {
+//        $query = DB::table('bus_types')->update(['flag' => '']);
+//        $query = DB::table('concession_fare_slabs')->update(['flag' => '']);
+//        $query = DB::table('concessions')->update(['flag' => '']);
+//        $query = DB::table('crew')->update(['flag' => '']);
+//        $query = DB::table('denominations')->update(['flag' => '']);
+//        $query = DB::table('depots')->update(['flag' => '']);
+//        $query = DB::table('duties')->update(['flag' => '']);
+//        $query = DB::table('etm_details')->update(['flag' => '']);
+//        $query = DB::table('fares')->update(['flag' => '']);
+//        $query = DB::table('inspector_remarks')->update(['flag' => '']);
+//        $query = DB::table('pass_types')->update(['flag' => '']);
+//        $query = DB::table('payout_reasons')->update(['flag' => '']);
+//        $query = DB::table('route_details')->update(['flag' => '']);
+//        $query = DB::table('routes')->update(['flag' => '']);
+//        $query = DB::table('services')->update(['flag' => '']);
+//        $query = DB::table('shifts')->update(['flag' => '']);
+//        $query = DB::table('stops')->update(['flag' => '']);
+//        $query = DB::table('targets')->update(['flag' => '']);
+//        $query = DB::table('trip_cancellation_reasons')->update(['flag' => '']);
+//        $query = DB::table('trip_details')->update(['flag' => '']);
+//        $query = DB::table('trips')->update(['flag' => '']);
+//        $query = DB::table('vehicles')->update(['flag' => '']);
+    }
+    
+    public function viewDifferences($id)
+    {
+        $differences = $this->getAllDifferences();
+        //echo '<pre>';        print_r($differences);die;
+        return view('versions.viewdifferences',compact('differences'));
+        echo '<pre>';        print_r($differences);die;
+    }
+    
+    public function getAllDifferences()
+    {
+        $differences = array();
+        $rows = DB::table('bus_types')
+                    ->where(function($query){
+                        $query->where('flag', '=', 'a')
+                        ->orwhere('flag', '=', 'u')
+                        ->orwhere('flag', '=', 'd');
+                    })
+                    ->get();
+        //echo '<pre>';print_r($rows);die;
+        foreach($rows as $row){
+            $row->log_tablename = 'bus_type_logs';
+            $differences['bus_types'][] = $row;
+        }
+        $rows = DB::table('concession_fare_slabs')
+                    ->where(function($query){
+                        $query->where('flag', '=', 'a')
+                        ->orwhere('flag', '=', 'u')
+                        ->orwhere('flag', '=', 'd');
+                    })
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'concession_fare_slab_logs';
+            $differences['concession_fare_slabs'][] = $row;
+        }
+        $rows = DB::table('concessions')
+                    ->where(function($query){
+                        $query->where('flag', '=', 'a')
+                        ->orwhere('flag', '=', 'u')
+                        ->orwhere('flag', '=', 'd');
+                    })
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'concession_logs';
+            $differences['concessions'][] = $row;
+        }
+        $rows = DB::table('crew')
+                    ->where(function($query){
+                        $query->where('flag', '=', 'a')
+                        ->orwhere('flag', '=', 'u')
+                        ->orwhere('flag', '=', 'd');
+                    })
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'crew_logs';
+            $differences['crew'][] = $row;
+       }
+        $rows = DB::table('denominations')
+                    ->where(function($query){
+                        $query->where('flag', '=', 'a')
+                        ->orwhere('flag', '=', 'u')
+                        ->orwhere('flag', '=', 'd');
+                    })
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'denomination_logs';
+            $differences['denominations'][] = $row;
+        }
+        $rows = DB::table('depots')
+                    ->where(function($query){
+                        $query->where('flag', '=', 'a')
+                        ->orwhere('flag', '=', 'u')
+                        ->orwhere('flag', '=', 'd');
+                    })
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'depot_logs';
+            $differences['depots'][] = $row;
+        }
+        $rows = DB::table('duties')
+                    ->where(function($query){
+                        $query->where('flag', '=', 'a')
+                        ->orwhere('flag', '=', 'u')
+                        ->orwhere('flag', '=', 'd');
+                    })
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'dutie_logs';
+            $differences['duties'][] = $row;
+        }
+        $rows = DB::table('etm_details')
+                    ->where(function($query){
+                        $query->where('flag', '=', 'a')
+                        ->orwhere('flag', '=', 'u')
+                        ->orwhere('flag', '=', 'd');
+                    })
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'etm_detail_logs';
+            $differences['etm_details'][] = $row;
+        }
+        $rows = DB::table('fares')
+                    ->where(function($query){
+                        $query->where('flag', '=', 'a')
+                        ->orwhere('flag', '=', 'u')
+                        ->orwhere('flag', '=', 'd');
+                    })
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'fare_logs';
+            $differences['fares'][] = $row;
+        }
+        $rows = DB::table('inspector_remarks')
+                    ->where(function($query){
+                        $query->where('flag', '=', 'a')
+                        ->orwhere('flag', '=', 'u')
+                        ->orwhere('flag', '=', 'd');
+                    })
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'inspector_remark_logs';
+            $differences['inspector_remarks'][] = $row;
+        }
+        $rows = DB::table('pass_types')
+                    ->where(function($query){
+                        $query->where('flag', '=', 'a')
+                        ->orwhere('flag', '=', 'u')
+                        ->orwhere('flag', '=', 'd');
+                    })
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'pass_type_logs';
+            $differences['pass_types'][] = $row;
+        }
+        $rows = DB::table('payout_reasons')
+                    ->where(function($query){
+                        $query->where('flag', '=', 'a')
+                        ->orwhere('flag', '=', 'u')
+                        ->orwhere('flag', '=', 'd');
+                    })
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'payout_reason_logs';
+            $differences['payout_reasons'][] = $row;
+        }
+        $rows = DB::table('route_details')
+                    ->where(function($query){
+                        $query->where('flag', '=', 'a')
+                        ->orwhere('flag', '=', 'u')
+                        ->orwhere('flag', '=', 'd');
+                    })
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'route_detail_logs';
+            $differences['route_details'][] = $row;
+        }
+        $rows = DB::table('routes')
+                    ->where(function($query){
+                        $query->where('flag', '=', 'a')
+                        ->orwhere('flag', '=', 'u')
+                        ->orwhere('flag', '=', 'd');
+                    })
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'route_logs';
+            $differences['routes'][] = $row;
+        }
+        $rows = DB::table('services')
+                    ->where(function($query){
+                        $query->where('flag', '=', 'a')
+                        ->orwhere('flag', '=', 'u')
+                        ->orwhere('flag', '=', 'd');
+                    })
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'service_logs';
+            $differences['services'][] = $row;
+        }
+        $rows = DB::table('shifts')
+                    ->where(function($query){
+                        $query->where('flag', '=', 'a')
+                        ->orwhere('flag', '=', 'u')
+                        ->orwhere('flag', '=', 'd');
+                    })
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'shift_logs';
+            $differences['shifts'][] = $row;
+        }
+        $rows = DB::table('stops')
+                    ->where(function($query){
+                        $query->where('flag', '=', 'a')
+                        ->orwhere('flag', '=', 'u')
+                        ->orwhere('flag', '=', 'd');
+                    })
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'stop_logs';
+            $differences['stops'][] = $row;
+        }
+        $rows = DB::table('targets')
+                    ->where(function($query){
+                        $query->where('flag', '=', 'a')
+                        ->orwhere('flag', '=', 'u')
+                        ->orwhere('flag', '=', 'd');
+                    })
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'target_logs';
+            $differences['targets'][] = $row;
+        }
+        $rows = DB::table('trip_cancellation_reasons')
+                    ->where(function($query){
+                        $query->where('flag', '=', 'a')
+                        ->orwhere('flag', '=', 'u')
+                        ->orwhere('flag', '=', 'd');
+                    })
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'trip_cancellation_reason_logs';
+            $differences['trip_cancellation_reasons'][] = $row;
+        }
+        $rows = DB::table('trip_details')
+                    ->where(function($query){
+                        $query->where('flag', '=', 'a')
+                        ->orwhere('flag', '=', 'u')
+                        ->orwhere('flag', '=', 'd');
+                    })
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'trip_detail_logs';
+            $differences['trip_details'][] = $row;
+        }
+        $rows = DB::table('trips')
+                    ->where(function($query){
+                        $query->where('flag', '=', 'a')
+                        ->orwhere('flag', '=', 'u')
+                        ->orwhere('flag', '=', 'd');
+                    })
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'trip_logs';
+            $differences['trips'][] = $row;
+        }
+        $rows = DB::table('vehicles')
+                    ->where(function($query){
+                        $query->where('flag', '=', 'a')
+                        ->orwhere('flag', '=', 'u')
+                        ->orwhere('flag', '=', 'd');
+                    })
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'vehicle_logs';
+            $differences['vehicles'][] = $row;
+        }
+        return $differences;
+    }
+    public function approveChange(Request $request) {
+        //echo '<pre>';print_r($request->all());die;
+         if(!$this->checkActionPermission('versions','view'))
+            return redirect()->route('401');
+        //$service = Service::find($id);
+        return $query = DB::table($request->table)
+                        ->where('id','=',$request->id)
+                        ->update(['flag' => '']);
+    }
+}

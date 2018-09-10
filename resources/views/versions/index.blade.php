@@ -10,10 +10,11 @@
             <div class="box-header">
                <h3 class="box-title">{{headingMain()}}</h3>
                <?php $permission_status = checkPermission('versions','create');
-                    if($permission_status){?>                     
-                        <a href="<?php echo route('versions.create')?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
+                    if($permission_status && checkVersionOpen()){?>                     
+<!--                    <a class="disabled"><span class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</span></a>-->
+                <?php }else{?>
+                    <a href="<?php echo route('versions.create')?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
                 <?php }?>
-               
             </div>
              @include('partials.message')
             <!-- /.box-header -->
@@ -44,7 +45,7 @@
                                     <?php }?>
                                 <?php }
                                 if(in_array('view',$permission)){?>
-                                    <a style="cursor: pointer;" title="View Version Detail" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>
+                                    <a href="versions/view_differences/<?=$value->id?>" title="View Version Differences"><span class="glyphicon glyphicon-search"></span></a>
                                 <?php }?>
                             </td>
                         </tr>

@@ -72,6 +72,8 @@ class RouteController extends Controller {
 //        {
 //            return redirect()->back()->withErrors(['This route and direction has already been taken.']);
 //        } else {
+        $version_id = $this->getCurrentVersion();
+        $routesRequest->request->add(['flag'=> 'a','version_id'=>$version_id]);
          $getInsertedId = $this->routes->create($routesRequest);
         return redirect()->route('routes.index');
        // }
@@ -214,6 +216,8 @@ class RouteController extends Controller {
         if (count($sql) > 0) {
             return redirect()->back()->withErrors(['This route and direction has already been taken.']);
         } else {
+        
+        $request->request->add(['flag'=> 'u']);
             $this->routes->update($id, $request);
             return redirect()->route('routes.index');
         }

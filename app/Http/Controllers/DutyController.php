@@ -76,6 +76,8 @@ class DutyController extends Controller {
       {
        return view('duties.create')->withErrors(['This route and duty number has already been taken.']); 
       }else{
+        $version_id = $this->getCurrentVersion();
+        $dutiesRequest->request->add(['flag'=> 'a','version_id'=>$version_id]);
         $dutiesRequest->request->add(['route_id'=> $route_id]);
         $getInsertedId = $this->duties->create($dutiesRequest);
         return redirect()->route('routes.duties.index',$route_id);
@@ -131,6 +133,8 @@ class DutyController extends Controller {
      {
       return redirect('duties/'.$id.'/edit')->withErrors(['This route and duty number has already been taken.']);
       } else {
+          
+        $request->request->add(['flag'=> 'u']);
         $this->duties->update($id, $request);
         return redirect()->route('routes.duties.index',$route_id);
       }

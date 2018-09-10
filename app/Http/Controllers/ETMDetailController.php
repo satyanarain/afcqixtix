@@ -73,6 +73,8 @@ class ETMDetailController extends Controller
     {
         if(!$this->checkActionPermission('ETM_details','create'))
             return redirect()->route('401');
+        $version_id = $this->getCurrentVersion();
+        $depotRequest->request->add(['flag'=> 'a','version_id'=>$version_id]);
         $getInsertedId = $this->ETM_details->create($depotRequest);
         return redirect()->route('ETM_details.index');         
     }
@@ -130,6 +132,8 @@ class ETMDetailController extends Controller
      {
        return redirect()->back()->withErrors(['This ETM no has already been taken.']);
       } else {
+        
+        $request->request->add(['flag'=> 'u']);
        $this->ETM_details->update($id, $request);
         return redirect()->route('ETM_details.index');
     }

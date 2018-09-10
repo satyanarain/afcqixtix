@@ -76,6 +76,8 @@ class ServiceController extends Controller
         {
             return redirect()->back()->withErrors(['Bus type and service name has already been taken.']);
         } else{
+            $version_id = $this->getCurrentVersion();
+            $servicesRequest->request->add(['flag'=> 'a','version_id'=>$version_id]);
             $servicesRequest->request->add(['bus_type_id'=> $bus_type_id]);
             $getInsertedId = $this->services->create($servicesRequest);
             return redirect()->route('bus_types.services.index',$bus_type_id);
@@ -123,7 +125,8 @@ class ServiceController extends Controller
         if(count($sql)>0)
         {
             return redirect()->back()->withErrors(['Bus type and service name has already been taken.']);
-        }else{    
+        }else{
+            $request->request->add(['flag'=> 'u']);
             $this->services->update($id, $request);
             return redirect()->route('bus_types.services.index',$bus_type_id);
         }

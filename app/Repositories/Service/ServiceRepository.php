@@ -40,7 +40,7 @@ class ServiceRepository implements ServiceRepositoryContract {
     }
 
     public function update($id, $requestData) {
-       $this->createLog('App\Models\Service','App\Models\ServiceLog',$id);
+       //$this->createLog('App\Models\Service','App\Models\ServiceLog',$id);
        $service = Service::findorFail($id);
        $input = $requestData->all();
        $input['user_id'] = Auth::id();

@@ -66,6 +66,8 @@ class TripController extends Controller {
         if(!$this->checkActionPermission('trips','create'))
             return redirect()->route('401');
         $tripsRequest->route;
+        $version_id = $this->getCurrentVersion();
+        $tripsRequest->request->add(['flag'=> 'a','version_id'=>$version_id]);
         $tripsRequest->request->add(['route_id'=> $route_id]);
         $tripsRequest->request->add(['duty_id'=> $duty_id]);
         $getInsertedId = $this->trips->create($tripsRequest);
@@ -228,6 +230,7 @@ $duties = DB::table($table_name)->select('*')->where('route_id',$id)->get();
 //        if (count($sql) > 0) {
 //            return redirect()->back()->withErrors(['This route and direction has already been taken.']);
 //        } else {
+            $request->request->add(['flag'=> 'u']);
             $request->request->add(['route_id'=> $route_id]);
             $request->request->add(['duty_id'=> $duty_id]);
             $this->trips->update($id, $request);

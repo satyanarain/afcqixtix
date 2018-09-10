@@ -41,9 +41,9 @@
                                 <?php $permission = getAllModulePermission('bus_types');
                                 if(in_array('edit',$permission) && $checkVersionOpen){
                                     echo '<a  href="'.route("bus_types.edit",$value->id).'" class="" title="Edit" ><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
-                                }elseif(in_array('edit',$permission))?>
+                                }elseif(in_array('edit',$permission)){?>
                                         <a class="disabled"><span class="glyphicon glyphicon-pencil "></span></a>&nbsp;&nbsp;&nbsp;&nbsp;   
-                                <?php 
+                                <?php }
                                 if(in_array('view',$permission))
                                     echo '<a style="cursor: pointer;" title="View" data-toggle="modal" data-target="#'.$value->id.'"  onclick="viewDetails('.$value->id.',\'view_detail\')"><span class="glyphicon glyphicon-search"></span></a>';
                                 ?>

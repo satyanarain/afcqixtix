@@ -48,8 +48,8 @@
                                 {{ menuCreate('payout_reasons','create','edit','view',$value->id,$value->payout_reasons)}}
                                 {{ menuCreate('denominations','create','edit','view',$value->id,$value->denominations)}}
                                 {{ menuCreate('pass_types','create','edit','view',$value->id,$value->pass_types)}}
-                                {{ menuCreate('crew_details','create','edit','view',$value->id,$value->crew_details)}}
-                                {{ menuCreate('versions','create','edit','view',$value->id,$value->versions)}}
+                                {{ menuCreate('crews','create','edit','view',$value->id,$value->crews)}}
+                                
                                 
                             </table> 
                         </div>
@@ -64,7 +64,17 @@
                         </table> 
                         </div>
                     </div>
-                    
+                    <div   class="formmain" onclick="showHide(this.id)" id="ACC3{{$value->id}}">
+                        <div class="plusminusbutton" id="plusminusbuttonACC3{{$value->id}}">+</div>&nbsp;&nbsp;Miscellaneous
+                    </div>
+                    <div class="row1"  id="formACC3{{$value->id}}" style="display:none;">
+                        <div class="row">  
+                            <table class="table table-responsive.view">
+                                 {{ menuCreate('versions','create','edit','view',$value->id,$value->versions)}}
+                                 {{ menuCreate('settings','create','edit','view',$value->id,$value->settings)}}
+                        </table> 
+                        </div>
+                    </div>
                     
                      <table class="table table-responsive.view">
                         <tr>

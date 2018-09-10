@@ -75,6 +75,8 @@ class VehicleController extends Controller
         
         //$depot_id = $vehiclesRequest->depot_id;die;
         //$vehiclesRequest->depot_id = $depot_id;
+        $version_id = $this->getCurrentVersion();
+        $vehiclesRequest->request->add(['flag'=> 'a','version_id'=>$version_id]);
         $vehiclesRequest->request->add(['depot_id'=> $depot_id]);
         //echo '<pre>';print_r($vehiclesRequest->all());die('fdfd');
         $getInsertedId = $this->vehicles->create($vehiclesRequest);
@@ -132,8 +134,9 @@ class VehicleController extends Controller
      if(count($sql)>0)
      {
        return redirect()->back()->withErrors(['Vehicle registration number has already been taken.']);
-      } else {   
-          $this->vehicles->update($id, $request);
+      } else {
+        $request->request->add(['flag'=> 'u']);
+        $this->vehicles->update($id, $request);
         return redirect()->route('depots.vehicles.index',$depot_id);   
       }
     }

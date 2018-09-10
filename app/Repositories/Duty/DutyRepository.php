@@ -41,7 +41,7 @@ class DutyRepository implements DutyRepositoryContract {
     }
 
     public function update($id, $requestData) {
-        $this->createLog('App\Models\Duty','App\Models\DutyLog',$id);
+        //$this->createLog('App\Models\Duty','App\Models\DutyLog',$id);
         $duties = Duty::findorFail($id);
         $input = $requestData->all();
         $userid = Auth::id();

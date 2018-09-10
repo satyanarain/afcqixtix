@@ -1,3 +1,4 @@
+<div class="form-group">@include('partials.message')</div>
 <div class="form-group">
         {!! Form::label('downloading_wef', Lang::get('Download From'), ['class' => 'col-md-3 control-label']) !!}
         

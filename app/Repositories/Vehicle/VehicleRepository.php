@@ -32,7 +32,7 @@ class VehicleRepository implements VehicleRepositoryContract {
     }
 
     public function update($id, $requestData) {
-        $this->createLog('App\Models\Vehicle', 'App\Models\VehicleLog', $id);
+        ///$this->createLog('App\Models\Vehicle', 'App\Models\VehicleLog', $id);
         $vehicle = Vehicle::findorFail($id);
         $input = $requestData->all();
         $input['user_id'] = Auth::id();

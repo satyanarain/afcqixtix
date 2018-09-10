@@ -71,6 +71,8 @@ class DepotsController extends Controller
     {
         if(!$this->checkActionPermission('depots','create'))
             return redirect()->route('401');
+        $version_id = $this->getCurrentVersion();
+        $depotRequest->request->add(['flag'=> 'a','version_id'=>$version_id]);
         $getInsertedId = $this->depots->create($depotRequest);
         return redirect()->route('depots.index');         
     }
@@ -129,7 +131,9 @@ class DepotsController extends Controller
        return redirect()->back()->withErrors(['Depot name has already been taken.']);
       } else if($depot_id>0){
        return redirect()->back()->withErrors(['Depot ID has already been taken.']);
-     } else { 
+     } else {
+     
+        $request->request->add(['flag'=> 'u']);
          $this->depots->update($id, $request);
         return redirect()->route('depots.index');
     }

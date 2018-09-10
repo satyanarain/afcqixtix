@@ -64,7 +64,7 @@ $id = DB::table('route_details')->insertGetId(
 }
     
  public function update($id, $requestData) {
-     $this->createLog('App\Models\Route','App\Models\RouteLog',$id);
+     //$this->createLog('App\Models\Route','App\Models\RouteLog',$id);
   $routes=  Route::findorFail($id) ;
      
 $input = $requestData->all();

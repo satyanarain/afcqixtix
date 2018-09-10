@@ -41,7 +41,7 @@ class InspectorRemarkRepository implements InspectorRemarkRepositoryContract {
        
     }
  public function update($id, $requestData) {
-         $this->createLog('App\Models\InspectorRemark','App\Models\InspectorRemarkLog',$id);
+         //$this->createLog('App\Models\InspectorRemark','App\Models\InspectorRemarkLog',$id);
          $concession = InspectorRemark::findorFail($id);
          $input = $requestData->all();
          $userid = Auth::id();

@@ -60,7 +60,7 @@ Session::flash('flash_message', "Trip Updated Successfully."); //Snippet in Mast
 }
     
  public function update($id, $requestData) {
-$this->createLog('App\Models\Trip','App\Models\TripLog',$id);
+//$this->createLog('App\Models\Trip','App\Models\TripLog',$id);
 $trips=  Trip::findorFail($id) ;
 $input = $requestData->all();
 $user_id = Auth::id();

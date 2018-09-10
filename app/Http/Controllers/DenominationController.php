@@ -90,6 +90,8 @@ class DenominationController extends Controller {
     public function store(StoreDenominationRequest $denominationsRequest) {
         if(!$this->checkActionPermission('denominations','create'))
             return redirect()->route('401');
+        $version_id = $this->getCurrentVersion();
+        $denominationsRequest->request->add(['flag'=> 'a','version_id'=>$version_id]);
         $getInsertedId = $this->denominations->create($denominationsRequest);
         return redirect()->route('denominations.index');
     }
@@ -170,6 +172,8 @@ class DenominationController extends Controller {
      {
        return redirect()->back()->withErrors(['Denomination has already been taken.']);
       } else { 
+        
+        $request->request->add(['flag'=> 'u']);
         $this->denominations->update($id, $request);
         return redirect()->route('denominations.index');
     }

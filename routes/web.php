@@ -219,7 +219,9 @@ Route::group(['middleware' => ['auth']], function () {
     
     //Route::get('versions/data', 'VersionController@anyData')->name('stops.data');
     //Route::post('stops/store', 'StopController@store');
-    Route::get('versions/view_detail/{id}', 'VersionController@viewDetail');
+    Route::get('versions/view_differences/{id}', 'VersionController@viewDifferences');
+    Route::post('versions/approve_change/{id}', 'VersionController@approveChange');
+    Route::get('versions/view_detail/{tablename}/{id}/{logtable}', 'VersionController@viewDetail');
     Route::resource('versions', 'VersionController');
     Route::get('settings/view_detail/{id}', 'SettingController@viewDetail');
     Route::resource('settings', 'SettingController');

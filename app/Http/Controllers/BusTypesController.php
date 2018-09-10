@@ -65,6 +65,9 @@ class BusTypesController extends Controller
     {
         if(!$this->checkActionPermission('bus_types','create'))
             return redirect()->route('401');
+        $version_id = $this->getCurrentVersion();
+        $bustypesRequest->request->add(['flag'=> 'a','version_id'=>$version_id]);
+        //echo '<pre>';print_r($bustypesRequest->all());die;
         $getInsertedId = $this->bustypes->create($bustypesRequest);
         return redirect()->route('bus_types.index');         
     }
@@ -113,6 +116,7 @@ class BusTypesController extends Controller
        return redirect()->back()->withErrors(['Bus type has already been taken.']);
       } else { 
         
+        $request->request->add(['flag'=> 'u']);
         $this->bustypes->update($id, $request);
         return redirect()->route('bus_types.index');
     }

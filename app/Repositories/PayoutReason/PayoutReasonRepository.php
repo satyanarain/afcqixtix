@@ -41,7 +41,7 @@ class PayoutReasonRepository implements PayoutReasonRepositoryContract {
        
     }
  public function update($id, $requestData) {
-         $this->createLog('App\Models\PayoutReason','App\Models\PayoutReasonLog',$id);
+         //$this->createLog('App\Models\PayoutReason','App\Models\PayoutReasonLog',$id);
          $concession = PayoutReason::findorFail($id);
          $input = $requestData->all();
          $userid = Auth::id();

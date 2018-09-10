@@ -38,7 +38,7 @@ class ETMDetailRepository implements ETMDetailRepositoryContract {
     }
 
     public function update($id, $requestData) {
-       $this->createLog('App\Models\ETMDetail','App\Models\ETMDetailLog',$id);
+       //$this->createLog('App\Models\ETMDetail','App\Models\ETMDetailLog',$id);
        $crew_detail = ETMDetail::findorFail($id);
        $input = $requestData->all();
        $input['user_id'] = Auth::id();

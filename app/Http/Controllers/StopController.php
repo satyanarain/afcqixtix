@@ -67,6 +67,8 @@ class StopController extends Controller
     {
         if(!$this->checkActionPermission('stops','create'))
             return redirect()->route('401');
+        $version_id = $this->getCurrentVersion();
+        $stopsRequest->request->add(['flag'=> 'a','version_id'=>$version_id]);
         $getInsertedId = $this->stops->create($stopsRequest);
         return redirect()->route('stops.index');         
     }
@@ -108,6 +110,7 @@ class StopController extends Controller
     {
         if(!$this->checkActionPermission('stops','edit'))
             return redirect()->route('401');
+        $request->request->add(['flag'=> 'u']);
         $this->stops->update($id, $request);
         return redirect()->route('stops.index');
     }

@@ -73,6 +73,8 @@ class TargetController extends Controller {
      {
      return view('targets.create')->withErrors(['This route,duty number and shift has already been taken.']);
       } else {
+            $version_id = $this->getCurrentVersion();
+            $targetsRequest->request->add(['flag'=> 'a','version_id'=>$version_id]);
           $targetsRequest->request->add(['route_id'=> $route_id]);
           $targetsRequest->request->add(['duty_id'=> $duty_id]);
           $getInsertedId = $this->targets->create($targetsRequest);
@@ -126,7 +128,7 @@ class TargetController extends Controller {
      {
       return redirect('targets/'.$id.'/edit')->withErrors(['This route and duty number has already been taken.']);
       } else {
-         
+        $request->request->add(['flag'=> 'u']);
         $this->targets->update($id, $request);
         return redirect()->route('routes.duties.targets.index',['route_id','duty_id']);
       }
