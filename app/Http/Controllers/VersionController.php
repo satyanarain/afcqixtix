@@ -407,7 +407,7 @@ class VersionController extends Controller
         }
         $rows = DB::table('concessions')
                     ->where(function($query){
-                        $query->where('flag', '=', 'a')
+                        $query->where('flag', '=', 'a') 
                         ->orwhere('flag', '=', 'u')
                         ->orwhere('flag', '=', 'd');
                     })
