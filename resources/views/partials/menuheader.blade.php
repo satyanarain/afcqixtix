@@ -75,6 +75,16 @@
                         </table> 
                         </div>
                     </div>
+                    <div   class="formmain" onclick="showHide(this.id)" id="ACC4{{$permissions->id}}">
+                        <div class="plusminusbutton" id="plusminusbuttonACC2{{$permissions->id}}">+</div>&nbsp;&nbsp;Inventories
+                    </div>
+                    <div class="row1"  id="formACC4{{$permissions->id}}" style="display:none;">
+                        <div class="row">  
+                            <table class="table table-responsive.view">
+                                 {{ menuCreate('inventories','create','edit','view',$permissions->id,$permissions->inventories)}}
+                        </table> 
+                        </div>
+                    </div>
                     
                      <table class="table table-responsive.view">
                         <tr>

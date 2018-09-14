@@ -68,6 +68,16 @@
                         </table> 
                         </div>
                     </div>
+                    <div   class="formmain" onclick="showHide(this.id)" id="ACC4{{$value->id}}">
+                        <div class="plusminusbutton" id="plusminusbuttonACC4{{$value->id}}">+</div>&nbsp;&nbsp;Inventories
+                    </div>
+                     <div class="row1"  id="formACC4{{$value->id}}" style="display:none;border:#ccc 1px solid;">
+                        <div class="row">  
+                            <table class="table table-responsive.view">
+                                 {{ menuCreate('inventories','create','edit','view',$value->id,$value->inventories)}}
+                        </table> 
+                        </div>
+                    </div>
               </div>
         </div>
 
