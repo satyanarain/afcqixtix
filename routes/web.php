@@ -136,8 +136,14 @@ Route::group(['middleware' => ['auth']], function () {
     
     Route::get('routes/data', 'RouteController@anyData')->name('routes.data');
     Route::get('routes/view_detail/{id}', 'RouteController@viewDetail');
+    Route::get('route_master/{route_id}/routes', 'RouteController@index');
     Route::post('routes/store', 'RouteController@store');
-    Route::resource('routes', 'RouteController');
+    Route::resource('route_master.routes', 'RouteController');
+    
+    Route::get('route_master/data', 'RouteMasterController@anyData')->name('routes.data');
+    Route::get('route_master/view_detail/{id}', 'RouteMasterController@viewDetail');
+    Route::post('route_master/store', 'RouteMasterController@store');
+    Route::resource('route_master', 'RouteMasterController');
     
 //    Route::get('duties/data', 'DutyController@anyData')->name('duties.data');
 //    Route::post('duties/store', 'DutyController@store');
@@ -145,21 +151,21 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('duties/sort_order/{id}/{route_id}/', 'DutyController@sortOrder');
     Route::get('duties/view_detail/{id}', 'DutyController@viewDetail');
     Route::get('duties/order_list/{route_id}', 'DutyController@orderList');
-    Route::get('routes/{route_id}/duties', 'DutyController@index');
-    Route::get('routes/{route_id}/duties/create', 'DutyController@create');
-    Route::resource('routes.duties', 'DutyController');
+    Route::get('route_master/{route_master_id}/duties', 'DutyController@index');
+    Route::get('route_master/{route_master_id}/duties/create', 'DutyController@create');
+    Route::resource('route_master.duties', 'DutyController');
     
 //    Route::get('trips/data', 'TripController@anyData')->name('trips.data');
 //    Route::get('trips/getsubcat/{id}', 'TripController@getSubCat');
     Route::get('trips/view_detail/{id}', 'TripController@viewDetail');
 //    Route::post('trips/store', 'TripController@store');
-    Route::resource('routes.duties.trips', 'TripController');
+    Route::resource('route_master.duties.trips', 'TripController');
     
     //Route::get('targets/data', 'TargetController@anyData')->name('targets.data');
     //Route::post('targets/store', 'TargetController@store');
     //Route::get('targets/getduties/{id}', 'TargetController@getDuty');
     //Route::get('routes/{route_id}/targets', 'TargetController@index');
-    Route::resource('routes.duties.targets', 'TargetController');
+    Route::resource('route_master.duties.targets', 'TargetController');
     
     
     

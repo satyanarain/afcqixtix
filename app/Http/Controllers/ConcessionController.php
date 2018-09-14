@@ -273,7 +273,7 @@ $k=1;
         if(!$this->checkActionPermission('concessions','create'))
             return redirect()->route('401');
         $version_id = $this->getCurrentVersion();
-        $concessionsRequest->request->add(['flag'=> 'a','version_id'=>$version_id]);
+        $concessionsRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id]);
         $concessionsRequest->request->add(['service_id'=> $service_id]);
         $getInsertedId = $this->concessions->create($concessionsRequest);
         return redirect()->route('bus_types.services.concessions.index',[$bus_type_id,$service_id]);
@@ -328,7 +328,7 @@ $k=1;
         return redirect('concessions/'.$id.'/edit')->withErrors(['This Service has already been taken.']);
       } else {
     
-        $request->request->add(['flag'=> 'u']);
+        $request->request->add(['approval_status'=>'p','flag'=> 'u']);
         $this->concessions->update($id, $request);
         return redirect()->route('bus_types.services.concessions.index',[$bus_type_id,$service_id]);
       }

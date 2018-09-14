@@ -29,7 +29,7 @@
     </div>
 </div> 
 <div class="form-group ">
-     {!! Form::label('emei_no', Lang::get('EMEI No.'), ['class' => 'col-md-3 control-label']) !!}
+     {!! Form::label('emei_no', Lang::get('IMEI No.'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12 required">
           {!! Form::text('emei_no', null, ['class' => 'col-md-6 form-control','required' => 'required','onkeypress'=>'return isNumberKey(event)']) !!}
     </div>

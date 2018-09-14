@@ -3,9 +3,9 @@
 <h1>{{headingBold()}}</h1>
 <ol class="breadcrumb">
     <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="/routes">Routes</a></li>
-    <li><a href="{{route('routes.duties.index',$route_id,$duty_id)}}">Duties</a></li>
-    <li><a href="{{route('routes.duties.trips.index',[$route_id,$duty_id])}}">Trips</a></li>
+    <li><a href="/route_master">Routes</a></li>
+    <li><a href="{{route('route_master.duties.index',$route_master_id,$duty_id)}}">Duties</a></li>
+    <li><a href="{{route('route_master.duties.trips.index',[$route_master_id,$duty_id])}}">Trips</a></li>
     <li class="active">Update Trip</li>
 </ol>
 @stop
@@ -29,7 +29,7 @@
                 <div class="box-body">
                    {!! Form::model($trips, [
         'method' => 'PATCH',
-        'route' => ['routes.duties.trips.update',$route_id,$duty_id,$trips->id],
+        'route' => ['route_master.duties.trips.update',$route_master_id,$duty_id,$trips->id],
         'files'=>true,
         'class'=>'form-horizontal',
         'enctype' => 'multipart/form-data',

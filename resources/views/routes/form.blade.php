@@ -4,7 +4,12 @@
    {!! Form::text('route', null, ['class' => 'form-control','required' => 'required']) !!}
    </div>
 </div>
-
+<div class="input-group col-md-12">
+<div class="col-md-12" style="padding:0px;  margin-bottom:10px;">
+  {!! Form::label('route', Lang::get('Direction'), ['class' => 'control-label','style'=>"margin-bottom:10px;"]) !!}</br>
+ {!! Form::select('direction',array('Up'=>'Up','Down'=>'Down',),isset($routes->direction) ? $routes->direction : selected,['class' => 'form-control required','required' => 'required','placeholder'=>'Select Direction']) !!}
+</div>
+</div>
 <div class="path-section">
     <p class="path-section-heading">Path</p>
      <div class="path-section-content">
@@ -36,12 +41,7 @@
 </div>
 </div>
 
-<div class="input-group col-md-12">
-<div class="col-md-12" style="padding:0px;  margin-bottom:10px;">
-  {!! Form::label('route', Lang::get('Direction'), ['class' => 'control-label','style'=>"margin-bottom:10px;"]) !!}</br>
- {!! Form::select('direction',array('Up'=>'Up','Down'=>'Down',),isset($routes->direction) ? $routes->direction : selected,['class' => 'form-control required','required' => 'required','placeholder'=>'Select Direction']) !!}
-</div>
-</div>
+
 
 <div class="path-section">
     <p class="path-section-heading">Stop Details</p>

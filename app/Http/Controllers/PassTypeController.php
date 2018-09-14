@@ -256,7 +256,7 @@ $k=1;
         if(!$this->checkActionPermission('pass_types','create'))
             return redirect()->route('401');
         $version_id = $this->getCurrentVersion();
-        $pass_typesRequest->request->add(['flag'=> 'a','version_id'=>$version_id]);
+        $pass_typesRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id]);
         $pass_typesRequest->request->add(['service_id'=> $service_id]);
         $getInsertedId = $this->pass_types->create($pass_typesRequest);
         return redirect()->route('bus_types.services.pass_types.index',[$bus_type_id,$service_id]);
@@ -303,7 +303,7 @@ $k=1;
         if(!$this->checkActionPermission('pass_types','edit'))
             return redirect()->route('401');
         
-        $request->request->add(['flag'=> 'u']);
+        $request->request->add(['approval_status'=>'p','flag'=> 'u']);
         $this->pass_types->update($id, $request);
         return redirect()->route('bus_types.services.pass_types.index',[$bus_type_id,$service_id]);
     }

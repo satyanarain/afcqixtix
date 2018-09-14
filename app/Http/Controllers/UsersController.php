@@ -163,6 +163,28 @@ class UsersController extends Controller
         return view('users.edit',compact('permissions'))->withUser($user);
     }
 
+    public function resetPermission($id,$role)
+    {
+        //echo $id;echo $role;die;
+        $data = DB::table('permissions')
+                ->select('*')
+                ->where('id', $role)->first();
+        //echo '<pre>';print_r($data);die;
+        foreach($data as $key=>$row)
+        {
+            //echo $key.' '.$row.'<br>';
+            if($key=="id" || $key=="user_id" || $key=="role" || $key=="description" || $key=="created_at" || $key=="updated_at"){
+                continue;
+            }else{
+                $query = DB::table('permission_details')
+                        ->where('user_id', '=', $id)
+                        ->update([$key => $row]);
+            }
+        }
+        return;
+        echo '<pre>';print_r($data);
+        echo $id;echo $role;die;
+    }
     /**
      * Update the specified resource in storage.
      *
@@ -173,6 +195,9 @@ class UsersController extends Controller
     {
         if(!$this->checkActionPermission('users','edit'))
             return redirect()->route('401');
+        //echo '<pre>';        print_r($requestData->all());die;
+        
+           
         $permission = PermissionDetail::where('user_id',$id);
         $user_id=  Auth::id();
         $input = $requestData->all();
@@ -232,7 +257,8 @@ class UsersController extends Controller
             $input['image_path'] = $filename;
         }
          $user->fill($input)->save();
-         
+         if($requestData->permission_reset)
+            $this->resetPermission($id,$requestData->role_id);
            
         Session::flash('flash_message', "$user->name User Updated Successfully.");
 

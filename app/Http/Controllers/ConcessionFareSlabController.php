@@ -76,7 +76,7 @@ class ConcessionFareSlabController extends Controller {
         if(!$this->checkActionPermission('concession_fare_slabs','create'))
             return redirect()->route('401');
         $version_id = $this->getCurrentVersion();
-        $concession_fare_slabsRequest->request->add(['flag'=> 'a','version_id'=>$version_id]);
+        $concession_fare_slabsRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id]);
         $concession_fare_slabsRequest->request->add(['service_id'=> $service_id]);
         $getInsertedId = $this->concession_fare_slabs->create($concession_fare_slabsRequest);
         return redirect()->route('bus_types.services.concession_fare_slabs.index',[$bus_type_id,$service_id]);
@@ -121,7 +121,7 @@ class ConcessionFareSlabController extends Controller {
         if(!$this->checkActionPermission('concession_fare_slabs','edit'))
             return redirect()->route('401');
         
-        $request->request->add(['flag'=> 'u']);
+        $request->request->add(['approval_status'=>'p','flag'=> 'u']);
         $request->request->add(['service_id'=> $service_id]);
         $this->concession_fare_slabs->update($id, $request);
         return redirect()->route('bus_types.services.concession_fare_slabs.index',[$bus_type_id,$service_id]);

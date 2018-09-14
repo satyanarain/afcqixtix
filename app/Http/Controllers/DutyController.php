@@ -40,21 +40,22 @@ class DutyController extends Controller {
     {
         if(!$this->checkActionPermission('duties','view'))
             return redirect()->route('401');
-        $route_id = $request->route_id;
+        $route_master_id = $request->route_master_id;
         $duties = DB::table('duties')->select('*','duties.id as id','duties.order_number as order_number','duties.end_time as end_time','duties.start_time as start_time','shifts.shift as shift')
                 ->leftjoin('shifts', 'duties.shift_id', '=', 'shifts.id')
-                ->leftjoin('routes', 'duties.route_id', '=', 'routes.id')
-                ->where('duties.route_id',$request->route_id)  
+                ->leftjoin('route_master', 'duties.route_id', '=', 'route_master.id')
+                ->where('duties.route_id',$request->route_master_id)
+                ->orderBy('duties.order_number')
                 ->get();
-        return view('duties.index',compact('duties','route_id'));
+        return view('duties.index',compact('duties','route_master_id'));
     }
 
     public function create(Request $request){
         if(!$this->checkActionPermission('duties','create'))
             return redirect()->route('401');
-        $route_id = $request->route_id;
+        $route_master_id = $request->route_master_id;
         //$duties = Duty::findOrFail();
-        return view('duties.create', compact('route_id'));
+        return view('duties.create', compact('route_master_id'));
     }
 
     /**
@@ -68,7 +69,7 @@ class DutyController extends Controller {
      * @param Duty $duties
      * @return Response
      */
-    public function store($route_id,StoreDutyRequest $dutiesRequest) {
+    public function store($route_master_id,StoreDutyRequest $dutiesRequest) {
         if(!$this->checkActionPermission('duties','create'))
             return redirect()->route('401');
       $sql=Duty::where([['route_id',$dutiesRequest->route_id],['duty_number',$dutiesRequest->duty_number]])->first();
@@ -77,10 +78,10 @@ class DutyController extends Controller {
        return view('duties.create')->withErrors(['This route and duty number has already been taken.']); 
       }else{
         $version_id = $this->getCurrentVersion();
-        $dutiesRequest->request->add(['flag'=> 'a','version_id'=>$version_id]);
-        $dutiesRequest->request->add(['route_id'=> $route_id]);
+        $dutiesRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id]);
+        $dutiesRequest->request->add(['route_id'=> $route_master_id]);
         $getInsertedId = $this->duties->create($dutiesRequest);
-        return redirect()->route('routes.duties.index',$route_id);
+        return redirect()->route('route_master.duties.index',$route_master_id);
     }
     }
 
@@ -109,11 +110,11 @@ class DutyController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function edit($route_id,$id) {
+    public function edit($route_master_id,$id) {
         if(!$this->checkActionPermission('duties','edit'))
             return redirect()->route('401');
         $duties = Duty::findOrFail($id);
-        return view('duties.edit',compact('duties','route_id'));
+        return view('duties.edit',compact('duties','route_master_id'));
     }
 
     /**
@@ -122,7 +123,7 @@ class DutyController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function update($route_id,$id, UpdateDutyRequest $request) {
+    public function update($route_master_id,$id, UpdateDutyRequest $request) {
         if(!$this->checkActionPermission('duties','edit'))
             return redirect()->route('401');
       $duties = Duty::findOrFail($id);
@@ -134,9 +135,9 @@ class DutyController extends Controller {
       return redirect('duties/'.$id.'/edit')->withErrors(['This route and duty number has already been taken.']);
       } else {
           
-        $request->request->add(['flag'=> 'u']);
+        $request->request->add(['approval_status'=>'p','flag'=> 'u']);
         $this->duties->update($id, $request);
-        return redirect()->route('routes.duties.index',$route_id);
+        return redirect()->route('route_master.duties.index',$route_master_id);
       }
     }
 
@@ -145,7 +146,7 @@ class DutyController extends Controller {
      * @author
      * @return Response
      */
-      public function sortOrder($id,$route_id) {
+      public function sortOrder($id,$route_master_id) {
         $array = explode(',', $id);
        $k=1;
         for ($i = 0; $i <= count($array); $i++) {

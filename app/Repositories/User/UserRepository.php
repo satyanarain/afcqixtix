@@ -4,7 +4,7 @@ namespace App\Repositories\User;
 
 use App\Models\User;
 use App\Models\Tasks;
-use App\Models\Settings;
+//use App\Models\Settings;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Gate;
@@ -45,7 +45,7 @@ class UserRepository implements UserRepositoryContract {
   
 
     public function create($requestData) {
-        $settings = Settings::first();
+        //$settings = Settings::first();
         $set_password_token = str_random(40);
         $date_of_birth = $requestData->date_of_birth;
         if ($date_of_birth!= '') {
@@ -59,7 +59,7 @@ class UserRepository implements UserRepositoryContract {
             if (!is_dir(public_path() . '/images/' . $companyname)) {
                 mkdir(public_path() . '/images/' . $companyname, 0777, true);
             }
-            $settings = Settings::findOrFail(1);
+            //$settings = Settings::findOrFail(1);
             $file = $requestData->file('image_path');
 
             $destinationPath = public_path() . '/images/' . $companyname;
@@ -68,7 +68,7 @@ class UserRepository implements UserRepositoryContract {
          }
 
         $user = new User;
-        $userid = User::create(['name'=>$requestData->name,'user_name'=>$requestData->user_name,'email'=>$requestData->email,'address'=>$requestData->address,
+        $userid = User::create(['name'=>$requestData->name,'user_name'=>strtolower(trim($requestData->user_name)),'email'=>$requestData->email,'address'=>$requestData->address,
         'country'=>$requestData->country,'city'=>$requestData->city,'password'=>$requestData->password,'mobile'=>$requestData->mobile,'date_of_birth'=>$requestData->date_of_birth,'image_path'=>$filename,'date_of_birth'=>$date_of_birth,'set_password_token'=>$set_password_token,'remember_token'=> $requestData->_token])->id;
          $user = User::findOrFail($userid);
           
@@ -169,7 +169,7 @@ class UserRepository implements UserRepositoryContract {
             if (!is_dir(public_path() . '/images/' . $companyname)) {
                 mkdir(public_path() . '/images/' . $companyname, 0777, true);
             }
-            $settings = Settings::findOrFail(1);
+            //$settings = Settings::findOrFail(1);
             $file = $requestData->file('image_path');
             $destinationPath = public_path() . '/images/' . $companyname;
             $filename = str_random(8) . '_' . $file->getClientOriginalName();

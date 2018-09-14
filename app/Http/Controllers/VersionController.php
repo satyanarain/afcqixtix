@@ -308,6 +308,7 @@ class VersionController extends Controller
         $result = $pdoLi->query('INSERT INTO payout_reason_logs SELECT * FROM payout_reasons');
         $result = $pdoLi->query('INSERT INTO route_detail_logs SELECT * FROM route_details');
         $result = $pdoLi->query('INSERT INTO route_logs SELECT * FROM routes');
+        $result = $pdoLi->query('INSERT INTO route_master_log SELECT * FROM route_master');
         $result = $pdoLi->query('INSERT INTO service_logs SELECT * FROM services');
         $result = $pdoLi->query('INSERT INTO shift_logs SELECT * FROM shifts');
         $result = $pdoLi->query('INSERT INTO stop_logs SELECT * FROM stops');
@@ -373,7 +374,12 @@ class VersionController extends Controller
     
     public function viewDifferences($id)
     {
-        $differences = $this->getAllDifferences();
+        $version_id = $this->getCurrentVersion();
+        if($version_id==$id)
+            $differences = $this->getAllDifferences();
+        else
+            $differences = $this->getVersionDifferences($id);
+        //echo '<pre>';        print_r($differences);die;
         //echo '<pre>';        print_r($differences);die;
         return view('versions.viewdifferences',compact('differences'));
         echo '<pre>';        print_r($differences);die;
@@ -383,11 +389,180 @@ class VersionController extends Controller
     {
         $differences = array();
         $rows = DB::table('bus_types')
+                    ->where('approval_status', '=', 'p')
+                    ->get();
+        //echo '<pre>';print_r($rows);die;
+        foreach($rows as $row){
+            $row->log_tablename = 'bus_type_logs';
+            $differences['bus_types'][] = $row;
+        }
+        $rows = DB::table('concession_fare_slabs')
+                    ->where('approval_status', '=', 'p')
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'concession_fare_slab_logs';
+            $differences['concession_fare_slabs'][] = $row;
+        }
+        $rows = DB::table('concessions')
+                    ->where('approval_status', '=', 'p')
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'concession_logs';
+            $differences['concessions'][] = $row;
+        }
+        $rows = DB::table('crew')
+                    ->where('approval_status', '=', 'p')
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'crew_logs';
+            $differences['crew'][] = $row;
+       }
+        $rows = DB::table('denominations')
+                    ->where('approval_status', '=', 'p')
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'denomination_logs';
+            $differences['denominations'][] = $row;
+        }
+        $rows = DB::table('depots')
+                    ->where('approval_status', '=', 'p')
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'depot_logs';
+            $differences['depots'][] = $row;
+        }
+        $rows = DB::table('duties')
+                    ->where('approval_status', '=', 'p')
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'dutie_logs';
+            $differences['duties'][] = $row;
+        }
+        $rows = DB::table('etm_details')
+                    ->where('approval_status', '=', 'p')
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'etm_detail_logs';
+            $differences['etm_details'][] = $row;
+        }
+        $rows = DB::table('fares')
+                    ->where('approval_status', '=', 'p')
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'fare_logs';
+            $differences['fares'][] = $row;
+        }
+        $rows = DB::table('inspector_remarks')
+                    ->where('approval_status', '=', 'p')
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'inspector_remark_logs';
+            $differences['inspector_remarks'][] = $row;
+        }
+        $rows = DB::table('pass_types')
+                    ->where('approval_status', '=', 'p')
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'pass_type_logs';
+            $differences['pass_types'][] = $row;
+        }
+        $rows = DB::table('payout_reasons')
+                    ->where('approval_status', '=', 'p')
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'payout_reason_logs';
+            $differences['payout_reasons'][] = $row;
+        }
+        $rows = DB::table('route_details')
+                    ->where('approval_status', '=', 'p')
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'route_detail_logs';
+            $differences['route_details'][] = $row;
+        }
+        $rows = DB::table('routes')
+                    ->where('approval_status', '=', 'p')
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'route_logs';
+            $differences['routes'][] = $row;
+        }
+        $rows = DB::table('route_master')
+                    ->where('approval_status', '=', 'p')
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'route_master_logs';
+            $differences['route_master'][] = $row;
+        }
+        $rows = DB::table('services')
+                    ->where('approval_status', '=', 'p')
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'service_logs';
+            $differences['services'][] = $row;
+        }
+        $rows = DB::table('shifts')
+                    ->where('approval_status', '=', 'p')
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'shift_logs';
+            $differences['shifts'][] = $row;
+        }
+        $rows = DB::table('stops')
+                    ->where('approval_status', '=', 'p')
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'stop_logs';
+            $differences['stops'][] = $row;
+        }
+        $rows = DB::table('targets')
+                   ->where('approval_status', '=', 'p')
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'target_logs';
+            $differences['targets'][] = $row;
+        }
+        $rows = DB::table('trip_cancellation_reasons')
+                    ->where('approval_status', '=', 'p')
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'trip_cancellation_reason_logs';
+            $differences['trip_cancellation_reasons'][] = $row;
+        }
+        $rows = DB::table('trip_details')
+                    ->where('approval_status', '=', 'p')
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'trip_detail_logs';
+            $differences['trip_details'][] = $row;
+        }
+        $rows = DB::table('trips')
+                    ->where('approval_status', '=', 'p')
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'trip_logs';
+            $differences['trips'][] = $row;
+        }
+        $rows = DB::table('vehicles')
+                    ->where('approval_status', '=', 'p')
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'vehicle_logs';
+            $differences['vehicles'][] = $row;
+        }
+        return $differences;
+    }
+    
+    public function getVersionDifferences($id)
+    {
+        $differences = array();
+        $rows = DB::table('bus_types')
                     ->where(function($query){
                         $query->where('flag', '=', 'a')
                         ->orwhere('flag', '=', 'u')
                         ->orwhere('flag', '=', 'd');
                     })
+                    ->where('approval_status', '=', 'p')
                     ->get();
         //echo '<pre>';print_r($rows);die;
         foreach($rows as $row){
@@ -537,6 +712,17 @@ class VersionController extends Controller
             $row->log_tablename = 'route_logs';
             $differences['routes'][] = $row;
         }
+        $rows = DB::table('route_master')
+                    ->where(function($query){
+                        $query->where('flag', '=', 'a')
+                        ->orwhere('flag', '=', 'u')
+                        ->orwhere('flag', '=', 'd');
+                    })
+                    ->get();
+        foreach($rows as $key=>$row){
+            $row->log_tablename = 'route_master_logs';
+            $differences['route_master'][] = $row;
+        }
         $rows = DB::table('services')
                     ->where(function($query){
                         $query->where('flag', '=', 'a')
@@ -634,6 +820,6 @@ class VersionController extends Controller
         //$service = Service::find($id);
         return $query = DB::table($request->table)
                         ->where('id','=',$request->id)
-                        ->update(['flag' => '']);
+                        ->update(['approval_status' => 'a']);
     }
 }

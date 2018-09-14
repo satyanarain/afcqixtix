@@ -1,12 +1,7 @@
 @extends('layouts.master')
 @section('header')
 <h1>{{headingBold()}}</h1>
-<ol class="breadcrumb">
-    <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="{{route('route_master.index')}}">Route</a></li>
-    <li><a href="{{route('route_master.routes.index',$route_master_id)}}">Route Details</a></li>
-    <li class="active">Update Route</li>
-</ol>
+{{BreadCrumb()}}
 @stop
 @section('content')
 <div class="row">
@@ -28,14 +23,14 @@
                 <div class="box-body">
                    {!! Form::model($routes, [
         'method' => 'PATCH',
-        'route' => ['route_master.routes.update',$route_master_id, $routes->id],
+        'route' => ['route_master.update', $routes->id],
         'files'=>true,
         'class'=>'form-horizontal',
         'enctype' => 'multipart/form-data',
          'autocomplete'=>'off'
         ]) !!}
                     <!-- Warranty -->
-                    @include('routes.form1', ['submitButtonText' => Lang::get('user.headers.create_submit')])
+                    @include('route_master.form1', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 
                     {!! Form::close() !!}
                 </div>

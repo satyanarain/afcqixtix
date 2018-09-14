@@ -3,8 +3,8 @@
 <h1>{{headingBold()}}</h1>
 <ol class="breadcrumb">
     <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="/routes">Routes</a></li>
-    <li><a href="{{route('routes.duties.index',$route_id,$duty_id)}}">Duties</a></li>
+    <li><a href="/route_master">Routes</a></li>
+    <li><a href="{{route('route_master.duties.index',$route_master_id,$duty_id)}}">Duties</a></li>
     <li class="active">Targets</li>
 </ol>
 @stop
@@ -17,7 +17,7 @@
                <?php $permission_status = checkPermission('targets','create');
                      $checkVersionOpen = checkVersionOpen();
                     if($permission_status && $checkVersionOpen){?>                     
-                        <a href="<?php echo route('routes.duties.targets.create',[$route_id,$duty_id])?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
+                        <a href="<?php echo route('route_master.duties.targets.create',[$route_master_id,$duty_id])?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
                 <?php }elseif($permission_status)
                         createDisableButton('create','Add');?>
              
@@ -48,7 +48,7 @@
                             <td>
                                 <?php $permission = getAllModulePermission('targets');
                                 if(in_array('edit',$permission) && $checkVersionOpen){?>
-                                    <a href="<?php echo route('routes.duties.targets.edit',[$route_id,$duty_id,$value->id])?>" title="Edit Target"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a href="<?php echo route('route_master.duties.targets.edit',[$route_master_id,$duty_id,$value->id])?>" title="Edit Target"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
                                 <?php }elseif(in_array('edit',$permission)){?>
                                     <a class="disabled"><span class="glyphicon glyphicon-pencil "></span></a>&nbsp;&nbsp;&nbsp;&nbsp;   
                                 <?php }

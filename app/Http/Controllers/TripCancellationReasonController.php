@@ -201,7 +201,7 @@ class TripCancellationReasonController extends Controller {
         if(!$this->checkActionPermission('trip_cancellation_reasons','create'))
             return redirect()->route('401');
         $version_id = $this->getCurrentVersion();
-        $trip_cancellation_reasonsRequest->request->add(['flag'=> 'a','version_id'=>$version_id]);
+        $trip_cancellation_reasonsRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id]);
         $getInsertedId = $this->trip_cancellation_reasons->create($trip_cancellation_reasonsRequest);
         return redirect()->route('trip_cancellation_reasons.index');
     }
@@ -253,7 +253,7 @@ class TripCancellationReasonController extends Controller {
      {
        return redirect()->back()->withErrors(['This trip cancellation reason has already been taken.']);
       } else {
-        $request->request->add(['flag'=> 'u']);   
+        $request->request->add(['approval_status'=>'p','flag'=> 'u']);   
           $this->trip_cancellation_reasons->update($id, $request);
         return redirect()->route('trip_cancellation_reasons.index');
     }

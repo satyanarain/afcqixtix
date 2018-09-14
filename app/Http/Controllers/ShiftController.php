@@ -67,7 +67,7 @@ class ShiftController extends Controller
         if(!$this->checkActionPermission('shifts','create'))
             return redirect()->route('401');
         $version_id = $this->getCurrentVersion();
-        $shiftsRequest->request->add(['flag'=> 'a','version_id'=>$version_id]);
+        $shiftsRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id]);
         $getInsertedId = $this->shifts->create($shiftsRequest);
         return redirect()->route('shifts.index');         
     }
@@ -111,7 +111,7 @@ class ShiftController extends Controller
     {
         if(!$this->checkActionPermission('shifts','edit'))
             return redirect()->route('401');
-        $request->request->add(['flag'=> 'u']);
+        $request->request->add(['approval_status'=>'p','flag'=> 'u']);
         $this->shifts->update($id, $request);
         return redirect()->route('shifts.index');
     }

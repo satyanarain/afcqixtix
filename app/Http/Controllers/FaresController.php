@@ -76,7 +76,7 @@ class FaresController extends Controller {
         if(!$this->checkActionPermission('fares','create'))
             return redirect()->route('401');
         $version_id = $this->getCurrentVersion();
-        $faresRequest->request->add(['flag'=> 'a','version_id'=>$version_id]);
+        $faresRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id]);
         $faresRequest->request->add(['service_id'=> $service_id]);
         //echo '<pre>';print_r($faresRequest->all());die;
         foreach($faresRequest->stage as $key=>$stage)
@@ -228,7 +228,7 @@ class FaresController extends Controller {
             return redirect()->route('401');
         //die($id);
         
-        $request->request->add(['flag'=> 'u']);
+        $request->request->add(['approval_status'=>'p','flag'=> 'u']);
         $request->request->add(['service_id'=> $service_id]);
         $this->fares->update($id, $request);
         return redirect()->route('bus_types.services.fares.index',[$bus_type_id,$service_id]);

@@ -190,7 +190,7 @@ class InspectorRemarkController extends Controller {
         if(!$this->checkActionPermission('inspector_remarks','create'))
             return redirect()->route('401');
         $version_id = $this->getCurrentVersion();
-        $inspector_remarksRequest->request->add(['flag'=> 'a','version_id'=>$version_id]);
+        $inspector_remarksRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id]);
         $getInsertedId = $this->inspector_remarks->create($inspector_remarksRequest);
         return redirect()->route('inspector_remarks.index');
     }
@@ -243,7 +243,7 @@ class InspectorRemarkController extends Controller {
        return redirect()->back()->withErrors(['Inspector remark has already been taken.']);
       } else {
         
-        $request->request->add(['flag'=> 'u']);
+        $request->request->add(['approval_status'=>'p','flag'=> 'u']);
         $this->inspector_remarks->update($id, $request);
         return redirect()->route('inspector_remarks.index');
     }

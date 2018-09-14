@@ -186,7 +186,7 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                             </a>
                                      @endif
                             @if(menuPermission('routes')==1)
-                            <li @if($segments_var[0]=='routes') class="active" @endif><a href="{{route('routes.index')}}">
+                            <li @if($segments_var[0]=='routes') class="active" @endif><a href="{{route('route_master.index')}}">
                                     <i class="fa fa-map-marker"></i> @lang('menu.routes.title') 
                             </a>
                              </li>

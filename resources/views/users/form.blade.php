@@ -25,7 +25,7 @@
 </div>
 @if($user->user_name!='')
 <div class="form-group">
-        {!! Form::label('user_name', Lang::get('User Name'), ['class' => 'col-md-3 control-label']) !!}
+        {!! Form::label('user_name', Lang::get('Username'), ['class' => 'col-md-3 control-label']) !!}
          <div class="col-md-7 col-sm-12 required">
         {!! Form::text('user_name', null, ['class' => 'col-md-6 form-control','readonly'=>'readonly']) !!}
 </div>
@@ -123,6 +123,15 @@
      <div class="col-md-7 col-sm-12 required">
     {!! Form::select('role_id',$role,isset($user->role_id) ? $user->role_id : selected,['class' => 'col-md-6 form-control','onchange'=>'loadFile(event)','onchange'=>'activeTab(this.value)','placeholder'=>'Please select role','required'=>'required']) !!}
 </div>
+</div>
+
+<div class="form-group">
+    <div class="col-md-3"></div>
+        <div class="col-md-7 col-sm-12">
+            <input type="checkbox" value='yes' name="permission_reset" id="permission_reset"  > 
+            {!! Form::label('permission_reset', Lang::get('Reset to Default Permission'), ['class' => 'control-label','style'=>""]) !!}
+            
+        </div>
 </div>
 </div>
     <?php print_r($value); ?>

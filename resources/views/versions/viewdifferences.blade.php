@@ -39,7 +39,7 @@
                             </td>
                             <td>
                                 <?php $permission = getAllModulePermission('versions');
-                                if(in_array('edit',$permission)){?>
+                                if(in_array('edit',$permission) && $value->approval_status=="p"){?>
                                 <a style="cursor: pointer;" title="Approve Change" onclick="approveChange('<?php echo $key?>',<?php echo $value->id ?>)"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
                                 <?php }
                                 if(in_array('view',$permission)){?>

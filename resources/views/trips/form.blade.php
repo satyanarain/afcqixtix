@@ -23,9 +23,9 @@
 <div id="control-group" style="padding-left:0px;" class="col-md-12" >
      <div class="col-md-1" style="padding-left:0px;  margin-bottom:10px;">Trip No.</div>
        <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;">Start Time</div>
-       <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;">Path</div>
+       <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;">Path</div>
        <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;">Deviated Route</div>
-       <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;">Deviated Path</div>
+       <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;">Deviated Path</div>
       
 </div>
       @php $routes=displayList('routes','route')@endphp
@@ -40,9 +40,9 @@
                    <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span></div>
            </div>
        </div>
-        <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;">{{ displayPath('path_route_id[]')}}</div>
+        <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;">{{ displayPath('path_route_id[]')}}</div>
        <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;">{!! Form::select('deviated_route[]',$routes,isset($trips->deviated_route) ? $trips->deviated_route : selected,['class' => 'form-control','placeholder'=>'Select deviated route']) !!}</div>
-       <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;">{{ displayPath('deviated_path[]')}}</div>
+       <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;">{{ displayPath('deviated_path[]')}}</div>
 </div>
 </div>
 </div>
@@ -148,10 +148,10 @@ jQuery(function($) {
 $("#input_fields_wrap_classes").append('<div id="div_remove_field'+ x +'" style="padding-left:0px;  margin-bottom:10px;" class="col-md-12">\n\
   <div class="col-md-1" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="trip_no[]" class="form-control" placeholder="Trip No." required="required" onkeypress="return isIntegerKey(event)"></div>\n\
 <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"  data-placement="right" data-align="top" data-autoclose="true"><div class="input-group col-md-12"><div class="input-group col-md-12" data-placement="right" data-align="top" data-autoclose="true"><input type="text" class="form-control clockpicker" value="" name="start_time[]" plcacholder="Start Time"><span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span></div></div></div>\n\
-<div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;">{{ displayPath('path_route_id[]')}}</div>\n\
+<div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;">{{ displayPath('path_route_id[]')}}</div>\n\
 <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;">{!! Form::select('deviated_route[]',$routes,isset($shifts->deviated_route) ? $$shifts->deviated_route : selected,['class' => 'form-control','placeholder' => 'Select deviated route']) !!}</div>\n\
-<div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;">{{ displayPath('deviated_path[]')}}</div>\n\
-<button class="btn btn-danger remove" type="button" id="remove_field'+ x+'" onclick="removeFunction(this.id)"><i class="glyphicon glyphicon-remove"></i> Remove</button></div>'); //add input box
+<div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;">{{ displayPath('deviated_path[]')}}</div>\n\
+<button class="btn btn-danger remove col-md-1" type="button" id="remove_field'+ x+'" onclick="removeFunction(this.id)"><i class="glyphicon glyphicon-remove"></i> Remove</button></div>'); //add input box
    bindClockPicker();
   }
  });

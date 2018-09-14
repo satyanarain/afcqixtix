@@ -191,7 +191,7 @@ class PayoutReasonController extends Controller {
         if(!$this->checkActionPermission('payout_reasons','create'))
             return redirect()->route('401');
         $version_id = $this->getCurrentVersion();
-        $payout_reasonsRequest->request->add(['flag'=> 'a','version_id'=>$version_id]);
+        $payout_reasonsRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id]);
         $getInsertedId = $this->payout_reasons->create($payout_reasonsRequest);
         return redirect()->route('payout_reasons.index');
     }
@@ -242,7 +242,7 @@ class PayoutReasonController extends Controller {
        return redirect()->back()->withErrors(['Payout reason has already been taken.']);
       } else { 
         
-        $request->request->add(['flag'=> 'u']);
+        $request->request->add(['approval_status'=>'p','flag'=> 'u']);
         $this->payout_reasons->update($id, $request);
         return redirect()->route('payout_reasons.index');
     }
