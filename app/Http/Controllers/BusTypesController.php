@@ -160,8 +160,9 @@ class BusTypesController extends Controller
         <?php foreach ($bustypes as $value) {
         ?>
                     <li id="<?php echo "order" . $value->id; ?>" class="list-group-order-sub">
+                        <a href="javascript:void(0);"><?php echo $value->order_number; ?></a>
                     <a href="javascript:void(0);" ><?php echo $value->bus_type; ?></a>
-                    <a href="javascript:void(0);"><?php echo $value->order_number; ?></a>
+                    
                     <a href="javascript:void(0);"><?php echo $value->abbreviation; ?></a>
                    </li>
         <?php } ?>
