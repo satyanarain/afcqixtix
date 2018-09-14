@@ -21,6 +21,7 @@
 <div class="form-group">
     <div class="col-md-3" style="margin-right: 15px;"></div>
     {{ Form::submit('Save', array('class' => 'btn btn-success pull-left','required' => 'required')) }}
+    <div class="col-md-3" style="margin-right: 15px;">{{ Form::button('Cancel', array('class' => 'btn btn-success pull-left','onclick'=>'window.history.back();')) }}</div>
     <div class="col-md-9">
         <div class="col-md-7 col-sm-12">
         </div>

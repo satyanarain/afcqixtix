@@ -30,8 +30,10 @@
                     {!! Form::label('description', Lang::get('role.headers.description'), ['class' => 'control-label']) !!}
                     {!! Form::textarea('description', null, ['class' => 'form-control']) !!}
                 </div>
-                {!! Form::submit(Lang::get('common.titles.save'), ['class' => 'btn btn-success']) !!}
-
+                <div class="form-group">
+                    <div class="col-md-1" style="margin-left: 15px;">{!! Form::submit(Lang::get('common.titles.save'), ['class' => 'btn btn-success']) !!}</div>
+                <div class="col-md-3" style="margin-right: 15px;">{{ Form::button('Cancel', array('class' => 'btn btn-success pull-left','onclick'=>'window.history.back();')) }}</div>
+                </div>
                 {!! Form::close() !!}
             </div>
             <!-- /.box-body -->
