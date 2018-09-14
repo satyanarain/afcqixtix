@@ -28,12 +28,12 @@
             @include('partials.message')
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="example2" class="table table-bordered table-striped">
                     <thead>
                         <tr>
 <!--                            <th>@lang('Bus Type')</th>-->
-                            <th>@lang('Service Name')</th>
                             <th>@lang('Order Number')</th>
+                            <th>@lang('Service Name')</th>
                             <th>@lang('Short Name')</th>
                            {{  actionHeading('Action', $newaction='','') }}
                         </tr>
@@ -42,8 +42,8 @@
                         @foreach($services as $value)
                         <tr class="nor_f">
 <!--                            <td>{{$value->bus_type}}</td>-->
-                            <td>{{$value->name}}</td>
                             <td>{{$value->order_number}}</td>
+                            <td>{{$value->name}}</td>
                             <td>{{$value->short_name}}</td>
                             <td>
                                 <?php $permission = getAllModulePermission('services');

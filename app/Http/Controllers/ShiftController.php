@@ -133,8 +133,9 @@ class ShiftController extends Controller
         $shifs = Shift::orderBy('order_number')->get();
         ?>
                 <thead>
-                    <tr>  <th>Shift</th>
+                    <tr> 
                         <th>Order Number</th>
+                        <th>Shift</th>
                         <th>Start Time</th>
                         <th>End Time</th>
                         <th>Action</th>
@@ -144,8 +145,8 @@ class ShiftController extends Controller
             <?php foreach ($shifs as $value) {
                 ?>
                             <tr class="nor_f">
-                                <td><?php echo $value->shift ; ?></td>
                                 <td><?php echo $value->order_number; ?></td>
+                                <td><?php echo $value->shift ; ?></td>
                                 <td><?php echo $value->start_time ?></td>
                                 <td><?php echo $value->end_time ?></td>
                                 <td><a  href="<?php echo route("shifts.edit", $value->id) ?>" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -163,8 +164,9 @@ class ShiftController extends Controller
         <?php foreach ($shifts as $value) {
         ?>
                     <li id="<?php echo "order" . $value->id; ?>" class="list-group-order-sub">
+                         <a href="javascript:void(0);"><?php echo $value->order_number; ?></a>
                     <a href="javascript:void(0);" ><?php echo $value->shift; ?></a>
-                    <a href="javascript:void(0);"><?php echo $value->order_number; ?></a>
+                   
                     <a href="javascript:void(0);"><?php echo $value->abbreviation; ?></a>
                    </li>
         <?php } ?>

@@ -24,9 +24,7 @@
                          <tr>
                              <th>@lang('Order Number')</th>
                             <th>@lang('Bus Type')</th>
-                            
                             <th>@lang('Abbreviation')</th>
-                            
                            {{  actionHeading('Action', $newaction='') }}
                         </tr>
                     </thead>

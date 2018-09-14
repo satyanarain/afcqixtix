@@ -12,8 +12,10 @@
                     <strong id="success_order"></strong>
                 </div>
                 <ul class="list-group-order-main">
-                    <li class="order-sub"><a href="javascript:void(0);">Trip Cancellation Reason</a>
+                    <li class="order-sub">
                         <a href="javascript:void(0);">Order Number</a>
+                        <a href="javascript:void(0);">Trip Cancellation Reason</a>
+                        
                         <a href="javascript:void(0);">Short Reason</a>
                     </li>  </ul>
                 <ul class="list-group-order" id="order_list">
@@ -91,7 +93,7 @@ function updateOrder() {
 		success: function(data){
                   $("#successMessage_order").show();
                   $("#success_order").html("Order Number Updated successfully.");
-                  $("#example1").html(data);
+                  $("#example2").html(data);
                   setTimeout(function() {
                   $('#successMessage_order').fadeOut('fast');
         }, 5000); // <-- time in milliseconds 

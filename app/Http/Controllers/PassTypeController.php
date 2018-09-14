@@ -73,8 +73,9 @@ class PassTypeController extends Controller {
         <?php foreach ($sql as $value) {
         ?>
                     <li id="<?php echo "order" . $value->id; ?>" class="list-group-order-sub">
-                    <a href="javascript:void(0);" ><?php echo $value->servicename; ?></a>
                     <a href="javascript:void(0);"><?php echo $value->order_number; ?></a>
+                    <a href="javascript:void(0);" ><?php echo $value->pass_type_master_id; ?></a>
+                    
                     <a href="javascript:void(0);"><?php echo $value->concession_provider_master_id; ?></a>
                    </li>
         <?php } ?>

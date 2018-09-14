@@ -4,7 +4,7 @@
 <ol class="breadcrumb">
     <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
     <li><a href="/routes">Routes</a></li>
-    <li><a href="{{route('route_master.duties.index',$route_id,$duty_id)}}">Duties</a></li>
+    <li><a href="{{route('route_master.duties.index',$route_master_id,$duty_id)}}">Duties</a></li>
     <li class="active">Create Duty</li>
 </ol>
 @stop

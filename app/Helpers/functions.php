@@ -384,7 +384,7 @@ function createButton($action = '', $title='',$order='',$order_id='',$privious='
    <?php if($order!=''){ ?>
  </br>
  </br>
-      <button  class="btn btn-primary pull-left"  onclick="orderList('order_id','order_list')"><span class="fa fa-sort-desc"></span>&nbsp;Update Order</button>&nbsp;&nbsp;&nbsp;&nbsp;
+      <button  class="btn btn-primary pull-left"  onclick="orderList('order_id','order_list')"><span class="fa fa-sort-desc"></span>&nbsp;Reorder Rows for ETM</button>&nbsp;&nbsp;&nbsp;&nbsp;
  <?php 
    }
 }   
@@ -405,7 +405,7 @@ function createDisableButton($action = '', $title='',$order='',$order_id='',$pri
    <?php if($order!=''){ ?>
  </br>
  </br>
-      <button  class="btn btn-primary pull-left disabled"  onclick="orderList('order_id','order_list')"><span class="fa fa-sort-desc"></span>&nbsp;Update Order</button>&nbsp;&nbsp;&nbsp;&nbsp;
+      <button  class="btn btn-primary pull-left disabled"  onclick="orderList('order_id','order_list')"><span class="fa fa-sort-desc"></span>&nbsp;Reorder Rows for ETM</button>&nbsp;&nbsp;&nbsp;&nbsp;
  <?php 
    }
 }   
