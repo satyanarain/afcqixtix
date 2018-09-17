@@ -32,6 +32,21 @@
     {!! Form::label('accept_gender', Lang::get('Accept Gender'), ['class' => 'control-label']) !!}<br>
     <input type="checkbox" name="accept_gender" value="Yes" <?php if($pass_types->accept_gender=='Yes') { ?>checked="checked"<?php } ?>>
 </div>
+<div class="col-sm-12"  style="padding-left:0px; padding-bottom:20px;">
+    <?php $accept_gender_detail = explode(',',$pass_types->accept_gender_detail);?>
+    <div class="col-sm-3" style="padding-left:0px; ">
+        {!! Form::label('accept_gender_male', Lang::get('Male'), ['class' => 'control-label']) !!}<br>
+        <input id="accept_gender_male" type="checkbox" name="accept_gender_detail[]" value="Male" <?php if(in_array('Male',$accept_gender_detail)) { ?>checked="checked"<?php } ?>>
+    </div>
+    <div class="col-sm-3" style="padding-left:0px; ">
+        {!! Form::label('accept_gender_female', Lang::get('Female'), ['class' => 'control-label']) !!}<br>
+        <input id="accept_gender_female" type="checkbox" name="accept_gender_detail[]" value="Female" <?php if(in_array('Female',$accept_gender_detail)) { ?>checked="checked"<?php } ?>>
+    </div>
+    <div class="col-sm-3" style="padding-left:0px; ">
+        {!! Form::label('accept_gender_other', Lang::get('Other'), ['class' => 'control-label']) !!}<br>
+        <input id="accept_gender_other" type="checkbox" name="accept_gender_detail[]" value="Other" <?php if(in_array('Other',$accept_gender_detail)) { ?>checked="checked"<?php } ?>>
+    </div>
+</div>
 <div class="form-group">
     {!! Form::label('accept_agg', Lang::get('Accept Age ?'), ['class' => 'control-label']) !!}<br>
   <input type="checkbox" name="accept_age" value="Yes" <?php if($pass_types->accept_age=='Yes') { ?>checked="checked"<?php } ?>>

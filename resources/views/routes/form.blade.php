@@ -97,27 +97,27 @@
 <script type="text/javascript">
 function checkDest(id)
 {
-var source= $("#source").val();
-var destination= $("#destination").val();
-  if(source==id)
-  {
-   alert("Please select source and destination different.");  
-   $("#destination").val('');
-  }
- }
+    var source= $("#source").val();
+    var destination= $("#destination").val();
+    if(source==id)
+    {
+        alert("Please select source and destination different.");  
+        $("#destination").val('');
+    }
+}
 function checkDest_via(id)
 {
-var source= $("#source").val();
-var destination= $("#destination").val();
-  if(source==id)
-  {
-   alert("Please select source and via different.");  
-    $("#via").val('');
-  }else if(destination==id)
-  {
-   alert("Please select destination and via different.");  
-   $("#via").val('');
-  }
+    var source= $("#source").val();
+    var destination= $("#destination").val();
+    if(source==id)
+    {
+        alert("Please select source and via different.");  
+        $("#via").val('');
+    }else if(destination==id)
+    {
+        alert("Please select destination and via different.");  
+        $("#via").val('');
+    }
  }
  
  
