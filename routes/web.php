@@ -231,4 +231,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('versions', 'VersionController');
     Route::get('settings/view_detail/{id}', 'SettingController@viewDetail');
     Route::resource('settings', 'SettingController');
+    
+    //Manage inventory route
+    Route::resource('centerstock', 'CenterstockController');
 });

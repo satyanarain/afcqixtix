@@ -11,7 +11,7 @@ trait checkPermission {
     function checkActionPermission($module = '',$action='') {
         $user_id = Auth::id();
         $sql = PermissionDetail::where('user_id', '=', $user_id)->first();
-        $result = $sql[$module];  
+        $result = $sql[$module];
         $array_menu= explode(',', $result);
         if(in_array($action,$array_menu))
             return true;

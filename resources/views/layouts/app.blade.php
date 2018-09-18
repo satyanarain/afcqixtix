@@ -190,12 +190,7 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                                     <i class="fa fa-map-marker"></i> @lang('menu.routes.title') 
                             </a>
                              </li>
-                                 @endif
-                            
-                            
-                            
-                            
-                           
+                            @endif
                             @if(menuPermission('trip_cancellation_reasons')==1)
                            <li @if($segments_var[0]=='trip_cancellation_reasons') class="active" @endif><a href="{{route('trip_cancellation_reasons.index')}}">
                                     <i class="fa fa-inr"></i> @lang('menu.trip_cancellation_reason.title') </a>
@@ -224,48 +219,22 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                          </ul>
                     </li>
                     
-                     <!--Start Inventories left menu details-->  
+                  <!--Start Inventories left menu details-->  
                   @php $pem=menuDisplayByUser($result, 'inventories','view'); @endphp
                   @if($pem=='true')
-                  <li @if($segments_var[0]=='inventories') class="treeview active" @else class="treeview" @endif>
+                  <li @if($segments_var[0]=='centerstock') class="treeview active" @else class="treeview" @endif>
                         <a href="#">
-                            <i class="fa fa-user"></i> <span>@lang('Manage Inventory')</span>
+                            <i class="fa fa-user"></i> <span>@lang('Manage Inventories')</span>
                             <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
+                                <i class="fa fa-angle-left pull-right"></i></span>
                             </span>
                         </a>
                         <ul @if($segments_var[0]=='inventories' || $segments_var[0]=='changepasswords') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
-                            <li @if($segments_var[0]=='inventories') class="active" @endif><a href="#">
-                                    <a href="#"><i class="fa fa-copy"></i> @lang('Stock')
-                              <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                              </span>
-                            </a>
-                              </a>
-                              <ul @if($segments_var[0]=='inventories') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
-                              <li @if($segments_var[0]=='inventories') class="active" @endif><a href="#"><i class="fa fa-circle-o"></i>Central Stock</a></li>
-                              <li @if($segments_var[0]=='inventories') class="active" @endif><a href="#"><i class="fa fa-circle-o"></i>Depot Stock</a></li>
-                              <li @if($segments_var[0]=='inventories') class="active" @endif><a href="#"><i class="fa fa-circle-o"></i>Crew Stock</a></li>
+                              <li @if($segments_var[0]=='centerstock') class="active" @endif><a href="{{route('centerstock.index')}}"><i class="fa fa-edit"></i>Central Stock</a></li>
+                              <li @if($segments_var[0]=='inventories') class="active" @endif><a href="#"><i class="fa fa-edit"></i>Depot Stock</a></li>
+                              <li @if($segments_var[0]=='inventories') class="active" @endif><a href="#"><i class="fa fa-edit"></i>Crew Stock</a></li>
                             </ul>
                           </li>
-                       </ul>
-                       <ul class="treeview-menu">
-                            <li @if($segments_var[0]=='inventories') class="active" @endif><a href="#">
-                                    <a href="#"><i class="fa fa-copy"></i>@lang('Issues')
-                              <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                              </span>
-                            </a>
-                              </a>
-                              <ul class="treeview-menu" style="display: none;" >
-                              <li><a href=""><i class="fa fa-circle-o"></i>Issues to Ticket Section</a></li>
-                              <li><a href="#"><i class="fa fa-circle-o"></i>Issues to Crew</a></li>
-                              <li><a href="#"><i class="fa fa-circle-o"></i>Returned to Conductor</a></li>
-                            </ul>
-                          </li>
-                       </ul>
-                       
-                    </li>
                     @endif
                     <!-- End Inventories menu details -->
                     

@@ -158,5 +158,11 @@ class AccessServiceProvider extends ServiceProvider
             \App\Repositories\RouteMaster\RouteMasterRepositoryContract::class,
             \App\Repositories\RouteMaster\RouteMasterRepository::class
         );
+        
+        $this->app->bind(
+            \App\Repositories\CenterStock\CenterStockRepositoryContract::class,
+            \App\Repositories\CenterStock\CenterStockRepository::class
+        );
     }
 }
+    
