@@ -132,8 +132,9 @@ class BusTypesController extends Controller
         $bustypes = BusType::orderBy('order_number')->get();
         ?>
                 <thead>
-                    <tr>  <th>Bus Type</th>
+                    <tr> 
                         <th>Order Number</th>
+                        <th>Bus Type</th>
                         <th>Abbreviation</th>
                         <th>Action</th>
                     </tr>
@@ -142,8 +143,8 @@ class BusTypesController extends Controller
             <?php foreach ($bustypes as $value) {
                 ?>
                             <tr class="nor_f">
-                                <td><?php echo $value->bus_type; ?></td>
                                 <td><?php echo $value->order_number; ?></td>
+                                <td><?php echo $value->bus_type; ?></td>
                                 <td><?php echo $value->abbreviation ?></td>
                                 <td><a  href="<?php echo route("bus_types.edit", $value->id) ?>" class="" ><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
                                     <a style="cursor: pointer;" data-toggle="modal" onclick="viewDetails(<?php echo $value->id ?>,'view_detail')"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;</td>
@@ -160,8 +161,9 @@ class BusTypesController extends Controller
         <?php foreach ($bustypes as $value) {
         ?>
                     <li id="<?php echo "order" . $value->id; ?>" class="list-group-order-sub">
+                        <a href="javascript:void(0);"><?php echo $value->order_number; ?></a>
                     <a href="javascript:void(0);" ><?php echo $value->bus_type; ?></a>
-                    <a href="javascript:void(0);"><?php echo $value->order_number; ?></a>
+                    
                     <a href="javascript:void(0);"><?php echo $value->abbreviation; ?></a>
                    </li>
         <?php } ?>

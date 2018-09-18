@@ -93,7 +93,7 @@ function updateOrder() {
 		success: function(data){
                   $("#successMessage_order").show();
                   $("#success_order").html("Order Number Updated successfully.");
-                  $("#example1").html(data);
+                  $("#example2").html(data);
                   setTimeout(function() {
                   $('#successMessage_order').fadeOut('fast');
         }, 5000); // <-- time in milliseconds 

@@ -73,8 +73,9 @@ class PassTypeController extends Controller {
         <?php foreach ($sql as $value) {
         ?>
                     <li id="<?php echo "order" . $value->id; ?>" class="list-group-order-sub">
-                    <a href="javascript:void(0);" ><?php echo $value->servicename; ?></a>
                     <a href="javascript:void(0);"><?php echo $value->order_number; ?></a>
+                    <a href="javascript:void(0);" ><?php echo $value->pass_type_master_id; ?></a>
+                    
                     <a href="javascript:void(0);"><?php echo $value->concession_provider_master_id; ?></a>
                    </li>
         <?php } ?>
@@ -255,6 +256,8 @@ $k=1;
     public function store($bus_type_id,$service_id,StorePassTypeRequest $pass_typesRequest) {
         if(!$this->checkActionPermission('pass_types','create'))
             return redirect()->route('401');
+        $accept_gender_detail = implode(',',$pass_typesRequest->accept_gender_detail);
+        $pass_typesRequest->request->add(['accept_gender_detail'=>$accept_gender_detail]);
         $version_id = $this->getCurrentVersion();
         $pass_typesRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id]);
         $pass_typesRequest->request->add(['service_id'=> $service_id]);
@@ -302,7 +305,9 @@ $k=1;
     public function update($bus_type_id,$service_id,$id, UpdatePassTypeRequest $request) {
         if(!$this->checkActionPermission('pass_types','edit'))
             return redirect()->route('401');
-        
+        $accept_gender_detail = implode(',',$request->accept_gender_detail);
+        $request->request->add(['accept_gender_detail'=>$accept_gender_detail]);
+        //echo '<pre>';print_r($request->all());die;
         $request->request->add(['approval_status'=>'p','flag'=> 'u']);
         $this->pass_types->update($id, $request);
         return redirect()->route('bus_types.services.pass_types.index',[$bus_type_id,$service_id]);

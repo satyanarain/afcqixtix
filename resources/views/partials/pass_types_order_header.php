@@ -13,8 +13,10 @@
                 </div>
         <div class="gallery">
         <ul class="list-group-order-main">
-         <li class="order-sub"><a href="javascript:void(0);">Service Name</a>
-          <a href="javascript:void(0);">Order Number</a>
+         <li class="order-sub">
+             <a href="javascript:void(0);">Order Number</a>
+             <a href="javascript:void(0);">Pass Type</a>
+          
          <a href="javascript:void(0);">Pass Provider</a>
          <a href="javascript:void(0);">Pass Type</a>
          </li>

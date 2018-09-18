@@ -32,7 +32,8 @@
                     'enctype' => 'multipart/form-data',
                     'id'=>'create-form',
                     'class'=>'form-horizontal',
-                    'autocomplete'=>'off'
+                    'autocomplete'=>'off',
+                    'onsubmit' => 'return kunal()',
                     ]) !!}
                     <!-- Warranty -->
                     @include('routes.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
@@ -44,4 +45,9 @@
 
 
 @stop
-
+<script type="text/javascript">
+    function kunal()
+    {
+        return true;
+    }
+</script>

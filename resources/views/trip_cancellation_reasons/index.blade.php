@@ -20,11 +20,12 @@
            @include('partials.message')
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="example2" class="table table-bordered table-striped">
                     <thead>
                          <tr>
+                             <th>@lang('Order Number')</th>
                             <th>@lang('Trip Cancellation Reason')</th>
-                           <th>@lang('Order Number')</th>
+                           
                             <th>@lang('Short Reason')</th>
                             <th>@lang('Reason Description')</th>
                              {{  actionHeading('Action', $newaction='') }}
@@ -33,8 +34,9 @@
                     <tbody>
                          @foreach($trip_cancellation_reasons as $value)
                         <tr class="nor_f">
-                            <td>{{$value->trip_cancellation_reason_category_master_id}}</td>
                             <td>{{$value->order_number}}</td>
+                            <td>{{$value->trip_cancellation_reason_category_master_id}}</td>
+                            
                              <td>{{$value->short_reason}}</td>
                             <td>{{$value->reason_description}}</td>
                             <td>

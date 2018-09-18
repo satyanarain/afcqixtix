@@ -19,22 +19,22 @@
             @include('partials.message')
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="example2" class="table table-bordered table-striped">
                     <thead>
                          <tr>
+                             <th>@lang('Order Number')</th>
                             <th>@lang('Bus Type')</th>
-                            <th>@lang('Order Number')</th>
                             <th>@lang('Abbreviation')</th>
-                            
                            {{  actionHeading('Action', $newaction='') }}
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($bustypes as $value)
                         <tr class="nor_f">
-                            <td>{{$value->bus_type}}</td>
-                             <td>{{$value->order_number}}
+                            <td>{{$value->order_number}}
                             </td>
+                            <td>{{$value->bus_type}}</td>
+                             
                             <td>{{$value->abbreviation}}
                             </td>
                             <td>

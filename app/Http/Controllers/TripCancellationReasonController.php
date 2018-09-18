@@ -68,8 +68,9 @@ class TripCancellationReasonController extends Controller {
                 ->get();
         ?>
                 <thead>
-                    <tr>  <th>Trip Cancellation Reason</th>
+                    <tr> 
                         <th>Order Number</th>
+                        <th>Trip Cancellation Reason</th>
                         <th>Short Reason</th>
                         <th>Reason Description</th>
                         <th>Action</th>
@@ -79,8 +80,9 @@ class TripCancellationReasonController extends Controller {
             <?php foreach ($sql as $value) {
                 ?>
                             <tr class="nor_f">
-                              <td><?php echo $value->trip_cancellation_reason_category_master_id; ?></td>
                                 <td><?php echo $value->order_number; ?></td>
+                              <td><?php echo $value->trip_cancellation_reason_category_master_id; ?></td>
+                                
                                 <td><?php echo $value->short_reason ?></td>
                                 <td><?php echo $value->reason_description ?></td>
                                 <td><a  href="<?php echo route("trip_cancellation_reasons.edit", $value->id) ?>" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -102,8 +104,9 @@ class TripCancellationReasonController extends Controller {
         <?php foreach ($sql as $value) {
         ?>
                     <li id="<?php echo "order" . $value->id; ?>" class="list-group-order-sub">
+                         <a href="javascript:void(0);"><?php echo $value->order_number; ?></a>
                     <a href="javascript:void(0);" ><?php echo $value->trip_cancellation_reason_category_master_id; ?></a>
-                    <a href="javascript:void(0);"><?php echo $value->order_number; ?></a>
+                   
                     <a href="javascript:void(0);"><?php echo $value->short_reason; ?></a>
                    </li>
         <?php } ?>

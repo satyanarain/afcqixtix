@@ -155,8 +155,8 @@ class DutyController extends Controller {
         }
        $duties = DB::table('duties')->select('*','duties.id as id','duties.start_time as start_time','shifts.shift as shift','duties.order_number as order_number')
                 ->leftjoin('shifts', 'duties.shift_id', '=', 'shifts.id')
-                ->leftjoin('routes', 'duties.route_id', '=', 'routes.id')
-               ->where('duties.route_id',$route_id)  
+                ->leftjoin('route_master', 'duties.route_id', '=', 'route_master.id')
+               ->where('duties.route_id',$route_master_id)  
                ->orderBy('duties.order_number')->get();
         ?>
                 <thead>
@@ -182,7 +182,7 @@ class DutyController extends Controller {
                                 <td><?php echo $value->shift ?></td>
                                 
                                 <td>
-                                    <a href="<?php echo route('routes.duties.edit',[$route_id,$value->id])?>" title="Edit Duty"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a href="<?php echo route('route_master.duties.edit',[$route_master_id,$value->id])?>" title="Edit Duty"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
                                     <a style="cursor: pointer;" title="View Duty" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
                                 </td>
                             </tr>
@@ -203,8 +203,9 @@ class DutyController extends Controller {
         <?php foreach ($duties as $value) {
         ?>
                     <li id="<?php echo "order" . $value->id; ?>" class="list-group-order-sub">
+                        <a href="javascript:void(0);"><?php echo $value->order_number; ?></a>
                     <a href="javascript:void(0);" ><?php echo $value->route; ?></a>
-                    <a href="javascript:void(0);"><?php echo $value->order_number; ?></a>
+                    
                     <a href="javascript:void(0);"><?php echo $value->duty_number; ?></a>
                    
                    </li>

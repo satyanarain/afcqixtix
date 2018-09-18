@@ -156,8 +156,8 @@ echo json_encode([
                             </span>
                         </a>
                         @php
-$array= array('depots','bus_types','services','vehicles','shifts','stops','routes','duties','targets','trips','fares','concession_fare_slabs'
-,'concessions','trip_cancellation_reasons','inspector_remarks','payout_reasons','denominations','pass_types','crew','')
+$array= array('depots','bus_types','services','vehicles','shifts','stops','routes','route_master','duties','targets','trips','fares','concession_fare_slabs'
+,'concessions','trip_cancellation_reasons','inspector_remarks','payout_reasons','denominations','pass_types','crew','ETM_details')
                        @endphp
                         <ul @if(in_array($segments_var[0],$array)) class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
                              
@@ -186,7 +186,7 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                             </a>
                                      @endif
                             @if(menuPermission('routes')==1)
-                            <li @if($segments_var[0]=='routes') class="active" @endif><a href="{{route('route_master.index')}}">
+                            <li @if($segments_var[0]=='route_master') class="active" @endif><a href="{{route('route_master.index')}}">
                                     <i class="fa fa-map-marker"></i> @lang('menu.routes.title') 
                             </a>
                              </li>

@@ -19,11 +19,12 @@
           @include('partials.message')
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="example2" class="table table-bordered table-striped">
                     <thead>
                          <tr>
+                             <th>@lang('Order Number')</th>
                             <th>@lang('Shift')</th>
-                            <th>@lang('Order Number')</th>
+                            
                             <th>@lang('Start Time')</th>
                             <th>@lang('End Time')</th>
                            {{  actionHeading('Action', $newaction='') }}
@@ -32,8 +33,9 @@
                     <tbody>
                       @foreach($shifts as $value)
                         <tr class="nor_f">
-                            <td>{{$value->shift}}</td>
                             <td>{{$value->order_number}}</td>
+                            <td>{{$value->shift}}</td>
+                            
                             <td>{{displayView($value->start_time)}}
                             </td>
                             <td>{{displayView($value->end_time)}}
