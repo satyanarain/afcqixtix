@@ -231,4 +231,16 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('versions', 'VersionController');
     Route::get('settings/view_detail/{id}', 'SettingController@viewDetail');
     Route::resource('settings', 'SettingController');
+    
+    
+    
+    Route::get('waybills/data', 'WaybillController@anyData')->name('waybill.data');
+    Route::get('waybills/view_detail/{id}', 'WaybillController@viewDetail');
+    Route::get('waybills/close/{id}', 'WaybillController@close')->name('waybills.close');
+    Route::get('waybills/auditlist', 'WaybillController@auditlist')->name('waybills.auditlist');
+    Route::post('waybills/getdata/{id}', 'WaybillController@getData');
+    Route::post('waybills/getfiltereddata', 'WaybillController@getfiltereddata')->name('waybills/getfiltereddata');
+    Route::resource('waybills', 'WaybillController');
+    
+    
 });

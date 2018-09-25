@@ -101,6 +101,7 @@ class UserRepository implements UserRepositoryContract {
             $input['ETM_details'] = implode(',', $requestData->ETM_details);
             $input['versions'] = implode(',', $requestData->versions);
             $input['settings'] = implode(',', $requestData->settings);
+            $input['waybills'] = implode(',', $requestData->waybills);
             //echo "<pre>";
            // print_r($input);
             //exit();
@@ -153,6 +154,7 @@ class UserRepository implements UserRepositoryContract {
             $input['ETM_details'] = implode(',', $requestData->ETM_details);
             $input['settings'] = implode(',', $requestData->settings);
             $input['versions'] = implode(',', $requestData->versions);
+            $input['waybills'] = implode(',', $requestData->waybills);
             $permission->fill($input)->save();
          
     

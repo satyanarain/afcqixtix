@@ -176,7 +176,7 @@ class VersionController extends Controller
         $pdoLi=new PDO('sqlite:'.public_path().'/supportingdocs/data'.$version_id.'.sqlite') or die("can't connect to data1");
 
         $tbls=array('depots','vehicles','crew','bus_types','services','fares','concession_fare_slabs','concessions',
-            'pass_types','shifts','stops','routes','route_details','duties','trips','trip_details',
+            'pass_types','shifts','stops','route_master','routes','route_details','duties','trips','trip_details',
             'targets','trip_cancellation_reasons','inspector_remarks','payout_reasons','denominations',
             'etm_details','versions','trip_cancellation_reason_category_masters',
             'trip_start','concession_masters','concession_provider_masters','countries');
