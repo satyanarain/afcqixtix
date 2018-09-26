@@ -136,7 +136,7 @@ class VersionController extends Controller
     {
         if(!$this->checkActionPermission('versions','edit'))
             return redirect()->route('401');
-        
+        $this->approveVersion($id);return redirect()->route('versions.index');
         if($request->version_status=="c")
         {
             $diff = $this->getAllDifferences();
