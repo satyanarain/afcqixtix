@@ -85,7 +85,7 @@ if($segments_var[2]=='edit')
     <header class="main-header">   
              
             <!-- Logo -->
-            <a href="index2.html" class="logo">
+            <a href="/dashboard" class="logo">
              
                 <span class="logo-lg"><b>Qixtix(AFC)</span>
             </a>

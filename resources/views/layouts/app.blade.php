@@ -59,9 +59,9 @@ echo json_encode([
 <div class="wrapper">
     <header class="main-header">   
             <!-- Logo -->
-            <a href="index2.html" class="logo">
-             
-                <span class="logo-lg"><b>Qixtix(AFC)</span>
+            <a href="/dashboard" class="logo" style="text-align: left;">
+                <img src="<?php echo \URL::to('')?>/images/qt-logo.png" style="height: 30px; float: left;margin-top: 10px;">
+                <span class="logo-lg" style="float: left;margin-left: 8px;">QixTix | AFCS</span>
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top">
@@ -69,7 +69,7 @@ echo json_encode([
                 <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                     <span class="sr-only">Toggle navigation</span>
                 </a>
-
+                  <div style="width: 82%;float: left;text-align: center; color: #fff;font-size: 20px;padding-top: 10px;">Automated Fare Collection System</div>
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
                         <!-- Messages: style can be found in dropdown.less-->
@@ -119,7 +119,9 @@ echo json_encode([
                         </li>
                     </ul>
                 </div>
+                  
             </nav>
+            
         </header>
    <aside class="main-sidebar">
      <section class="sidebar">
