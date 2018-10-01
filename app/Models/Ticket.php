@@ -8,5 +8,5 @@ class Ticket extends Model
 {
     protected $table = 'tickets';
 
-    protected $fillable = [];
+    protected $guarded = [];
 }
