@@ -183,11 +183,12 @@ return [
         Fenos\Notifynder\NotifynderServiceProvider::class,
         App\Providers\AccessServiceProvider::class,
         App\Providers\BroadcastServiceProvider::class,
-         Zizaco\Entrust\EntrustServiceProvider::class,
-         App\Providers\HelperServiceProvider::class,
-         App\Providers\ValidationServiceProvider::class,
-         App\Services\Validation\ValidationServiceProvider::class,  
-         Felixkiss\UniqueWithValidator\ServiceProvider::class,
+        Zizaco\Entrust\EntrustServiceProvider::class,
+        App\Providers\HelperServiceProvider::class,
+        App\Providers\ValidationServiceProvider::class,
+        App\Services\Validation\ValidationServiceProvider::class,  
+        Felixkiss\UniqueWithValidator\ServiceProvider::class,
+        Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
       ],
 
     /*
@@ -241,6 +242,7 @@ return [
         'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
         'Form' => Collective\Html\FormFacade::class,
         'HTML' => Collective\Html\HtmlFacade::class,
+        'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
 
 
     ],

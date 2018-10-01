@@ -8,6 +8,7 @@ class Crew extends Model
      *
      * @var string
      */
+    protected $primaryKey = 'id';
     protected $table = 'crew';
     protected $guarded = ['confirm_password'];
     /**

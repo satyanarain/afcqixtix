@@ -14,9 +14,12 @@ use Illuminate\Http\Request;
 */
 
 Route::group(['namespace'=>'Api\V1', 'prefix'=>'v1'], function(){
-	Route::post('shiftstart', 'ShiftStartController@store');
-	Route::get('getsqlitedbname', 'CommonController@getSqliteDbName');
+	Route::post('login', 'AuthController@login');
+	Route::group(['middleware'=>'jwt.auth'], function(){
+		Route::post('shiftstart', 'ShiftStartController@store');
+		Route::get('getsqlitedbname', 'CommonController@getSqliteDbName');
 
-	Route::post('tripstart', 'TripStartController@store');
-        Route::post('sellticket', 'TicketController@store');
+		Route::post('tripstart', 'TripStartController@store');
+	    Route::post('sellticket', 'TicketController@store');
+	});
 });
