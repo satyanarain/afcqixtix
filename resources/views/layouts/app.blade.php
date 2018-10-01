@@ -59,9 +59,9 @@ echo json_encode([
 <div class="wrapper">
     <header class="main-header">   
             <!-- Logo -->
-            <a href="index2.html" class="logo">
-             
-                <span class="logo-lg"><b>Qixtix(AFC)</span>
+            <a href="/dashboard" class="logo" style="text-align: left;">
+                <img src="<?php echo \URL::to('')?>/images/qt-logo.png" style="height: 30px; float: left;margin-top: 10px;">
+                <span class="logo-lg" style="float: left;margin-left: 8px;">QixTix | AFCS</span>
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top">
@@ -69,7 +69,7 @@ echo json_encode([
                 <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                     <span class="sr-only">Toggle navigation</span>
                 </a>
-
+                  <div style="width: 82%;float: left;text-align: center; color: #fff;font-size: 20px;padding-top: 10px;">Automated Fare Collection System</div>
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
                         <!-- Messages: style can be found in dropdown.less-->
@@ -119,7 +119,9 @@ echo json_encode([
                         </li>
                     </ul>
                 </div>
+                  
             </nav>
+            
         </header>
    <aside class="main-sidebar">
      <section class="sidebar">
@@ -239,7 +241,21 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                           </li>
                     @endif
                     <!-- End Inventories menu details -->
-                    
+                @php $pem=menuDisplayByUser($result, 'waybills','view'); @endphp
+                    @if($pem=='true')
+                     <li  @if($segments_var[0]=='waybills') class="treeview active" @else class="treeview" @endif>
+                        <a href="#">
+                            <i class="fa fa-cog" aria-hidden="true"></i> <span>Waybill Management</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul @if($segments_var[0]=='waybills') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
+                            <li @if($segments_var[0]=='waybills' && !$segments_var[1]) class="active" @endif><a href="{{route('waybills.index')}}"><i class="fa fa-key"></i>Abstract</a></li>
+                            <li @if($segments_var[1]=='auditlist') class="active" @endif><a href="{{route('waybills.auditlist')}}"><i class="fa fa-key"></i>Audit</a></li>
+                         </ul>
+                    </li>
+                    @endif    
                  @php $pem=menuDisplayByUser($result, 'permissions','view'); @endphp
                     @if($pem=='true')
                      <li  @if($segments_var[0]=='roles' || $segments_var[0]=='permissions' || $segments_var[0]=='settings') class="treeview active" @else class="treeview" @endif>
@@ -263,7 +279,7 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                     @endif
                     <li @if($segments_var[0]=='versions') class="treeview active" @else class="treeview" @endif>
                        <a href="{{route('versions.index')}}">
-                            <i class="fa fa-dashboard"></i> <span>Version</span>
+                           <img src="<?php echo \URL::to('') . '/images/version.png' ?>" width="14" style="margin-right: 10px"><span>Version</span>
                         </a>
                     </li>
                     <li @if($segments_var[0]=='changepasswords') class="active" @endif><a href="{{route('changepasswords.create')}}">
@@ -385,7 +401,8 @@ $.widget.bridge('uibutton', $.ui.button);
 <script type="text/javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.1.2/js/buttons.html5.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.1.2/js/buttons.print.min.js"></script>
-
+<link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.css') }}">
+<script src="{{ asset('js/bootstrap-datetimepicker.min.js') }}"></script>
 
 <script type="text/javascript">
   
@@ -409,6 +426,21 @@ minDate: 0,
 
           });
       }); 
+      
+ //$(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii', minDate:new Date()});
+ $('.form_datetime').datetimepicker({
+        //language:  'fr',
+        format: 'dd-mm-yyyy hh:ii',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		forceParse: 0,
+        showMeridian: 1,
+        startDate:new Date()
+    });
+ 
   $('#map1').append('<div style="" id="map"><div class="loading_bar"></div></div>');
 $(window).on('load', function(){
   setTimeout(removeLoader, 200); //wait for page load PLUS two seconds.

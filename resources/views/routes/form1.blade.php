@@ -73,8 +73,8 @@
             {!! Form::select('stop_id[]',$stops,isset($value->stop_id) ? $value->stop_id : selected,['class' => 'form-control route_stops','required' => 'required','placeholder'=>'Select Stop']) !!}
         </div>
      <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="stage_number[]" class="form-control stage_number" placeholder="Stage Number" required="required" onkeypress="return isIntegerKey(event)" value="{{ $value->stage_number }}"></div>
-       <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="distance[]" class="form-control" placeholder="Distance(km)" required="required" onkeypress="return isNumberKey(event)" value="{{ $value->stage_number }}"></div>
-       <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="hot_key[]" class="form-control hot_key" placeholder="Hot Key" required="required" onkeypress="return isIntegerKey(event)" value="{{ $value->stage_number }}"></div>
+       <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="distance[]" class="form-control" placeholder="Distance(km)" required="required" onkeypress="return isNumberKey(event)" value="{{ $value->distance }}"></div>
+       <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="hot_key[]" class="form-control hot_key" placeholder="Hot Key" required="required" onkeypress="return isIntegerKey(event)" value="{{ $value->hot_key }}"></div>
 
     </div>
 @endforeach

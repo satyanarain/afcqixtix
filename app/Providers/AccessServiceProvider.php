@@ -163,6 +163,11 @@ class AccessServiceProvider extends ServiceProvider
             \App\Repositories\CenterStock\CenterStockRepositoryContract::class,
             \App\Repositories\CenterStock\CenterStockRepository::class
         );
+        $this->app->bind(
+            \App\Repositories\Waybill\WaybillRepositoryContract::class,
+            \App\Repositories\Waybill\WaybillRepository::class
+
+        );
     }
 }
     

@@ -38,10 +38,11 @@ class RouteController extends Controller {
         if(!$this->checkActionPermission('routes','view'))
             return redirect()->route('401');
         $route_master_id = $request->route_id;
-        $routes = DB::table('routes')->select('*','route_master.*','route_details.stop_id','routes.route', 'routes.id', 'stops.stop')
-                ->leftjoin('route_details', 'route_details.stop_id', '=', 'routes.id')
-                ->leftjoin('stops', 'route_details.stop_id', '=', 'stops.id')
-                ->leftjoin('route_master', 'route_master.id', '=', 'routes.route_number')
+        $routes = DB::table('routes')
+                ->select('*')
+                //->leftjoin('route_details', 'route_details.stop_id', '=', 'routes.id')
+                //->leftjoin('stops', 'route_details.stop_id', '=', 'stops.id')
+                ///->leftjoin('route_master', 'route_master.id', '=', 'routes.route_number')
                 ->where('routes.route_number',$request->route_id)  
                 ->get();
         //echo '<pre>';        print_r($routes);die;

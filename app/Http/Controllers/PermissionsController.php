@@ -156,6 +156,7 @@ class PermissionsController extends Controller
             $input['ETM_details'] = implode(',', $request->ETM_details);
             $input['versions'] = implode(',', $request->versions);
             $input['settings'] = implode(',', $request->settings);
+            $input['waybills'] = implode(',', $request->waybills);
            $roles= Permission::create($input);
            Session::flash('flash_message', "Role Created Successfully."); //Snippet in Master.blade.php
          return redirect()->route('permissions.index');
@@ -200,6 +201,7 @@ class PermissionsController extends Controller
             $input['ETM_details'] = implode(',', $request->ETM_details);
             $input['versions'] = implode(',', $request->versions);
             $input['settings'] = implode(',', $request->settings);
+            $input['waybills'] = implode(',', $request->waybills);
             $permission->fill($input)->save();
            Session::flash('flash_message', "Role Updated Successfully."); 
         return redirect()->route('permissions.index');

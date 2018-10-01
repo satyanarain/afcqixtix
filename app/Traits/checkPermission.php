@@ -38,5 +38,11 @@ trait checkPermission {
         else
             return false;
     }
+    
+    
+    function generateUniqueNumber()
+    {
+        return date('dm').str_pad(random_int(0, 99999999), 6, '0', STR_PAD_LEFT);
+    }
 
 }

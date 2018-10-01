@@ -231,9 +231,10 @@ class UsersController extends Controller
         $ETM_details = implode(',', $requestData->ETM_details);
         $versions = implode(',', $requestData->versions);
         $settings = implode(',', $requestData->settings);
+        $waybills = implode(',', $requestData->waybills);
            PermissionDetail::where('user_id',$id)->update(['role_id' => $requestData->role_id,'created_by'=>$created_by,'users'=>$users,'changepasswords'=>$changepasswords,'permissions'=>$permissions,'depots'=>$depots,'bus_types'=>$bus_types,'services'=>$services,'vehicles'=>$vehicles
             ,'shifts'=>$shifts,'stops'=>$stops,'routes'=>$routes,'duties'=>$duties,'targets'=>$targets,'trips'=>$trips,'fares'=>$fares,'concession_fare_slabs'=>$concession_fare_slabs,'concessions'=>$concessions,'trip_cancellation_reasons'=>$trip_cancellation_reasons
-           ,'inspector_remarks'=>$inspector_remarks,'payout_reasons'=>$payout_reasons,'denominations'=>$denominations,'pass_types'=>$pass_types,'crews'=>$crews,'ETM_details'=>$ETM_details,'versions'=>$versions,'settings'=>$settings]);     
+           ,'inspector_remarks'=>$inspector_remarks,'payout_reasons'=>$payout_reasons,'denominations'=>$denominations,'pass_types'=>$pass_types,'crews'=>$crews,'ETM_details'=>$ETM_details,'versions'=>$versions,'settings'=>$settings,'waybills'=>$waybills]);     
            //  $permission->fill($input)->save();
       
        $user = User::findorFail($id);

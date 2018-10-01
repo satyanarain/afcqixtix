@@ -357,8 +357,8 @@ function actionHeading($action = '', $newaction='') {
 
 function menuDisplayByUser($result,$menuname='',$action='') {
  $userid_menu = Auth::id();
-    $sql = DB::table('users')->select('*', 'users.id as id')->leftjoin('permissions', 'users.id', '=', 'permissions.user_id')
-            ->where('users.id', '=', $userid_menu)
+     $sql = DB::table('users')->select('*', 'users.id as id')->leftjoin('permission_details', 'users.id', '=', 'permission_details.user_id')
+          ->where('users.id', '=', $userid_menu)
             ->first();
     $array_value = $sql->$menuname;
     $array = explode(',', $array_value);

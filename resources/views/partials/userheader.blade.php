@@ -69,7 +69,7 @@
                           </tr>
                           <tr>
                              <tr>
-                              <td>Date Of Borth</td>
+                              <td>Date Of Birth</td>
                               <td class="table_normal">{{ dateView($value->date_of_birth) }}</td>
                           </tr>
                          <tr>

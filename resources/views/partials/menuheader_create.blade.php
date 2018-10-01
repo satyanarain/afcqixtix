@@ -78,6 +78,17 @@
                         </table> 
                         </div>
                     </div>
+                    <div   class="formmain" onclick="showHide(this.id)" id="ACC5{{$permissions->id}}">
+                        <div class="plusminusbutton" id="plusminusbuttonACC5{{$permissions->id}}">+</div>&nbsp;&nbsp;Waybill
+                    </div>
+                    <div class="row1"  id="formACC5{{$permissions->id}}" style="display:none;">
+                        <div class="row">  
+                            <table class="table table-responsive.view">
+                                 {{ menuCreate('waybills','create','edit','view',$permissions->id,$permissions->waybills)}}
+                                 
+                        </table> 
+                        </div>
+                    </div>
               </div>
         </div>
 
