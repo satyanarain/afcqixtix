@@ -9,7 +9,7 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{headingMain()}}</h3>
-               <?php $permission_status = checkPermission('ETM_details','create');
+               <?php $permission_status = checkPermission('etm_details','create');
                $checkVersionOpen = checkVersionOpen();
                     if($permission_status && $checkVersionOpen)
                         createButton('create','Add');
@@ -31,7 +31,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($ETM_details as $value)
+                        @foreach($etm_details as $value)
                         <tr class="nor_f">
                             <th class="display_none"></th>
                             <td>{{$value->name}}</td>
@@ -39,9 +39,9 @@
                             <td>{{$value->evm_status_master_id}}</td>
                             <td>{{$value->sim_no}}</td>
                             <td>
-                                <?php $permission = getAllModulePermission('ETM_details');
+                                <?php $permission = getAllModulePermission('etm_details');
                                 if(in_array('edit',$permission) && $checkVersionOpen){
-                                    echo '<a  href="'.route("ETM_details.edit",$value->id).'" class="" title="Edit" ><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
+                                    echo '<a  href="'.route("etm_details.edit",$value->id).'" class="" title="Edit" ><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
                                 }elseif(in_array('edit',$permission)){?>
                                     <a class="disabled"><span class="glyphicon glyphicon-pencil "></span></a>&nbsp;&nbsp;&nbsp;&nbsp;   
                                 <?php }
@@ -85,7 +85,7 @@ function statusUpdate(id)
 }
 </script>
 <!-- /.row -->
-@include('partials.ETM_details_header')
+@include('partials.etm_details_header')
 @include('partials.table_script')
 
 @stop

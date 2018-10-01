@@ -204,9 +204,9 @@ Route::group(['middleware' => ['auth']], function () {
     
     
     
-    Route::get('ETM_details/data', 'ETMDetailController@anyData')->name('ETM_details.data');
-    Route::get('ETM_details/view_detail/{id}', 'ETMDetailController@viewDetail');
-    Route::resource('ETM_details', 'ETMDetailController');
+    Route::get('etm_details/data', 'EtmDetailController@anyData')->name('etm_details.data');
+    Route::get('etm_details/view_detail/{id}', 'EtmDetailController@viewDetail');
+    Route::resource('etm_details', 'EtmDetailController');
     /* ROLES */
     Route::get('roles/data', 'RolesController@anyData')->name('roles.data');
     Route::get('roles/view_detail/{id}', 'RolesController@viewDetail');

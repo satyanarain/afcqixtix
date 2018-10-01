@@ -21,7 +21,7 @@ class ETMDetailRepository implements ETMDetailRepositoryContract {
       use FormatDates;
       use activityLog;
   public function find($id) {
-        return ETMDetail::join('ETM_details', 'users.user_type', '=', 'roles.id')->first();
+        return ETMDetail::join('etm_details', 'users.user_type', '=', 'roles.id')->first();
     }
 
     public function getAllETMDetails() {

@@ -9,7 +9,7 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{headingMain()}}</h3>
-               <?php $permission_status = checkPermission('ETM_details','create');
+               <?php $permission_status = checkPermission('etm_details','create');
                     if($permission_status)
                         createButton('create','Add');
                     elseif($permission_status)
@@ -40,7 +40,7 @@
                             <td>{{$value->route_name}}</td>
                             <td><?php if($value->status=="g"){echo 'Generated';}elseif($value->status=="s"){echo 'Submitted';}elseif($value->status=="c"){echo 'Audited & Closed';}?></td>
                             <td>
-                                <?php $permission = getAllModulePermission('ETM_details');
+                                <?php $permission = getAllModulePermission('etm_details');
                                 if(in_array('edit',$permission)){
                                     echo '<a  href="'.route("waybills.edit",$value->id).'" class="" title="Edit Waybill" ><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
                                     echo '<a  href="'.route("waybills.close",$value->id).'" class="" title="Submit Waybill" ><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';

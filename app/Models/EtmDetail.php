@@ -1,7 +1,7 @@
 <?php
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
-class ETMdetail extends Model
+class Etmdetail extends Model
 {
   /**
      * The database table used by the model.

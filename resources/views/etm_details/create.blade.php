@@ -6,13 +6,13 @@
 @section('content')
 @include('partials.form_header')
                 {!! Form::open([
-                'route' => 'ETM_details.store',
+                'route' => 'etm_details.store',
                 'files'=>true,
                 'enctype' => 'multipart/form-data',
                 'class'=>'form-horizontal',
                  'onSubmit'=>"return validateForm();"
                 ]) !!}
-                @include('ETM_details.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
+                @include('etm_details.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 
                 {!! Form::close() !!}
             </div>

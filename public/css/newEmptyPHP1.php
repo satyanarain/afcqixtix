@@ -394,7 +394,7 @@
                             </span>
                         </a>
                         <ul  class="treeview-menu" >
-                         <li ><a href="http://localhost:8000/ETM_details"><i class="fa fa-calculator"></i>ETM details</a>
+                         <li ><a href="http://localhost:8000/etm_details"><i class="fa fa-calculator"></i>ETM details</a>
                             </li>
                          </ul>
                     </li>
@@ -1117,22 +1117,22 @@
                                  
    <tr>
      <td align="center" width="15%">
-       <input type="checkbox" id="checkAllETM_details" onclick="checkAll(this,this.id);">&nbsp;
+       <input type="checkbox" id="checkAlletm_details" onclick="checkAll(this,this.id);">&nbsp;
       
          </td>
                 <td width="30%">
                     <b>
-                   <input  class="checkAllETM_details" type="checkbox" name="ETM_details[]" value="ETM_details"  onchange="showMenu(this.id)" id="ETM_details">
+                   <input  class="checkAlletm_details" type="checkbox" name="etm_details[]" value="etm_details"  onchange="showMenu(this.id)" id="etm_details">
                    &nbsp;&nbsp;
                   ETM Detail</b>
    </td>
                  <td align="left" valign="top" width="55%">
-                    <span id="showETM_details"class="display_none">
+                    <span id="showetm_details"class="display_none">
                      <table class="table_normal_100">
                        <tr>
-                                                     <td><input class="checkAllETM_details" type="checkbox" name="ETM_details[]" value="create" >&nbsp;&nbsp;Add</td>
-                                                                              <td><input class="checkAllETM_details" type="checkbox" name="ETM_details[]" value="edit" >&nbsp;&nbsp;Edit</td>
-                                                                                  <td><input class="checkAllETM_details" type="checkbox" name="ETM_details[]" value="view"   id="showviewETM_details">&nbsp;&nbsp;View</td>
+                                                     <td><input class="checkAlletm_details" type="checkbox" name="etm_details[]" value="create" >&nbsp;&nbsp;Add</td>
+                                                                              <td><input class="checkAlletm_details" type="checkbox" name="etm_details[]" value="edit" >&nbsp;&nbsp;Edit</td>
+                                                                                  <td><input class="checkAlletm_details" type="checkbox" name="etm_details[]" value="view"   id="showviewetm_details">&nbsp;&nbsp;View</td>
                                                   </tr>   
                    </table>  
                </span>

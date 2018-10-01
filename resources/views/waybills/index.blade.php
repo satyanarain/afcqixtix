@@ -9,7 +9,7 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{headingMain()}}</h3>
-               <?php $permission_status = checkPermission('ETM_details','create');
+               <?php $permission_status = checkPermission('etm_details','create');
                     if($permission_status)
                         createButton('create','Add');
                     elseif($permission_status)

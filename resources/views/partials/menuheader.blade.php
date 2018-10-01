@@ -60,7 +60,7 @@
                      <div class="row1"  id="formACC2{{$value->id}}" style="display:none;border:#ccc 1px solid;">
                         <div class="row">  
                             <table class="table table-responsive.view">
-                                 {{ menuCreate('ETM_details','create','edit','view',$value->id,$value->ETM_details)}}
+                                 {{ menuCreate('etm_details','create','edit','view',$value->id,$value->etm_details)}}
                         </table> 
                         </div>
                     </div>

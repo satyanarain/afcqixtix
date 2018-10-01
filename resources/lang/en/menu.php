@@ -33,7 +33,7 @@ return [
         'roles' => 'Role Management',
         'permissions' => 'Role and permission',
      ],
-   'ETM_details' =>  [
+   'etm_details' =>  [
         'title' => 'ETM details',
      
      ],
