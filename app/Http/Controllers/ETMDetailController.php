@@ -41,13 +41,13 @@ class ETMDetailController extends Controller
      */
     public function index()
     {
-        if(!$this->checkActionPermission('ETM_details','view'))
+        if(!$this->checkActionPermission('etm_details','view'))
             return redirect()->route('401');
-    $ETM_details = DB::table('ETM_details')->select('*','ETM_details.id as id','depots.name as name','evm_status_masters.name as evm_status_master_id')
+        $ETM_details = DB::table('etm_details')->select('*','ETM_details.id as id','depots.name as name','evm_status_masters.name as evm_status_master_id')
             ->leftjoin('depots','depots.id','ETM_details.depot_id')
             ->leftjoin('evm_status_masters','evm_status_masters.id','ETM_details.evm_status_master_id')
              ->orderBy('ETM_details.id','desc')->get();
-    return view('ETM_details.index',compact('ETM_details'))->withETMDetails($depot);
+        return view('ETM_details.index',compact('ETM_details'))->withETMDetails($depot);
    
     }
     public function create()
@@ -88,7 +88,7 @@ class ETMDetailController extends Controller
    {
        if(!$this->checkActionPermission('ETM_details','view'))
             return redirect()->route('401');
-        $ETM_details = DB::table('ETM_details')->select('*','ETM_details.id as id','depots.name as name','evm_status_masters.name as evm_status_master_id')
+        $ETM_details = DB::table('etm_details')->select('*','ETM_details.id as id','depots.name as name','evm_status_masters.name as evm_status_master_id')
             ->leftjoin('depots','depots.id','ETM_details.depot_id')
             ->leftjoin('evm_status_masters','evm_status_masters.id','ETM_details.evm_status_master_id')
             ->where('ETM_details.id',$id)
@@ -108,7 +108,7 @@ class ETMDetailController extends Controller
     {
         if(!$this->checkActionPermission('ETM_details','edit'))
             return redirect()->route('401');
-       $ETM_details = DB::table('ETM_details')->select('*','ETM_details.id as id','depots.id as depot_id')
+       $ETM_details = DB::table('etm_details')->select('*','ETM_details.id as id','depots.id as depot_id')
             ->leftjoin('depots','depots.id','ETM_details.depot_id')
             ->where('ETM_details.id',$id)
             ->orderBy('ETM_details.id','desc')
@@ -149,7 +149,7 @@ class ETMDetailController extends Controller
       public function viewDetail($id) {
           if(!$this->checkActionPermission('ETM_details','view'))
             return redirect()->route('401');
-       $value = DB::table('ETM_details')->select('*','ETM_details.id as id','depots.name as name','evm_status_masters.name as evm_status_master_id','ETM_details.created_at as created_at','ETM_details.updated_at as updated_at')
+       $value = DB::table('etm_details')->select('*','ETM_details.id as id','depots.name as name','evm_status_masters.name as evm_status_master_id','ETM_details.created_at as created_at','ETM_details.updated_at as updated_at')
             ->leftjoin('depots','depots.id','ETM_details.depot_id')
             ->leftjoin('users', 'users.id', '=', 'ETM_details.user_id')
             ->leftjoin('evm_status_masters','evm_status_masters.id','ETM_details.evm_status_master_id')
