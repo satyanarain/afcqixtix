@@ -66,7 +66,18 @@
  $concession_allowed_on = date('d-m-Y', strtotime($concession->concession_allowed_on));
  }
  @endphp
-<div class="form-group">
+ <div class="form-group ">
+     {!! Form::label('concession_allowed_on', Lang::get('Concession Allowed on(for all days of the year leave field blank)'), ['class' => 'col-md-3 control-label','for'=>'concession_allowed_on']) !!}
+    <div class="col-md-9 col-sm-12">
+        <div class="input-group date form_date col-md-10" data-date="" data-date-format="dd MM yyyy p" data-link-field="date_of_birtha">
+        {!! Form::text('concession_allowed_on', $concession_allowed_on, ['class' => 'form-control','readonly'=>'readonly']) !!}
+        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+        </div>
+        
+    </div>
+</div>
+<!--<div class="form-group">
     
     {!! Form::label('concession_allowed_on', Lang::get('Concession Allowed on(for all days of the year leave field blank)'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12">
@@ -74,11 +85,11 @@
         <div class="input-group-addon">
             <i class="fa fa-calendar"></i>
         </div>
-        {!! Form::text('concession_allowed_on', $concession_allowed_on, ['class' => 'multiple_date','readonly'=>'readonly']) !!}
+        {!! Form::text('concession_allowed_on1', $concession_allowed_on, ['class' => 'multiple_date','readonly'=>'readonly']) !!}
       </div>
       </div>
-    <!-- /.input group -->
-</div>
+     /.input group 
+</div>-->
 <div class="form-group">
       {!! Form::label('flat_fare', Lang::get('Flat Fare'), ['class' => 'col-md-3 control-label']) !!}
       <div class="col-md-7 col-sm-12">

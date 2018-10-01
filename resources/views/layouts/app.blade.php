@@ -72,52 +72,41 @@ echo json_encode([
                   <div style="width: 82%;float: left;text-align: center; color: #fff;font-size: 20px;padding-top: 10px;">Automated Fare Collection System</div>
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
-                        <!-- Messages: style can be found in dropdown.less-->
-                        <li class="dropdown messages-menu">
-                        
-                            <ul class="dropdown-menu">
-                                <li class="header">You have 4 messages</li>
-                                <li>
-                                    <!-- inner menu: contains the actual data -->
-                                    <ul class="menu">
-
-                                    </ul>
-                                </li>
-                                <li class="footer"><a href="#">See All Messages</a></li>
-                            </ul>
-                        </li>
-                      
-                        <li class="dropdown user user-menu" >
-
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-
-                                @if(Auth::user()->image_path)
-                                {{Html::image('/images/photo/'.Auth::user()->image_path,'',array('class'=>"user-image"))}}
+                          
+                <li class="dropdown notifications-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                         @if(Auth::user()->image_path)
+                                {{Html::image('/images/photo/'.Auth::user()->image_path,'',array('class'=>"user-image img-circle",'style'=>"height:auto;width:20px;"))}}
                                 @else
                                 <img src="<?php echo \URL::to('') . '/img/user2-160x160.jpg' ?>" class="user-image">
                                 @endif
                                 <span class="hidden-xs">{{{ isset(Auth::user()->salutation) ? Auth::user()->salutation : '' }}} {{{ isset(Auth::user()->name) ? Auth::user()->name : '' }}}!</span>
                                 <b class="caret"></b>
-                            </a>           
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="{{ url('/users/'.Auth::user()->id) }}" class="glyphicon glyphicon-user">Profile</a>
-                                </li>
-                                <li>
-                                    <a href="{{ url('/changepasswords/create/') }}" class="glyphicon glyphicon-user">Change password</a>
-                                </li>
-                                <li>
-                                    <a href="{{ url('/logout') }}" class="glyphicon glyphicon-log-out">Sign out</a>
-                                </li>
-
-                            </ul>
-                        </li>
-                        
-                        <!-- Control Sidebar Toggle Button -->
+                    </a>
+                    <ul class="dropdown-menu" style="width:50%">
                         <li>
-                            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                           <ul class="menu" style="overflow: hidden;">
+                                    <li>
+                                        <a href="{{ url('/users/'.Auth::user()->id) }}">
+                                            <span class="glyphicon glyphicon-user text-green"></span>Profile
+                                        </a>
+                                    </li>
+                                    
+                                    <li>
+                                        <a href="{{ url('/changepasswords/create/') }}">
+                                            <i class="fa fa-exchange text-yellow"></i>Change Password
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ url('/logout') }}">
+                                            <i class="fa fa-sign-out text-warning"></i></span> Logout
+                                        </a>
+                                    </li>
+                                </ul>
                         </li>
                     </ul>
+                </li>
+            </ul>
                 </div>
                   
             </nav>
@@ -440,7 +429,17 @@ minDate: 0,
         showMeridian: 1,
         startDate:new Date()
     });
- 
+ $('.form_date').datetimepicker({
+        //language:  'fr',
+        format: 'dd-mm-yyyy',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		minView: 2,
+		forceParse: 0
+    });
   $('#map1').append('<div style="" id="map"><div class="loading_bar"></div></div>');
 $(window).on('load', function(){
   setTimeout(removeLoader, 200); //wait for page load PLUS two seconds.
