@@ -40,7 +40,7 @@ $input['user_id'] = $user_id;
 
 
 
-$routes_id = Route::create(['user_id'=>$user_id,'route'=>$requestData->route,'source'=>$requestData->source,'destination'=>$requestData->destination,'via'=>$requestData->via,'direction'=>$requestData->direction,'default_path'=>$requestData->default_path,'is_this_by'=>$requestData->is_this_by])->id;
+$routes_id = Route::create(['approval_status'=>'p','flag'=>'a','route_number'=>$requestData->route_number,'version_id'=>$requestData->version_id,'user_id'=>$user_id,'route'=>$requestData->route,'source'=>$requestData->source,'destination'=>$requestData->destination,'via'=>$requestData->via,'direction'=>$requestData->direction,'default_path'=>$requestData->default_path,'is_this_by'=>$requestData->is_this_by])->id;
 
 
 $stop_id = $requestData->stop_id;
@@ -64,7 +64,7 @@ $id = DB::table('route_details')->insertGetId(
 }
     
  public function update($id, $requestData) {
-     $this->createLog('App\Models\Route','App\Models\RouteLog',$id);
+     //$this->createLog('App\Models\Route','App\Models\RouteLog',$id);
   $routes=  Route::findorFail($id) ;
      
 $input = $requestData->all();

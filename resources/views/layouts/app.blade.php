@@ -59,9 +59,9 @@ echo json_encode([
 <div class="wrapper">
     <header class="main-header">   
             <!-- Logo -->
-            <a href="index2.html" class="logo">
-             
-                <span class="logo-lg"><b>Qixtix(AFC)</span>
+            <a href="/dashboard" class="logo" style="text-align: left;">
+                <img src="<?php echo \URL::to('')?>/images/qt-logo.png" style="height: 30px; float: left;margin-top: 10px;">
+                <span class="logo-lg" style="float: left;margin-left: 8px;">QixTix | AFCS</span>
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top">
@@ -69,57 +69,48 @@ echo json_encode([
                 <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                     <span class="sr-only">Toggle navigation</span>
                 </a>
-
+                  <div style="width: 82%;float: left;text-align: center; color: #fff;font-size: 20px;padding-top: 10px;">Automated Fare Collection System</div>
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
-                        <!-- Messages: style can be found in dropdown.less-->
-                        <li class="dropdown messages-menu">
-                        
-                            <ul class="dropdown-menu">
-                                <li class="header">You have 4 messages</li>
-                                <li>
-                                    <!-- inner menu: contains the actual data -->
-                                    <ul class="menu">
-
-                                    </ul>
-                                </li>
-                                <li class="footer"><a href="#">See All Messages</a></li>
-                            </ul>
-                        </li>
-                      
-                        <li class="dropdown user user-menu" >
-
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-
-                                @if(Auth::user()->image_path)
-                                {{Html::image('/images/photo/'.Auth::user()->image_path,'',array('class'=>"user-image"))}}
+                          
+                <li class="dropdown notifications-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                         @if(Auth::user()->image_path)
+                                {{Html::image('/images/photo/'.Auth::user()->image_path,'',array('class'=>"user-image img-circle",'style'=>"height:auto;width:20px;"))}}
                                 @else
                                 <img src="<?php echo \URL::to('') . '/img/user2-160x160.jpg' ?>" class="user-image">
                                 @endif
                                 <span class="hidden-xs">{{{ isset(Auth::user()->salutation) ? Auth::user()->salutation : '' }}} {{{ isset(Auth::user()->name) ? Auth::user()->name : '' }}}!</span>
                                 <b class="caret"></b>
-                            </a>           
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="{{ url('/users/'.Auth::user()->id) }}" class="glyphicon glyphicon-user">Profile</a>
-                                </li>
-                                <li>
-                                    <a href="{{ url('/changepasswords/create/') }}" class="glyphicon glyphicon-user">Change password</a>
-                                </li>
-                                <li>
-                                    <a href="{{ url('/logout') }}" class="glyphicon glyphicon-log-out">Sign out</a>
-                                </li>
-
-                            </ul>
-                        </li>
-                        
-                        <!-- Control Sidebar Toggle Button -->
+                    </a>
+                    <ul class="dropdown-menu" style="width:50%">
                         <li>
-                            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                           <ul class="menu" style="overflow: hidden;">
+                                    <li>
+                                        <a href="{{ url('/users/'.Auth::user()->id) }}">
+                                            <span class="glyphicon glyphicon-user text-green"></span>Profile
+                                        </a>
+                                    </li>
+                                    
+                                    <li>
+                                        <a href="{{ url('/changepasswords/create/') }}">
+                                            <i class="fa fa-exchange text-yellow"></i>Change Password
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ url('/logout') }}">
+                                            <i class="fa fa-sign-out text-warning"></i></span> Logout
+                                        </a>
+                                    </li>
+                                </ul>
                         </li>
                     </ul>
+                </li>
+            </ul>
                 </div>
+                  
             </nav>
+            
         </header>
    <aside class="main-sidebar">
      <section class="sidebar">
@@ -156,8 +147,8 @@ echo json_encode([
                             </span>
                         </a>
                         @php
-$array= array('depots','bus_types','services','vehicles','shifts','stops','routes','duties','targets','trips','fares','concession_fare_slabs'
-,'concessions','trip_cancellation_reasons','inspector_remarks','payout_reasons','denominations','pass_types','crew','')
+$array= array('depots','bus_types','services','vehicles','shifts','stops','routes','route_master','duties','targets','trips','fares','concession_fare_slabs'
+,'concessions','trip_cancellation_reasons','inspector_remarks','payout_reasons','denominations','pass_types','crew','ETM_details')
                        @endphp
                         <ul @if(in_array($segments_var[0],$array)) class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
                              
@@ -186,16 +177,11 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                             </a>
                                      @endif
                             @if(menuPermission('routes')==1)
-                            <li @if($segments_var[0]=='routes') class="active" @endif><a href="{{route('routes.index')}}">
+                            <li @if($segments_var[0]=='route_master') class="active" @endif><a href="{{route('route_master.index')}}">
                                     <i class="fa fa-map-marker"></i> @lang('menu.routes.title') 
                             </a>
                              </li>
-                                 @endif
-                            
-                            
-                            
-                            
-                           
+                            @endif
                             @if(menuPermission('trip_cancellation_reasons')==1)
                            <li @if($segments_var[0]=='trip_cancellation_reasons') class="active" @endif><a href="{{route('trip_cancellation_reasons.index')}}">
                                     <i class="fa fa-inr"></i> @lang('menu.trip_cancellation_reason.title') </a>
@@ -216,23 +202,49 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                                     <i class="fa fa-plus"></i> @lang('menu.denominations.title') </a>
                            </li>
                                @endif
+                            @php $pem=menuDisplayByUser($result, 'ETM_details','view'); @endphp
+                            @if($pem=='true')
+                            <li @if($segments_var[0]=='ETM_details') class="active" @endif><a href="{{route('ETM_details.index')}}"><i class="fa fa-calculator"></i>@lang('menu.ETM_details.title')</a>
+                            </li>
+                            @endif
                          </ul>
                     </li>
-                    @php $pem=menuDisplayByUser($result, 'ETM_details','view'); @endphp
-                    @if($pem=='true')
-                     <li  @if($segments_var[0]=='ETM_details') class="treeview active" @else class="treeview" @endif>
+                    
+                  <!--Start Inventories left menu details-->  
+                  @php 
+                  $pem=menuDisplayByUser($result, 'centerstock','view'); 
+                  @endphp
+                  @if($pem=='true')
+                  <li @if($segments_var[0]=='centerstock') class="treeview active" @else class="treeview" @endif>
                         <a href="#">
-                            <i class="fa fa-calculator" aria-hidden="true"></i> <span>@lang('menu.ETM_details.title')</span>
+                            <i class="fa fa-user"></i> <span>@lang('Manage Inventories')</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i></span>
+                            </span>
+                        </a>
+                        <ul @if($segments_var[0]=='inventories' || $segments_var[0]=='changepasswords') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
+                              <li @if($segments_var[0]=='centerstock') class="active" @endif><a href="{{route('centerstock.index')}}"><i class="fa fa-edit"></i>Central Stock</a></li>
+                              <li @if($segments_var[0]=='inventories') class="active" @endif><a href="#"><i class="fa fa-edit"></i>Depot Stock</a></li>
+                              <li @if($segments_var[0]=='inventories') class="active" @endif><a href="#"><i class="fa fa-edit"></i>Crew Stock</a></li>
+                            </ul>
+                          </li>
+                    @endif
+                    <!-- End Inventories menu details -->
+                @php $pem=menuDisplayByUser($result, 'waybills','view'); @endphp
+                    @if($pem=='true')
+                     <li  @if($segments_var[0]=='waybills') class="treeview active" @else class="treeview" @endif>
+                        <a href="#">
+                            <i class="fa fa-cog" aria-hidden="true"></i> <span>Waybill Management</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
-                        <ul @if($segments_var[0]=='ETM_details') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
-                         <li @if($segments_var[0]=='ETM_details') class="active" @endif><a href="{{route('ETM_details.index')}}"><i class="fa fa-calculator"></i>@lang('menu.ETM_details.title')</a>
-                            </li>
+                        <ul @if($segments_var[0]=='waybills') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
+                            <li @if($segments_var[0]=='waybills' && !$segments_var[1]) class="active" @endif><a href="{{route('waybills.index')}}"><i class="fa fa-key"></i>Abstract</a></li>
+                            <li @if($segments_var[1]=='auditlist') class="active" @endif><a href="{{route('waybills.auditlist')}}"><i class="fa fa-key"></i>Audit</a></li>
                          </ul>
                     </li>
-                    @endif
+                    @endif    
                  @php $pem=menuDisplayByUser($result, 'permissions','view'); @endphp
                     @if($pem=='true')
                      <li  @if($segments_var[0]=='roles' || $segments_var[0]=='permissions' || $segments_var[0]=='settings') class="treeview active" @else class="treeview" @endif>
@@ -256,7 +268,7 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                     @endif
                     <li @if($segments_var[0]=='versions') class="treeview active" @else class="treeview" @endif>
                        <a href="{{route('versions.index')}}">
-                            <i class="fa fa-dashboard"></i> <span>Version</span>
+                           <img src="<?php echo \URL::to('') . '/images/version.png' ?>" width="14" style="margin-right: 10px"><span>Version</span>
                         </a>
                     </li>
                     <li @if($segments_var[0]=='changepasswords') class="active" @endif><a href="{{route('changepasswords.create')}}">
@@ -378,7 +390,8 @@ $.widget.bridge('uibutton', $.ui.button);
 <script type="text/javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.1.2/js/buttons.html5.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.1.2/js/buttons.print.min.js"></script>
-
+<link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.css') }}">
+<script src="{{ asset('js/bootstrap-datetimepicker.min.js') }}"></script>
 
 <script type="text/javascript">
   
@@ -402,6 +415,31 @@ minDate: 0,
 
           });
       }); 
+      
+ //$(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii', minDate:new Date()});
+ $('.form_datetime').datetimepicker({
+        //language:  'fr',
+        format: 'dd-mm-yyyy hh:ii',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		forceParse: 0,
+        showMeridian: 1,
+        startDate:new Date()
+    });
+ $('.form_date').datetimepicker({
+        //language:  'fr',
+        format: 'dd-mm-yyyy',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		minView: 2,
+		forceParse: 0
+    });
   $('#map1').append('<div style="" id="map"><div class="loading_bar"></div></div>');
 $(window).on('load', function(){
   setTimeout(removeLoader, 200); //wait for page load PLUS two seconds.

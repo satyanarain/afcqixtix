@@ -9,7 +9,12 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{headingMain()}}</h3>
-               <a href="<?php echo route('versions.create')?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
+               <?php $permission_status = checkPermission('versions','create');
+                    if($permission_status && checkVersionOpen()){?>                     
+<!--                    <a class="disabled"><span class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</span></a>-->
+                <?php }else{?>
+                    <a href="<?php echo route('versions.create')?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
+                <?php }?>
             </div>
              @include('partials.message')
             <!-- /.box-header -->
@@ -33,10 +38,15 @@
                             <td>{{$value->reason}}
                             </td>
                             <td>
-                                <?php if($value->version_status=='o'){?>
-                                <a href="<?php echo route('versions.edit',$value->id)?>" title="Edit Version"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php $permission = getAllModulePermission('versions');
+                                if(in_array('edit',$permission)){?>
+                                    <?php if($value->version_status=='o'){?>
+                                    <a href="<?php echo route('versions.edit',$value->id)?>" title="Edit Version"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <?php }?>
+                                <?php }
+                                if(in_array('view',$permission)){?>
+                                    <a href="versions/view_differences/<?=$value->id?>" title="View Version Differences"><span class="glyphicon glyphicon-search"></span></a>
                                 <?php }?>
-                                <a style="cursor: pointer;" title="View Version Detail" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>
                             </td>
                         </tr>
                         @endforeach

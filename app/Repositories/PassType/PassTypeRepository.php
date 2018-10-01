@@ -49,7 +49,7 @@ class PassTypeRepository implements PassTypeRepositoryContract {
        
     }
  public function update($id, $requestData) {
-        $this->createLog('App\Models\PassType','App\Models\PassTypeLog',$id);
+        //$this->createLog('App\Models\PassType','App\Models\PassTypeLog',$id);
         $pass_pypes = PassType::findorFail($id);
         $input = $requestData->all();
         $userid = Auth::id();

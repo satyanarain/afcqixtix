@@ -19,9 +19,9 @@ use App\Http\Requests\ConcessionFareSlab\StoreConcessionFareSlabRequest;
 use App\Repositories\ConcessionFareSlab\ConcessionFareSlabRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-
+use App\Traits\checkPermission;
 class ConcessionFareSlabController extends Controller {
-
+    use checkPermission;
     protected $concession_fare_slabs;
 
     public function __construct(
@@ -37,6 +37,8 @@ class ConcessionFareSlabController extends Controller {
      */
  public function index($bus_type_id,$service_id)
 {
+     if(!$this->checkActionPermission('concession_fare_slabs','view'))
+            return redirect()->route('401');
     $concessionFareSlabs = DB::table('concession_fare_slabs')
     ->select('*','concession_fare_slabs.id as id','users.name as username','services.name as name')
     ->leftjoin('users', 'users.id', '=', 'concession_fare_slabs.user_id')
@@ -54,6 +56,8 @@ class ConcessionFareSlabController extends Controller {
     }
 
     public function create($bus_type_id,$service_id,Request $request) {
+        if(!$this->checkActionPermission('concession_fare_slabs','create'))
+            return redirect()->route('401');
         return view('concession_fare_slabs.create',compact('bus_type_id','service_id'));
     }
 
@@ -69,6 +73,10 @@ class ConcessionFareSlabController extends Controller {
      * @return Response
      */
     public function store($bus_type_id,$service_id,StoreConcessionFareSlabRequest $concession_fare_slabsRequest) {
+        if(!$this->checkActionPermission('concession_fare_slabs','create'))
+            return redirect()->route('401');
+        $version_id = $this->getCurrentVersion();
+        $concession_fare_slabsRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id]);
         $concession_fare_slabsRequest->request->add(['service_id'=> $service_id]);
         $getInsertedId = $this->concession_fare_slabs->create($concession_fare_slabsRequest);
         return redirect()->route('bus_types.services.concession_fare_slabs.index',[$bus_type_id,$service_id]);
@@ -81,6 +89,8 @@ class ConcessionFareSlabController extends Controller {
      * @return Response
      */
     public function show($id) {
+        if(!$this->checkActionPermission('concession_fare_slabs','view'))
+            return redirect()->route('401');
                 $concession_fare_slabs = DB::table('concession_fare_slabs')->select('*','concession_fare_slabs.id as id','users.name as username','services.name as name')
                 ->leftjoin('users', 'users.id', '=', 'concession_fare_slabs.user_id')
                 ->leftjoin('services', 'concession_fare_slabs.service_id', '=', 'services.id')
@@ -95,6 +105,8 @@ class ConcessionFareSlabController extends Controller {
      * @return Response
      */
     public function edit($bus_type_id,$service_id,$id) {
+        if(!$this->checkActionPermission('concession_fare_slabs','edit'))
+            return redirect()->route('401');
         $concession_fare_slabs = ConcessionFareSlab::findOrFail($id);
         return view('concession_fare_slabs.edit',compact('concession_fare_slabs','service_id','bus_type_id'));
     }
@@ -106,6 +118,10 @@ class ConcessionFareSlabController extends Controller {
      * @return Response
      */
     public function update($bus_type_id,$service_id,$id, UpdateConcessionFareSlabRequest $request) {
+        if(!$this->checkActionPermission('concession_fare_slabs','edit'))
+            return redirect()->route('401');
+        
+        $request->request->add(['approval_status'=>'p','flag'=> 'u']);
         $request->request->add(['service_id'=> $service_id]);
         $this->concession_fare_slabs->update($id, $request);
         return redirect()->route('bus_types.services.concession_fare_slabs.index',[$bus_type_id,$service_id]);

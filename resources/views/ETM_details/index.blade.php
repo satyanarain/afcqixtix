@@ -9,7 +9,13 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{headingMain()}}</h3>
-         {{ createButton('create','Add') }}
+               <?php $permission_status = checkPermission('ETM_details','create');
+               $checkVersionOpen = checkVersionOpen();
+                    if($permission_status && $checkVersionOpen)
+                        createButton('create','Add');
+                    elseif($permission_status)
+                        createDisableButton('create','Add');
+                ?>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -33,7 +39,15 @@
                             <td>{{$value->evm_status_master_id}}</td>
                             <td>{{$value->sim_no}}</td>
                             <td>
-                            {{ actionEdit('edit',$value->id)}}
+                                <?php $permission = getAllModulePermission('ETM_details');
+                                if(in_array('edit',$permission) && $checkVersionOpen){
+                                    echo '<a  href="'.route("ETM_details.edit",$value->id).'" class="" title="Edit" ><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
+                                }elseif(in_array('edit',$permission)){?>
+                                    <a class="disabled"><span class="glyphicon glyphicon-pencil "></span></a>&nbsp;&nbsp;&nbsp;&nbsp;   
+                                <?php }
+                                if(in_array('view',$permission))
+                                    echo '<a style="cursor: pointer;" title="View" data-toggle="modal" data-target="#'.$value->id.'"  onclick="viewDetails('.$value->id.',\'view_detail\')"><span class="glyphicon glyphicon-search"></span></a>';
+                                ?>
                             </td>
                          </tr>
                         @endforeach

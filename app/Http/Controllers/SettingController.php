@@ -18,10 +18,11 @@ use App\Repositories\Setting\SettingRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use PDO;
-
+use App\Traits\checkPermission;
 class SettingController extends Controller
 {
     protected $settings;
+    use checkPermission;
     public function __construct(
         SettingRepositoryContract $settings
     ) {
@@ -34,6 +35,8 @@ class SettingController extends Controller
      */
     public function index()
     {
+        if(!$this->checkActionPermission('settings','view'))
+            return redirect()->route('401');
         $settings = DB::table('settings')->select('*')
       ->orderBy('id','desc')->get();
         //print_r($settings);die;
@@ -42,6 +45,8 @@ class SettingController extends Controller
     }
     public function create()
     {
+        if(!$this->checkActionPermission('settings','create'))
+            return redirect()->route('401');
         //$settings = Setting::findOrFail();
         return view('settings.create');
     }
@@ -60,6 +65,8 @@ class SettingController extends Controller
     
     public function store(StoreSettingRequest $settingsRequest)
     {
+        if(!$this->checkActionPermission('settings','create'))
+            return redirect()->route('401');
         //print_r($settingsRequest->all());die;
         $getInsertedId = $this->settings->create($settingsRequest);
         return redirect()->route('settings.index');         
@@ -72,6 +79,8 @@ class SettingController extends Controller
      */
    public function show($id)
    {
+       if(!$this->checkActionPermission('settings','view'))
+            return redirect()->route('401');
    $settings=Setting::findOrFail($id);
     return view('settings.show')->withSettings($settings);
      }
@@ -84,7 +93,8 @@ class SettingController extends Controller
      */
     public function edit($id)
     {
-        //die('f');
+        if(!$this->checkActionPermission('settings','edit'))
+            return redirect()->route('401');
        $settings=Setting::findOrFail($id);
       return view('settings.edit')->withSettings($settings);
     }
@@ -97,6 +107,8 @@ class SettingController extends Controller
      */
     public function update($id, UpdateSettingRequest $request)
     {
+        if(!$this->checkActionPermission('settings','edit'))
+            return redirect()->route('401');
         //print_r($request);die;
         //print_r($id);die;
         $this->settings->update($id, $request);
@@ -114,6 +126,8 @@ class SettingController extends Controller
     
     
      public function viewDetail($id) {
+         if(!$this->checkActionPermission('settings','view'))
+            return redirect()->route('401');
         //$service = Service::find($id);
         $sql = DB::table('settings')->where('id', $id)->get();
        ?>

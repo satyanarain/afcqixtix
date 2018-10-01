@@ -4,7 +4,12 @@
    {!! Form::text('route', null, ['class' => 'form-control','required' => 'required']) !!}
    </div>
 </div>
-
+<div class="input-group col-md-12">
+<div class="col-md-12" style="padding:0px;  margin-bottom:10px;">
+  {!! Form::label('route', Lang::get('Direction'), ['class' => 'control-label','style'=>"margin-bottom:10px;"]) !!}</br>
+ {!! Form::select('direction',array('Up'=>'Up','Down'=>'Down',),isset($routes->direction) ? $routes->direction : selected,['class' => 'form-control required','required' => 'required','placeholder'=>'Select Direction']) !!}
+</div>
+</div>
 <div class="path-section">
     <p class="path-section-heading">Path</p>
 
@@ -35,12 +40,7 @@
  <input type="checkbox" value='Yes' name="default_path"> 
 </div>
 </div>
-<div class="input-group col-md-12">
-<div class="col-md-12" style="padding:0px;  margin-bottom:10px;">
-  {!! Form::label('route', Lang::get('Direction'), ['class' => 'control-label','style'=>"margin-bottom:10px;"]) !!}</br>
- {!! Form::select('direction',array('Up'=>'Up','Down'=>'Down',),isset($routes->direction) ? $routes->direction : selected,['class' => 'form-control required','required' => 'required','placeholder'=>'Select Direction']) !!}
-</div>
-</div>
+
 
 <div class="path-section">
     <p class="path-section-heading">Stop Details</p>
@@ -70,11 +70,11 @@
  <div id="control-group" style="padding-left:0px;  margin-bottom:10px;" class="col-md-12" >
        <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;">
            @php $stops=displayList('stops','stop')@endphp
-            {!! Form::select('stop_id[]',$stops,isset($value->stop_id) ? $value->stop_id : selected,['class' => 'form-control','required' => 'required','placeholder'=>'Select Stop']) !!}
+            {!! Form::select('stop_id[]',$stops,isset($value->stop_id) ? $value->stop_id : selected,['class' => 'form-control route_stops','required' => 'required','placeholder'=>'Select Stop']) !!}
         </div>
-     <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="stage_number[]" class="form-control" placeholder="Stage Number" required="required" onkeypress="return isIntegerKey(event)" value="{{ $value->stage_number }}"></div>
-       <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="distance[]" class="form-control" placeholder="Distance(km)" required="required" onkeypress="return isNumberKey(event)" value="{{ $value->stage_number }}"></div>
-       <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="hot_key[]" class="form-control" placeholder="Hot Key" required="required" onkeypress="return isIntegerKey(event)" value="{{ $value->stage_number }}"></div>
+     <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="stage_number[]" class="form-control stage_number" placeholder="Stage Number" required="required" onkeypress="return isIntegerKey(event)" value="{{ $value->stage_number }}"></div>
+       <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="distance[]" class="form-control" placeholder="Distance(km)" required="required" onkeypress="return isNumberKey(event)" value="{{ $value->distance }}"></div>
+       <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="hot_key[]" class="form-control hot_key" placeholder="Hot Key" required="required" onkeypress="return isIntegerKey(event)" value="{{ $value->hot_key }}"></div>
 
     </div>
 @endforeach
@@ -85,11 +85,11 @@
        <div id="control-group" style="padding-left:0px;  margin-bottom:10px;" class="col-md-12" >
        <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;">
            @php $stops=displayList('stops','stop')@endphp
-            {!! Form::select('stop_id[]',$stops,isset($routes->stop_id) ? $routes->stop_id : selected,['class' => 'form-control','required' => 'required','placeholder'=>'Select Stop']) !!}
+            {!! Form::select('stop_id[]',$stops,isset($routes->stop_id) ? $routes->stop_id : selected,['class' => 'form-control route_stops','required' => 'required','placeholder'=>'Select Stop']) !!}
         </div>
-       <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="stage_number[]" class="form-control" placeholder="Stage Number" required="required" onkeypress="return isIntegerKey(event)"></div>
+       <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="stage_number[]" class="form-control stage_number" placeholder="Stage Number" required="required" onkeypress="return isIntegerKey(event)"></div>
        <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="distance[]" class="form-control" placeholder="Distance(km)" required="required" onkeypress="return isNumberKey(event)"></div>
-       <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="hot_key[]" class="form-control" placeholder="Hot Key" required="required" onkeypress="return isIntegerKey(event)"></div>
+       <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="hot_key[]" class="form-control hot_key" placeholder="Hot Key" required="required" onkeypress="return isIntegerKey(event)"></div>
      
 </div>
 </div>
@@ -109,6 +109,7 @@
 
 <div class="input-group col-md-12" id="button">
   {!! Form::submit(Lang::get('common.titles.save'), ['class' => 'btn btn-success']) !!}
+  <div class="col-md-3" style="margin-right: 15px;">{{ Form::button('Cancel', array('class' => 'btn btn-success pull-left','onclick'=>'window.history.back();')) }}</div>
 </div>
  </div>
 
@@ -156,10 +157,10 @@ if(id!='')
          if(x < max_fields){ //max input box allowed
             x++; //text box increment
 $("#input_fields_wrap_classes").append('<div id="div_remove_field'+ x +'" style="padding-left:0px;  margin-bottom:10px;" class="col-md-12">\n\
- <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;">{!! Form::select('stop_id[]',$stops,isset($routes->stop_id) ? $routes->stop_id : selected,['class' => 'form-control','required' => 'required','placeholder'=>'Select Stop']) !!}</div>\n\
-  <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="stage_number[]" class="form-control" placeholder="Stage Number" required="required" onkeypress="return isIntegerKey(event)"></div>\n\
+ <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;">{!! Form::select('stop_id[]',$stops,isset($routes->stop_id) ? $routes->stop_id : selected,['class' => 'form-control route_stops','required' => 'required','placeholder'=>'Select Stop']) !!}</div>\n\
+  <div class="col-md-3" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="stage_number[]" class="form-control stage_number" placeholder="Stage Number" required="required" onkeypress="return isIntegerKey(event)"></div>\n\
 <div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="distance[]" class="form-control" placeholder="Distance(km)" required="required" onkeypress="return isNumberKey(event)"></div>\n\
-<div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="hot_key[]" class="form-control" placeholder="Hot Key" required="required" onkeypress="return isIntegerKey(event)"></div>\n\
+<div class="col-md-2" style="padding-left:0px;  margin-bottom:10px;"><input type="text" name="hot_key[]" class="form-control hot_key" placeholder="Hot Key" required="required" onkeypress="return isIntegerKey(event)"></div>\n\
 <button class="btn btn-danger remove" type="button" id="remove_field'+ x+'" onclick="removeFunction(this.id)"><i class="glyphicon glyphicon-remove"></i> Remove</button></div>'); //add input box
    }
  });

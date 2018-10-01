@@ -20,10 +20,10 @@ class TripStartController extends Controller
     		'start_timestamp' => 'required',
     	]);
 
-    	/*if($validator->fails())
+    	if($validator->fails())
     	{
     		return response()->json(['statusCode'=>'Error', 'data'=>$validator->errors()]);
-    	}*/
+    	}
 
     	$tripStart = TripStart::create($request->all());
 

@@ -85,7 +85,7 @@ if($segments_var[2]=='edit')
     <header class="main-header">   
              
             <!-- Logo -->
-            <a href="index2.html" class="logo">
+            <a href="/dashboard" class="logo">
              
                 <span class="logo-lg"><b>Qixtix(AFC)</span>
             </a>
@@ -382,42 +382,12 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                                     <i class="fa fa-bus"></i> @lang('menu.bus_types.title') 
                             </a>
                            </li>
-                            <li @if($segments_var[0]=='services') class="active" @endif><a href="{{route('services.index')}}">
-                                    <i class="fa fa-briefcase"></i> @lang('menu.services.title') 
-                            </a>
-                            </li>
-                            <li @if($segments_var[0]=='vehicles') class="active" @endif><a href="{{route('vehicles.index')}}">
-                                    <i class="fa fa-bus"></i> @lang('menu.vehicles.title') 
-                            </a>
-                            </li>
                             <li @if($segments_var[0]=='shifts') class="active" @endif><a href="{{route('shifts.index')}}">
                                     <i class="fa fa-calendar"></i> @lang('menu.shifts.title') 
                             </a>
                             <li @if($segments_var[0]=='stops') class="active" @endif><a href="{{route('stops.index')}}">
                                     <i class="fa fa-bus"></i> @lang('menu.stops.title') 
                             </a>
-                            <li @if($segments_var[0]=='routes') class="active" @endif><a href="{{route('routes.index')}}">
-                                    <i class="fa fa-map-marker"></i> @lang('menu.routes.title') 
-                            </a>
-                             </li>
-                            <li @if($segments_var[0]=='duties') class="active" @endif><a href="{{route('duties.index')}}">
-                                    <i class="fa fa-file"></i> @lang('menu.duties.title') 
-                            </a>
-                            </li>
-                            
-                            <li @if($segments_var[0]=='targets') class="active" @endif><a href="{{route('targets.index')}}">
-                                    <i class="fa fa-bullseye"></i> @lang('menu.targets.title') 
-                            </a>
-                                 
-                            <li @if($segments_var[0]=='fares') class="active" @endif><a href="{{route('fares.index')}}">
-                                    <i class="fa fa-inr"></i> @lang('menu.fares.title') </a>
-                           </li>
-                           <li @if($segments_var[0]=='concession_fare_slabs') class="active" @endif><a href="{{route('concession_fare_slabs.index')}}">
-                                    <i class="fa fa-inr"></i> @lang('menu.concession_fare_slabs.title') </a>
-                           </li>
-                           <li @if($segments_var[0]=='concessions') class="active" @endif><a href="{{route('concessions.index')}}">
-                                    <i class="fa fa-inr"></i> @lang('menu.concessions.title') </a>
-                           </li>
                            <li @if($segments_var[0]=='trip_cancellation_reasons') class="active" @endif><a href="{{route('trip_cancellation_reasons.index')}}">
                                     <i class="fa fa-inr"></i> @lang('menu.trip_cancellation_reason.title') </a>
                            </li>
@@ -431,13 +401,6 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                            <li @if($segments_var[0]=='denominations') class="active" @endif><a href="{{route('denominations.index')}}">
                                     <i class="fa fa-plus"></i> @lang('menu.denominations.title') </a>
                            </li>
-                           <li @if($segments_var[0]=='pass_types') class="active" @endif><a href="{{route('pass_types.index')}}">
-                                    <i class="fa fa-lock"></i> @lang('menu.pass_types.title') </a>
-                           </li>
-                           <li @if($segments_var[0]=='crew_details') class="active" @endif><a href="{{route('crew_details.index')}}">
-                                    <i class="fa fa-eye"></i> @lang('menu.crew_details.title') </a>
-                           </li>
-                             
                          </ul>
                     </li>
                @php $pem=menuDisplayByUser($result, 'permissions','view'); @endphp

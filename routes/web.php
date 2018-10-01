@@ -14,6 +14,9 @@
 Auth::routes();
 
 Route::get('login', ['as' => 'login', 'uses' => 'Auth\LoginController@showLoginForm']);
+Route::get('/401', function () {
+    return view('/errors/401');
+})->name('401');
 Route::post('login', ['as' => 'login.post', 'uses' => 'Auth\LoginController@login']);
 Route::post('logout', ['as' => 'logout', 'uses' => 'Auth\LoginController@logout']);
 Route::get('/logout', 'Auth\LoginController@logout');
@@ -133,8 +136,14 @@ Route::group(['middleware' => ['auth']], function () {
     
     Route::get('routes/data', 'RouteController@anyData')->name('routes.data');
     Route::get('routes/view_detail/{id}', 'RouteController@viewDetail');
+    Route::get('route_master/{route_id}/routes', 'RouteController@index');
     Route::post('routes/store', 'RouteController@store');
-    Route::resource('routes', 'RouteController');
+    Route::resource('route_master.routes', 'RouteController');
+    
+    Route::get('route_master/data', 'RouteMasterController@anyData')->name('routes.data');
+    Route::get('route_master/view_detail/{id}', 'RouteMasterController@viewDetail');
+    Route::post('route_master/store', 'RouteMasterController@store');
+    Route::resource('route_master', 'RouteMasterController');
     
 //    Route::get('duties/data', 'DutyController@anyData')->name('duties.data');
 //    Route::post('duties/store', 'DutyController@store');
@@ -142,21 +151,21 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('duties/sort_order/{id}/{route_id}/', 'DutyController@sortOrder');
     Route::get('duties/view_detail/{id}', 'DutyController@viewDetail');
     Route::get('duties/order_list/{route_id}', 'DutyController@orderList');
-    Route::get('routes/{route_id}/duties', 'DutyController@index');
-    Route::get('routes/{route_id}/duties/create', 'DutyController@create');
-    Route::resource('routes.duties', 'DutyController');
+    Route::get('route_master/{route_master_id}/duties', 'DutyController@index');
+    Route::get('route_master/{route_master_id}/duties/create', 'DutyController@create');
+    Route::resource('route_master.duties', 'DutyController');
     
 //    Route::get('trips/data', 'TripController@anyData')->name('trips.data');
 //    Route::get('trips/getsubcat/{id}', 'TripController@getSubCat');
     Route::get('trips/view_detail/{id}', 'TripController@viewDetail');
 //    Route::post('trips/store', 'TripController@store');
-    Route::resource('routes.duties.trips', 'TripController');
+    Route::resource('route_master.duties.trips', 'TripController');
     
     //Route::get('targets/data', 'TargetController@anyData')->name('targets.data');
     //Route::post('targets/store', 'TargetController@store');
     //Route::get('targets/getduties/{id}', 'TargetController@getDuty');
     //Route::get('routes/{route_id}/targets', 'TargetController@index');
-    Route::resource('routes.duties.targets', 'TargetController');
+    Route::resource('route_master.duties.targets', 'TargetController');
     
     
     
@@ -216,8 +225,22 @@ Route::group(['middleware' => ['auth']], function () {
     
     //Route::get('versions/data', 'VersionController@anyData')->name('stops.data');
     //Route::post('stops/store', 'StopController@store');
-    Route::get('versions/view_detail/{id}', 'VersionController@viewDetail');
+    Route::get('versions/view_differences/{id}', 'VersionController@viewDifferences');
+    Route::post('versions/approve_change/{id}', 'VersionController@approveChange');
+    Route::get('versions/view_detail/{tablename}/{id}/{logtable}', 'VersionController@viewDetail');
     Route::resource('versions', 'VersionController');
     Route::get('settings/view_detail/{id}', 'SettingController@viewDetail');
     Route::resource('settings', 'SettingController');
+    
+    //Manage inventory route
+    Route::resource('centerstock', 'CenterstockController');
+    
+    Route::get('waybills/data', 'WaybillController@anyData')->name('waybill.data');
+    Route::get('waybills/view_detail/{id}', 'WaybillController@viewDetail');
+    Route::get('waybills/close/{id}', 'WaybillController@close')->name('waybills.close');
+    Route::get('waybills/auditlist', 'WaybillController@auditlist')->name('waybills.auditlist');
+    Route::post('waybills/getdata/{id}', 'WaybillController@getData');
+    Route::post('waybills/getfiltereddata', 'WaybillController@getfiltereddata')->name('waybills/getfiltereddata');
+    Route::resource('waybills', 'WaybillController');
+    
 });

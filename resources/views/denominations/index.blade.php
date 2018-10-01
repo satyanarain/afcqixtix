@@ -9,7 +9,12 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{headingMain()}}</h3>
-             {{ createButton('create','Add') }}
+               <?php $permission_status = checkPermission('denominations','create');
+                     $checkVersionOpen = checkVersionOpen();
+                    if($permission_status && $checkVersionOpen)
+                        createButton('create','Add');
+                    elseif($permission_status)
+                        createDisableButton('create','Add');?>
             </div>
            @include('partials.message')
             <!-- /.box-header -->
@@ -30,7 +35,15 @@
                              <td>{{$value->description}}</td>
                             <td>{{$value->price}}</td>
                             <td>
-                             {{ actionEdit('edit',$value->id)}}
+                                <?php $permission = getAllModulePermission('denominations');
+                                if(in_array('edit',$permission) && $checkVersionOpen){?>
+                                <a href="<?php echo route('denominations.edit',$value->id)?>" title="Edit Denomination"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }elseif(in_array('edit',$permission)){?>
+                                    <a class="disabled"><span class="glyphicon glyphicon-pencil "></span></a>&nbsp;&nbsp;&nbsp;&nbsp;   
+                                <?php }
+                                if(in_array('view',$permission)){?>
+                                <a style="cursor: pointer;" title="View Denomination" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }?>
                             </td>
                         </tr>
                         @endforeach

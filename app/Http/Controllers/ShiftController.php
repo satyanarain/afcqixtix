@@ -20,9 +20,11 @@ use App\Repositories\Shift\ShiftRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Traits\activityLog;
+use App\Traits\checkPermission;
 class ShiftController extends Controller
 {
     use activityLog;
+    use checkPermission;
     protected $shifts;
     public function __construct(
         ShiftRepositoryContract $shifts
@@ -36,11 +38,15 @@ class ShiftController extends Controller
      */
     public function index()
     {
+        if(!$this->checkActionPermission('shifts','view'))
+            return redirect()->route('401');
      $shifts = Shift::all();
      return view('shifts.index')->withShifts($shifts);
     }
     public function create()
     {
+        if(!$this->checkActionPermission('shifts','create'))
+            return redirect()->route('401');
      //$shifts = Shift::findOrFail();
      return view('shifts.create');
     }
@@ -58,6 +64,10 @@ class ShiftController extends Controller
      */
     public function store(StoreShiftRequest $shiftsRequest)
     {
+        if(!$this->checkActionPermission('shifts','create'))
+            return redirect()->route('401');
+        $version_id = $this->getCurrentVersion();
+        $shiftsRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id]);
         $getInsertedId = $this->shifts->create($shiftsRequest);
         return redirect()->route('shifts.index');         
     }
@@ -69,6 +79,8 @@ class ShiftController extends Controller
      */
    public function show($id)
    {
+       if(!$this->checkActionPermission('shifts','view'))
+            return redirect()->route('401');
  $shifts = DB::table('shifts')->select('*','shifts.updated_at as updated_at','shifts.id as id','shifts.user_id as user_id','users.user_name as user_name')
            ->leftjoin('users', 'users.id', '=', 'shifts.user_id')
          ->get();
@@ -83,6 +95,8 @@ class ShiftController extends Controller
      */
     public function edit($id)
     {
+        if(!$this->checkActionPermission('shifts','edit'))
+            return redirect()->route('401');
        $shifts=Shift::findOrFail($id);
       return view('shifts.edit')->withShifts($shifts);
     }
@@ -95,6 +109,9 @@ class ShiftController extends Controller
      */
     public function update($id, UpdateShiftRequest $request)
     {
+        if(!$this->checkActionPermission('shifts','edit'))
+            return redirect()->route('401');
+        $request->request->add(['approval_status'=>'p','flag'=> 'u']);
         $this->shifts->update($id, $request);
         return redirect()->route('shifts.index');
     }
@@ -116,8 +133,9 @@ class ShiftController extends Controller
         $shifs = Shift::orderBy('order_number')->get();
         ?>
                 <thead>
-                    <tr>  <th>Shift</th>
+                    <tr> 
                         <th>Order Number</th>
+                        <th>Shift</th>
                         <th>Start Time</th>
                         <th>End Time</th>
                         <th>Action</th>
@@ -127,8 +145,8 @@ class ShiftController extends Controller
             <?php foreach ($shifs as $value) {
                 ?>
                             <tr class="nor_f">
-                                <td><?php echo $value->shift ; ?></td>
                                 <td><?php echo $value->order_number; ?></td>
+                                <td><?php echo $value->shift ; ?></td>
                                 <td><?php echo $value->start_time ?></td>
                                 <td><?php echo $value->end_time ?></td>
                                 <td><a  href="<?php echo route("shifts.edit", $value->id) ?>" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -146,8 +164,9 @@ class ShiftController extends Controller
         <?php foreach ($shifts as $value) {
         ?>
                     <li id="<?php echo "order" . $value->id; ?>" class="list-group-order-sub">
+                         <a href="javascript:void(0);"><?php echo $value->order_number; ?></a>
                     <a href="javascript:void(0);" ><?php echo $value->shift; ?></a>
-                    <a href="javascript:void(0);"><?php echo $value->order_number; ?></a>
+                   
                     <a href="javascript:void(0);"><?php echo $value->abbreviation; ?></a>
                    </li>
         <?php } ?>
@@ -155,6 +174,8 @@ class ShiftController extends Controller
         <?php
     }
    public function viewDetail($id) {
+       if(!$this->checkActionPermission('shifts','view'))
+            return redirect()->route('401');
           $value = DB::table('shifts')->select("*",'shifts.created_at','shifts.updated_at','shifts.id as id')
                   ->leftjoin('users','users.id','shifts.user_id')
                   ->orderBy('shifts.order_number')

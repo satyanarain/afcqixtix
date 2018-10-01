@@ -1,6 +1,6 @@
 @php 
     $segment = Request::segments();
-    $routes=displayList('routes','route')
+    $routes=displayList('route_master','route_name')
 @endphp
 @if($segment[4]==="edit")
 <div class="form-group">
@@ -52,7 +52,7 @@
         {!! Form::text('order_number', null, ['class' => 'col-md-6 form-control','readonly' => 'readonly']) !!}
         </div>
          @else
-         @php $duties_value= maxId1('duties','order_number','route_id',$route_id) @endphp
+         @php $duties_value= maxId1('duties','order_number','route_id',$route_master_id) @endphp
          {!! Form::label('order_number', Lang::get('Order Number'), ['class' => 'col-md-3 control-label']) !!}
          <div class="col-md-7 col-sm-12 required">
         {!! Form::text('order_number', $duties_value, ['class' => 'col-md-6 form-control','readonly' => 'readonly',]) !!}
@@ -63,6 +63,7 @@
 <div class="form-group">
     <div class="col-md-3" style="margin-right: 15px;"></div>
     {{ Form::submit('Save', array('class' => 'btn btn-success pull-left','required' => 'required')) }}
+    <div class="col-md-3" style="margin-right: 15px;">{{ Form::button('Cancel', array('class' => 'btn btn-success pull-left','onclick'=>'window.history.back();')) }}</div>
     <div class="col-md-9">
         <div class="col-md-7 col-sm-12">
         </div>

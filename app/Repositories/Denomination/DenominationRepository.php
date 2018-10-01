@@ -41,7 +41,7 @@ class DenominationRepository implements DenominationRepositoryContract {
        
     }
  public function update($id, $requestData) {
-         $this->createLog('App\Models\Denomination','App\Models\DenominationLog',$id);
+         //$this->createLog('App\Models\Denomination','App\Models\DenominationLog',$id);
          $concession = Denomination::findorFail($id);
          $input = $requestData->all();
          $userid = Auth::id();

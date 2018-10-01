@@ -19,9 +19,11 @@ use App\Repositories\Role\RoleRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Traits\activityLog;
+use App\Traits\checkPermission;
 class RolesController extends Controller
 {
- protected $roles;
+    protected $roles;
+    use checkPermission;
  public function __construct(RoleRepositoryContract $roles) {
         $this->roles = $roles;
         //$this->middleware('user.is.admin', ['only' => ['index', 'create', 'destroy']]);

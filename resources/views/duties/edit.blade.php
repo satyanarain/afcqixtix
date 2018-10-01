@@ -3,8 +3,8 @@
 <h1>Duty Management {{--headingBold()--}}</h1>
 <ol class="breadcrumb">
     <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="{{route('routes.index')}}">Routes</a></li>
-    <li><a href="{{route('routes.duties.index',$route_id)}}">Duties</a></li>
+    <li><a href="{{route('route_master.index')}}">Routes</a></li>
+    <li><a href="{{route('route_master.duties.index',$route_id)}}">Duties</a></li>
     <li class="active">Update Duty</li>
 </ol>
 @stop
@@ -27,7 +27,7 @@
             <div class="box-body">
                {!! Form::model($duties, [
         'method' => 'PATCH',
-        'route' => ['routes.duties.update',$route_id,$duties->id],
+        'route' => ['route_master.duties.update',$route_master_id,$duties->id],
         'files'=>true,
         'class'=>'form-horizontal',
         'enctype' => 'multipart/form-data'

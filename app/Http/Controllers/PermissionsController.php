@@ -16,11 +16,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Traits\activityLog;
+use App\Traits\checkPermission;
 class PermissionsController extends Controller
 {
-
+    use checkPermission;
 
     public function index() {
+        if(!$this->checkActionPermission('permissions','view'))
+            return redirect()->route('401');
          $users = DB::table('permissions')->select('*','permissions.id as id')
                ->leftjoin('users','permissions.user_id','users.id')
                 ->orderBy('permissions.id','desc')
@@ -29,6 +32,8 @@ class PermissionsController extends Controller
           return view('permissions.index', compact('users'));
     }
     public function show() {
+        if(!$this->checkActionPermission('permissions','view'))
+            return redirect()->route('401');
          $users = DB::table('permissions')->select('*','permissions.id as id')
                // ->leftjoin('users','permissions.user_id','users.id')
                 ->orderBy('permissions.id','desc')
@@ -42,7 +47,8 @@ class PermissionsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create() {
-       
+        if(!$this->checkActionPermission('permissions','create'))
+            return redirect()->route('401');
          return view('permissions.create');
     }
 //
@@ -120,7 +126,8 @@ class PermissionsController extends Controller
      */
       public function store(Request $request)
     {
-       
+          if(!$this->checkActionPermission('permissions','create'))
+            return redirect()->route('401');
             $input= $request->all();
             $user_id=  Auth::id();
             $input['user_id'] = $user_id;
@@ -145,8 +152,11 @@ class PermissionsController extends Controller
             $input['payout_reasons'] = implode(',', $request->payout_reasons);
             $input['denominations'] = implode(',', $request->denominations);
             $input['pass_types'] = implode(',', $request->pass_types);
-            $input['crew'] = implode(',', $request->crew);
+            $input['crews'] = implode(',', $request->crews);
             $input['ETM_details'] = implode(',', $request->ETM_details);
+            $input['versions'] = implode(',', $request->versions);
+            $input['settings'] = implode(',', $request->settings);
+            $input['waybills'] = implode(',', $request->waybills);
            $roles= Permission::create($input);
            Session::flash('flash_message', "Role Created Successfully."); //Snippet in Master.blade.php
          return redirect()->route('permissions.index');
@@ -154,6 +164,8 @@ class PermissionsController extends Controller
   
      public function update($id, Request $request)
     {
+         if(!$this->checkActionPermission('permissions','edit'))
+            return redirect()->route('401');
     $role=$request->role;
     $sql=Permission::where([['role',$role],['id','!=',$id]])->first();
      if(count($sql)>0)
@@ -185,8 +197,11 @@ class PermissionsController extends Controller
             $input['payout_reasons'] = implode(',', $request->payout_reasons);
             $input['denominations'] = implode(',', $request->denominations);
             $input['pass_types'] = implode(',', $request->pass_types);
-            $input['crew'] = implode(',', $request->crew);
+            $input['crews'] = implode(',', $request->crews);
             $input['ETM_details'] = implode(',', $request->ETM_details);
+            $input['versions'] = implode(',', $request->versions);
+            $input['settings'] = implode(',', $request->settings);
+            $input['waybills'] = implode(',', $request->waybills);
             $permission->fill($input)->save();
            Session::flash('flash_message', "Role Updated Successfully."); 
         return redirect()->route('permissions.index');
@@ -194,7 +209,8 @@ class PermissionsController extends Controller
     }
      public function edit($id)
     {
-     
+        if(!$this->checkActionPermission('permissions','edit'))
+            return redirect()->route('401');
          $permissions = DB::table('permissions')->select('*','permissions.id as id')
                ->leftjoin('users','permissions.user_id','users.id')
                ->where('permissions.id',$id)

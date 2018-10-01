@@ -1,7 +1,11 @@
 @extends('layouts.master')
 @section('header')
-<h1>{{headingBold()}}</h1>
-{{BreadCrumb()}}
+<h1>Manage Route Details</h1>
+<ol class="breadcrumb">
+    <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li><a href="/route_master">Routes</a></li>
+    <li class="active">Route Details</li>
+</ol>
 @stop
 @section('content')
 
@@ -9,8 +13,14 @@
     <div class="col-xs-12">
       <div class="box">
             <div class="box-header">
-               <h3 class="box-title">{{headingMain()}}</h3>
-             {{createButton('create','Add')}}
+               <h3 class="box-title">List of Route Details</h3>
+               <?php $permission_status = checkPermission('routes','create');
+                     $checkVersionOpen = checkVersionOpen();
+                    if($permission_status && $checkVersionOpen){?>
+                        <a href="<?php echo route('route_master.routes.create',$route_master_id)?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
+                    <?php }elseif($permission_status){
+                        createDisableButton('create','Add');
+                    }?>
             </div>
            @include('partials.message')
             <!-- /.box-header -->
@@ -31,8 +41,16 @@
                             <td>{{$value->route}}{{ucfirst(substr($value->direction,0,1))}} : {{displayIdBaseName('stops',$value->source,'stop')}} - {{displayIdBaseName('stops',$value->destination,'stop')}} via- {{displayIdBaseName('stops',$value->via,'stop')}}</td>
                             <td>{{$value->direction}}</td>
                             <td>
-                             {{ actionEdit('edit',$value->id)}}
-                             <a href="<?php echo route('routes.duties.index',$value->id)?>" title="Manage Duty" class="" ><span class="fa fa-briefcase"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php $permission = getAllModulePermission('routes');
+                                if(in_array('edit',$permission) && $checkVersionOpen){?>
+                                <a href="<?php echo route('route_master.routes.edit',[$route_master_id,$value->id])?>" title="Edit Routes"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }elseif(in_array('edit',$permission)){?>
+                                    <a class="disabled"><span class="glyphicon glyphicon-pencil "></span></a>&nbsp;&nbsp;&nbsp;&nbsp;   
+                                <?php }
+                                if(in_array('view',$permission)){?>
+                                <a style="cursor: pointer;" title="View Routes" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }?>
+                                
                             </td>
                         </tr>
                         @endforeach

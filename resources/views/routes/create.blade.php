@@ -1,7 +1,12 @@
 @extends('layouts.master')
 @section('header')
 <h1>{{headingBold()}}</h1>
-{{BreadCrumb()}}
+<ol class="breadcrumb">
+    <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li><a href="{{route('route_master.index')}}">Routes</a></li>
+    <li><a href="{{route('route_master.routes.index',$route_master_id)}}">Route Details</a></li>
+    <li class="active">Create Route Detail</li>
+</ol>
 @stop
 @section('content')
 <div class="row">
@@ -22,12 +27,13 @@
 
                 <div class="box-body">
                     {!! Form::open([
-                    'route' => 'routes.store',
+                    'route' => ['route_master.routes.store',$route_master_id],
                     'files'=>true,
                     'enctype' => 'multipart/form-data',
                     'id'=>'create-form',
                     'class'=>'form-horizontal',
-                    'autocomplete'=>'off'
+                    'autocomplete'=>'off',
+                    'onsubmit' => 'return kunal()',
                     ]) !!}
                     <!-- Warranty -->
                     @include('routes.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
@@ -39,4 +45,9 @@
 
 
 @stop
-
+<script type="text/javascript">
+    function kunal()
+    {
+        return true;
+    }
+</script>

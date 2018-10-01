@@ -19,11 +19,11 @@ use App\Http\Requests\InspectorRemark\StoreInspectorRemarkRequest;
 use App\Repositories\InspectorRemark\InspectorRemarkRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-
+use App\Traits\checkPermission;
 class InspectorRemarkController extends Controller {
 
     protected $inspector_remarks;
-
+    use checkPermission;
     public function __construct(
     InspectorRemarkRepositoryContract $inspector_remarks
     ) {
@@ -36,6 +36,8 @@ class InspectorRemarkController extends Controller {
      * @return Response
      */
  public function index() {
+     if(!$this->checkActionPermission('inspector_remarks','view'))
+            return redirect()->route('401');
                 $inspector_remarks = DB::table('inspector_remarks')
                 ->orderby('inspector_remarks.order_number')       
                 ->get();
@@ -104,6 +106,8 @@ class InspectorRemarkController extends Controller {
     }
     
     public function viewDetail($id) {
+        if(!$this->checkActionPermission('inspector_remarks','view'))
+            return redirect()->route('401');
        $value = DB::table('inspector_remarks')->select('*')
                 ->where('inspector_remarks.id',$id) 
                ->orderby('inspector_remarks.order_number') 
@@ -152,6 +156,8 @@ class InspectorRemarkController extends Controller {
     }
 
     public function create() {
+        if(!$this->checkActionPermission('inspector_remarks','create'))
+            return redirect()->route('401');
      return view('inspector_remarks.create');
     }
     /**
@@ -181,6 +187,10 @@ class InspectorRemarkController extends Controller {
      * * @Author created by satya 4.2.2018
      */
     public function store(StoreInspectorRemarkRequest $inspector_remarksRequest) {
+        if(!$this->checkActionPermission('inspector_remarks','create'))
+            return redirect()->route('401');
+        $version_id = $this->getCurrentVersion();
+        $inspector_remarksRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id]);
         $getInsertedId = $this->inspector_remarks->create($inspector_remarksRequest);
         return redirect()->route('inspector_remarks.index');
     }
@@ -192,6 +202,8 @@ class InspectorRemarkController extends Controller {
      * @return Response
      */
     public function show($id) {
+        if(!$this->checkActionPermission('inspector_remarks','view'))
+            return redirect()->route('401');
                        $inspector_remarks = DB::table('inspector_remarks')->select('*','inspector_remarks.id as id','trip_cancellation_reason_category_masters.name as trip_cancellation_reason_category_master_id')
                 ->leftjoin('users', 'users.id', '=', 'inspector_remarks.user_id')
                 ->leftjoin('trip_cancellation_reason_category_masters', 'trip_cancellation_reason_category_masters.id', '=', 'inspector_remarks.trip_cancellation_reason_category_master_id')
@@ -208,6 +220,8 @@ class InspectorRemarkController extends Controller {
      * @return Response
      */
     public function edit($id) {
+        if(!$this->checkActionPermission('inspector_remarks','edit'))
+            return redirect()->route('401');
         $inspector_remarks = InspectorRemark::findOrFail($id);
         return view('inspector_remarks.edit',compact('inspector_remarks'));
     }
@@ -220,13 +234,17 @@ class InspectorRemarkController extends Controller {
      * * @Author created by satya 4.2.2018
      */
     public function update($id, UpdateInspectorRemarkRequest $request) {
+        if(!$this->checkActionPermission('inspector_remarks','edit'))
+            return redirect()->route('401');
    $inspector_remark = $request->short_remark;
      $sql=inspectorRemark::where([['short_remark',$inspector_remark],['id','!=',$id]])->first();
      if(count($sql)>0)
      {
        return redirect()->back()->withErrors(['Inspector remark has already been taken.']);
-      } else { 
-          $this->inspector_remarks->update($id, $request);
+      } else {
+        
+        $request->request->add(['approval_status'=>'p','flag'=> 'u']);
+        $this->inspector_remarks->update($id, $request);
         return redirect()->route('inspector_remarks.index');
     }
     }

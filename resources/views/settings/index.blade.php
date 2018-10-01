@@ -9,7 +9,11 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{headingMain()}}</h3>
-               <a href="<?php echo route('settings.create')?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
+               <?php $permission_status = checkPermission('settings','create');
+                    if($permission_status){?>                     
+                        <a href="<?php echo route('settings.create')?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
+                <?php }?>
+               
             </div>
              @include('partials.message')
             <!-- /.box-header -->
@@ -28,8 +32,13 @@
                             <td>{{$value->setting_name}}</td>
                             <td>{{$value->setting_value}}</td>
                             <td>
-                                <a href="<?php echo route('settings.edit',$value->id)?>" title="Edit Version"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                <a style="cursor: pointer;" title="View Version Detail" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>
+                                <?php $permission = getAllModulePermission('settings');
+                                if(in_array('edit',$permission)){?>
+                                <a href="<?php echo route('settings.edit',$value->id)?>" title="Edit Setting"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }
+                                if(in_array('view',$permission)){?>
+                                <a style="cursor: pointer;" title="View Setting Detail" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>
+                                <?php }?>
                             </td>
                         </tr>
                         @endforeach

@@ -19,11 +19,11 @@ use App\Http\Requests\PayoutReason\StorePayoutReasonRequest;
 use App\Repositories\PayoutReason\PayoutReasonRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-
+use App\Traits\checkPermission;
 class PayoutReasonController extends Controller {
 
     protected $payout_reasons;
-
+    use checkPermission;
     public function __construct(
     PayoutReasonRepositoryContract $payout_reasons
     ) {
@@ -36,6 +36,8 @@ class PayoutReasonController extends Controller {
      * @return Response
      */
  public function index() {
+     if(!$this->checkActionPermission('payout_reasons','view'))
+            return redirect()->route('401');
                 $payout_reasons = DB::table('payout_reasons')
                 ->orderby('payout_reasons.order_number')       
                 ->get();
@@ -105,6 +107,8 @@ class PayoutReasonController extends Controller {
     }
     
     public function viewDetail($id) {
+        if(!$this->checkActionPermission('payout_reasons','view'))
+            return redirect()->route('401');
        $value = DB::table('payout_reasons')->select('*')
                 ->where('payout_reasons.id',$id) 
                ->orderby('payout_reasons.order_number') 
@@ -153,6 +157,8 @@ class PayoutReasonController extends Controller {
     }
 
     public function create() {
+        if(!$this->checkActionPermission('payout_reasons','create'))
+            return redirect()->route('401');
      return view('payout_reasons.create');
     }
     /**
@@ -182,6 +188,10 @@ class PayoutReasonController extends Controller {
      * * @Author created by satya 5.2.2018
      */
     public function store(StorePayoutReasonRequest $payout_reasonsRequest) {
+        if(!$this->checkActionPermission('payout_reasons','create'))
+            return redirect()->route('401');
+        $version_id = $this->getCurrentVersion();
+        $payout_reasonsRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id]);
         $getInsertedId = $this->payout_reasons->create($payout_reasonsRequest);
         return redirect()->route('payout_reasons.index');
     }
@@ -209,6 +219,8 @@ class PayoutReasonController extends Controller {
      * @return Response
      */
     public function edit($id) {
+        if(!$this->checkActionPermission('payout_reasons','edit'))
+            return redirect()->route('401');
         $payout_reasons = PayoutReason::findOrFail($id);
         return view('payout_reasons.edit',compact('payout_reasons'));
     }
@@ -221,12 +233,16 @@ class PayoutReasonController extends Controller {
      * * @Author created by satya 5.2.2018
      */
     public function update($id, UpdatePayoutReasonRequest $request) {
+        if(!$this->checkActionPermission('payout_reasons','edit'))
+            return redirect()->route('401');
            $payout_reason = $request->short_reason;
       $sql=PayoutReason::where([['short_reason',$payout_reason],['id','!=',$id]])->first();
      if(count($sql)>0)
      {
        return redirect()->back()->withErrors(['Payout reason has already been taken.']);
       } else { 
+        
+        $request->request->add(['approval_status'=>'p','flag'=> 'u']);
         $this->payout_reasons->update($id, $request);
         return redirect()->route('payout_reasons.index');
     }

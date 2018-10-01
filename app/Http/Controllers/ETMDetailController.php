@@ -21,13 +21,14 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use App\Traits\activityLog;
 use App\Traits\Ac;
-
+use App\Traits\checkPermission;
 //use Illuminate\Support\Facades\Validator;
 class ETMDetailController extends Controller
 {
     protected $ETM_details;
  
     use activityLog;
+    use checkPermission;
     public function __construct(
         ETMDetailRepositoryContract $ETM_details
     ) {
@@ -40,6 +41,8 @@ class ETMDetailController extends Controller
      */
     public function index()
     {
+        if(!$this->checkActionPermission('ETM_details','view'))
+            return redirect()->route('401');
     $ETM_details = DB::table('ETM_details')->select('*','ETM_details.id as id','depots.name as name','evm_status_masters.name as evm_status_master_id')
             ->leftjoin('depots','depots.id','ETM_details.depot_id')
             ->leftjoin('evm_status_masters','evm_status_masters.id','ETM_details.evm_status_master_id')
@@ -49,8 +52,10 @@ class ETMDetailController extends Controller
     }
     public function create()
     {
-     //$depot = ETMDetail::findOrFail();
-     return view('ETM_details.create');
+        if(!$this->checkActionPermission('ETM_details','create'))
+            return redirect()->route('401');
+        //$depot = ETMDetail::findOrFail();
+        return view('ETM_details.create');
     }
  
     /**
@@ -66,6 +71,10 @@ class ETMDetailController extends Controller
      */
     public function store(StoreETMDetailRequest $depotRequest)
     {
+        if(!$this->checkActionPermission('ETM_details','create'))
+            return redirect()->route('401');
+        $version_id = $this->getCurrentVersion();
+        $depotRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id]);
         $getInsertedId = $this->ETM_details->create($depotRequest);
         return redirect()->route('ETM_details.index');         
     }
@@ -77,13 +86,15 @@ class ETMDetailController extends Controller
      */
    public function show($id)
    {
-  $ETM_details = DB::table('ETM_details')->select('*','ETM_details.id as id','depots.name as name','evm_status_masters.name as evm_status_master_id')
+       if(!$this->checkActionPermission('ETM_details','view'))
+            return redirect()->route('401');
+        $ETM_details = DB::table('ETM_details')->select('*','ETM_details.id as id','depots.name as name','evm_status_masters.name as evm_status_master_id')
             ->leftjoin('depots','depots.id','ETM_details.depot_id')
             ->leftjoin('evm_status_masters','evm_status_masters.id','ETM_details.evm_status_master_id')
             ->where('ETM_details.id',$id)
              ->orderBy('ETM_details.id','desc')
           ->first();
-    return view('ETM_details.index',compact('ETM_details'))->withETMDetails($depot);
+        return view('ETM_details.index',compact('ETM_details'))->withETMDetails($depot);
    
      }
 
@@ -95,6 +106,8 @@ class ETMDetailController extends Controller
      */
     public function edit($id)
     {
+        if(!$this->checkActionPermission('ETM_details','edit'))
+            return redirect()->route('401');
        $ETM_details = DB::table('ETM_details')->select('*','ETM_details.id as id','depots.id as depot_id')
             ->leftjoin('depots','depots.id','ETM_details.depot_id')
             ->where('ETM_details.id',$id)
@@ -111,12 +124,16 @@ class ETMDetailController extends Controller
      */
     public function update($id, UpdateETMDetailRequest $request)
     {
+        if(!$this->checkActionPermission('ETM_details','edit'))
+            return redirect()->route('401');
      $etm_no = $request->etm_no;
      $sql=ETMDetail::where([['etm_no',$etm_no],['id','!=',$id]])->first();
      if(count($sql)>0)
      {
        return redirect()->back()->withErrors(['This ETM no has already been taken.']);
       } else {
+        
+        $request->request->add(['approval_status'=>'p','flag'=> 'u']);
        $this->ETM_details->update($id, $request);
         return redirect()->route('ETM_details.index');
     }
@@ -130,6 +147,8 @@ class ETMDetailController extends Controller
      */
     
       public function viewDetail($id) {
+          if(!$this->checkActionPermission('ETM_details','view'))
+            return redirect()->route('401');
        $value = DB::table('ETM_details')->select('*','ETM_details.id as id','depots.name as name','evm_status_masters.name as evm_status_master_id','ETM_details.created_at as created_at','ETM_details.updated_at as updated_at')
             ->leftjoin('depots','depots.id','ETM_details.depot_id')
             ->leftjoin('users', 'users.id', '=', 'ETM_details.user_id')

@@ -37,7 +37,7 @@ class StopRepository implements StopRepositoryContract {
     }
 
     public function update($id, $requestData) {
-      $this->createLog('App\Models\Stop','App\Models\StopLog',$id);
+      //$this->createLog('App\Models\Stop','App\Models\StopLog',$id);
       $depot = Stop::findorFail($id);
       $input = $requestData->all();
       $stop = $requestData->stop;

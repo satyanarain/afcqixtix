@@ -92,7 +92,7 @@ $id = DB::table('fares')->insertGetId(
  public function update($id, $requestData) {
      
      
-    $this->createLog('App\Models\Fare','App\Models\FareLog',$id);
+    //$this->createLog('App\Models\Fare','App\Models\FareLog',$id);
     $fares = Fare::findorFail($id);
     $input = $requestData->all();
     //echo '<pre>';print_r($input);die;

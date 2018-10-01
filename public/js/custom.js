@@ -147,3 +147,44 @@ var newreg =  /^(([0-1][0-9])|(2[0-3])):[0-5][0-9]$/;
         }
         return true;
 }
+
+
+function fillDropdown(ele,table,column,dropdown)
+{
+     //console.log(ele,table,column,);return;
+     
+     var id = $('#'+dropdown).val();
+     jQuery.ajax({
+         url: "/waybills/getdata/"+id,
+         type: "POST",
+         data: {
+             "table"    : table,
+             "column"   : column,
+             "id"       : id,
+             "ele"       : ele,
+             "dropdown"       : dropdown,
+         },
+         headers: {
+             "x-access-token": window.Laravel.csrfToken
+         },
+         contentType: "application/x-www-form-urlencoded",
+         cache: false
+     })
+     .done(function(data, textStatus, jqXHR) {
+         $("#"+ele).empty();
+         $("#"+ele).append('<option value="">Select</option>');
+         jQuery.each(data.data, function( i, val ) {
+             console.log(val);
+             console.log(column);
+            $("#"+ele).append(
+                '<option value="'+val.id+'">'+val.name+'</option>'
+            )
+        });
+         //$("#duty").show();  
+          //$("#duty").html(data);
+     })
+     .fail(function(jqXHR, textStatus, errorThrown) {
+         $("#"+ele).empty();
+         $("#"+ele).append('<option value="">No Record Found</option>');
+     })
+}

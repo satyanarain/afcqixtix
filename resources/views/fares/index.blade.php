@@ -15,7 +15,13 @@
       <div class="box">
             <div class="box-header">
                 <h3 class="box-title">{{getCurrentLabel('services','id',$service_id,'name')}} :- {{headingMain()}}</h3>
-                <a href="{{route('bus_types.services.fares.create',[$bus_type_id,$service_id])}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
+                <?php $permission_status = checkPermission('fares','create');
+                      $checkVersionOpen = checkVersionOpen();
+                    if($permission_status && $checkVersionOpen){?>                     
+                        <a href="{{route('bus_types.services.fares.create',[$bus_type_id,$service_id])}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
+                <?php }elseif($permission_status)
+                        createDisableButton('create','Add');?> 
+                
             </div>
            @include('partials.message')
             <!-- /.box-header -->
@@ -38,8 +44,15 @@
                             <td>{{$value->child_ticket_amount}}</td>
                             <td>{{$value->luggage_ticket_amount}}</td>
                             <td>
+                                <?php $permission = getAllModulePermission('fares');
+                                if(in_array('edit',$permission) && $checkVersionOpen){?>
                                 <a href="<?php echo route('bus_types.services.fares.edit',[$bus_type_id,$service_id,$value->id])?>" title="Edit Service"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }elseif(in_array('edit',$permission)){?>
+                                    <a class="disabled"><span class="glyphicon glyphicon-pencil "></span></a>&nbsp;&nbsp;&nbsp;&nbsp;   
+                                <?php }
+                                if(in_array('view',$permission)){?>
                                 <a style="cursor: pointer;" title="View Service" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }?>
                             </td>
                         </tr>
                         @endforeach

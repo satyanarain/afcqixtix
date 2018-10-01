@@ -38,7 +38,7 @@ $input = $requestData->all();
 $user_id = Auth::id();
 $input['user_id'] = $user_id;
 
-$trips_id = Trip::create(['user_id'=>$user_id,'route_id'=>$requestData->route_id,'duty_id'=>$requestData->duty_id,'shift_id'=>$requestData->shift_id,'trip_no'=>$requestData->trip_no])->id;
+$trips_id = Trip::create(['approval_status'=>'p','version_id'=>$requestData->version_id,'flag'=>'a','user_id'=>$user_id,'route_id'=>$requestData->route_id,'duty_id'=>$requestData->duty_id,'shift_id'=>$requestData->shift_id,'trip_no'=>$requestData->trip_no])->id;
 $trip_no = $requestData->trip_no;
 $start_time = $requestData->start_time;
 $path_route_id = $requestData->path_route_id;
@@ -60,7 +60,7 @@ Session::flash('flash_message', "Trip Updated Successfully."); //Snippet in Mast
 }
     
  public function update($id, $requestData) {
-$this->createLog('App\Models\Trip','App\Models\TripLog',$id);
+//$this->createLog('App\Models\Trip','App\Models\TripLog',$id);
 $trips=  Trip::findorFail($id) ;
 $input = $requestData->all();
 $user_id = Auth::id();

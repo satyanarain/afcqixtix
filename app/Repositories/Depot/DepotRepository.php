@@ -35,7 +35,7 @@ class DepotRepository implements DepotRepositoryContract {
     }
 
     public function update($id, $requestData) {
-       $this->createLog('App\Models\Depot','App\Models\DepotLog',$id);
+       //$this->createLog('App\Models\Depot','App\Models\DepotLog',$id);
        $depot = Depot::findorFail($id);
        $input = $requestData->all();
        $input['user_id'] = Auth::id();

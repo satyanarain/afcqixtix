@@ -3,8 +3,8 @@
 <h1>{{headingBold()}}</h1>
 <ol class="breadcrumb">
     <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="/routes/">Routes</a></li>
-    <li><a href="{{route('routes.duties.index',$route_id,$duty_id)}}">Duty</a></li>
+    <li><a href="/route_master/">Routes</a></li>
+    <li><a href="{{route('route_master.duties.index',$route_master_id,$duty_id)}}">Duty</a></li>
     <li class="active">Trips</li>
 </ol>
 @stop
@@ -14,7 +14,13 @@
       <div class="box">
             <div class="box-header">
                <h3 class="box-title">{{getCurrentLabel('duties','id',$duty_id,'duty_number')}} :- {{headingMain()}}</h3>
-             <a href="{{route('routes.duties.trips.create',[$route_id,$duty_id])}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
+               <?php $permission_status = checkPermission('trips','create');
+                     $checkVersionOpen = checkVersionOpen();
+                    if($permission_status && $checkVersionOpen){?>                     
+                        <a href="{{route('route_master.duties.trips.create',[$route_master_id,$duty_id])}}"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
+                <?php }elseif($permission_status)
+                        createDisableButton('create','Add');?>
+             
             </div>
            @include('partials.message')
             <!-- /.box-header -->
@@ -31,12 +37,19 @@
                     <tbody>
                          @foreach($trips as $value)
                         <tr class="nor_f">
-                            <td>{{displayIdBaseName('routes',$value->route_id,'route')}}</td>
+                            <td>{{displayIdBaseName('route_master',$value->route_id,'route_name')}}</td>
                             <td>{{$value->duty_number}}</td>
                             <td>{{$value->shift}}</td>
                             <td>
-                                <a href="<?php echo route('routes.duties.trips.edit',[$route_id,$duty_id,$value->id])?>" title="Edit Trip"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                <a style="cursor: pointer;" title="View Trip" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php $permission = getAllModulePermission('trips');
+                                if(in_array('edit',$permission) && $checkVersionOpen){?>
+                                    <a href="<?php echo route('route_master.duties.trips.edit',[$route_master_id,$duty_id,$value->id])?>" title="Edit Trip"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }elseif(in_array('edit',$permission)){?>
+                                    <a class="disabled"><span class="glyphicon glyphicon-pencil "></span></a>&nbsp;&nbsp;&nbsp;&nbsp;   
+                                <?php }
+                                if(in_array('view',$permission)){?>
+                                    <a style="cursor: pointer;" title="View Trip" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails(<?php echo $value->id ?>,'view_detail');"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <?php }?>
                             </td>
                         </tr>
                         @endforeach

@@ -23,6 +23,7 @@
 <div class="input-group col-md-12" id="button">
     <input type="hidden" name='service_id' value="<?php echo $fares->id; ?>">
   {!! Form::submit(Lang::get('common.titles.update'), ['class' => 'btn btn-success']) !!}
+  <div class="col-md-3" style="margin-right: 15px;">{{ Form::button('Cancel', array('class' => 'btn btn-success pull-left','onclick'=>'window.history.back();')) }}</div>
 </div>
 
  </div>

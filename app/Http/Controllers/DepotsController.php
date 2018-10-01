@@ -20,10 +20,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use App\Traits\activityLog;
+use App\Traits\checkPermission;
 //use Illuminate\Support\Facades\Validator;
 class DepotsController extends Controller
 {
     use activityLog;
+    use checkPermission;
     protected $depots;
     public function __construct(
         DepotRepositoryContract $depots
@@ -37,7 +39,8 @@ class DepotsController extends Controller
      */
     public function index()
     {
- 
+        if(!$this->checkActionPermission('depots','view'))
+            return redirect()->route('401');
       $depot = DB::table('depots')->select('*','depots.id as id','depots.name as name','services.name as service_name','depots.created_at as created_at','depots.updated_at as updated_at')
       ->leftjoin('users','users.id','depots.user_id')
       ->leftjoin('services','depots.service_id','services.id')
@@ -47,6 +50,8 @@ class DepotsController extends Controller
     }
     public function create()
     {
+        if(!$this->checkActionPermission('depots','create'))
+            return redirect()->route('401');
      //$depot = Depot::findOrFail();
      return view('depots.create');
     }
@@ -64,6 +69,10 @@ class DepotsController extends Controller
      */
     public function store(StoreDepotRequest $depotRequest)
     {
+        if(!$this->checkActionPermission('depots','create'))
+            return redirect()->route('401');
+        $version_id = $this->getCurrentVersion();
+        $depotRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id]);
         $getInsertedId = $this->depots->create($depotRequest);
         return redirect()->route('depots.index');         
     }
@@ -75,6 +84,8 @@ class DepotsController extends Controller
      */
    public function show($id)
    {
+       if(!$this->checkActionPermission('depots','view'))
+            return redirect()->route('401');
       $depot = DB::table('depots')->select('*','depots.id as id','depots.name as name','services.name as service_name','depots.created_at as created_at','depots.updated_at as updated_at')
       ->leftjoin('users','users.id','depots.user_id')
       ->leftjoin('services','depots.service_id','services.id')
@@ -91,6 +102,8 @@ class DepotsController extends Controller
      */
     public function edit($id)
     {
+        if(!$this->checkActionPermission('depots','edit'))
+            return redirect()->route('401');
      $depot = DB::table('depots')->select('*','depots.name as name','services.name as service_name','depots.created_at as created_at','depots.updated_at as updated_at','depots.id as id')
       ->leftjoin('users','users.id','depots.user_id')
       ->leftjoin('services','depots.service_id','services.id')
@@ -107,6 +120,8 @@ class DepotsController extends Controller
      */
     public function update($id, UpdateDepotRequest $request)
     {
+        if(!$this->checkActionPermission('depots','edit'))
+            return redirect()->route('401');
       $name = $request->name;
       $depot_id = $request->depot_id;
       $sql=Depot::where([['name',$name],['id','!=',$id]])->first();
@@ -116,7 +131,9 @@ class DepotsController extends Controller
        return redirect()->back()->withErrors(['Depot name has already been taken.']);
       } else if($depot_id>0){
        return redirect()->back()->withErrors(['Depot ID has already been taken.']);
-     } else { 
+     } else {
+     
+        $request->request->add(['approval_status'=>'p','flag'=> 'u']);
          $this->depots->update($id, $request);
         return redirect()->route('depots.index');
     }

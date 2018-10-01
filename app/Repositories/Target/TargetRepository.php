@@ -42,7 +42,7 @@ class TargetRepository implements TargetRepositoryContract {
     }
 
     public function update($id, $requestData) {
-    $this->createLog('App\Models\Target','App\Models\TargetLog',$id);
+        //$this->createLog('App\Models\Target','App\Models\TargetLog',$id);
         $targets = Target::findorFail($id);
         $input = $requestData->all();
         $userid = Auth::id();

@@ -9,13 +9,13 @@ use App\Models\User;
 use App\Models\Settings;
 use App\Http\Controllers\Controller;
 //use App\Repositories\User\UserRepositoryContract;
-
+use App\Traits\checkPermission;
  use App\Repositories\Setting\SettingRepositoryContract;
 error_reporting(0);
 class PagesController extends Controller
 {
     protected $users;
-
+    use checkPermission;
 
     public function __construct(
       //  UserRepositoryContract $users,

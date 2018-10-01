@@ -19,9 +19,9 @@ use App\Http\Requests\TripCancellationReason\StoreTripCancellationReasonRequest;
 use App\Repositories\TripCancellationReason\TripCancellationReasonRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-
+use App\Traits\checkPermission;
 class TripCancellationReasonController extends Controller {
-
+    use checkPermission;
     protected $trip_cancellation_reasons;
 
     public function __construct(
@@ -36,6 +36,8 @@ class TripCancellationReasonController extends Controller {
      * @return Response
      */
  public function index() {
+     if(!$this->checkActionPermission('trip_cancellation_reasons','view'))
+            return redirect()->route('401');
                 $trip_cancellation_reasons = DB::table('trip_cancellation_reasons')->select('*','trip_cancellation_reasons.id as id','trip_cancellation_reason_category_masters.name as trip_cancellation_reason_category_master_id')
                 ->leftjoin('users', 'users.id', '=', 'trip_cancellation_reasons.user_id')
                 ->leftjoin('trip_cancellation_reason_category_masters', 'trip_cancellation_reason_category_masters.id', '=', 'trip_cancellation_reasons.trip_cancellation_reason_category_master_id')
@@ -66,8 +68,9 @@ class TripCancellationReasonController extends Controller {
                 ->get();
         ?>
                 <thead>
-                    <tr>  <th>Trip Cancellation Reason</th>
+                    <tr> 
                         <th>Order Number</th>
+                        <th>Trip Cancellation Reason</th>
                         <th>Short Reason</th>
                         <th>Reason Description</th>
                         <th>Action</th>
@@ -77,8 +80,9 @@ class TripCancellationReasonController extends Controller {
             <?php foreach ($sql as $value) {
                 ?>
                             <tr class="nor_f">
-                              <td><?php echo $value->trip_cancellation_reason_category_master_id; ?></td>
                                 <td><?php echo $value->order_number; ?></td>
+                              <td><?php echo $value->trip_cancellation_reason_category_master_id; ?></td>
+                                
                                 <td><?php echo $value->short_reason ?></td>
                                 <td><?php echo $value->reason_description ?></td>
                                 <td><a  href="<?php echo route("trip_cancellation_reasons.edit", $value->id) ?>" class="btn btn-small btn-primary-edit" ><span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -100,8 +104,9 @@ class TripCancellationReasonController extends Controller {
         <?php foreach ($sql as $value) {
         ?>
                     <li id="<?php echo "order" . $value->id; ?>" class="list-group-order-sub">
+                         <a href="javascript:void(0);"><?php echo $value->order_number; ?></a>
                     <a href="javascript:void(0);" ><?php echo $value->trip_cancellation_reason_category_master_id; ?></a>
-                    <a href="javascript:void(0);"><?php echo $value->order_number; ?></a>
+                   
                     <a href="javascript:void(0);"><?php echo $value->short_reason; ?></a>
                    </li>
         <?php } ?>
@@ -110,6 +115,8 @@ class TripCancellationReasonController extends Controller {
     }
     
     public function viewDetail($id) {
+        if(!$this->checkActionPermission('trip_cancellation_reasons','view'))
+            return redirect()->route('401');
        $value = DB::table('trip_cancellation_reasons')->select('*','trip_cancellation_reasons.id as id','trip_cancellation_reason_category_masters.name as trip_cancellation_reason_category_master_id')
                 ->leftjoin('users', 'users.id', '=', 'trip_cancellation_reasons.user_id')
                 ->leftjoin('trip_cancellation_reason_category_masters', 'trip_cancellation_reason_category_masters.id', '=', 'trip_cancellation_reasons.trip_cancellation_reason_category_master_id')
@@ -163,6 +170,8 @@ class TripCancellationReasonController extends Controller {
     }
 
     public function create() {
+        if(!$this->checkActionPermission('trip_cancellation_reasons','create'))
+            return redirect()->route('401');
      return view('trip_cancellation_reasons.create');
     }
     /**
@@ -192,6 +201,10 @@ class TripCancellationReasonController extends Controller {
      * * @Author created by satya 4.2.2018
      */
     public function store(StoreTripCancellationReasonRequest $trip_cancellation_reasonsRequest) {
+        if(!$this->checkActionPermission('trip_cancellation_reasons','create'))
+            return redirect()->route('401');
+        $version_id = $this->getCurrentVersion();
+        $trip_cancellation_reasonsRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id]);
         $getInsertedId = $this->trip_cancellation_reasons->create($trip_cancellation_reasonsRequest);
         return redirect()->route('trip_cancellation_reasons.index');
     }
@@ -203,6 +216,8 @@ class TripCancellationReasonController extends Controller {
      * @return Response
      */
     public function show($id) {
+        if(!$this->checkActionPermission('trip_cancellation_reasons','view'))
+            return redirect()->route('401');
                        $trip_cancellation_reasons = DB::table('trip_cancellation_reasons')->select('*','trip_cancellation_reasons.id as id','trip_cancellation_reason_category_masters.name as trip_cancellation_reason_category_master_id')
                 ->leftjoin('users', 'users.id', '=', 'trip_cancellation_reasons.user_id')
                 ->leftjoin('trip_cancellation_reason_category_masters', 'trip_cancellation_reason_category_masters.id', '=', 'trip_cancellation_reasons.trip_cancellation_reason_category_master_id')
@@ -219,6 +234,8 @@ class TripCancellationReasonController extends Controller {
      * @return Response
      */
     public function edit($id) {
+        if(!$this->checkActionPermission('trip_cancellation_reasons','edit'))
+            return redirect()->route('401');
         $trip_cancellation_reasons = TripCancellationReason::findOrFail($id);
         return view('trip_cancellation_reasons.edit',compact('trip_cancellation_reasons'));
     }
@@ -231,13 +248,15 @@ class TripCancellationReasonController extends Controller {
      * * @Author created by satya 4.2.2018
      */
     public function update($id, UpdateTripCancellationReasonRequest $request) {
-        
+        if(!$this->checkActionPermission('trip_cancellation_reasons','edit'))
+            return redirect()->route('401');
         $trip_cancellation_reason_category_master_id = $request->trip_cancellation_reason_category_master_id;
      $sql=TripCancellationReason::where([['trip_cancellation_reason_category_master_id',$trip_cancellation_reason_category_master_id],['id','!=',$id]])->first();
      if(count($sql)>0)
      {
        return redirect()->back()->withErrors(['This trip cancellation reason has already been taken.']);
-      } else { 
+      } else {
+        $request->request->add(['approval_status'=>'p','flag'=> 'u']);   
           $this->trip_cancellation_reasons->update($id, $request);
         return redirect()->route('trip_cancellation_reasons.index');
     }

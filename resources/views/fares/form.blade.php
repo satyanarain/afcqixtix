@@ -29,6 +29,7 @@
 
 <div class="input-group col-md-12" id="button">
   {!! Form::submit(Lang::get('common.titles.save'), ['class' => 'btn btn-success']) !!}
+  <div class="col-md-3" style="margin-right: 15px;">{{ Form::button('Cancel', array('class' => 'btn btn-success pull-left','onclick'=>'window.history.back();')) }}</div>
 </div>
  </div>
 

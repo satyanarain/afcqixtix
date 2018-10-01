@@ -41,7 +41,7 @@ class CrewRepository implements CrewRepositoryContract {
     }
 
     public function update($id, $requestData) {
-       $this->createLog('App\Models\Crew','App\Models\CrewLog',$id);
+       //$this->createLog('App\Models\Crew','App\Models\CrewLog',$id);
        $crew_detail = Crew::findorFail($id);
        $input = $requestData->all();
        $input['user_id'] = Auth::id();

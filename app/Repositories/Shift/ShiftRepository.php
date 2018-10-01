@@ -39,7 +39,7 @@ public function create($requestData) {
     }
 
 public function update($id, $requestData) {
-        $this->createLog('App\Models\Shift', 'App\Models\ShiftLog', $id);
+        //$this->createLog('App\Models\Shift', 'App\Models\ShiftLog', $id);
         $shift = Shift::findorFail($id);
         $input = $requestData->all();
         $shift_val = $requestData->shift;

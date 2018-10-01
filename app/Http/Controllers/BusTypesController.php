@@ -19,9 +19,11 @@ use App\Repositories\BusType\BusTypeRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Traits\activityLog;
+use App\Traits\checkPermission;
 class BusTypesController extends Controller
 {
     use activityLog;
+    use checkPermission;
     protected $bustypes;
     public function __construct(
         BusTypeRepositoryContract $bustypes
@@ -35,13 +37,16 @@ class BusTypesController extends Controller
      */
     public function index()
     {
-        
+        if(!$this->checkActionPermission('bus_types','view'))
+            return redirect()->route('401');
     $bustypes = BusType::orderBy('order_number')->get();
     return view('bustypes.index')->withBustypes($bustypes);
    
     }
     public function create()
     {
+        if(!$this->checkActionPermission('bus_types','create'))
+            return redirect()->route('401');
      return view('bustypes.create');
     }
  
@@ -58,6 +63,11 @@ class BusTypesController extends Controller
      */
     public function store(StoreBusTypeRequest $bustypesRequest)
     {
+        if(!$this->checkActionPermission('bus_types','create'))
+            return redirect()->route('401');
+        $version_id = $this->getCurrentVersion();
+        $bustypesRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id]);
+        //echo '<pre>';print_r($bustypesRequest->all());die;
         $getInsertedId = $this->bustypes->create($bustypesRequest);
         return redirect()->route('bus_types.index');         
     }
@@ -69,6 +79,8 @@ class BusTypesController extends Controller
      */
    public function show($id)
    {
+       if(!$this->checkActionPermission('bus_types','view'))
+            return redirect()->route('401');
    $bustypes=Bustype::findOrFail($id);
     return view('bustypes.show')->withBustypes($bustypes);
      }
@@ -81,6 +93,8 @@ class BusTypesController extends Controller
      */
     public function edit($id)
     {
+        if(!$this->checkActionPermission('bus_types','edit'))
+            return redirect()->route('401');
        $bustypes=Bustype::findOrFail($id);
        return view('bustypes.edit')->withBustypes($bustypes);
     }
@@ -93,6 +107,8 @@ class BusTypesController extends Controller
      */
     public function update($id, UpdateBusTypeRequest $request)
     {
+        if(!$this->checkActionPermission('bus_types','edit'))
+            return redirect()->route('401');
     $bus_type = $request->bus_type;
      $sql=BusType::where([['bus_type',$bus_type],['id','!=',$id]])->first();
      if(count($sql)>0)
@@ -100,6 +116,7 @@ class BusTypesController extends Controller
        return redirect()->back()->withErrors(['Bus type has already been taken.']);
       } else { 
         
+        $request->request->add(['approval_status'=>'p','flag'=> 'u']);
         $this->bustypes->update($id, $request);
         return redirect()->route('bus_types.index');
     }
@@ -115,8 +132,9 @@ class BusTypesController extends Controller
         $bustypes = BusType::orderBy('order_number')->get();
         ?>
                 <thead>
-                    <tr>  <th>Bus Type</th>
+                    <tr> 
                         <th>Order Number</th>
+                        <th>Bus Type</th>
                         <th>Abbreviation</th>
                         <th>Action</th>
                     </tr>
@@ -125,8 +143,8 @@ class BusTypesController extends Controller
             <?php foreach ($bustypes as $value) {
                 ?>
                             <tr class="nor_f">
-                                <td><?php echo $value->bus_type; ?></td>
                                 <td><?php echo $value->order_number; ?></td>
+                                <td><?php echo $value->bus_type; ?></td>
                                 <td><?php echo $value->abbreviation ?></td>
                                 <td><a  href="<?php echo route("bus_types.edit", $value->id) ?>" class="" ><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
                                     <a style="cursor: pointer;" data-toggle="modal" onclick="viewDetails(<?php echo $value->id ?>,'view_detail')"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;</td>
@@ -143,8 +161,9 @@ class BusTypesController extends Controller
         <?php foreach ($bustypes as $value) {
         ?>
                     <li id="<?php echo "order" . $value->id; ?>" class="list-group-order-sub">
+                        <a href="javascript:void(0);"><?php echo $value->order_number; ?></a>
                     <a href="javascript:void(0);" ><?php echo $value->bus_type; ?></a>
-                    <a href="javascript:void(0);"><?php echo $value->order_number; ?></a>
+                    
                     <a href="javascript:void(0);"><?php echo $value->abbreviation; ?></a>
                    </li>
         <?php } ?>
@@ -152,6 +171,8 @@ class BusTypesController extends Controller
         <?php
     }
    public function viewDetail($id) {
+       if(!$this->checkActionPermission('bus_types','view'))
+            return redirect()->route('401');
           $value = DB::table('bus_types')->select("*",'bus_types.created_at','bus_types.updated_at','bus_types.id as id')
                   ->leftjoin('users','users.id','bus_types.user_id')
                   ->orderBy('bus_types.order_number')

@@ -153,5 +153,21 @@ class AccessServiceProvider extends ServiceProvider
             \App\Repositories\Version\VersionRepositoryContract::class,
             \App\Repositories\Version\VersionRepository::class
         );
+        
+        $this->app->bind(
+            \App\Repositories\RouteMaster\RouteMasterRepositoryContract::class,
+            \App\Repositories\RouteMaster\RouteMasterRepository::class
+        );
+        
+        $this->app->bind(
+            \App\Repositories\CenterStock\CenterStockRepositoryContract::class,
+            \App\Repositories\CenterStock\CenterStockRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Waybill\WaybillRepositoryContract::class,
+            \App\Repositories\Waybill\WaybillRepository::class
+
+        );
     }
 }
+    

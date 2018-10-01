@@ -28,5 +28,7 @@
     {!! Form::label('password_confirmation', Lang::get('user.headers.confirmpassword'), ['class' => 'control-label']) !!}
    {{ Form::password('password_confirmation', array('class' => 'form-control','required' => 'required')) }}
 </div>
-
- {!! Form::submit(Lang::get('common.titles.save'), ['class' => 'btn btn-success']) !!}
+<div class="form-group">
+    <div class="col-md-1" style="margin-left: 15px;">{!! Form::submit(Lang::get('common.titles.save'), ['class' => 'btn btn-success']) !!}</div>
+    <div class="col-md-1" style="margin-left: 15px;">{{ Form::button('Cancel', array('class' => 'btn btn-success pull-right','onclick'=>'window.history.back();')) }}</div>
+</div>

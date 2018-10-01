@@ -67,8 +67,18 @@
           {!! Form::text('licence_no', null, ['class' => 'col-md-6 form-control']) !!}
     </div>
 </div> 
-
 <div class="form-group ">
+     {!! Form::label('valid_up_to', Lang::get('Licence No. Valid Up To'), ['class' => 'col-md-3 control-label','for'=>'valid_up_to']) !!}
+    <div class="col-md-9 col-sm-12">
+        <div class="input-group date form_date col-md-10" data-date="" data-date-format="dd MM yyyy p" data-link-field="date_of_birtha">
+        {!! Form::text('valid_up_to', $date_of_birth, ['class' => 'form-control','readonly'=>'readonly']) !!}
+        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+        </div>
+        
+    </div>
+</div>
+<!--<div class="form-group ">
      {!! Form::label('valid_up_to', Lang::get('Licence No. Valid Up To'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12">
        <div class="input-group date">
@@ -78,7 +88,7 @@
         {!! Form::text('valid_up_to', $date_of_birth, ['class' => 'multiple_date','readonly'=>'readonly']) !!}
       </div>
     </div>
-</div> 
+</div> -->
 <div class="form-group ">
      {!! Form::label('pf_no', Lang::get('PF No.'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12">
@@ -113,7 +123,18 @@
           {!! Form::text('mobile', null, ['class' => 'col-md-6 form-control']) !!}
     </div>
 </div> 
- <div class="form-group ">
+<div class="form-group ">
+     {!! Form::label('date_of_birth', Lang::get('Download From'), ['class' => 'col-md-3 control-label','for'=>'date_of_birth']) !!}
+    <div class="col-md-9 col-sm-12">
+        <div class="input-group date form_date col-md-10" data-date="" data-date-format="dd MM yyyy p" data-link-field="date_of_birtha">
+        {!! Form::text('date_of_birth', $date_of_birth, ['class' => 'form-control','readonly'=>'readonly']) !!}
+        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+        </div>
+        
+    </div>
+</div>
+<!-- <div class="form-group ">
      {!! Form::label('date_of_birth', Lang::get('Date of Birth'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12">
        <div class="input-group date">
@@ -123,9 +144,19 @@
         {!! Form::text('date_of_birth', $date_of_birth, ['class' => 'multiple_date','readonly'=>'readonly']) !!}
       </div>
     </div>
-</div> 
-
- <div class="form-group ">
+</div> -->
+<div class="form-group ">
+     {!! Form::label('date_of_join', Lang::get('Date of Joining'), ['class' => 'col-md-3 control-label','for'=>'date_of_join']) !!}
+    <div class="col-md-9 col-sm-12">
+        <div class="input-group date form_date col-md-10" data-date="" data-date-format="dd MM yyyy p" data-link-field="date_of_birtha">
+        {!! Form::text('date_of_join', $date_of_join, ['class' => 'form-control','readonly'=>'readonly']) !!}
+        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+        </div>
+        
+    </div>
+</div>
+<!-- <div class="form-group ">
      {!! Form::label('date_of_join', Lang::get('Date of Join'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12">
        <div class="input-group date">
@@ -135,8 +166,19 @@
         {!! Form::text('date_of_join', $date_of_join, ['class' => 'multiple_date','readonly'=>'readonly','required'=>'required']) !!}
       </div>
     </div>
-</div>  
-  <div class="form-group ">
+</div>  -->
+<div class="form-group ">
+     {!! Form::label('date_of_leaving', Lang::get('Date of Leaving'), ['class' => 'col-md-3 control-label','for'=>'date_of_leaving']) !!}
+    <div class="col-md-9 col-sm-12">
+        <div class="input-group date form_date col-md-10" data-date="" data-date-format="dd MM yyyy p" data-link-field="date_of_birtha">
+        {!! Form::text('date_of_leaving', $date_of_leaving, ['class' => 'form-control','readonly'=>'readonly']) !!}
+        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+        </div>
+        
+    </div>
+</div>
+<!--  <div class="form-group ">
      {!! Form::label('date_of_leaving', Lang::get('Date of Leaving'), ['class' => 'col-md-3 control-label','readonly'=>'readonly']) !!}
     <div class="col-md-7 col-sm-12">
        <div class="input-group date">
@@ -146,12 +188,13 @@
         {!! Form::text('date_of_leaving', $date_of_leaving, ['class' => 'multiple_date','readonly'=>'readonly','readonly'=>'readonly']) !!}
       </div>
     </div>
-</div> 
+</div> -->
   
   
 <div class="form-group">
     <div class="col-md-3" style="margin-right: 15px;"></div>
     {{ Form::submit('Save', array('class' => 'btn btn-success pull-left','required' => 'required')) }}
+    <div class="col-md-3" style="margin-right: 15px;">{{ Form::button('Cancel', array('class' => 'btn btn-success pull-left','onclick'=>'window.history.back();')) }}</div>
     <div class="col-md-9">
         <div class="col-md-7 col-sm-12">
         </div>

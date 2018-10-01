@@ -21,10 +21,11 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use App\Traits\activityLog;
 use App\Traits\Ac;
-
+use App\Traits\checkPermission;
 //use Illuminate\Support\Facades\Validator;
 class CrewController extends Controller
 {
+    use checkPermission;
     protected $crew;
  
     use activityLog;
@@ -40,6 +41,8 @@ class CrewController extends Controller
      */
     public function index(Request $request)
     {
+        if(!$this->checkActionPermission('crews','view'))
+            return redirect()->route('401');
         $depot_id = $request->depot_id;
         $crew_details = DB::table('crew')->select('*','crew.id as id')
             ->leftjoin('depots','depots.id','crew.depot_id')
@@ -50,6 +53,8 @@ class CrewController extends Controller
     }
     public function create(Request $request)
     {
+        if(!$this->checkActionPermission('crews','create'))
+            return redirect()->route('401');
         $depot_id = $request->depot_id;
         //$depot = CrewDetail::findOrFail();
         return view('crew.create',compact('depot_id'));
@@ -68,6 +73,10 @@ class CrewController extends Controller
      */
     public function store($depot_id,StoreCrewRequest $depotRequest)
     {
+        if(!$this->checkActionPermission('crews','create'))
+            return redirect()->route('401');
+        $version_id = $this->getCurrentVersion();
+        $depotRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id]);
         $depotRequest->request->add(['depot_id'=> $depot_id]);
         //echo '<pre>';print_r($depotRequest);die;
         $getInsertedId = $this->crew->create($depotRequest);
@@ -81,6 +90,8 @@ class CrewController extends Controller
      */
    public function show($id)
    {
+       if(!$this->checkActionPermission('crews','view'))
+            return redirect()->route('401');
    $depot=Crew::findOrFail($id);
     return view('crew.show')->withCrew($depot);
      }
@@ -93,6 +104,8 @@ class CrewController extends Controller
      */
     public function edit($depot_id,$id)
     {
+        if(!$this->checkActionPermission('crews','edit'))
+            return redirect()->route('401');
        $crew_details = DB::table('crew')->select('*','crew.id as id','depots.id as depot_id')
             ->leftjoin('depots','depots.id','crew.depot_id')
             ->where('crew.id',$id)
@@ -109,14 +122,18 @@ class CrewController extends Controller
      */
     public function update($depot_id,$id, UpdateCrewRequest $request)
     {
+        if(!$this->checkActionPermission('crews','edit'))
+            return redirect()->route('401');
        $crew_id = $request->crew_id;
       $sql=Crew::where([['crew_id',$crew_id],['id','!=',$id]])->first();
      if(count($sql)>0)
      {
        return redirect()->back()->withErrors(['This crew ID has already been taken.']);
       } else {
-       $this->crew->update($id, $request);
-        return redirect()->route('depots.crew.index',$depot_id); 
+            
+            $request->request->add(['approval_status'=>'p','flag'=> 'u']);
+            $this->crew->update($id, $request);
+            return redirect()->route('depots.crew.index',$depot_id); 
     }
     }
 
@@ -128,6 +145,8 @@ class CrewController extends Controller
      */
     
       public function viewDetail($id) {
+          if(!$this->checkActionPermission('crews','view'))
+            return redirect()->route('401');
            $value = DB::table('crew')->select('*','crew.id as id','depots.id as depot_id','crew.created_at as created_at','crew.updated_at as updated_at')
             ->leftjoin('depots','depots.id','crew.depot_id')
             ->leftjoin('users', 'users.id', '=', 'crew.user_id')

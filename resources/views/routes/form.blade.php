@@ -4,7 +4,12 @@
    {!! Form::text('route', null, ['class' => 'form-control','required' => 'required']) !!}
    </div>
 </div>
-
+<div class="input-group col-md-12">
+<div class="col-md-12" style="padding:0px;  margin-bottom:10px;">
+  {!! Form::label('route', Lang::get('Direction'), ['class' => 'control-label','style'=>"margin-bottom:10px;"]) !!}</br>
+ {!! Form::select('direction',array('Up'=>'Up','Down'=>'Down',),isset($routes->direction) ? $routes->direction : selected,['class' => 'form-control required','required' => 'required','placeholder'=>'Select Direction']) !!}
+</div>
+</div>
 <div class="path-section">
     <p class="path-section-heading">Path</p>
      <div class="path-section-content">
@@ -36,12 +41,7 @@
 </div>
 </div>
 
-<div class="input-group col-md-12">
-<div class="col-md-12" style="padding:0px;  margin-bottom:10px;">
-  {!! Form::label('route', Lang::get('Direction'), ['class' => 'control-label','style'=>"margin-bottom:10px;"]) !!}</br>
- {!! Form::select('direction',array('Up'=>'Up','Down'=>'Down',),isset($routes->direction) ? $routes->direction : selected,['class' => 'form-control required','required' => 'required','placeholder'=>'Select Direction']) !!}
-</div>
-</div>
+
 
 <div class="path-section">
     <p class="path-section-heading">Stop Details</p>
@@ -90,33 +90,34 @@
 </div>
 <div class="input-group col-md-12" id="button">
   {!! Form::submit(Lang::get('common.titles.save'), ['class' => 'btn btn-success']) !!}
+  <div class="col-md-3" style="margin-right: 15px;">{{ Form::button('Cancel', array('class' => 'btn btn-success pull-left','onclick'=>'window.history.back();')) }}</div>
 </div>
  </div>
 
 <script type="text/javascript">
 function checkDest(id)
 {
-var source= $("#source").val();
-var destination= $("#destination").val();
-  if(source==id)
-  {
-   alert("Please select source and destination different.");  
-   $("#destination").val('');
-  }
- }
+    var source= $("#source").val();
+    var destination= $("#destination").val();
+    if(source==id)
+    {
+        alert("Please select source and destination different.");  
+        $("#destination").val('');
+    }
+}
 function checkDest_via(id)
 {
-var source= $("#source").val();
-var destination= $("#destination").val();
-  if(source==id)
-  {
-   alert("Please select source and via different.");  
-    $("#via").val('');
-  }else if(destination==id)
-  {
-   alert("Please select destination and via different.");  
-   $("#via").val('');
-  }
+    var source= $("#source").val();
+    var destination= $("#destination").val();
+    if(source==id)
+    {
+        alert("Please select source and via different.");  
+        $("#via").val('');
+    }else if(destination==id)
+    {
+        alert("Please select destination and via different.");  
+        $("#via").val('');
+    }
  }
  
  

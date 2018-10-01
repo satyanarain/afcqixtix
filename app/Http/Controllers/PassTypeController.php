@@ -19,11 +19,11 @@ use App\Http\Requests\PassType\StorePassTypeRequest;
 use App\Repositories\PassType\PassTypeRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-
+use App\Traits\checkPermission;
 class PassTypeController extends Controller {
 
     protected $pass_types;
-
+    use checkPermission;
     public function __construct(
     PassTypeRepositoryContract $pass_types
     ) {
@@ -36,6 +36,8 @@ class PassTypeController extends Controller {
      * @return Response
      */
  public function index($bus_type_id,$service_id) {
+     if(!$this->checkActionPermission('pass_types','view'))
+            return redirect()->route('401');
                 $pass_types = DB::table('pass_types')
                 ->select('*','services.name as name','pass_types.order_number as order_number','pass_types.id as id','concession_provider_masters.name as concession_provider_master_id')
                 ->leftjoin('users', 'users.id', '=', 'pass_types.user_id')
@@ -71,8 +73,9 @@ class PassTypeController extends Controller {
         <?php foreach ($sql as $value) {
         ?>
                     <li id="<?php echo "order" . $value->id; ?>" class="list-group-order-sub">
-                    <a href="javascript:void(0);" ><?php echo $value->servicename; ?></a>
                     <a href="javascript:void(0);"><?php echo $value->order_number; ?></a>
+                    <a href="javascript:void(0);" ><?php echo $value->pass_type_master_id; ?></a>
+                    
                     <a href="javascript:void(0);"><?php echo $value->concession_provider_master_id; ?></a>
                    </li>
         <?php } ?>
@@ -81,6 +84,8 @@ class PassTypeController extends Controller {
     }
     
     public function viewDetail($id) {
+        if(!$this->checkActionPermission('pass_types','view'))
+            return redirect()->route('401');
        // die($id);
            $value = DB::table('pass_types')->select('*','pass_types.order_number as order_number','concession_provider_masters.name as concession_provider_master_id','services.name as name')
                 ->leftjoin('users', 'users.id', '=', 'pass_types.user_id')
@@ -218,6 +223,8 @@ $k=1;
     }
 
     public function create($bus_type_id,$service_id) {
+        if(!$this->checkActionPermission('pass_types','create'))
+            return redirect()->route('401');
      return view('pass_types.create',compact('bus_type_id','service_id'));
     }
     /**
@@ -247,6 +254,12 @@ $k=1;
      * * @Author created by satya 31-01-2018 
      */
     public function store($bus_type_id,$service_id,StorePassTypeRequest $pass_typesRequest) {
+        if(!$this->checkActionPermission('pass_types','create'))
+            return redirect()->route('401');
+        $accept_gender_detail = implode(',',$pass_typesRequest->accept_gender_detail);
+        $pass_typesRequest->request->add(['accept_gender_detail'=>$accept_gender_detail]);
+        $version_id = $this->getCurrentVersion();
+        $pass_typesRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id]);
         $pass_typesRequest->request->add(['service_id'=> $service_id]);
         $getInsertedId = $this->pass_types->create($pass_typesRequest);
         return redirect()->route('bus_types.services.pass_types.index',[$bus_type_id,$service_id]);
@@ -259,6 +272,8 @@ $k=1;
      * @return Response
      */
     public function show($id) {
+        if(!$this->checkActionPermission('pass_types','view'))
+            return redirect()->route('401');
                 $pass_types = DB::table('pass_types')->select('*','pass_types.id as id','users.name as username','services.name as name')
                 ->leftjoin('users', 'users.id', '=', 'pass_types.user_id')
                 ->leftjoin('services', 'pass_types.service_id', '=', 'services.id')
@@ -274,6 +289,8 @@ $k=1;
      * @return Response
      */
     public function edit($bus_type_id,$service_id,$id) {
+        if(!$this->checkActionPermission('pass_types','edit'))
+            return redirect()->route('401');
         $pass_types = PassType::findOrFail($id);
         return view('pass_types.edit',compact('pass_types','service_id','bus_type_id'));
     }
@@ -286,6 +303,12 @@ $k=1;
      * * @Author created by satya 31-01-2018 
      */
     public function update($bus_type_id,$service_id,$id, UpdatePassTypeRequest $request) {
+        if(!$this->checkActionPermission('pass_types','edit'))
+            return redirect()->route('401');
+        $accept_gender_detail = implode(',',$request->accept_gender_detail);
+        $request->request->add(['accept_gender_detail'=>$accept_gender_detail]);
+        //echo '<pre>';print_r($request->all());die;
+        $request->request->add(['approval_status'=>'p','flag'=> 'u']);
         $this->pass_types->update($id, $request);
         return redirect()->route('bus_types.services.pass_types.index',[$bus_type_id,$service_id]);
     }

@@ -18,11 +18,11 @@ use App\Http\Requests\Route\StoreRouteRequest;
 use App\Repositories\Route\RouteRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-
+use App\Traits\checkPermission;
 class RouteController extends Controller {
 
     protected $routes;
-
+    use checkPermission;
     public function __construct(
     RouteRepositoryContract $routess
     ) {
@@ -34,18 +34,27 @@ class RouteController extends Controller {
      *
      * @return Response
      */
-    public function index() {
-
-        $routes = DB::table('routes')->select('*','route_details.stop_id','routes.route', 'routes.id', 'stops.stop')
-                ->leftjoin('route_details', 'route_details.stop_id', '=', 'routes.id')
-                ->leftjoin('stops', 'route_details.stop_id', '=', 'stops.id')
+    public function index(Request $request) {
+        if(!$this->checkActionPermission('routes','view'))
+            return redirect()->route('401');
+        $route_master_id = $request->route_id;
+        $routes = DB::table('routes')
+                ->select('*')
+                //->leftjoin('route_details', 'route_details.stop_id', '=', 'routes.id')
+                //->leftjoin('stops', 'route_details.stop_id', '=', 'stops.id')
+                ///->leftjoin('route_master', 'route_master.id', '=', 'routes.route_number')
+                ->where('routes.route_number',$request->route_id)  
                 ->get();
-        return view('routes.index')->withRoutes($routes);
+        //echo '<pre>';        print_r($routes);die;
+        return view('routes.index',compact('routes','route_master_id'));
     }
 
-    public function create() {
+    public function create($route_master_id) {
+        if(!$this->checkActionPermission('routes','create'))
+            return redirect()->route('401');
+        $route_master_id = $route_master_id;
         //$routes = Route::findOrFail();
-        return view('routes.create');
+        return view('routes.create',compact('route_master_id'));
     }
 
     /**
@@ -59,8 +68,9 @@ class RouteController extends Controller {
      * @param Route $routes
      * @return Response
      */
-    public function store(StoreRouteRequest $routesRequest) {
-      
+    public function store($route_master_id,StoreRouteRequest $routesRequest) {
+        if(!$this->checkActionPermission('routes','create'))
+            return redirect()->route('401');
         $routesRequest->route;
         
 //      $sql=  Route::where([['route',$routesRequest->route],['direction',$routesRequest->direction]]);
@@ -68,8 +78,10 @@ class RouteController extends Controller {
 //        {
 //            return redirect()->back()->withErrors(['This route and direction has already been taken.']);
 //        } else {
+        $version_id = $this->getCurrentVersion();
+        $routesRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id,'route_number'=>$route_master_id]);
          $getInsertedId = $this->routes->create($routesRequest);
-        return redirect()->route('routes.index');
+        return redirect()->route('route_master.routes.index',$route_master_id);
        // }
     }
 
@@ -81,6 +93,8 @@ class RouteController extends Controller {
      */
     
           public function viewDetail($id) {
+              if(!$this->checkActionPermission('routes','view'))
+            return redirect()->route('401');
            $routes=Route::find($id);
             $sql = DB::table('route_details')->where('route_id',$id)
              ->get();
@@ -172,6 +186,8 @@ class RouteController extends Controller {
     
     
     public function show($id) {
+        if(!$this->checkActionPermission('routes','view'))
+            return redirect()->route('401');
  $routes = DB::table('routes')->select('*','route_details.stop_id','routes.route', 'routes.id', 'stops.stop')
                 ->leftjoin('route_details', 'route_details.stop_id', '=', 'routes.id')
                 ->leftjoin('stops', 'route_details.stop_id', '=', 'stops.id')
@@ -185,10 +201,12 @@ class RouteController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function edit($id) {
+    public function edit($route_master_id,$id) {
+        if(!$this->checkActionPermission('routes','edit'))
+            return redirect()->route('401');
         $routes = Route::findOrFail($id);
          $route_details = DB::table('route_details')->select('*')->where('route_id', $id)->get();
-        return view('routes.edit',compact('routes','route_details'));
+        return view('routes.edit',compact('routes','route_details','route_master_id'));
     }
 
     /**
@@ -197,13 +215,17 @@ class RouteController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function update($id, UpdateRouteRequest $request) {
+    public function update($route_master_id,$id, UpdateRouteRequest $request) {
+        if(!$this->checkActionPermission('routes','edit'))
+            return redirect()->route('401');
       $sql = Route::where([['route', $request->route], ['direction', $request->direction], ['id', '!=', $id]])->first();
         if (count($sql) > 0) {
             return redirect()->back()->withErrors(['This route and direction has already been taken.']);
         } else {
+        
+        $request->request->add(['approval_status'=>'p','flag'=> 'u']);
             $this->routes->update($id, $request);
-            return redirect()->route('routes.index');
+            return redirect()->route('route_master.routes.index',$route_master_id);
         }
     }
 

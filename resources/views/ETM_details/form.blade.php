@@ -29,7 +29,7 @@
     </div>
 </div> 
 <div class="form-group ">
-     {!! Form::label('emei_no', Lang::get('EMEI No.'), ['class' => 'col-md-3 control-label']) !!}
+     {!! Form::label('emei_no', Lang::get('IMEI No.'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12 required">
           {!! Form::text('emei_no', null, ['class' => 'col-md-6 form-control','required' => 'required','onkeypress'=>'return isNumberKey(event)']) !!}
     </div>
@@ -47,19 +47,28 @@
     </div>
 </div> 
 
-
-
 <div class="form-group ">
-     {!! Form::label('warranty', Lang::get('Warranty'), ['class' => 'col-md-3 control-label']) !!}
+     {!! Form::label('warranty', Lang::get('Warranty'), ['class' => 'col-md-3 control-label','for'=>'warranty']) !!}
+    <div class="col-md-9 col-sm-12">
+        <div class="input-group date form_date col-md-10" data-date="" data-date-format="dd MM yyyy p" data-link-field="">
+        {!! Form::text('warranty', $warranty, ['class' => 'form-control','readonly'=>'readonly']) !!}
+        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+        </div>
+        
+    </div>
+</div>
+<!--<div class="form-group ">
+     {!! Form::label('warranty1', Lang::get('Warranty'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12">
        <div class="input-group date">
         <div class="input-group-addon">
             <i class="fa fa-calendar"></i>
         </div>
-        {!! Form::text('warranty', $warranty, ['class' => 'multiple_date','readonly'=>'readonly']) !!}
+        {!! Form::text('warranty1', $warranty, ['class' => 'multiple_date','readonly'=>'readonly']) !!}
       </div>
     </div>
-</div> 
+</div> -->
 <div class="form-group ">
      {!! Form::label('project_period', Lang::get('Project period (Years)'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12">
@@ -75,6 +84,7 @@
 <div class="form-group">
     <div class="col-md-3" style="margin-right: 15px;"></div>
     {{ Form::submit('Save', array('class' => 'btn btn-success pull-left','required' => 'required')) }}
+    <div class="col-md-3" style="margin-right: 15px;">{{ Form::button('Cancel', array('class' => 'btn btn-success pull-left','onclick'=>'window.history.back();')) }}</div>
     <div class="col-md-9">
         <div class="col-md-7 col-sm-12">
         </div>

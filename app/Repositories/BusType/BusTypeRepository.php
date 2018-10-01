@@ -26,7 +26,7 @@ class BusTypeRepository implements BusTypeRepositoryContract {
     }
 
     public function update($id, $requestData) {
-       $this->createLog('App\Models\BusType','App\Models\BusTypeLog',$id);
+       //$this->createLog('App\Models\BusType','App\Models\BusTypeLog',$id);
        $bustype = BusType::findorFail($id);
        $input = $requestData->all();
        $input['user_id'] = Auth::id();
