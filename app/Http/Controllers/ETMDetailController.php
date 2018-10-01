@@ -46,7 +46,7 @@ class ETMDetailController extends Controller
         $ETM_details = DB::table('etm_details')->select('*','ETM_details.id as id','depots.name as name','evm_status_masters.name as evm_status_master_id')
             ->leftjoin('depots','depots.id','ETM_details.depot_id')
             ->leftjoin('evm_status_masters','evm_status_masters.id','ETM_details.evm_status_master_id')
-             ->orderBy('ETM_details.id','desc')->get();
+             ->orderBy('etm_details.id','desc')->get();
         return view('ETM_details.index',compact('ETM_details'))->withETMDetails($depot);
    
     }
