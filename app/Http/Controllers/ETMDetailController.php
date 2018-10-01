@@ -44,7 +44,7 @@ class ETMDetailController extends Controller
         if(!$this->checkActionPermission('etm_details','view'))
             return redirect()->route('401');
         $ETM_details = DB::table('etm_details')->select('*','etm_details.id as id','depots.name as name','evm_status_masters.name as evm_status_master_id')
-            ->leftjoin('depots','depots.id','ETM_details.depot_id')
+            ->leftjoin('depots','depots.id','etm_details.depot_id')
             ->leftjoin('evm_status_masters','evm_status_masters.id','etm_details.evm_status_master_id')
              ->orderBy('etm_details.id','desc')->get();
         return view('ETM_details.index',compact('ETM_details'))->withETMDetails($depot);
