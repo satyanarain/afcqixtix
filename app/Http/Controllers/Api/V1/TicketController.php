@@ -22,7 +22,9 @@ class TicketController extends Controller
     	{
             return response()->json(['statusCode'=>'Error', 'data'=>$validator->errors()]);
     	}
-        $request->add(['sold_at'=>date('yyyy-mm-dd',$version_id)]);
+        print_r($request->all());
+        die('dfgd');
+        $request->add(['sold_at'=>date('yyyy-mm-dd H:i:s',$version_id)]);
     	$ticket = Ticket::create($request->all());
     	return response()->json(['statusCode'=>'Ok', 'data'=>$ticket]);
     }
