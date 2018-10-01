@@ -8,7 +8,7 @@ class ETMdetail extends Model
      *
      * @var string
      */
-    protected $table = 'ETM_details';
+    protected $table = 'etm_details';
     protected $guarded = ['confirm_password'];
     /**
      * The attributes that are mass assignable.
