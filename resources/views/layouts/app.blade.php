@@ -220,7 +220,9 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                     </li>
                     
                   <!--Start Inventories left menu details-->  
-                  @php $pem=menuDisplayByUser($result, 'inventories','view'); @endphp
+                  @php 
+                  $pem=menuDisplayByUser($result, 'centerstock','view'); 
+                  @endphp
                   @if($pem=='true')
                   <li @if($segments_var[0]=='centerstock') class="treeview active" @else class="treeview" @endif>
                         <a href="#">

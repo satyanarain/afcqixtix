@@ -357,7 +357,7 @@ function actionHeading($action = '', $newaction='') {
 
 function menuDisplayByUser($result,$menuname='',$action='') {
  $userid_menu = Auth::id();
-     $sql = DB::table('users')->select('*', 'users.id as id')->leftjoin('permissions', 'users.id', '=', 'permissions.user_id')
+    $sql = DB::table('users')->select('*', 'users.id as id')->leftjoin('permissions', 'users.id', '=', 'permissions.user_id')
             ->where('users.id', '=', $userid_menu)
             ->first();
     $array_value = $sql->$menuname;
@@ -508,7 +508,7 @@ function checkPermission($module='',$action='') {
     else
         return false;
 }
-function checkVersionOpen() {
+    function checkVersionOpen() {
         $user_id = Auth::id();
         $sql = Version::where('version_status', '=', 'o')->first();
         

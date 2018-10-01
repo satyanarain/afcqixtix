@@ -20,9 +20,9 @@ class CenterStockRepository implements CenterStockRepositoryContract {
         
         $input = $requestData->all();
         $input['user_id'] = Auth::id();
-        $bustype = BusType::create($input);
-        Session::flash('flash_message', "$bustype->bus_type Bus Type Created Successfully."); //Snippet in Master.blade.php
-        return $bustype;
+        $cenyerstock = CenterStock::create($input);
+        Session::flash('flash_message', "Stock Created Successfully."); //Snippet in Master.blade.php
+        return $cenyerstock;
     }
 
     public function update($id, $requestData) {
@@ -30,9 +30,9 @@ class CenterStockRepository implements CenterStockRepositoryContract {
        $bustype = BusType::findorFail($id);
        $input = $requestData->all();
        $input['user_id'] = Auth::id();
-       $bustype->fill($input)->save();
-       Session::flash('flash_message', "$bustype->bus_type Bus Type Updated Successfully.");
-       return $bustype;
+       $cenyerstock->fill($input)->save();
+       Session::flash('flash_message', "Stock Updated Successfully.");
+       return $cenyerstock;
      
     }
 

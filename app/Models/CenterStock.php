@@ -8,15 +8,13 @@ class CenterStock extends Model
      *
      * @var string
      */
-    protected $table = 'inv_center_head_stock';
+    protected $table = 'inv_center_stock';
     protected $guarded = [];
-      public function services()
-    {
-       
+    public function services()
+    {  
         return $this->hasMany('App\Models\Service', 'center_stock_id');
     }
   
-    
     /**
      * The attributes that are mass assignable.
      *

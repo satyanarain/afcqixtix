@@ -35,18 +35,25 @@ class CenterstockController extends Controller
      */
     public function index()
     {
-        if(!$this->checkActionPermission('centerstock','view'))
+      if(!$this->checkActionPermission('centerstock','view'))
             return redirect()->route('401');
-    //$bustypes = BusType::orderBy('order_number')->get();
+      
+    //$centerstock = CenterStock::orderBy('id')->get();
+    $centerstock = DB::table('inv_center_stock')->select('inv_center_stock.*','inv_items_master.name','denominations.description')
+                ->leftjoin('inv_items_master', 'inv_center_stock.items_id', '=', 'inv_items_master.id')
+                ->leftjoin('denominations', 'inv_center_stock.denom_id', '=', 'denominations.id')
+                ->get();
     //return view('invcenterstock.index')->withBustypes($bustypes);
-    return view('centerstock.index');
+    return view('centerstock.index',compact('centerstock'));
    
     }
     public function create()
     {
       if(!$this->checkActionPermission('centerstock','create'))
             return redirect()->route('401');
-     return view('centerstock.create');
+      $items_data = DB::table("inv_items_master")->select('id','name','description')->where("status", "=", '1')->get();
+      $paperticket = DB::table("denominations")->select('id','description','denomination_master_id')->where("denomination_master_id", "=", '1')->get();
+      return view('centerstock.create',compact('items_data','paperticket'));
     }
  
     /**
@@ -60,15 +67,25 @@ class CenterstockController extends Controller
      * @param Bustype $bustypes
      * @return Response
      */
-    public function store(StoreBusTypeRequest $bustypesRequest)
+    public function store(StoreCenterStockRequest $Request)
     {
         if(!$this->checkActionPermission('centerstock','create'))
             return redirect()->route('401');
-        $version_id = $this->getCurrentVersion();
-        $bustypesRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id]);
-        //echo '<pre>';print_r($bustypesRequest->all());die;
-        $getInsertedId = $this->bustypes->create($bustypesRequest);
-        return redirect()->route('invcenterstock.index');         
+        
+       if($Request->items_id == 2){
+        //Update quantity in main table
+        $itemsdata = DB::table("inv_itemsquantity_stock")->select('*')->where("items_id", "=", $Request->items_id)->first();
+        $numdata = count($itemsdata);
+        if($numdata == 0)
+        {
+           DB::table('inv_itemsquantity_stock')->insert(array('items_id' =>$Request->items_id,'qty' => $Request->quantity)); 
+        }else{
+            $total = ($itemsdata->qty + $Request->quantity);
+            DB::table('inv_itemsquantity_stock')->where('items_id', $Request->items_id)->update(['qty' => $total]);
+        }
+       } 
+       $getInsertedId = $this->centerstock->create($Request);
+       return redirect()->route('centerstock.index');         
     }
     /**
      * Display the specified resource.
@@ -131,10 +148,17 @@ class CenterstockController extends Controller
         $bustypes = BusType::orderBy('order_number')->get();
         ?>
                 <thead>
-                    <tr>  <th>Bus Type</th>
-                        <th>Order Number</th>
-                        <th>Abbreviation</th>
-                        <th>Action</th>
+                    <tr>    
+                            <th>@lang('Items')</th>
+                            <th>@lang('Denominations')</th>
+                            <th>@lang('Series')</th>
+                            <th>@lang('Start Sequence')</th>
+                            <th>@lang('End Sequence')</th>
+                            <th>@lang('Quantity')</th>
+                            <th>@lang('Vender_name')</th>
+                            <th>@lang('Date Received')</th>
+                            <th>@lang('Challan Number')</th>
+                            <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>

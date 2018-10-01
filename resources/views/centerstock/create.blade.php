@@ -1,17 +1,22 @@
 @extends('layouts.master')
 @section('header')
-<h1>{{headingBold()}}</h1>
-{{BreadCrumb()}}
+<h1>Manage Center Stock</h1>
+<ol class="breadcrumb">
+  <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+  <li><a href="#">Inventories</a></li>
+  <li><a href="/centerstock" >Center Stock</a></li>
+  <li><a href="/centerstock.create" class="active">Create</a></li>
+</ol>
 @stop
 @section('content')
  @include('partials.form_header')
                 {!! Form::open([
-                'route' => 'bus_types.store',
+                'route' => 'centerstock.store',
                 'files'=>true,
                 'enctype' => 'multipart/form-data',
-                 'class'=>'form-horizontal'
+                'class'=>'form-horizontal'
                 ]) !!}
-                @include('bustypes.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
+                @include('centerstock.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 
                 {!! Form::close() !!}
             </div>
