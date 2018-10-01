@@ -148,7 +148,7 @@ echo json_encode([
                         </a>
                         @php
 $array= array('depots','bus_types','services','vehicles','shifts','stops','routes','route_master','duties','targets','trips','fares','concession_fare_slabs'
-,'concessions','trip_cancellation_reasons','inspector_remarks','payout_reasons','denominations','pass_types','crew','ETM_details')
+,'concessions','trip_cancellation_reasons','inspector_remarks','payout_reasons','denominations','pass_types','crew','etm_details')
                        @endphp
                         <ul @if(in_array($segments_var[0],$array)) class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
                              
@@ -202,9 +202,9 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                                     <i class="fa fa-plus"></i> @lang('menu.denominations.title') </a>
                            </li>
                                @endif
-                            @php $pem=menuDisplayByUser($result, 'ETM_details','view'); @endphp
+                            @php $pem=menuDisplayByUser($result, 'etm_details','view'); @endphp
                             @if($pem=='true')
-                            <li @if($segments_var[0]=='ETM_details') class="active" @endif><a href="{{route('ETM_details.index')}}"><i class="fa fa-calculator"></i>@lang('menu.ETM_details.title')</a>
+                            <li @if($segments_var[0]=='etm_details') class="active" @endif><a href="{{route('etm_details.index')}}"><i class="fa fa-calculator"></i>ETM Details</a>
                             </li>
                             @endif
                          </ul>

@@ -52,7 +52,7 @@
                     <div class="row1"  id="formACC2{{$permissions->id}}" style="display:none;">
                         <div class="row">  
                             <table class="table table-responsive.view">
-                                 {{ menuCreate('ETM_details','create','edit','view',$permissions->id,$permissions->ETM_details)}}
+                                 {{ menuCreate('etm_details','create','edit','view',$permissions->id,$permissions->etm_details)}}
                                  
                         </table> 
                         </div>

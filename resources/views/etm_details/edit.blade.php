@@ -5,14 +5,14 @@
 @stop
 @section('content')
 @include('partials.form_header')
-               {!! Form::model($ETM_details, [
+               {!! Form::model($etm_details, [
         'method' => 'PATCH',
-        'route' => ['ETM_details.update', $ETM_details->id],
+        'route' => ['etm_details.update', $etm_details->id],
         'files'=>true,
         'enctype' => 'multipart/form-data',
          'class'=>'form-horizontal'
         ]) !!}
-               @include('ETM_details.form', ['submitButtonText' => Lang::get('ETM_details.headers.update_submit')])
+               @include('etm_details.form', ['submitButtonText' => Lang::get('etm_details.headers.update_submit')])
 
                 {!! Form::close() !!}
             </div>

@@ -80,7 +80,7 @@ class PermissionsController extends Controller
 //            $permission->denominations = implode(',', $request->denominations);
 //            $permission->pass_types = implode(',', $request->pass_types);
 //            $permission->crew_details = implode(',', $request->crew_details);
-//            $permission->ETM_details = implode(',', $request->ETM_details);
+//            $permission->etm_details = implode(',', $request->etm_details);
 //            
 //            $permission->save();
 //            echo "Menu Updated Successfully!";
@@ -108,7 +108,7 @@ class PermissionsController extends Controller
 //            $input['denominations'] = implode(',', $request->denominations);
 //            $input['pass_types'] = implode(',', $request->pass_types);
 //            $input['crew_details'] = implode(',', $request->crew_details);
-//            $permission->ETM_details = implode(',', $request->ETM_details);
+//            $permission->etm_details = implode(',', $request->etm_details);
 //            
 //            Permission::create($input);
 //            echo "Menu Created Successfully!";
@@ -153,7 +153,7 @@ class PermissionsController extends Controller
             $input['denominations'] = implode(',', $request->denominations);
             $input['pass_types'] = implode(',', $request->pass_types);
             $input['crews'] = implode(',', $request->crews);
-            $input['ETM_details'] = implode(',', $request->ETM_details);
+            $input['etm_details'] = implode(',', $request->etm_details);
             $input['versions'] = implode(',', $request->versions);
             $input['settings'] = implode(',', $request->settings);
             $input['waybills'] = implode(',', $request->waybills);
@@ -198,7 +198,7 @@ class PermissionsController extends Controller
             $input['denominations'] = implode(',', $request->denominations);
             $input['pass_types'] = implode(',', $request->pass_types);
             $input['crews'] = implode(',', $request->crews);
-            $input['ETM_details'] = implode(',', $request->ETM_details);
+            $input['etm_details'] = implode(',', $request->etm_details);
             $input['versions'] = implode(',', $request->versions);
             $input['settings'] = implode(',', $request->settings);
             $input['waybills'] = implode(',', $request->waybills);

@@ -1,14 +1,14 @@
 <?php
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
-class ETMdetail extends Model
+class Etmdetail extends Model
 {
   /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'ETM_details';
+    protected $table = 'etm_details';
     protected $guarded = ['confirm_password'];
     /**
      * The attributes that are mass assignable.

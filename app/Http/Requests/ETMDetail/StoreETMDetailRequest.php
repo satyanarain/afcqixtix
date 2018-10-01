@@ -27,7 +27,7 @@ class StoreETMDetailRequest extends Request
       
       
       //SELECT `id`, `depot_id`, `etm_no`, `evm_status_master_id`, `sim_no`, `emei_no`, `serial_no`, `"
-          //. "make`, `warranty`, `project_period`, `remarks`, `created_at`, `updated_at` FROM `ETM_details` WHERE 1
+          //. "make`, `warranty`, `project_period`, `remarks`, `created_at`, `updated_at` FROM `etm_details` WHERE 1
       
         return [
             'depot_id' => 'required',

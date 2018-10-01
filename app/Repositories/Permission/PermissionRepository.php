@@ -71,7 +71,7 @@ class PermissionRepository implements PermissionRepositoryContract
             $input['denominations'] = implode(',', $request->denominations);
             $input['pass_types'] = implode(',', $request->pass_types);
             $input['crew'] = implode(',', $request->crew);
-            $input['ETM_details'] = implode(',', $request->ETM_details);
+            $input['etm_details'] = implode(',', $request->etm_details);
            $roles= Role::create($input);
             
              Session::flash('flash_message', "Role Created Successfully."); //Snippet in Master.blade.php

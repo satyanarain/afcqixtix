@@ -4,7 +4,7 @@
 <script>
 function viewDetails(id,view_detail)
    {
-   var urldata=   '/ETM_details/' + view_detail + '/' +id;
+   var urldata=   '/etm_details/' + view_detail + '/' +id;
     $.ajax({
 		type: "GET",
 		url: urldata,

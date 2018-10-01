@@ -98,7 +98,7 @@ class UserRepository implements UserRepositoryContract {
             $input['denominations'] = implode(',', $requestData->denominations);
             $input['pass_types'] = implode(',', $requestData->pass_types);
             $input['crews'] = implode(',', $requestData->crews);
-            $input['ETM_details'] = implode(',', $requestData->ETM_details);
+            $input['etm_details'] = implode(',', $requestData->etm_details);
             $input['versions'] = implode(',', $requestData->versions);
             $input['settings'] = implode(',', $requestData->settings);
             $input['waybills'] = implode(',', $requestData->waybills);
@@ -151,7 +151,7 @@ class UserRepository implements UserRepositoryContract {
             $input['denominations'] = implode(',', $requestData->denominations);
             $input['pass_types'] = implode(',', $requestData->pass_types);
             $input['crews'] = implode(',', $requestData->crews);
-            $input['ETM_details'] = implode(',', $requestData->ETM_details);
+            $input['etm_details'] = implode(',', $requestData->etm_details);
             $input['settings'] = implode(',', $requestData->settings);
             $input['versions'] = implode(',', $requestData->versions);
             $input['waybills'] = implode(',', $requestData->waybills);

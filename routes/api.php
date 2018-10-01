@@ -18,4 +18,5 @@ Route::group(['namespace'=>'Api\V1', 'prefix'=>'v1'], function(){
 	Route::get('getsqlitedbname', 'CommonController@getSqliteDbName');
 
 	Route::post('tripstart', 'TripStartController@store');
+        Route::post('sellticket', 'TicketController@store');
 });

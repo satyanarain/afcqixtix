@@ -4,6 +4,6 @@
 {{BreadCrumb()}}
 @stop
 @section('content')
-@include('partials.ETM_details_header')
+@include('partials.etm_details_header')
 @stop
   

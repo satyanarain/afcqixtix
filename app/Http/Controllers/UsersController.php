@@ -228,13 +228,13 @@ class UsersController extends Controller
         $denominations = implode(',', $requestData->denominations);
         $pass_types = implode(',', $requestData->pass_types);
         $crews = implode(',', $requestData->crews);
-        $ETM_details = implode(',', $requestData->ETM_details);
+        $etm_details = implode(',', $requestData->etm_details);
         $versions = implode(',', $requestData->versions);
         $settings = implode(',', $requestData->settings);
         $waybills = implode(',', $requestData->waybills);
            PermissionDetail::where('user_id',$id)->update(['role_id' => $requestData->role_id,'created_by'=>$created_by,'users'=>$users,'changepasswords'=>$changepasswords,'permissions'=>$permissions,'depots'=>$depots,'bus_types'=>$bus_types,'services'=>$services,'vehicles'=>$vehicles
             ,'shifts'=>$shifts,'stops'=>$stops,'routes'=>$routes,'duties'=>$duties,'targets'=>$targets,'trips'=>$trips,'fares'=>$fares,'concession_fare_slabs'=>$concession_fare_slabs,'concessions'=>$concessions,'trip_cancellation_reasons'=>$trip_cancellation_reasons
-           ,'inspector_remarks'=>$inspector_remarks,'payout_reasons'=>$payout_reasons,'denominations'=>$denominations,'pass_types'=>$pass_types,'crews'=>$crews,'ETM_details'=>$ETM_details,'versions'=>$versions,'settings'=>$settings,'waybills'=>$waybills]);     
+           ,'inspector_remarks'=>$inspector_remarks,'payout_reasons'=>$payout_reasons,'denominations'=>$denominations,'pass_types'=>$pass_types,'crews'=>$crews,'etm_details'=>$etm_details,'versions'=>$versions,'settings'=>$settings,'waybills'=>$waybills]);     
            //  $permission->fill($input)->save();
       
        $user = User::findorFail($id);
@@ -326,7 +326,7 @@ public function roleupdate($id, Request $request)
                      <div class="row1"  id="formACC2<?php echo $permissions->id; ?>" style="display:none;">
                         <div class="row">  
                             <table class="table table-responsive.view">
-                                 <?php menuCreate('ETM_details','create','edit','view',$permissions->id,$permissions->ETM_details) ?>
+                                 <?php menuCreate('etm_details','create','edit','view',$permissions->id,$permissions->etm_details) ?>
                         </table> 
                         </div>
                     </div>

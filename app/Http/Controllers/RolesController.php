@@ -80,7 +80,7 @@ class RolesController extends Controller
             $permission->denominations = implode(',', $request->denominations);
             $permission->pass_types = implode(',', $request->pass_types);
             $permission->crew = implode(',', $request->crew);
-            $permission->ETM_details = implode(',', $request->ETM_details);
+            $permission->etm_details = implode(',', $request->etm_details);
             
             $permission->save();
             echo "Menu Updated Successfully!";
@@ -108,7 +108,7 @@ class RolesController extends Controller
             $input['denominations'] = implode(',', $request->denominations);
             $input['pass_types'] = implode(',', $request->pass_types);
             $input['crew'] = implode(',', $request->crew);
-            $permission->ETM_details = implode(',', $request->ETM_details);
+            $permission->etm_details = implode(',', $request->etm_details);
             
             Role::create($input);
             echo "Menu Created Successfully!";

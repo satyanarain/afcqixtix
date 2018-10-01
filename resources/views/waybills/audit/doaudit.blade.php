@@ -12,7 +12,7 @@
         'enctype' => 'multipart/form-data',
          'class'=>'form-horizontal'
         ]) !!}
-               @include('waybills.editform', ['submitButtonText' => Lang::get('ETM_details.headers.update_submit')])
+               @include('waybills.editform', ['submitButtonText' => Lang::get('etm_details.headers.update_submit')])
 
                 {!! Form::close() !!}
             </div>
