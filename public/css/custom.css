@@ -484,5 +484,5 @@ font-weight: bold;
     
 }
 .disabled{cursor: not-allowed;}
-
-
+.slimScrollDiv{ height: auto !important;}
+ul.menu{ height: auto !important;}

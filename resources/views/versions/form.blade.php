@@ -1,5 +1,16 @@
 <div class="form-group">@include('partials.message')</div>
-<div class="form-group">
+<div class="form-group ">
+     {!! Form::label('downloading_wef', Lang::get('Download From'), ['class' => 'col-md-3 control-label','for'=>'downloading_wef']) !!}
+    <div class="col-md-9 col-sm-12">
+        <div class="input-group date form_date col-md-10" data-date="" data-date-format="dd MM yyyy p" data-link-field="date_of_birtha">
+        {!! Form::text('downloading_wef', $versions->downloading_wef, ['class' => 'form-control','readonly'=>'readonly']) !!}
+        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+        </div>
+        
+    </div>
+</div>
+<!--<div class="form-group">
         {!! Form::label('downloading_wef', Lang::get('Download From'), ['class' => 'col-md-3 control-label']) !!}
         
         <div class="col-md-7 col-sm-12 required">
@@ -7,13 +18,13 @@
                 <div class="input-group-addon">
                     <i class="fa fa-calendar"></i>
                 </div>
-                {!! Form::text('downloading_wef', $versions->downloading_wef, ['class' => 'multiple_date1','readonly'=>'readonly']) !!}
+                {!! Form::text('downloading_wef1', $versions->downloading_wef, ['class' => 'multiple_date1','readonly'=>'readonly']) !!}
             </div>
       </div>
         
         
           
-</div>
+</div>-->
 <div class="form-group">
         {!! Form::label('reason', Lang::get('Reason'), ['class' => 'col-md-3 control-label']) !!}
          <div class="col-md-7 col-sm-12 required">

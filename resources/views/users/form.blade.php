@@ -76,18 +76,29 @@
  $date_of_birth = date('d-m-Y', strtotime($user->date_of_birth));
  }
  @endphp
-<div class="form-group">
-    {!! Form::label('date_of_birth', Lang::get('user.headers.date_of_birth'), ['class' => 'col-md-3 control-label']) !!}
+ <div class="form-group ">
+     {!! Form::label('date_of_birth', Lang::get('user.headers.date_of_birth'), ['class' => 'col-md-3 control-label','for'=>'date_of_birth']) !!}
+    <div class="col-md-9 col-sm-12">
+        <div class="input-group date form_date col-md-10" data-date="" data-date-format="dd MM yyyy p" data-link-field="date_of_birtha">
+        {!! Form::text('date_of_birth', $date_of_birth, ['class' => 'form-control','readonly'=>'readonly']) !!}
+        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+        </div>
+        
+    </div>
+</div>
+<!--<div class="form-group">
+    {!! Form::label('date_of_birth1', Lang::get('user.headers.date_of_birth'), ['class' => 'col-md-3 control-label']) !!}
  <div class="col-md-7 col-sm-12">
     <div class="input-group date">
         <div class="input-group-addon">
             <i class="fa fa-calendar"></i>
         </div>
-        {!! Form::text('date_of_birth', $date_of_birth, ['class' => 'multiple_date','readonly'=>'readonly']) !!}
+        {!! Form::text('date_of_birth1', $date_of_birth, ['class' => 'multiple_date','readonly'=>'readonly']) !!}
       </div>
       </div>
-    <!-- /.input group -->
-</div>
+     /.input group 
+</div>-->
   @if($user->image_path!='')
 <div class="form-group">
 @if($user->image_path!='')
