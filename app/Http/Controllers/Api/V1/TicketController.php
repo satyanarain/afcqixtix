@@ -18,15 +18,34 @@ class TicketController extends Controller
     		'trip_id' => 'required',
     		'sold_at' => 'required',
     	]);
+
     	if($validator->fails())
     	{
             return response()->json(['statusCode'=>'Error', 'data'=>$validator->errors()]);
     	}
-//        $request->add(['sold_at'=>date('yyyy-mm-dd H:i:s',strtotime($request->sold_at))]);
-//        print_r($request->all());
-//        die('dfgd');
         
     	$ticket = Ticket::create($request->all());
     	return response()->json(['statusCode'=>'Ok', 'data'=>$ticket]);
+    }
+
+    public function importTickets(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'data' => 'required'
+        ]);
+
+        if($validator->fails())
+        {
+            return response()->json(['statusCode'=>'Error', 'data'=>$validator->errors()]);
+        }
+
+        $jsonDecoded = json_decode($request->data, true);
+
+        foreach ($jsonDecoded as $key => $value) 
+        {
+            $ticket = Ticket::create($value);
+        }
+
+        return response()->json($jsonDecoded);
     }
 }

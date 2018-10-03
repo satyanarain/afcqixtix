@@ -21,5 +21,8 @@ Route::group(['namespace'=>'Api\V1', 'prefix'=>'v1'], function(){
 
 		Route::post('tripstart', 'TripStartController@store');
 	    Route::post('sellticket', 'TicketController@store');
+
 	});
+
+	Route::post('importtickets', 'TicketController@importTickets');
 });
