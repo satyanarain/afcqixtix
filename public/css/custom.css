@@ -486,3 +486,15 @@ font-weight: bold;
 .disabled{cursor: not-allowed;}
 .slimScrollDiv{ height: auto !important;}
 ul.menu{ height: auto !important;}
+
+.denominations-icon{ background: url('../images/denominations.png') no-repeat; width:14px; height:14px; display: inline-block;}
+.denominations-icon:hover{background: url('../images/denominations-hover.png') no-repeat;cursor: pointer; }
+
+.depot-icon{ background: url('../images/depot.png') no-repeat; width:14px; height:14px; display: inline-block;}
+.depot-icon:hover{background: url('../images/depot-hover.png') no-repeat;cursor: pointer; }
+
+.stop-icon{ background: url('../images/stop.png') no-repeat; width:14px; height:14px; display: inline-block;}
+.stop-icon:hover{background: url('../images/stop-hover.png') no-repeat;cursor: pointer; }
+
+.version-icon{ background: url('../images/version.png') no-repeat; width:14px; height:14px; display: inline-block;margin-right: 10px;}
+.version-icon:hover{background: url('../images/version-hover.png') no-repeat;cursor: pointer; }

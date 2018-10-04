@@ -24,7 +24,7 @@ class TicketController extends Controller
             return response()->json(['statusCode'=>'Error', 'data'=>$validator->errors()]);
     	}
         
-    	$ticket = Ticket::create($request->all());
+    	$ticket = Ticket::create($request->except(['token']));
     	return response()->json(['statusCode'=>'Ok', 'data'=>$ticket]);
     }
 
