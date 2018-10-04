@@ -47,9 +47,9 @@ class TicketController extends Controller
         {
             try{
                 $ticket = Ticket::create($value);
-                $insertedData[$value['local_id']] = 1;
+                $insertedData[] = ['id'=>$value['local_id'], 'status'=>1];
             } catch (\Illuminate\Database\QueryException $exception) {
-                $insertedData[$value['local_id']] = 0;
+                $insertedData[] = ['id'=>$value['local_id'], 'status'=>0];
             }            
         }
 
