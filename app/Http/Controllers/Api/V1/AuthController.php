@@ -30,7 +30,7 @@ class AuthController extends Controller
     		$token = JWTAuth::fromUser($crew);
 
     		//return strlen($token);
-    		return response()->json(['statusCode'=>'Ok', 'data'=>['token_length'=>strlen($token), 'token'=>$token]]);
+    		return response()->json(['statusCode'=>'Ok', 'token'=>$token]);
     	}else{
     		return response()->json(['statusCode'=>'Error', 'data'=>'Invalid credentilas!']);
     	}
