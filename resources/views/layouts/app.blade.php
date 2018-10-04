@@ -154,7 +154,7 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                              
                           @if(menuPermission('depots')==1)
                           <li @if($segments_var[0]=='depots') class="active" @endif><a href="{{route('depots.index')}}">
-                                    <i class="fa fa-bus"></i> @lang('menu.depots.title')
+                                    <i class="depot-icon"></i> @lang('menu.depots.title')
                              </a>
                            </li>
                            @endif
@@ -173,7 +173,7 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                                      @endif
                             @if(menuPermission('stops')==1)
                             <li @if($segments_var[0]=='stops') class="active" @endif><a href="{{route('stops.index')}}">
-                                    <i class="fa fa-bus"></i> @lang('menu.stops.title') 
+                                    <i class="stop-icon"></i> @lang('menu.stops.title') 
                             </a>
                                      @endif
                             @if(menuPermission('routes')==1)
@@ -199,7 +199,7 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                                @endif
                             @if(menuPermission('denominations')==1)
                            <li @if($segments_var[0]=='denominations') class="active" @endif><a href="{{route('denominations.index')}}">
-                                    <i class="fa fa-plus"></i> @lang('menu.denominations.title') </a>
+                                    <i class="denominations-icon"></i> @lang('menu.denominations.title') </a>
                            </li>
                                @endif
                             @php $pem=menuDisplayByUser($result, 'etm_details','view'); @endphp
@@ -268,7 +268,7 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                     @endif
                     <li @if($segments_var[0]=='versions') class="treeview active" @else class="treeview" @endif>
                        <a href="{{route('versions.index')}}">
-                           <img src="<?php echo \URL::to('') . '/images/version.png' ?>" width="14" style="margin-right: 10px"><span>Version</span>
+                           <i class="version-icon"></i><span>Version</span>
                         </a>
                     </li>
                     <li @if($segments_var[0]=='changepasswords') class="active" @endif><a href="{{route('changepasswords.create')}}">

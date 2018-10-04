@@ -26,7 +26,7 @@ class TicketController extends Controller
 //        print_r($request->all());
 //        die('dfgd');
         
-    	$ticket = Ticket::create($request->all());
+    	$ticket = Ticket::create($request->except(['token']));
     	return response()->json(['statusCode'=>'Ok', 'data'=>$ticket]);
     }
 }
