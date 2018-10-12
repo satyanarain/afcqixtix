@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('header')
-<h1>{{headingBold()}}</h1>
+<h1>Manage Users</h1>
 {{BreadCrumb()}}
 @stop
 @section('content')
@@ -8,7 +8,7 @@
     <div class="col-xs-12">
       <div class="box">
             <div class="box-header">
-               <h3 class="box-title">{{headingMain()}}</h3>
+               <h3 class="box-title">List of All Users</h3>
                 <?php $permission_status = checkPermission('users','create');
                     if($permission_status)
                         createButton('create','Add');

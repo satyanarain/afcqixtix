@@ -124,18 +124,10 @@ echo json_encode([
                     
                     @php $pem=menuDisplayByUser($result, 'users','view'); @endphp
                     @if($pem=='true')
-                  <li @if($segments_var[0]=='users') class="treeview active" @else class="treeview" @endif>
-                        <a href="#">
-                            <i class="fa fa-user"></i> <span>User Management</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
+                    <li @if($segments_var[0]=='users') class="treeview active" @else class="treeview" @endif>
+                        <a href="{{route('users.index')}}">
+                            <i class="fa fa-users"></i> <span>Manage Users</span>
                         </a>
-                        <ul @if($segments_var[0]=='users' || $segments_var[0]=='changepasswords') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
-                            <li @if($segments_var[0]=='users') class="active" @endif><a href="{{route('users.index')}}">
-                                    <i class="fa fa-users"></i> @lang('menu.users.user') 
-                                </a></li>
-                          </ul>
                     </li>
                     @endif
                     
@@ -189,12 +181,12 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                             @endif
                             @if(menuPermission('inspector_remarks')==1)
                            <li @if($segments_var[0]=='inspector_remarks') class="active" @endif><a href="{{route('inspector_remarks.index')}}">
-                                    <i class="fa fa-user"></i> @lang('menu.inspector_remarks.title') </a>
+                                    <i class="fa fa-user"></i>Inspector Remarks </a>
                            </li>
                             @endif
                             @if(menuPermission('payout_reasons')==1)
                            <li @if($segments_var[0]=='payout_reasons') class="active" @endif><a href="{{route('payout_reasons.index')}}">
-                                    <i class="fa fa-cc-mastercard"></i> @lang('menu.payout_reasons.title') </a>
+                                    <i class="fa fa-cc-mastercard"></i>Payout Options </a>
                            </li>
                                @endif
                             @if(menuPermission('denominations')==1)
@@ -249,17 +241,15 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                     @if($pem=='true')
                      <li  @if($segments_var[0]=='roles' || $segments_var[0]=='permissions' || $segments_var[0]=='settings') class="treeview active" @else class="treeview" @endif>
                         <a href="#">
-                            <i class="fa fa-cog" aria-hidden="true"></i> <span>@lang('menu.settings.title')</span>
+                            <i class="fa fa-cog" aria-hidden="true"></i> <span>Settings</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
                         <ul @if($segments_var[0]=='changepasswords' || $segments_var[0]=='permissions' || $segments_var[0]=='settings') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
-                         <li @if($segments_var[0]=='roles' || $segments_var[0]=='permissions') class="active" @endif><a href="{{route('permissions.index')}}"><i class="fa fa-key"></i>@lang('menu.settings.permissions')</a>
-                            </li>
-                         <li @if($segments_var[0]=='settings') class="active" @endif><a href="{{route('settings.index')}}"><i class="fa fa-cog"></i>@lang('Settings')</a>
-                            </li>     
-                            
+                         <li @if($segments_var[0]=='roles' || $segments_var[0]=='permissions') class="active" @endif><a href="{{route('permissions.index')}}"><i class="fa fa-key"></i>Roles and Permissions</a></li>
+                         <li @if($segments_var[0]=='settings') class="active" @endif><a href="{{route('settings.index')}}"><i class="fa fa-cog"></i>Configuration Settings</a></li>     
+                         <li @if($segments_var[0]=='changepasswords') class="active" @endif><a href="{{route('changepasswords.create')}}"><i class="fa fa-key"></i>Change Password</a></li>   
                             
                             
                             
@@ -268,12 +258,10 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                     @endif
                     <li @if($segments_var[0]=='versions') class="treeview active" @else class="treeview" @endif>
                        <a href="{{route('versions.index')}}">
-                           <i class="version-icon"></i><span>Version</span>
+                           <i class="version-icon"></i><span>Version Control</span>
                         </a>
                     </li>
-                    <li @if($segments_var[0]=='changepasswords') class="active" @endif><a href="{{route('changepasswords.create')}}">
-                                    <i class="fa fa-key"></i> @lang('menu.users.changepassword') 
-                                </a></li>  
+                      
                     </ul>
             </section>
             <!-- /.sidebar -->

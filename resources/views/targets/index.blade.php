@@ -13,7 +13,7 @@
     <div class="col-xs-12">
       <div class="box">
             <div class="box-header">
-               <h3 class="box-title">{{getCurrentLabel('duties','id',$duty_id,'duty_number')}} :- {{headingMain()}}</h3>
+               <h3 class="box-title">{{getCurrentLabel('duties','id',$duty_id,'duty_number')}} | {{headingMain()}}</h3>
                <?php $permission_status = checkPermission('targets','create');
                      $checkVersionOpen = checkVersionOpen();
                     if($permission_status && $checkVersionOpen){?>                     

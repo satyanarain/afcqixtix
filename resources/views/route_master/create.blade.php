@@ -1,13 +1,17 @@
 @extends('layouts.master')
 @section('header')
-<h1>{{headingBold()}}</h1>
-{{BreadCrumb()}}
+<h1>Manage Route Master</h1>
+<ol class="breadcrumb">
+    <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li><a href="{{route('route_master.index')}}">Route Master</a></li>
+    <li class="active">Create Route Master</li>
+</ol>
 @stop
 @section('content')
 <div class="row">
 <div class="col-md-12">
     <div class="callout callout-info">
-        {{headingMain()}}
+        Create Route Master
     </div>
 </div>
 <div class="col-md-8 col-md-offset-2" style="min-height:10px;">

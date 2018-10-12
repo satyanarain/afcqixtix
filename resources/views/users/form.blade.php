@@ -136,17 +136,18 @@
 </div>
 </div>
 
-<div class="form-group">
-    <div class="col-md-3"></div>
+
+</div>
+    <?php print_r($value); ?>
+<div class="tab-pane" id="timeline">
+    <div class="form-group">
+    <div class="col-md-12"></div>
         <div class="col-md-7 col-sm-12">
             <input type="checkbox" value='yes' name="permission_reset" id="permission_reset"  > 
             {!! Form::label('permission_reset', Lang::get('Reset to Default Permission'), ['class' => 'control-label','style'=>""]) !!}
             
         </div>
-</div>
-</div>
-    <?php print_r($value); ?>
-<div class="tab-pane" id="timeline">
+    </div>
    @include('partials.menuheader_create')
  </div>
 </div>     

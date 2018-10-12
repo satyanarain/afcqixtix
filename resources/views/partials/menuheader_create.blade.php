@@ -1,6 +1,6 @@
  <div class="modal-content">
             <div class="formmain">
-                <div class="plusminusbutton"></div>&nbsp;&nbsp;Model Details
+                <div class="plusminusbutton"></div>&nbsp;&nbsp;Module Wise Permission Details
             </div>
             <div class="modal-body-view">
                 <div class="alert-new-success alert-block" id="{{"message_show".$permissions->id}}" style="display:none;">

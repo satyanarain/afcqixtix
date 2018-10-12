@@ -1,7 +1,11 @@
 @extends('layouts.master')
 @section('header')
-<h1>{{headingBold()}}</h1>
-{{BreadCrumb()}}
+<h1>Manage Version Control</h1>
+<ol class="breadcrumb">
+    <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li><a href="{{route('versions.index')}}">Versions</a></li>
+    <li class="active">Create Version</li>
+</ol>
 @stop
 @section('content')
   @include('partials.form_header')

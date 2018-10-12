@@ -1,8 +1,8 @@
 @php $trip_cancellation_reason_category_masters=displayList('trip_cancellation_reason_category_masters','name')@endphp
 <div class="form-group">
-        {!! Form::label('trip_cancellation_reason_category_master_id', Lang::get('Trip Cancel Reason'), ['class' => 'col-md-3 control-label']) !!}
+        {!! Form::label('trip_cancellation_reason_category_master_id', Lang::get('Trip Cancellation Reason'), ['class' => 'col-md-3 control-label']) !!}
          <div class="col-md-7 col-sm-12 required">
-        {!! Form::select('trip_cancellation_reason_category_master_id',$trip_cancellation_reason_category_masters,isset($trip_cancellation_reasons->trip_cancellation_reason_category_master_id) ? $trip_cancellation_reasons->trip_cancellation_reason_category_master_id : selected,['class' => 'col-md-6 form-control','required' => 'required','placeholder'=>"Select Trip Cancel Reason"]) !!}
+        {!! Form::select('trip_cancellation_reason_category_master_id',$trip_cancellation_reason_category_masters,isset($trip_cancellation_reasons->trip_cancellation_reason_category_master_id) ? $trip_cancellation_reasons->trip_cancellation_reason_category_master_id : selected,['class' => 'col-md-6 form-control','required' => 'required','placeholder'=>"Select Trip Cancellation Reason"]) !!}
 </div>
 </div>
 <div class="form-group">
