@@ -41,11 +41,18 @@ class TicketController extends Controller
 
         $jsonDecoded = json_decode($request->data, true);
 
+        $insertedData = [];
+
         foreach ($jsonDecoded as $key => $value) 
         {
-            $ticket = Ticket::create($value);
+            try{
+                $ticket = Ticket::create($value);
+                $insertedData[] = ['id'=>$value['local_id'], 'status'=>1];
+            } catch (\Illuminate\Database\QueryException $exception) {
+                $insertedData[] = ['id'=>$value['local_id'], 'status'=>0];
+            }            
         }
 
-        return response()->json($jsonDecoded);
+        return response()->json($insertedData);
     }
 }
