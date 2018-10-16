@@ -40,9 +40,8 @@ class SettingRepository implements SettingRepositoryContract {
         return $setting;
     }
 
-    public function update($id, $requestData) {
-       
-//        /$this->createLog('App\Models\Setting',$id);
+    public function update($id, $requestData) 
+    {
         $setting = Setting::findorFail($id);
         $input = $requestData->all();
         $input['setting_description'] = $requestData->setting_name; 

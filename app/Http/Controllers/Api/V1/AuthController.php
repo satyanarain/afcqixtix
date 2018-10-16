@@ -35,7 +35,7 @@ class AuthController extends Controller
             $settings = Setting::where('setting_name', 'ticket_dat')->first();
             if($settings)
             {
-                $sync_time = $settings->setting_value;
+                $sync_time = (int)$settings->setting_value;
             }
     		return response()->json(['statusCode'=>'Ok', 'token'=>$token, 'sync_time'=>$sync_time]);
     	}else{
