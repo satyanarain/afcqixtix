@@ -1,7 +1,7 @@
 <div class="form-group">
         {!! Form::label('setting_name', Lang::get('Configuration Name'), ['class' => 'col-md-3 control-label']) !!}
          <div class="col-md-7 col-sm-12 required">
-        {!! Form::text('setting_name', $settings->setting_name, ['class' => 'col-md-6 form-control','required' => 'required']) !!}
+        {!! Form::text('setting_name', isset($settings)?$settings->setting_description:null, ['class' => 'col-md-6 form-control','required' => 'required']) !!}
 </div>
 </div>
 <div class="form-group">

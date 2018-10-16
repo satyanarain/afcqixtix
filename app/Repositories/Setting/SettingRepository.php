@@ -45,6 +45,8 @@ class SettingRepository implements SettingRepositoryContract {
 //        /$this->createLog('App\Models\Setting',$id);
         $setting = Setting::findorFail($id);
         $input = $requestData->all();
+        $input['setting_description'] = $requestData->setting_name; 
+        $input['setting_name'] = $setting->setting_name; 
         $setting_id = $requestData->id;
         $sql_id=Setting::where([['id',$setting_id],['id','!=',$id]])->first();
         $setting->fill($input)->save();
