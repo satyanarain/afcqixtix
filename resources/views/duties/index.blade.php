@@ -12,7 +12,7 @@
     <div class="col-xs-12">
       <div class="box">
             <div class="box-header">
-               <h3 class="box-title">{{getCurrentLabel('route_master','id',$route_master_id,'route_name')}} :- List of All Duties</h3>
+               <h3 class="box-title">{{getCurrentLabel('route_master','id',$route_master_id,'route_name')}} | List of All Duties</h3>
                <?php $permission_status = checkPermission('duties','create');
                      $checkVersionOpen = checkVersionOpen();
                     if($permission_status && $checkVersionOpen){?>                     

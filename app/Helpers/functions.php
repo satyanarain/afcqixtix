@@ -201,7 +201,7 @@ function headingMain() {
         if($segments[$seg_count-2]=="crew")
             echo $segments_value = ucwords(str_replace("_", " ", $segments[$seg_count-3])). " Update";
         else
-            echo $segments_value = substr(ucwords(str_replace("_", " ", $segments[$seg_count-3])), 0, -1). " Update";
+            echo $segments_value = " Update " .substr(ucwords(str_replace("_", " ", $segments[$seg_count-3])), 0, -1);
     }else
     {
         echo $segments_value = "List of All " .substr(ucwords(str_replace("_", " ", $segments[$seg_count-1])), 0, -1);

@@ -498,3 +498,5 @@ ul.menu{ height: auto !important;}
 
 .version-icon{ background: url('../images/version.png') no-repeat; width:14px; height:14px; display: inline-block;margin-right: 10px;}
 .version-icon:hover{background: url('../images/version-hover.png') no-repeat;cursor: pointer; }
+.dataTables_empty{text-align: center;}
+#button .col-md-1{padding-left: 0px;}

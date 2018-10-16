@@ -12,7 +12,7 @@
     <div class="col-xs-12">
       <div class="box">
             <div class="box-header">
-               <h3 class="box-title">{{getCurrentLabel('depots','id',$depot_id,'name')}} :- List of All Crew</h3>
+               <h3 class="box-title">{{getCurrentLabel('depots','id',$depot_id,'name')}} | List of All Crew</h3>
                <?php $permission_status = checkPermission('crews','create');
                      $checkVersionOpen = checkVersionOpen();
                     if($permission_status && $checkVersionOpen){?>                     
