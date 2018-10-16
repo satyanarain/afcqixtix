@@ -1,5 +1,6 @@
 <?php
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Inventory;
+
 use Gate;
 use Carbon;
 use Notifynder;
@@ -11,21 +12,21 @@ use App\Models\Country;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CenterStock\StoreCenterStockRequest;
-use App\Repositories\CenterStock\CenterStockRepository;
-use App\Repositories\CenterStock\CenterStockRepositoryContract;
+use App\Http\Requests\Inventory\CenterStock\StoreCenterStockRequest;
+use App\Repositories\Inventory\CenterStock\CenterStockRepository;
+use App\Repositories\Inventory\CenterStock\CenterStockRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Traits\activityLog;
 use App\Traits\checkPermission;
+
 class CenterstockController extends Controller
 {
     use activityLog;
     use checkPermission;
     protected $centerstock;
-    public function __construct(
-        CenterStockRepositoryContract $centerstock
-    ) {
+    public function __construct(CenterStockRepositoryContract $centerstock) 
+    {
         $this->centerstock = $centerstock;
     }
     /**
@@ -35,25 +36,25 @@ class CenterstockController extends Controller
      */
     public function index()
     {
-      if(!$this->checkActionPermission('centerstock','view'))
+        if(!$this->checkActionPermission('centerstock','view'))
             return redirect()->route('401');
       
-    //$centerstock = CenterStock::orderBy('id')->get();
-    $centerstock = DB::table('inv_center_stock')->select('inv_center_stock.*','inv_items_master.name','denominations.description')
+        //$centerstock = CenterStock::orderBy('id')->get();
+        $centerstock = DB::table('inv_center_stock')->select('inv_center_stock.*','inv_items_master.name','denominations.description')
                 ->leftjoin('inv_items_master', 'inv_center_stock.items_id', '=', 'inv_items_master.id')
                 ->leftjoin('denominations', 'inv_center_stock.denom_id', '=', 'denominations.id')
                 ->get();
-    //return view('invcenterstock.index')->withBustypes($bustypes);
-    return view('centerstock.index',compact('centerstock'));
-   
+        //return view('invcenterstock.index')->withBustypes($bustypes);
+        return view('inventory.centerstock.index',compact('centerstock'));   
     }
+
     public function create()
     {
-      if(!$this->checkActionPermission('centerstock','create'))
+        if(!$this->checkActionPermission('centerstock','create'))
             return redirect()->route('401');
-      $items_data = DB::table("inv_items_master")->select('id','name','description')->where("status", "=", '1')->get();
-      $paperticket = DB::table("denominations")->select('id','description','denomination_master_id')->where("denomination_master_id", "=", '1')->get();
-      return view('centerstock.create',compact('items_data','paperticket'));
+        $items_data = DB::table("inv_items_master")->select('id','name','description')->where("status", "=", '1')->get();
+        $paperticket = DB::table("denominations")->select('id','description','denomination_master_id')->where("denomination_master_id", "=", '1')->get();
+        return view('inventory.centerstock.create',compact('items_data','paperticket'));
     }
  
     /**
@@ -67,25 +68,13 @@ class CenterstockController extends Controller
      * @param Bustype $bustypes
      * @return Response
      */
-    public function store(StoreCenterStockRequest $Request)
+    public function store(StoreCenterStockRequest $request)
     {
         if(!$this->checkActionPermission('centerstock','create'))
             return redirect()->route('401');
-        
-       if($Request->items_id == 2){
-        //Update quantity in main table
-        $itemsdata = DB::table("inv_itemsquantity_stock")->select('*')->where("items_id", "=", $Request->items_id)->first();
-        $numdata = count($itemsdata);
-        if($numdata == 0)
-        {
-           DB::table('inv_itemsquantity_stock')->insert(array('items_id' =>$Request->items_id,'qty' => $Request->quantity)); 
-        }else{
-            $total = ($itemsdata->qty + $Request->quantity);
-            DB::table('inv_itemsquantity_stock')->where('items_id', $Request->items_id)->update(['qty' => $total]);
-        }
-       } 
-       $getInsertedId = $this->centerstock->create($Request);
-       return redirect()->route('centerstock.index');         
+      
+        $getInsertedId = $this->centerstock->create($request);
+        return redirect()->route('inventory.centerstock.index');         
     }
     /**
      * Display the specified resource.
@@ -93,13 +82,13 @@ class CenterstockController extends Controller
      * @param  int  $id
      * @return Response
      */
-   public function show($id)
-   {
-       if(!$this->checkActionPermission('centerstock','view'))
+    public function show($id)
+    {
+        if(!$this->checkActionPermission('centerstock','view'))
             return redirect()->route('401');
-   $bustypes=Bustype::findOrFail($id);
-    return view('invcenterstock.show')->withBustypes($bustypes);
-     }
+        $bustypes=Bustype::findOrFail($id);
+        return view('invcenterstock.show')->withBustypes($bustypes);
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -111,8 +100,12 @@ class CenterstockController extends Controller
     {
         if(!$this->checkActionPermission('centerstock','edit'))
             return redirect()->route('401');
-       $bustypes=Bustype::findOrFail($id);
-       return view('invcenterstock.edit')->withBustypes($bustypes);
+
+        $stock = CenterStock::findOrFail($id);
+        $items_data = DB::table("inv_items_master")->select('id','name','description')->where("status", "=", '1')->get();
+        $paperticket = DB::table("denominations")->select('id','description','denomination_master_id')->where("denomination_master_id", "=", '1')->get();
+
+        return view('inventory.centerstock.edit', compact('stock', 'items_data', 'paperticket'));
     }
 
     /**
@@ -121,22 +114,15 @@ class CenterstockController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function update($id, UpdateBusTypeRequest $request)
+    public function update($id, StoreCenterStockRequest $request)
     {
         if(!$this->checkActionPermission('centerstock','edit'))
             return redirect()->route('401');
-    $bus_type = $request->bus_type;
-     $sql=BusType::where([['bus_type',$bus_type],['id','!=',$id]])->first();
-     if(count($sql)>0)
-     {
-       return redirect()->back()->withErrors(['Bus type has already been taken.']);
-      } else { 
         
-        $request->request->add(['approval_status'=>'p','flag'=> 'u']);
-        $this->bustypes->update($id, $request);
-        return redirect()->route('bus_types.index');
-    }
+        $getInsertedId = $this->centerstock->update($id, $request);
+        return redirect()->route('inventory.centerstock.index');   
     } 
+
     public function sortOrder($id) {
         $array = explode(',', $id);
        $k=1;

@@ -233,7 +233,38 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('settings', 'SettingController');
     
     //Manage inventory route
-    Route::resource('centerstock', 'CenterstockController');
+    //@Auther Subhash Chandra, {email: subash_chandra@opiant.in}
+    Route::group(['prefix'=>'inventory', 'namespace'=>'Inventory', 'as'=>'inventory.'], function(){
+        Route::resource('centerstock', 'CenterstockController');
+        Route::resource('depotstock', 'DepotstockController');
+        Route::group(['prefix'=>'depotstock', 'as'=>'depotstock.'], function(){
+            Route::post('getseries', 'DepotstockController@getSeries')->name('getseries');
+            Route::post('getstartsequence', 'DepotstockController@getStartSequence')->name('getstartsequence');
+            Route::post('validateendsequence', 'DepotstockController@validateEndSequence')->name('validateendsequence');
+            Route::post('validatequantity', 'DepotstockController@validateQuantity')->name('validatequantity');
+        });
+
+        Route::resource('crewstock', 'CrewstockController');
+        Route::group(['prefix'=>'crewstock', 'as'=>'crewstock.'], function(){
+            Route::post('getseries', 'CrewstockController@getSeries')->name('getseries');
+            Route::post('getstartsequence', 'CrewstockController@getStartSequence')->name('getstartsequence');
+            Route::post('validateendsequence', 'CrewstockController@validateEndSequence')->name('validateendsequence');
+            Route::post('validatequantity', 'CrewstockController@validateQuantity')->name('validatequantity');
+        });
+
+        Route::resource('returncrewstock', 'ReturnCrewstockController');
+        Route::group(['prefix'=>'return', 'as'=>'return.'], function(){
+            Route::post('getseries', 'ReturnCrewstockController@getSeries')->name('getseries');
+            Route::post('getstartsequence', 'ReturnCrewstockController@getStartSequence')->name('getstartsequence');
+            Route::post('validateendsequence', 'ReturnCrewstockController@validateEndSequence')->name('validateendsequence');
+            Route::post('validatequantity', 'ReturnCrewstockController@validateQuantity')->name('validatequantity');
+        });
+    });
+
+    Route::group(['prefix'=>'notification', 'namespace'=>'Notification', 'as'=>'notification.'], function(){
+        Route::resource('inventory', 'InventoryController');
+    });
+    
     
     Route::get('waybills/data', 'WaybillController@anyData')->name('waybill.data');
     Route::get('waybills/view_detail/{id}', 'WaybillController@viewDetail');

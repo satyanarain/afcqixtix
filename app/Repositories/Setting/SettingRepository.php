@@ -24,13 +24,17 @@ class SettingRepository implements SettingRepositoryContract {
         return Setting::first();
     }
 
-    public function getAllSettings() {
+    public function getAllSettings() 
+    {
         return Setting::all();
     }
 
-    public function create($requestData) {
+    public function create($requestData) 
+    {
         $input = $requestData->all();
-        $user_id=Auth::id();
+        $user_id = Auth::id();
+        $input['setting_name'] = implode('_', array_map('strtolower', explode(' ', substr($requestData->setting_name, 0, 10))));
+        $input['setting_description'] = $requestData->setting_name;
         $setting = Setting::create($input);
         Session::flash('flash_message', "Setting $depot->id Created Successfully."); //Snippet in Master.blade.php
         return $setting;

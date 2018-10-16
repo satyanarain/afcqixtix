@@ -170,12 +170,14 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                             <li @if($segments_var[0]=='shifts') class="active" @endif><a href="{{route('shifts.index')}}">
                                     <i class="fa fa-calendar"></i> @lang('menu.shifts.title') 
                             </a>
-                                     @endif
+                            </li>
+                            @endif
                             @if(menuPermission('stops')==1)
                             <li @if($segments_var[0]=='stops') class="active" @endif><a href="{{route('stops.index')}}">
                                     <i class="stop-icon"></i> @lang('menu.stops.title') 
                             </a>
-                                     @endif
+                            </li>
+                            @endif
                             @if(menuPermission('routes')==1)
                             <li @if($segments_var[0]=='route_master') class="active" @endif><a href="{{route('route_master.index')}}">
                                     <i class="fa fa-map-marker"></i> @lang('menu.routes.title') 
@@ -215,17 +217,18 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                   $pem=menuDisplayByUser($result, 'centerstock','view'); 
                   @endphp
                   @if($pem=='true')
-                  <li @if($segments_var[0]=='centerstock') class="treeview active" @else class="treeview" @endif>
+                  <li @if($segments_var[1]=='centerstock' || $segments_var[1]=='depotstock' || $segments_var[1]=='crewstock' || $segments_var[1]=='returncrewstock') class="treeview active" @else class="treeview" @endif>
                         <a href="#">
                             <i class="fa fa-user"></i> <span>@lang('Manage Inventories')</span>
                             <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i></span>
+                                <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
-                        <ul @if($segments_var[0]=='inventories' || $segments_var[0]=='changepasswords') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
-                              <li @if($segments_var[0]=='centerstock') class="active" @endif><a href="{{route('centerstock.index')}}"><i class="fa fa-edit"></i>Central Stock</a></li>
-                              <li @if($segments_var[0]=='inventories') class="active" @endif><a href="#"><i class="fa fa-edit"></i>Depot Stock</a></li>
-                              <li @if($segments_var[0]=='inventories') class="active" @endif><a href="#"><i class="fa fa-edit"></i>Crew Stock</a></li>
+                        <ul @if($segments_var[1]=='centerstock' || $segments_var[1]=='depotstock' || $segments_var[1]=='crewstock') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
+                              <li @if($segments_var[1]=='centerstock') class="active" @endif><a href="{{route('inventory.centerstock.index')}}"><i class="fa fa-edit"></i>Central Stock</a></li>
+                              <li @if($segments_var[1]=='depotstock') class="active" @endif><a href="{{route('inventory.depotstock.index')}}"><i class="fa fa-edit"></i>Depot Stock</a></li>
+                              <li @if($segments_var[1]=='crewstock') class="active" @endif><a href="{{route('inventory.crewstock.index')}}"><i class="fa fa-edit"></i>Crew Stock</a></li>
+                              <li @if($segments_var[1]=='returncrewstock') class="active" @endif><a href="{{route('inventory.returncrewstock.index')}}"><i class="fa fa-edit"></i>Return Crew Stock</a></li>
                             </ul>
                           </li>
                     @endif
@@ -245,7 +248,7 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                          </ul>
                     </li>
                     @endif    
-                 @php $pem=menuDisplayByUser($result, 'permissions','view'); @endphp
+                  @php $pem=menuDisplayByUser($result, 'permissions','view'); @endphp
                     @if($pem=='true')
                      <li  @if($segments_var[0]=='roles' || $segments_var[0]=='permissions' || $segments_var[0]=='settings') class="treeview active" @else class="treeview" @endif>
                         <a href="#">
@@ -266,6 +269,23 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                          </ul>
                     </li>
                     @endif
+
+                    @php $pem=menuDisplayByUser($result, 'permissions','view'); @endphp
+                    @if($pem=='true')
+                     <li  @if($segments_var[0]=='notification') class="treeview active" @else class="treeview" @endif>
+                        <a href="#">
+                            <i class="fa fa-bell" aria-hidden="true"></i> <span>Manage Notifications</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul @if($segments_var[1]=='inventory') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
+                          <li @if($segments_var[1]=='inventory') class="active" @endif><a href="{{route('notification.inventory.index')}}"><i class="fa fa-edit"></i>@lang('Inventory')</a>
+                          </li>                      
+                         </ul>
+                    </li>
+                    @endif
+
                     <li @if($segments_var[0]=='versions') class="treeview active" @else class="treeview" @endif>
                        <a href="{{route('versions.index')}}">
                            <i class="version-icon"></i><span>Version</span>

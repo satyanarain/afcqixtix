@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\CenterStock;
+namespace App\Http\Requests\Inventory\CrewStock;
 
 use App\Http\Requests\Request;
 
-class UpdateCenterStockRequest extends Request
+class UpdateCrewStockRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.

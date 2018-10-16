@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\CenterStock;
+namespace App\Http\Requests\Inventory\ReturnCrewStock;
 
 use App\Http\Requests\Request;
 
-class StoreCenterStockRequest extends Request
+class UpdateReturnCrewStockRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,22 +14,21 @@ class StoreCenterStockRequest extends Request
     public function authorize()
     {
         return true;
-        //return auth()->user()->can('user-create');
     }
-
     /**
      * Get the validation rules that apply to the request.
      *
      * @return array
      */
-    public function rules()
+  public function rules()
     {
         
             return [
-                   //'bus_type' => 'required|unique:bus_types,bus_type',
-                   //'abbreviation' => 'required',
-                   //'order_number' => 'required'
+                   'bus_type' => 'required',
+                   'abbreviation' => 'required',
+                   'order_number' => 'required'
              ];
         
     }
+
 }

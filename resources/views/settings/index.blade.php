@@ -29,7 +29,7 @@
                     <tbody>
                         @foreach($settings as $value)
                         <tr class="nor_f    ">
-                            <td>{{$value->setting_name}}</td>
+                            <td>{{$value->setting_description}}</td>
                             <td>{{$value->setting_value}}</td>
                             <td>
                                 <?php $permission = getAllModulePermission('settings');

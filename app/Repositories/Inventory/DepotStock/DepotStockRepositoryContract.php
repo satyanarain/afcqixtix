@@ -1,10 +1,11 @@
 <?php
-namespace App\Repositories\CenterStock;
-interface CenterStockRepositoryContract
+namespace App\Repositories\Inventory\DepotStock;
+
+interface DepotStockRepositoryContract
 {
     
     //public function find($id);
-    public function getAllCenterStock();
+    public function getAllDepotStock();
     public function create($requestData);
     public function update($id, $requestData);
 

@@ -22,8 +22,7 @@ class AccessServiceProvider extends ServiceProvider
      * @return void
      */
     public function register()
-    {
-     
+    {     
         $this->app->bind(
             \App\Repositories\Permission\PermissionRepositoryContract::class,
             \App\Repositories\Permission\PermissionRepository::class
@@ -160,9 +159,25 @@ class AccessServiceProvider extends ServiceProvider
         );
         
         $this->app->bind(
-            \App\Repositories\CenterStock\CenterStockRepositoryContract::class,
-            \App\Repositories\CenterStock\CenterStockRepository::class
+            \App\Repositories\Inventory\CenterStock\CenterStockRepositoryContract::class,
+            \App\Repositories\Inventory\CenterStock\CenterStockRepository::class
         );
+
+        $this->app->bind(
+            \App\Repositories\Inventory\DepotStock\DepotStockRepositoryContract::class,
+            \App\Repositories\Inventory\DepotStock\DepotStockRepository::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\Inventory\CrewStock\CrewStockRepositoryContract::class,
+            \App\Repositories\Inventory\CrewStock\CrewStockRepository::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\Inventory\ReturnCrewStock\ReturnCrewStockRepositoryContract::class,
+            \App\Repositories\Inventory\ReturnCrewStock\ReturnCrewStockRepository::class
+        );
+
         $this->app->bind(
             \App\Repositories\Waybill\WaybillRepositoryContract::class,
             \App\Repositories\Waybill\WaybillRepository::class

@@ -9,14 +9,14 @@
 </ol>
 @stop
 @section('content')
- @include('partials.form_header')
+@include('partials.form_header')
                 {!! Form::open([
-                'route' => 'centerstock.store',
+                'route' => 'inventory.centerstock.store',
                 'files'=>true,
                 'enctype' => 'multipart/form-data',
                 'class'=>'form-horizontal'
                 ]) !!}
-                @include('centerstock.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
+                @include('inventory.centerstock.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 
                 {!! Form::close() !!}
             </div>
