@@ -183,8 +183,8 @@ class ETMDetailController extends Controller
                         <td class="table_normal"><?php echo $value->sim_no; ?></td>
                     </tr>
                     <tr>
-                        <td><b>EMEI No.</b></td>
-                        <td class="table_normal"><?php  echo $this->displayView($value->emei_no); ?></td>
+                        <td><b>IMEI No.</b></td>
+                        <td class="table_normal"><?php  echo $this->displayView($value->imei_no); ?></td>
                     </tr>
                     <tr>
                         <td><b>Serial No.</b></td>
