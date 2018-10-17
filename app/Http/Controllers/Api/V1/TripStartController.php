@@ -27,6 +27,6 @@ class TripStartController extends Controller
 
     	$tripStart = TripStart::create($request->all());
 
-    	return response()->json(['statusCode'=>'Ok', 'data'=>$tripStart]);
+    	return response()->json(['statusCode'=>'Ok', 'trip_id'=>$tripStart->id]);
     }
 }
