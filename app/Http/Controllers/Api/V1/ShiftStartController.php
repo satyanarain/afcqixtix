@@ -20,6 +20,7 @@ class ShiftStartController extends Controller
     		'shift_id' => 'required',
     		'odo_reading' => 'required',
     		'start_timestamp' => 'required',
+            'abstract_no' => 'required'
     	]);
 
     	if($validator->fails())
