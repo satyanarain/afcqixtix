@@ -25,25 +25,25 @@
 <div class="form-group ">
      {!! Form::label('sim_no', Lang::get('SIM No.'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12 required">
-          {!! Form::text('sim_no', null, ['class' => 'col-md-6 form-control','required' => 'required','onkeypress'=>'return isNumberKey(event)']) !!}
+          {!! Form::text('sim_no', null, ['class' => 'col-md-6 form-control','required' => 'required']) !!}
     </div>
 </div> 
 <div class="form-group ">
-     {!! Form::label('emei_no', Lang::get('IMEI No.'), ['class' => 'col-md-3 control-label']) !!}
+     {!! Form::label('imei_no', Lang::get('IMEI No.'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12 required">
-          {!! Form::text('emei_no', null, ['class' => 'col-md-6 form-control','required' => 'required','onkeypress'=>'return isNumberKey(event)']) !!}
+          {!! Form::text('imei_no', null, ['class' => 'col-md-6 form-control','required' => 'required']) !!}
     </div>
 </div> 
 <div class="form-group ">
      {!! Form::label('serial_no', Lang::get('Serial No.'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12 required">
-          {!! Form::text('serial_no', null, ['class' => 'col-md-6 form-control','required' => 'required','onkeypress'=>'return isNumberKey(event)']) !!}
+          {!! Form::text('serial_no', null, ['class' => 'col-md-6 form-control','required' => 'required']) !!}
     </div>
 </div> 
 <div class="form-group ">
      {!! Form::label('make', Lang::get('Make'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12 required">
-          {!! Form::text('make', null, ['class' => 'col-md-6 form-control','required' => 'required','onkeypress'=>'return isNumberKey(event)']) !!}
+          {!! Form::text('make', null, ['class' => 'col-md-6 form-control','required' => 'required']) !!}
     </div>
 </div> 
 

@@ -34,7 +34,7 @@ class StoreETMDetailRequest extends Request
             'etm_no' => 'required',
              'evm_status_master_id' => 'required',
              'sim_no' => 'required',
-             'emei_no' => 'required',
+             'imei_no' => 'required',
              'serial_no' => 'required',
              'make' => 'required'           
            
