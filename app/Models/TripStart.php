@@ -8,5 +8,5 @@ class TripStart extends Model
 {
     protected $table = 'trip_start';
 
-    protected $fillable = ['service_id', 'route_id', 'direction', 'start_stop_id', 'end_stop_id', 'start_timestamp', 'bus_type'];
+    protected $fillable = ['service_id', 'route_id', 'direction', 'start_stop_id', 'end_stop_id', 'start_timestamp', 'bus_type', 'abstract_no'];
 }
