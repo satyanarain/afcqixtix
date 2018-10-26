@@ -154,6 +154,10 @@ class PermissionsController extends Controller
             $input['pass_types'] = implode(',', $request->pass_types);
             $input['crews'] = implode(',', $request->crews);
             $input['etm_details'] = implode(',', $request->etm_details);
+            $input['centerstocks'] = implode(',', $request->centerstocks);
+            $input['depotstocks'] = implode(',', $request->depotstocks);
+            $input['crewstocks'] = implode(',', $request->crewstocks);
+            $input['returncrewstocks'] = implode(',', $request->returncrewstocks);
             $input['versions'] = implode(',', $request->versions);
             $input['settings'] = implode(',', $request->settings);
             $input['waybills'] = implode(',', $request->waybills);
@@ -199,6 +203,10 @@ class PermissionsController extends Controller
             $input['pass_types'] = implode(',', $request->pass_types);
             $input['crews'] = implode(',', $request->crews);
             $input['etm_details'] = implode(',', $request->etm_details);
+            $input['centerstocks'] = implode(',', $request->centerstocks);
+            $input['depotstocks'] = implode(',', $request->depotstocks);
+            $input['crewstocks'] = implode(',', $request->crewstocks);
+            $input['returncrewstocks'] = implode(',', $request->returncrewstocks);
             $input['versions'] = implode(',', $request->versions);
             $input['settings'] = implode(',', $request->settings);
             $input['waybills'] = implode(',', $request->waybills);

@@ -160,12 +160,12 @@ class WaybillController extends Controller
      * @date 20-02-2018
      */
     
-      public function viewDetail($id) {
+    public function viewDetail($id) {
           if(!$this->checkActionPermission('waybills','view'))
             return redirect()->route('401');
        $res = DB::table('waybills')
                 ->select('users.user_name','waybills.id as id','depots.name as depot_name','shifts.shift','route_master.route_name',
-                        'duties.duty_number','services.name as service_name','bus_types.bus_type','vehicles.vehicle_registration_number','waybills.*')
+                        'duties.duty_number','services.name as service_name','bus_types.bus_type','vehicles.vehicle_registration_number','waybills.*','crew1.crew_name as driver','crew2.crew_name as conductor')
                 ->leftjoin('depots','depots.id','waybills.depot_id')
                 ->leftjoin('shifts','shifts.id','waybills.shift_id')
                 ->leftjoin('route_master','route_master.id','waybills.route_id')
@@ -173,7 +173,9 @@ class WaybillController extends Controller
                 ->leftjoin('services','services.id','waybills.service_id')
                 ->leftjoin('bus_types','bus_types.id','waybills.bus_type_id')
                 ->leftjoin('vehicles','vehicles.id','waybills.vehicle_id')
-               ->leftjoin('users','users.id','waybills.user_id')
+                ->leftjoin('users','users.id','waybills.user_id')
+                ->leftjoin('crew as crew1','crew1.id','waybills.driver_id')
+                ->leftjoin('crew as crew2','crew2.id','waybills.conductor_id')
                 ->where('waybills.id',$id)
                 ->orderBy('waybills.id','desc')
                 ->first();
@@ -397,6 +399,71 @@ class WaybillController extends Controller
                             "recordsFiltered" => intval( $totalFiltered ), // total number of records after searching, if there is no searching then totalFiltered = totalData
                             "data"            => $data   // total data array
                             );
+        echo $datajson = json_encode($json_data);  // send data as json format
+    }
+    
+    public function cash_collection(){
+        if(!$this->checkActionPermission('waybills','view'))
+            return redirect()->route('401');
+        return view('waybills.cash_collection.create',compact('waybills'));
+    }
+    
+    public function storecash(Request $request){
+        if(!$this->checkActionPermission('waybills','view'))
+            return redirect()->route('401');
+        //echo '<pre>';print_r($request->all());die;
+        if ($request->input('amount_payable')){
+            $query = DB::table('cash_collection')
+                    ->insertGetId(['abstract_no'=>$request['abstract_no'],'amount_payable'=>$request['amount_payable'],'cash_remitted'=>$request['cash_remitted'],'cash_challan_no'=>$request['cash_challan_no']]);
+        }
+        return view('waybills.cash_collection.create');
+    }
+    
+    public function getabstractdetail(){
+        if(!$this->checkActionPermission('waybills','view'))
+            return redirect()->route('401');
+        $requestData= $_REQUEST;
+        //print_r($requestData);die;
+        $cash_exist = DB::table('cash_collection')
+            ->select('*')
+            ->where('abstract_no','=',$requestData['abstract_no'])
+            ->first();
+        if($cash_exist)
+        {
+            $json_data = array(
+                                "status"            =>  'error',
+                                "message"               => 'Cash is already sbumitted for this abstract number.'
+                                );
+        }else{
+            $waybills = DB::table('shift_start')
+                ->select('*')
+                ->leftjoin('crew','shift_start.conductor_id','crew.id')
+                ->leftjoin('duties','shift_start.duty_id','duties.id')
+                ->where('abstract_no','=',$requestData['abstract_no'])
+                ->first();
+            if($waybills){
+                $amount_payable = DB::table('tickets')
+                    ->where('abstract_id','=',$requestData['abstract_no'])
+                    ->sum('total_amt');
+                //echo '<pre>';        print_r($amount_payable);die;
+                $json_data = array(
+                                "conductor_name"          =>  $waybills->crew_name,  
+                                "conductor_id"            =>  $waybills->crew_id,
+                                "amount_payable"          =>  $amount_payable,
+                                "route_id"                =>  $waybills->route_id,
+                                "duty_id"                 =>  $waybills->duty_id,
+                                "status"                  =>  'success',
+                                "message"                 => ''
+                                );
+                
+            }else{
+                $json_data = array(
+                                "status"            =>  'error',
+                                "message"               => 'Invalid abstract number.'
+                                );
+            }
+        }
+        //echo '<pre>';        print_r($waybills);die;
         echo $datajson = json_encode($json_data);  // send data as json format
     }
   }

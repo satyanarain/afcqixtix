@@ -15,14 +15,11 @@
                         </tr>
                     </table>
                     <div   class="formmain" onclick="showHide(this.id)" id="ACC1{{$permissions->id}}">
-                        <div class="plusminusbutton" id="plusminusbuttonACC1{{$permissions->id}}">+</div>&nbsp;&nbsp; Master Details
+                        <div class="plusminusbutton" id="plusminusbuttonACC1{{$permissions->id}}">+</div>&nbsp;&nbsp; Manage Master 
                     </div>
                     <div class="row1"  id="formACC1{{$permissions->id}}" style="display:none;">
                         <div class="row">  
                             <table  align="left" class="table">
-                                {{ menuCreate('users','create','edit','view',$permissions->id,$permissions->users)}}
-                                {{ menuCreate('changepasswords','create','edit','view',$permissions->id,$permissions->changepasswords)}}
-                                {{ menuCreate('permissions','create','edit','view',$permissions->id,$permissions->permissions) }}
                                 {{ menuCreate('depots','create','edit','view',$permissions->id,$permissions->depots) }}
                                 {{ menuCreate('bus_types','create','edit','view',$permissions->id,$permissions->bus_types)}}
                                 {{ menuCreate('services','create','edit','view',$permissions->id,$permissions->services)}}
@@ -42,53 +39,63 @@
                                 {{ menuCreate('denominations','create','edit','view',$permissions->id,$permissions->denominations)}}
                                 {{ menuCreate('pass_types','create','edit','view',$permissions->id,$permissions->pass_types)}}
                                 {{ menuCreate('crews','create','edit','view',$permissions->id,$permissions->crews)}}
+                                {{ menuCreate('etm_details','create','edit','view',$permissions->id,$permissions->etm_details)}}
                                 
                             </table> 
                         </div>
                     </div>
-                    <div   class="formmain" onclick="showHide(this.id)" id="ACC2{{$permissions->id}}">
-                        <div class="plusminusbutton" id="plusminusbuttonACC2{{$permissions->id}}">+</div>&nbsp;&nbsp;ETM Details
+                    <div   class="formmain" onclick="showHide(this.id)" id="ACC2{{$value->id}}">
+                        <div class="plusminusbutton" id="plusminusbuttonACC2{{$value->id}}">+</div>&nbsp;&nbsp;Manage Inventory
                     </div>
-                    <div class="row1"  id="formACC2{{$permissions->id}}" style="display:none;">
+                     <div class="row1"  id="formACC2{{$value->id}}" style="display:none;border:#ccc 1px solid;">
                         <div class="row">  
                             <table class="table table-responsive.view">
-                                 {{ menuCreate('etm_details','create','edit','view',$permissions->id,$permissions->etm_details)}}
-                                 
+                                 {{ menuCreate('centerstocks','create','edit','view',$value->id,$value->centerstocks)}}
+                                 {{ menuCreate('depotstocks','create','edit','view',$value->id,$value->depotstocks)}}
+                                 {{ menuCreate('crewstocks','create','edit','view',$value->id,$value->crewstocks)}}
+                                 {{ menuCreate('returncrewstocks','create','edit','view',$value->id,$value->returncrewstocks)}}
                         </table> 
                         </div>
                     </div>
                     <div   class="formmain" onclick="showHide(this.id)" id="ACC3{{$permissions->id}}">
-                        <div class="plusminusbutton" id="plusminusbuttonACC3{{$permissions->id}}">+</div>&nbsp;&nbsp;Miscellaneous
+                        <div class="plusminusbutton" id="plusminusbuttonACC3{{$permissions->id}}">+</div>&nbsp;&nbsp;Waybill Management
                     </div>
                     <div class="row1"  id="formACC3{{$permissions->id}}" style="display:none;">
                         <div class="row">  
                             <table class="table table-responsive.view">
-                                 {{ menuCreate('versions','create','edit','view',$permissions->id,$permissions->versions)}}
-                                 {{ menuCreate('settings','create','edit','view',$permissions->id,$permissions->settings)}}
+                                 {{ menuCreate('waybills','create','edit','view',$permissions->id,$permissions->waybills)}}
+                                 {{ menuCreate('audits','create','edit','view',$permissions->id,$permissions->audits)}}
+                                 {{ menuCreate('cash_collections','create','edit','view',$permissions->id,$permissions->cash_collections)}}
                         </table> 
                         </div>
                     </div>
-                    <div   class="formmain" onclick="showHide(this.id)" id="ACC4{{$value->id}}">
-                        <div class="plusminusbutton" id="plusminusbuttonACC4{{$value->id}}">+</div>&nbsp;&nbsp;Inventories
+                    <div   class="formmain" onclick="showHide(this.id)" id="ACC4{{$permissions->id}}">
+                        <div class="plusminusbutton" id="plusminusbuttonACC4{{$permissions->id}}">+</div>&nbsp;&nbsp;Manage Users
                     </div>
-                     <div class="row1"  id="formACC4{{$value->id}}" style="display:none;border:#ccc 1px solid;">
+                    <div class="row1"  id="formACC4{{$permissions->id}}" style="display:none;">
                         <div class="row">  
                             <table class="table table-responsive.view">
-                                 {{ menuCreate('inventories','create','edit','view',$value->id,$value->inventories)}}
+                                 {{ menuCreate('users','create','edit','view',$permissions->id,$permissions->users)}}
                         </table> 
                         </div>
                     </div>
+                    
+                    
                     <div   class="formmain" onclick="showHide(this.id)" id="ACC5{{$permissions->id}}">
-                        <div class="plusminusbutton" id="plusminusbuttonACC5{{$permissions->id}}">+</div>&nbsp;&nbsp;Waybill
+                        <div class="plusminusbutton" id="plusminusbuttonACC5{{$permissions->id}}">+</div>&nbsp;&nbsp;Miscellaneous
                     </div>
                     <div class="row1"  id="formACC5{{$permissions->id}}" style="display:none;">
                         <div class="row">  
                             <table class="table table-responsive.view">
-                                 {{ menuCreate('waybills','create','edit','view',$permissions->id,$permissions->waybills)}}
-                                 
+                                {{ menuCreate('changepasswords','create','edit','view',$permissions->id,$permissions->changepasswords)}}
+                                {{ menuCreate('permissions','create','edit','view',$permissions->id,$permissions->permissions) }}
+                                {{ menuCreate('versions','create','edit','view',$permissions->id,$permissions->versions)}}
+                                {{ menuCreate('settings','create','edit','view',$permissions->id,$permissions->settings)}}
                         </table> 
                         </div>
                     </div>
+                    
+                    
               </div>
         </div>
 

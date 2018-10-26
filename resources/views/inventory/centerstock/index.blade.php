@@ -13,7 +13,7 @@
             <div class="box-header">
                <h3 class="box-title">Center Stock Inventories Details </h3>
                 <?php 
-                $permission_status = checkPermission('centerstock','create');
+                $permission_status = checkPermission('centerstocks','create');
                 if($permission_status)
                 {?>
                 <a class="btn btn-primary pull-right" href="{{route('inventory.centerstock.create')}}"><span class="fa fa-plus"></span> Add</a>
@@ -60,7 +60,7 @@
                                 @endif
                             </td>
                             <td>
-                                <?php $permission = getAllModulePermission('centerstock');
+                                <?php $permission = getAllModulePermission('centerstocks');
                                 if(in_array('edit',$permission)){
                                     echo '<a  href="'.route("inventory.centerstock.edit",$value->id).'" class="" title="Edit" ><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
                                 }elseif(in_array('edit',$permission)){?>

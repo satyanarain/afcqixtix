@@ -7,6 +7,7 @@
     <div class="col-md-8 col-md-offset-2" style="min-height:10px;">
         <div class="box box-default" style="min-height:0px;">
             <div class="box-header with-border">
+                <div class="col-md-12 col-sm-12 alert-danger cash-collection-error hide"></div>
                 <h3 class="box-title">
                 </h3>
                 <div class="box-tools pull-right">

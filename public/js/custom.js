@@ -1,4 +1,50 @@
- function showHide(id) {
+$(document).on('click', '.get_abstract_detail', function(){
+    var depot_id = $('#depot_id').val();
+    var abstract_no = $('#abstract_no').val();
+    if(abstract_no)
+    {
+        jQuery.ajax({
+         url: "/waybills/getabstractdetail",
+         type: "POST",
+         data: {
+             "depot_id"    : depot_id,
+             "abstract_no"   : abstract_no
+         },
+         headers: {
+             "x-access-token": window.Laravel.csrfToken
+         },
+         contentType: "application/x-www-form-urlencoded",
+         cache: false
+     })
+        .done(function(data, textStatus, jqXHR) {
+         var data = JSON.parse(data);
+         //alert(data.conductor_name);
+        if(data.status=="error")
+        {
+            $('.cash-collection-error').html(data.message);
+            $('.cash-collection-error').removeClass('hide');
+        }else{
+            $('#conductor_name').val(data.conductor_name);
+            $('#conductor_id').val(data.conductor_id);
+            $('#amount_payable').val(data.amount_payable);
+            $('#route_duty').val(data.route_id+'/'+data.duty_id);
+            $('.cash-collection-error').addClass('hide');
+            $('.btn-success').prop("disabled", false); 
+            $('#abstract_no').prop("readonly",true);
+            //$('#depot_id').attr("disabled",true);
+        }
+     })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+         $("#"+ele).empty();
+         $("#"+ele).append('<option value="">No Record Found</option>');
+     })
+    }else{
+        $('.cash-collection-error').html('Please enter abstract number.');
+        $('.cash-collection-error').removeClass('hide');
+    }
+  });
+
+function showHide(id) {
 
     	var ele = document.getElementById("form"+id);
 

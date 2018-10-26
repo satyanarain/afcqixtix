@@ -14,7 +14,7 @@
     <div class="col-md-7 col-sm-12">
         @php $depots=displayList('depots','name');@endphp
         {!! Form::select('depot_id', $depots,isset($waybills->depot_id) ? $waybills->depot_id : selected,
-        ['class' => 'col-md-6 form-control', 'placeholder'=>'Select Depot','required' => 'required','onchange'=>'fillDropdown("vehicle_id","vehicles","vehicle_registration_number","depot_id")']) !!}
+        ['class' => 'col-md-6 form-control', 'placeholder'=>'Select Depot','required' => 'required','onchange'=>'fillDropdown("vehicle_id","vehicles","vehicle_registration_number","depot_id");fillDropdown("driver_id","crew","crew_name","depot_id");fillDropdown("conductor_id","crew","crew_name","depot_id");']) !!}
     </div>
 
 </div> 
@@ -70,16 +70,18 @@
 
 </div>
 <div class="form-group ">
-     {!! Form::label('driver', Lang::get('Driver'), ['class' => 'col-md-3 control-label']) !!}
+     {!! Form::label('driver_id', Lang::get('Driver'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12">
-          {!! Form::text('driver', null, ['class' => 'col-md-6 form-control']) !!}
-    </div>
+    {!! Form::select('driver_id', null,null,
+        ['class' => 'col-md-6 form-control', 'placeholder'=>'Select Driver','required' => 'required']) !!}
+    </div>    
 </div>
  
 <div class="form-group ">
-     {!! Form::label('conductor', Lang::get('Conductor'), ['class' => 'col-md-3 control-label']) !!}
+     {!! Form::label('conductor_id', Lang::get('Conductor'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12">
-          {!! Form::text('conductor', null, ['class' => 'col-md-6 form-control']) !!}
+        {!! Form::select('conductor_id', null,null,
+        ['class' => 'col-md-6 form-control', 'placeholder'=>'Select Conductor','required' => 'required']) !!}
     </div>
 </div> 
 <div class="form-group ">

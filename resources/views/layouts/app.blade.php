@@ -122,14 +122,7 @@ echo json_encode([
                         </a>
                     </li>
                     
-                    @php $pem=menuDisplayByUser($result, 'users','view'); @endphp
-                    @if($pem=='true')
-                    <li @if($segments_var[0]=='users') class="treeview active" @else class="treeview" @endif>
-                        <a href="{{route('users.index')}}">
-                            <i class="fa fa-users"></i> <span>Manage Users</span>
-                        </a>
-                    </li>
-                    @endif
+                    
                     
                   <li @if($segments_var[0]=='depots') class="treeview active" @else class="treeview" @endif>
                         <a href="#">
@@ -206,7 +199,7 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                     
                   <!--Start Inventories left menu details-->  
                   @php 
-                  $pem=menuDisplayByUser($result, 'centerstock','view'); 
+                  $pem=menuDisplayByUser($result, 'centerstocks','view'); 
                   @endphp
                   @if($pem=='true')
                   <li @if($segments_var[1]=='centerstock' || $segments_var[1]=='depotstock' || $segments_var[1]=='crewstock' || $segments_var[1]=='returncrewstock') class="treeview active" @else class="treeview" @endif>
@@ -236,29 +229,22 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                         </a>
                         <ul @if($segments_var[0]=='waybills') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
                             <li @if($segments_var[0]=='waybills' && !$segments_var[1]) class="active" @endif><a href="{{route('waybills.index')}}"><i class="fa fa-key"></i>Abstract</a></li>
+                            <li @if($segments_var[0]=='waybills' && $segments_var[1]=='cash_collection') class="active" @endif><a href="{{route('waybills.cash_collection')}}"><i class="fa fa-key"></i>Cash Collection</a></li>
                             <li @if($segments_var[1]=='auditlist') class="active" @endif><a href="{{route('waybills.auditlist')}}"><i class="fa fa-key"></i>Audit</a></li>
                          </ul>
                     </li>
-                    @endif    
-                  @php $pem=menuDisplayByUser($result, 'permissions','view'); @endphp
+                    @endif   
+                    
+                    @php $pem=menuDisplayByUser($result, 'users','view'); @endphp
                     @if($pem=='true')
-                     <li  @if($segments_var[0]=='roles' || $segments_var[0]=='permissions' || $segments_var[0]=='settings') class="treeview active" @else class="treeview" @endif>
-                        <a href="#">
-                            <i class="fa fa-cog" aria-hidden="true"></i> <span>Settings</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
+                    <li @if($segments_var[0]=='users') class="treeview active" @else class="treeview" @endif>
+                        <a href="{{route('users.index')}}">
+                            <i class="fa fa-users"></i> <span>Manage Users</span>
                         </a>
-                        <ul @if($segments_var[0]=='changepasswords' || $segments_var[0]=='permissions' || $segments_var[0]=='settings') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
-                         <li @if($segments_var[0]=='roles' || $segments_var[0]=='permissions') class="active" @endif><a href="{{route('permissions.index')}}"><i class="fa fa-key"></i>Roles and Permissions</a></li>
-                         <li @if($segments_var[0]=='settings') class="active" @endif><a href="{{route('settings.index')}}"><i class="fa fa-cog"></i>Configuration Settings</a></li>     
-                         <li @if($segments_var[0]=='changepasswords') class="active" @endif><a href="{{route('changepasswords.create')}}"><i class="fa fa-key"></i>Change Password</a></li>   
-                            
-                            
-                            
-                         </ul>
                     </li>
                     @endif
+                    
+                  
 
                     @php $pem=menuDisplayByUser($result, 'permissions','view'); @endphp
                     @if($pem=='true')
@@ -281,7 +267,25 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                            <i class="version-icon"></i><span>Version Control</span>
                         </a>
                     </li>
-                      
+                    @php $pem=menuDisplayByUser($result, 'permissions','view'); @endphp
+                    @if($pem=='true')
+                     <li  @if($segments_var[0]=='roles' || $segments_var[0]=='permissions' || $segments_var[0]=='settings') class="treeview active" @else class="treeview" @endif>
+                        <a href="#">
+                            <i class="fa fa-cog" aria-hidden="true"></i> <span>Settings</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul @if($segments_var[0]=='changepasswords' || $segments_var[0]=='permissions' || $segments_var[0]=='settings') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
+                         <li @if($segments_var[0]=='roles' || $segments_var[0]=='permissions') class="active" @endif><a href="{{route('permissions.index')}}"><i class="fa fa-key"></i>Roles and Permissions</a></li>
+                         <li @if($segments_var[0]=='settings') class="active" @endif><a href="{{route('settings.index')}}"><i class="fa fa-cog"></i>Configuration Settings</a></li>     
+                         <li @if($segments_var[0]=='changepasswords') class="active" @endif><a href="{{route('changepasswords.create')}}"><i class="fa fa-key"></i>Change Password</a></li>   
+                            
+                            
+                            
+                         </ul>
+                    </li>
+                    @endif  
                     </ul>
             </section>
             <!-- /.sidebar -->

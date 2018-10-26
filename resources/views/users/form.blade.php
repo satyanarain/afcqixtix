@@ -138,7 +138,7 @@
 
 
 </div>
-    <?php print_r($value); ?>
+    <?php //print_r($value); ?>
 <div class="tab-pane" id="timeline">
     <div class="form-group">
     <div class="col-md-12"></div>

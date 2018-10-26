@@ -36,7 +36,7 @@ class CenterstockController extends Controller
      */
     public function index()
     {
-        if(!$this->checkActionPermission('centerstock','view'))
+        if(!$this->checkActionPermission('centerstocks','view'))
             return redirect()->route('401');
       
         //$centerstock = CenterStock::orderBy('id')->get();
@@ -50,7 +50,7 @@ class CenterstockController extends Controller
 
     public function create()
     {
-        if(!$this->checkActionPermission('centerstock','create'))
+        if(!$this->checkActionPermission('centerstocks','create'))
             return redirect()->route('401');
         $items_data = DB::table("inv_items_master")->select('id','name','description')->where("status", "=", '1')->get();
         $paperticket = DB::table("denominations")->select('id','description','denomination_master_id')->where("denomination_master_id", "=", '1')->get();
@@ -70,7 +70,7 @@ class CenterstockController extends Controller
      */
     public function store(StoreCenterStockRequest $request)
     {
-        if(!$this->checkActionPermission('centerstock','create'))
+        if(!$this->checkActionPermission('centerstocks','create'))
             return redirect()->route('401');
       
         $getInsertedId = $this->centerstock->create($request);
@@ -84,7 +84,7 @@ class CenterstockController extends Controller
      */
     public function show($id)
     {
-        if(!$this->checkActionPermission('centerstock','view'))
+        if(!$this->checkActionPermission('centerstocks','view'))
             return redirect()->route('401');
         $bustypes=Bustype::findOrFail($id);
         return view('invcenterstock.show')->withBustypes($bustypes);
@@ -98,7 +98,7 @@ class CenterstockController extends Controller
      */
     public function edit($id)
     {
-        if(!$this->checkActionPermission('centerstock','edit'))
+        if(!$this->checkActionPermission('centerstocks','edit'))
             return redirect()->route('401');
 
         $stock = CenterStock::findOrFail($id);
@@ -116,7 +116,7 @@ class CenterstockController extends Controller
      */
     public function update($id, StoreCenterStockRequest $request)
     {
-        if(!$this->checkActionPermission('centerstock','edit'))
+        if(!$this->checkActionPermission('centerstocks','edit'))
             return redirect()->route('401');
         
         $getInsertedId = $this->centerstock->update($id, $request);
@@ -178,7 +178,7 @@ class CenterstockController extends Controller
         <?php
     }
    public function viewDetail($id) {
-       if(!$this->checkActionPermission('centerstock','view'))
+       if(!$this->checkActionPermission('centerstocks','view'))
             return redirect()->route('401');
           $value = DB::table('bus_types')->select("*",'bus_types.created_at','bus_types.updated_at','bus_types.id as id')
                   ->leftjoin('users','users.id','bus_types.user_id')

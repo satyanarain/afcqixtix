@@ -229,12 +229,19 @@ class UsersController extends Controller
         $pass_types = implode(',', $requestData->pass_types);
         $crews = implode(',', $requestData->crews);
         $etm_details = implode(',', $requestData->etm_details);
+        $centerstocks = implode(',', $requestData->centerstocks);
+        $depotstocks = implode(',', $requestData->depotstocks);
+        $crewstocks = implode(',', $requestData->crewstocks);
+        $returncrewstocks = implode(',', $requestData->returncrewstocks);
         $versions = implode(',', $requestData->versions);
         $settings = implode(',', $requestData->settings);
         $waybills = implode(',', $requestData->waybills);
-           PermissionDetail::where('user_id',$id)->update(['role_id' => $requestData->role_id,'created_by'=>$created_by,'users'=>$users,'changepasswords'=>$changepasswords,'permissions'=>$permissions,'depots'=>$depots,'bus_types'=>$bus_types,'services'=>$services,'vehicles'=>$vehicles
+        $audits = implode(',', $requestData->audits);
+        $cash_collections = implode(',', $requestData->cash_collections);
+        
+        PermissionDetail::where('user_id',$id)->update(['role_id' => $requestData->role_id,'created_by'=>$created_by,'users'=>$users,'changepasswords'=>$changepasswords,'permissions'=>$permissions,'depots'=>$depots,'bus_types'=>$bus_types,'services'=>$services,'vehicles'=>$vehicles
             ,'shifts'=>$shifts,'stops'=>$stops,'routes'=>$routes,'duties'=>$duties,'targets'=>$targets,'trips'=>$trips,'fares'=>$fares,'concession_fare_slabs'=>$concession_fare_slabs,'concessions'=>$concessions,'trip_cancellation_reasons'=>$trip_cancellation_reasons
-           ,'inspector_remarks'=>$inspector_remarks,'payout_reasons'=>$payout_reasons,'denominations'=>$denominations,'pass_types'=>$pass_types,'crews'=>$crews,'etm_details'=>$etm_details,'versions'=>$versions,'settings'=>$settings,'waybills'=>$waybills]);     
+           ,'inspector_remarks'=>$inspector_remarks,'payout_reasons'=>$payout_reasons,'denominations'=>$denominations,'pass_types'=>$pass_types,'crews'=>$crews,'etm_details'=>$etm_details,'versions'=>$versions,'settings'=>$settings,'waybills'=>$waybills,'audits'=>$audits,'cash_collections'=>$cash_collections,'centerstocks'=>$centerstocks,'depotstocks'=>$depotstocks,'crewstocks'=>$crewstocks,'returncrewstocks'=>$returncrewstocks]);     
            //  $permission->fill($input)->save();
       
        $user = User::findorFail($id);
@@ -286,50 +293,88 @@ public function roleupdate($id, Request $request)
                             <td width="55%">Action</td>
                         </tr>
                     </table>
-                    <div   class="formmain" onclick="showHide(this.id)" id="ACC1<?php echo $permissions->id; ?>">
-                        <div class="plusminusbutton" id="plusminusbuttonACC1<?php echo $permissions->id; ?>">+</div>&nbsp;&nbsp; Master Details
+                    <div   class="formmain" onclick="showHide(this.id)" id="ACC1<?php echo $permissions->id?>">
+                        <div class="plusminusbutton" id="plusminusbuttonACC1<?php echo $permissions->id?>">+</div>&nbsp;&nbsp; Manage Master 
                     </div>
-
-          <div class="row1"  id="formACC1<?php echo $permissions->id; ?>" style="display:none">
+                    <div class="row1"  id="formACC1<?php echo $permissions->id?>" style="display:none;">
                         <div class="row">  
                             <table  align="left" class="table">
-                                <?php menuCreate('users','create','edit','view',$permissions->id,$permissions->users); ?>
-                                <?php menuCreate('changepasswords','create','edit','view',$permissions->id,$permissions->changepasswords); ?>
-                                <?php menuCreate('permissions','create','edit','view',$permissions->id,$permissions->permissions) ; ?>
-                                <?php menuCreate('depots','create','edit','view',$permissions->id,$permissions->depots) ; ?>
-                                <?php menuCreate('bus_types','create','edit','view',$permissions->id,$permissions->bus_types); ?>
-                                <?php menuCreate('services','create','edit','view',$permissions->id,$permissions->services); ?>
-                                <?php menuCreate('vehicles','create','edit','view',$permissions->id,$permissions->vehicles); ?>
-                                <?php menuCreate('shifts','create','edit','view',$permissions->id,$permissions->shifts); ?>
-                                <?php menuCreate('stops','create','edit','view',$permissions->id,$permissions->stops); ?>
-                                <?php menuCreate('routes','create','edit','view',$permissions->id,$permissions->routes); ?>
-                                <?php menuCreate('duties','create','edit','view',$permissions->id,$permissions->duties); ?>
-                                <?php menuCreate('targets','create','edit','view',$permissions->id,$permissions->targets); ?>
-                                <?php menuCreate('trips','create','edit','view',$permissions->id,$permissions->trips); ?>
-                                <?php menuCreate('fares','create','edit','view',$permissions->id,$permissions->fares); ?>
-                                <?php menuCreate('concession_fare_slabs','create','edit','view',$permissions->id,$permissions->concession_fare_slabs); ?>
-                                <?php menuCreate('concessions','create','edit','view',$permissions->id,$permissions->concessions); ?>
-                                <?php menuCreate('trip_cancellation_reasons','create','edit','view',$permissions->id,$permissions->trip_cancellation_reasons); ?>
-                                <?php menuCreate('inspector_remarks','create','edit','view',$permissions->id,$permissions->inspector_remarks); ?>
-                                <?php menuCreate('payout_reasons','create','edit','view',$permissions->id,$permissions->payout_reasons); ?>
-                                <?php menuCreate('denominations','create','edit','view',$permissions->id,$permissions->denominations); ?>
-                                <?php menuCreate('pass_types','create','edit','view',$permissions->id,$permissions->pass_types); ?>
-                                <?php menuCreate('crew','create','edit','view',$permissions->id,$permissions->crew); ?>
-                               
+                                <?php  menuCreate('depots','create','edit','view',$permissions->id,$permissions->depots) ?>
+                                <?php  menuCreate('bus_types','create','edit','view',$permissions->id,$permissions->bus_types)?>
+                                <?php  menuCreate('services','create','edit','view',$permissions->id,$permissions->services)?>
+                                <?php  menuCreate('vehicles','create','edit','view',$permissions->id,$permissions->vehicles)?>
+                                <?php  menuCreate('shifts','create','edit','view',$permissions->id,$permissions->shifts)?>
+                                <?php  menuCreate('stops','create','edit','view',$permissions->id,$permissions->stops)?>
+                                <?php  menuCreate('routes','create','edit','view',$permissions->id,$permissions->routes)?>
+                                <?php  menuCreate('duties','create','edit','view',$permissions->id,$permissions->duties)?>
+                                <?php  menuCreate('targets','create','edit','view',$permissions->id,$permissions->targets)?>
+                                <?php  menuCreate('trips','create','edit','view',$permissions->id,$permissions->trips)?>
+                                <?php  menuCreate('fares','create','edit','view',$permissions->id,$permissions->fares)?>
+                                <?php  menuCreate('concession_fare_slabs','create','edit','view',$permissions->id,$permissions->concession_fare_slabs)?>
+                                <?php  menuCreate('concessions','create','edit','view',$permissions->id,$permissions->concessions)?>
+                                <?php  menuCreate('trip_cancellation_reasons','create','edit','view',$permissions->id,$permissions->trip_cancellation_reasons)?>
+                                <?php  menuCreate('inspector_remarks','create','edit','view',$permissions->id,$permissions->inspector_remarks)?>
+                                <?php  menuCreate('payout_reasons','create','edit','view',$permissions->id,$permissions->payout_reasons)?>
+                                <?php  menuCreate('denominations','create','edit','view',$permissions->id,$permissions->denominations)?>
+                                <?php  menuCreate('pass_types','create','edit','view',$permissions->id,$permissions->pass_types)?>
+                                <?php  menuCreate('crews','create','edit','view',$permissions->id,$permissions->crews)?>
+                                <?php  menuCreate('etm_details','create','edit','view',$permissions->id,$permissions->etm_details)?>
+                                
                             </table> 
                         </div>
-                    </div>  
+                    </div> 
                 
-                   <div   class="formmain" onclick="showHide(this.id)" id="ACC2<?php echo $permissions->id; ?>">
-                        <div class="plusminusbutton" id="plusminusbuttonACC2<?php echo $permissions->id; ?>">+</div>&nbsp;&nbsp;ETM Details
+                   <div class="formmain" onclick="showHide(this.id)" id="ACC2<?php echo $value->id?>">
+                        <div class="plusminusbutton" id="plusminusbuttonACC2<?php echo $value->id?>">+</div>&nbsp;&nbsp;Manage Inventory
                     </div>
-                     <div class="row1"  id="formACC2<?php echo $permissions->id; ?>" style="display:none;">
+                     <div class="row1"  id="formACC2<?php echo $value->id?>" style="display:none;border:#ccc 1px solid;">
                         <div class="row">  
                             <table class="table table-responsive.view">
-                                 <?php menuCreate('etm_details','create','edit','view',$permissions->id,$permissions->etm_details) ?>
+                                 <?php  menuCreate('centerstocks','create','edit','view',$value->id,$value->centerstocks)?>
+                                 <?php  menuCreate('depotstocks','create','edit','view',$value->id,$value->depotstocks)?>
+                                 <?php  menuCreate('crewstocks','create','edit','view',$value->id,$value->crewstocks)?>
+                                 <?php  menuCreate('returncrewstocks','create','edit','view',$value->id,$value->returncrewstocks)?>
                         </table> 
                         </div>
                     </div>
+                    <div   class="formmain" onclick="showHide(this.id)" id="ACC3<?php echo $permissions->id?>">
+                        <div class="plusminusbutton" id="plusminusbuttonACC3<?php echo $permissions->id?>">+</div>&nbsp;&nbsp;Waybill Management
+                    </div>
+                    <div class="row1"  id="formACC3<?php echo $permissions->id?>" style="display:none;">
+                        <div class="row">  
+                            <table class="table table-responsive.view">
+                                 <?php  menuCreate('waybills','create','edit','view',$permissions->id,$permissions->waybills)?>
+                                 <?php  menuCreate('audits','create','edit','view',$permissions->id,$permissions->audits)?>
+                                 <?php  menuCreate('cash_collections','create','edit','view',$permissions->id,$permissions->cash_collections)?>
+                        </table> 
+                        </div>
+                    </div>
+                    <div   class="formmain" onclick="showHide(this.id)" id="ACC4<?php echo $permissions->id?>">
+                        <div class="plusminusbutton" id="plusminusbuttonACC4<?php echo $permissions->id?>">+</div>&nbsp;&nbsp;Manage Users
+                    </div>
+                    <div class="row1"  id="formACC4<?php echo $permissions->id?>" style="display:none;">
+                        <div class="row">  
+                            <table class="table table-responsive.view">
+                                 <?php  menuCreate('users','create','edit','view',$permissions->id,$permissions->users)?>
+                        </table> 
+                        </div>
+                    </div>
+                    
+                    
+                    <div   class="formmain" onclick="showHide(this.id)" id="ACC5<?php echo $permissions->id?>">
+                        <div class="plusminusbutton" id="plusminusbuttonACC5<?php echo $permissions->id?>">+</div>&nbsp;&nbsp;Miscellaneous
+                    </div>
+                    <div class="row1"  id="formACC5<?php echo $permissions->id?>" style="display:none;">
+                        <div class="row">  
+                            <table class="table table-responsive.view">
+                                <?php  menuCreate('changepasswords','create','edit','view',$permissions->id,$permissions->changepasswords)?>
+                                <?php  menuCreate('permissions','create','edit','view',$permissions->id,$permissions->permissions) ?>
+                                <?php  menuCreate('versions','create','edit','view',$permissions->id,$permissions->versions)?>
+                                <?php  menuCreate('settings','create','edit','view',$permissions->id,$permissions->settings)?>
+                        </table> 
+                        </div>
+                    </div>
+                
               </div>
       <?php     
       }

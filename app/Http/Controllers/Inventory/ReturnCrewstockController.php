@@ -33,7 +33,7 @@ class ReturnCrewStockController extends Controller
      */
     public function index()
     {
-        if(!$this->checkActionPermission('crewstock','view'))
+        if(!$this->checkActionPermission('crewstocks','view'))
             return redirect()->route('401');
 
         $stocks = $this->crewstock->getAllReturnCrewStock();
@@ -48,7 +48,7 @@ class ReturnCrewStockController extends Controller
      */
     public function create()
     {
-        if(!$this->checkActionPermission('crewstock','create'))
+        if(!$this->checkActionPermission('crewstocks','create'))
             return redirect()->route('401');
         $items_data = DB::table("inv_items_master")->select('id','name','description')->where("status", "=", '1')->get();
         $paperticket = DB::table("denominations")->select('id','description','denomination_master_id')->where("denomination_master_id", "=", '1')->get();
@@ -90,7 +90,7 @@ class ReturnCrewStockController extends Controller
      */
     public function edit($id)
     {
-        if(!$this->checkActionPermission('crewstock','edit'))
+        if(!$this->checkActionPermission('crewstocks','edit'))
             return redirect()->route('401');
         $items_data = DB::table("inv_items_master")->select('id','name','description')->where("status", "=", '1')->get();
         $paperticket = DB::table("denominations")->select('id','description','denomination_master_id')->where("denomination_master_id", "=", '1')->get();

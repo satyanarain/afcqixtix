@@ -270,6 +270,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('waybills/view_detail/{id}', 'WaybillController@viewDetail');
     Route::get('waybills/close/{id}', 'WaybillController@close')->name('waybills.close');
     Route::get('waybills/auditlist', 'WaybillController@auditlist')->name('waybills.auditlist');
+    Route::get('waybills/cash_collection', 'WaybillController@cash_collection')->name('waybills.cash_collection');
+    Route::post('waybills/getabstractdetail', 'WaybillController@getabstractdetail')->name('waybills.getabstractdetail');
+    Route::post('waybills/storecash', 'WaybillController@storecash')->name('waybills.storecash');
     Route::post('waybills/getdata/{id}', 'WaybillController@getData');
     Route::post('waybills/getfiltereddata', 'WaybillController@getfiltereddata')->name('waybills/getfiltereddata');
     Route::resource('waybills', 'WaybillController');

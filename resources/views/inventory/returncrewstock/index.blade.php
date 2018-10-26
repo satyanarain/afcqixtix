@@ -13,7 +13,7 @@
             <div class="box-header">
                <h3 class="box-title">Return Crew Stock Inventories Details </h3>
                 <?php 
-                $permission_status = checkPermission('returncrewstock','create');
+                $permission_status = checkPermission('returncrewstocks','create');
                 if($permission_status)
                 {?>
                 <a class="btn btn-primary pull-right" href="{{route('inventory.returncrewstock.create')}}"><span class="fa fa-plus"></span> Add</a>
@@ -48,7 +48,7 @@
                             <td>{{$value->end_sequence}}</td>
                             <td>{{$value->quantity}}</td>
                             <td>
-                                <?php $permission = getAllModulePermission('returncrewstock');
+                                <?php $permission = getAllModulePermission('returncrewstocks');
                                 if(in_array('edit',$permission)){
                                     echo '<a  href="'.route("inventory.returncrewstock.edit",$value->id).'" class="" title="Edit" ><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
                                 }elseif(in_array('edit',$permission)){?>
