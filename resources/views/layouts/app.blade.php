@@ -246,7 +246,7 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                     
                   
 
-                    @php $pem=menuDisplayByUser($result, 'permissions','view'); @endphp
+                    @php $pem=menuDisplayByUser($result, 'centerstocks','view'); @endphp
                     @if($pem=='true')
                      <li  @if($segments_var[0]=='notification') class="treeview active" @else class="treeview" @endif>
                         <a href="#">
