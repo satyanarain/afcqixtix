@@ -262,7 +262,10 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     Route::group(['prefix'=>'notification', 'namespace'=>'Notification', 'as'=>'notification.'], function(){
-        Route::resource('inventory', 'InventoryController');
+        Route::resource('inventory', 'InventoryController')->only(['index', 'store', 'edit', 'update']);
+        Route::group(['prefix'=>'inventory', 'as'=>'inventory.'], function(){
+            Route::get('getitemsandadmins', 'InventoryController@getItemsandAdmins')->name('getitemsandadmins');
+        });
     });
     
     
