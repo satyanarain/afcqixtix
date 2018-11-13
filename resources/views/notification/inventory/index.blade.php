@@ -43,8 +43,9 @@
         		</tbody>
         	</table>
     </div>
-    
-
+</div>    
+	<hr>
+<div class="row">
     <div class="col-xs-12">
         <h4>Depot stock <button class="btn btn-primary pull-right" id="manageDepotStock"><span class="fa fa-plus"></span> Add</button></h4>
        
@@ -255,7 +256,7 @@
 				minlevel: minlevel,
 				notifyto: notifyto
 			};
-			url = "{{route('notification.inventory.store')}}";
+			url = "{{route('notification.inventory.centerstock.store')}}";
 		}else {
 			var data = {
 				item: item,
@@ -265,7 +266,7 @@
 				_method: 'PATCH'
 			};
 
-			url = "{{route('notification.inventory.update', ':id')}}";
+			url = "{{route('notification.inventory.centerstock.update', ':id')}}";
 			url = url.replace(':id', dataId);
 		}
 
@@ -280,7 +281,7 @@
 			{
 				if(response.errorCode == 'ALREADY_ADDED')
 				{
-					$('#error').html('Item settings already added.').shwo();
+					$('#error').html('Item settings already added.').show();
 				}
 				if(response.status == 'Ok')
 				{
@@ -306,7 +307,7 @@
 		var data = {
 			id: id
 		};
-		var url = "{{route('notification.inventory.edit', ':id')}}";
+		var url = "{{route('notification.inventory.centerstock.edit', ':id')}}";
 		console.log(url);
 		url = url.replace(':id', id);
 		$.ajax({
@@ -448,7 +449,7 @@
 				minlevel: minlevel,
 				notifyto: notifyto
 			};
-			url = "{{route('notification.inventory.storedepot')}}";
+			url = "{{route('notification.inventory.depotstock.store')}}";
 		}else {
 			var data = {
 				depot: depot,
@@ -459,7 +460,7 @@
 				_method: 'PATCH'
 			};
 
-			url = "{{route('notification.inventory.updatedepot', ':id')}}";
+			url = "{{route('notification.inventory.depotstock.update', ':id')}}";
 			url = url.replace(':id', dataId);
 		}
 
@@ -474,7 +475,7 @@
 			{
 				if(response.errorCode == 'ALREADY_ADDED')
 				{
-					$('#error').html('Item settings already added.').shwo();
+					$('#error').html('Item settings already added.').show();
 				}
 				if(response.status == 'Ok')
 				{

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Notification;
+namespace App\Http\Controllers\Notification\Inventory;
 
 use DB;
 use Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class InventoryController extends Controller
+class CenterStockController extends Controller
 {
     public function index()
     {
