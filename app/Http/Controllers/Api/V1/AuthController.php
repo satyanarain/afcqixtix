@@ -37,7 +37,7 @@ class AuthController extends Controller
             {
                 $sync_time = (int)$settings->setting_value;
             }
-    		return response()->json(['statusCode'=>'Ok', 'token'=>$token, 'sync_time'=>$sync_time]);
+    		return response()->json(['statusCode'=>'Ok', 'token'=>$token, 'sync_time'=>$sync_time, 'server_time'=>date('d-m-Y H:i:s')]);
     	}else{
     		return response()->json(['statusCode'=>'Error', 'data'=>'Invalid credentilas!']);
     	}

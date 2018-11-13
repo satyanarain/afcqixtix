@@ -42,7 +42,12 @@ class InventoryController extends Controller
     				->orderBy('name', 'asc')
     				->get();
 
-    	return response()->json(['items'=>$items, 'admins'=>$admins]);
+        $depots = DB::table('depots')
+                    ->select('name', 'id')
+                    ->orderBy('name', 'asc')
+                    ->get();
+
+    	return response()->json(['items'=>$items, 'admins'=>$admins, 'depots'=>$depots]);
     }
 
     /*----------------------------------------------------------------
