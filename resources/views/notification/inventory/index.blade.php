@@ -24,7 +24,7 @@
         			</tr>
         		</thead>
         		<tbody>
-        			@foreach($settings as $setting)
+        			@foreach($centerStockSettings as $setting)
         			<tr>
         				<td>{{$setting->item_id}}</td>
         				<td>{{$setting->min_stock}}</td>
@@ -60,9 +60,9 @@
         			</tr>
         		</thead>
         		<tbody>
-        			@foreach($settings as $setting)
+        			@foreach($depotStockSettings as $setting)
         			<tr>
-        				<td>BELWADI</td>
+        				<td>{{$setting->depot_id}}</td>
         				<td>{{$setting->item_id}}</td>
         				<td>{{$setting->min_stock}}</td>
         				<td>
@@ -74,7 +74,7 @@
         						@endif
         					@endforeach
         				</td>
-        				<td><a href="" onclick="openEditModal(event, {{$setting->id}});"><span class="fa fa-edit"></span></a></td>
+        				<td><a href="" onclick="openDepotStockEditModal(event, {{$setting->id}});"><span class="fa fa-edit"></span></a></td>
         			</tr>
         			@endforeach
         		</tbody>
@@ -166,7 +166,7 @@
 				        	</select>
 				        </div>
 				        <div class="form-group">
-				        	<span id="depoterror" class="label label-danger"></span>
+				        	<span id="errorDepot" class="label label-danger"></span>
 				        </div>
 				    </div>
 		    	</div>
@@ -181,7 +181,6 @@
 </div>
 </div>
 </section>
-
 @include('partials.bustypes_order_header')
 @include('partials.table_script_order')
 @stop
@@ -360,7 +359,7 @@
 			{
 				console.log(error);
 			}
-		})
+		});
 	}
 
 	//depot stock js
@@ -475,7 +474,7 @@
 			{
 				if(response.errorCode == 'ALREADY_ADDED')
 				{
-					$('#error').html('Item settings already added.').show();
+					$('#errorDepot').html('Item settings already added.').show();
 				}
 				if(response.status == 'Ok')
 				{
@@ -489,5 +488,85 @@
 		});
 
 	});
+
+	function openDepotStockEditModal(event, itemId)
+	{
+		event.preventDefault();
+		var id = itemId;
+		if(!id)
+		{
+			return alert('Invalid item ID.');
+		}
+		var data = {
+			id: id
+		};
+		var url = "{{route('notification.inventory.depotstock.edit', ':id')}}";
+		console.log(url);
+		url = url.replace(':id', id);
+		$.ajax({
+			url: url,
+			type:"GET",
+			dataType: "JSON",
+			data:data,
+			success: function(response)
+			{
+				if(response.status == 'Ok')
+				{
+					var settings = response.settings;
+					var items = response.items;
+					var admins = response.admins;
+					var depots = response.depots;
+					if(items.length > 0)
+					{
+						var itemsString = "<option value=''>Please select an item</option>";
+						$.each(items, function(index, item){
+							itemsString += '<option value='+item.id+'>'+item.name+'</option>';
+						});
+
+						$('#depotinventorytype').html(itemsString);
+					}
+
+					if(admins.length > 0)
+					{
+						var adminsString = "";//"<option value=''>Please select who to notify</option>";
+						$.each(admins, function(index, admin){
+							if($.inArray(admin.id, selectedOptions) !== -1)
+							{
+								adminsString += '<option value='+admin.id+' selected>'+admin.name+'</option>';
+							}else{
+								adminsString += '<option value='+admin.id+'>'+admin.name+'</option>';
+							}
+							
+						});
+
+						$('#depotnotifyto').html(adminsString);
+					}
+
+					if(depots.length > 0)
+					{
+						var depotsString = "<option value=''>Please select a depot</option>";
+						$.each(depots, function(index, depot){
+							depotsString += '<option value='+depot.id+'>'+depot.name+'</option>';
+						});
+
+						$('#depots').html(depotsString);
+					}
+
+					var selectedOptions = response.selectedOptions;
+					console.log(settings.notify_to);
+					$('#depotinventorytype').val(settings.item_id).attr('disabled', true);
+					$('#depotminlevel').val(settings.min_stock);
+					$('#depotnotifyto').val(selectedOptions);
+					$('#depots').val(settings.depot_id).attr('disabled', true);
+					$('#depotSaveSetting').attr('data-id', settings.id);
+					$('#depotStockNotificationModal').modal('show');
+				}
+			},
+			error: function(error)
+			{
+				console.log(error);
+			}
+		});
+	}
 </script>
 @endpush
