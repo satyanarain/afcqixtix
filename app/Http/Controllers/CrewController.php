@@ -174,6 +174,10 @@ class CrewController extends Controller
                         <td class="table_normal"><?php  echo $value->role; ?></span></td>
                     </tr>
                     <tr>
+                        <td><b>Crew Type</b></td>
+                        <td class="table_normal"><?php echo $value->crew_type; ?></td>
+                    </tr>
+                    <tr>
                         <td><b>Crew Name</b></td>
                         <td class="table_normal"><?php echo $value->crew_name; ?></td>
                     </tr>
