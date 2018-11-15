@@ -2,185 +2,187 @@
 @section('header')
 <h1>Manage Inventory Notification</h1>
 <ol class="breadcrumb">
-  <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-  <li><a href="#" class="active">Inventory Notification</a></li>
+	<li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+	<li><a href="#" class="active">Inventory Notification</a></li>
 </ol>
 @stop
 @section('content')
-<section class="content">
-<div class="box">
-<div class="box-body">
 <div class="row">
-    <div class="col-xs-12">
-        <h4>Central stock <button class="btn btn-primary pull-right" id="manageCenterStock"><span class="fa fa-plus"></span> Add</button></h4>
-       
-        	<table class="table">
-        		<thead>
-        			<tr>
-        				<th>Invenory Type</th>
-        				<th>Min Stock</th>
-        				<th>Notify to</th>
-        				<th>Action</th>
-        			</tr>
-        		</thead>
-        		<tbody>
-        			@foreach($centerStockSettings as $setting)
-        			<tr>
-        				<td>{{$setting->item_id}}</td>
-        				<td>{{$setting->min_stock}}</td>
-        				<td>
-        					@foreach($setting->notify_to as $key=>$admin)
-        						@if($key == 0)
-        							{{$admin->email}}
-        						@else
-        							{{', '.$admin->email}}
-        						@endif
-        					@endforeach
-        				</td>
-        				<td><a href="" onclick="openEditModal(event, {{$setting->id}});"><span class="fa fa-edit"></span></a></td>
-        			</tr>
-        			@endforeach
-        		</tbody>
-        	</table>
-    </div>
-</div>    
-	<hr>
+	<div class="col-xs-12">
+		<div class="box">
+			<div class="box-body">
+				<h4>Central stock <button class="btn btn-primary pull-right" id="manageCenterStock"><span class="fa fa-plus"></span> Add</button></h4>
+
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Invenory Type</th>
+							<th>Min Stock</th>
+							<th>Notify to</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach($centerStockSettings as $setting)
+						<tr>
+							<td>{{$setting->item_id}}</td>
+							<td>{{$setting->min_stock}}</td>
+							<td>
+								@foreach($setting->notify_to as $key=>$admin)
+								@if($key == 0)
+								{{$admin->email}}
+								@else
+								{{', '.$admin->email}}
+								@endif
+								@endforeach
+							</td>
+							<td><a href="" onclick="openEditModal(event, {{$setting->id}});"><span class="fa fa-edit"></span></a></td>
+						</tr>
+						@endforeach
+					</tbody>
+				</table>
+			</div>
+		</div>  
+	</div>
+</div>  
+<hr>
 <div class="row">
-    <div class="col-xs-12">
-        <h4>Depot stock <button class="btn btn-primary pull-right" id="manageDepotStock"><span class="fa fa-plus"></span> Add</button></h4>
-       
-        	<table class="table">
-        		<thead>
-        			<tr>
-        				<th>Depot</th>
-        				<th>Invenory Type</th>
-        				<th>Min Stock</th>
-        				<th>Notify to</th>
-        				<th>Action</th>
-        			</tr>
-        		</thead>
-        		<tbody>
-        			@foreach($depotStockSettings as $setting)
-        			<tr>
-        				<td>{{$setting->depot_id}}</td>
-        				<td>{{$setting->item_id}}</td>
-        				<td>{{$setting->min_stock}}</td>
-        				<td>
-        					@foreach($setting->notify_to as $key=>$admin)
-        						@if($key == 0)
-        							{{$admin->email}}
-        						@else
-        							{{', '.$admin->email}}
-        						@endif
-        					@endforeach
-        				</td>
-        				<td><a href="" onclick="openDepotStockEditModal(event, {{$setting->id}});"><span class="fa fa-edit"></span></a></td>
-        			</tr>
-        			@endforeach
-        		</tbody>
-        	</table>
-    </div>
+	<div class="col-xs-12">
+		<div class="box">
+			<div class="box-body">
+				<h4>Depot stock <button class="btn btn-primary pull-right" id="manageDepotStock"><span class="fa fa-plus"></span> Add</button></h4>
+
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Depot</th>
+							<th>Invenory Type</th>
+							<th>Min Stock</th>
+							<th>Notify to</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach($depotStockSettings as $setting)
+						<tr>
+							<td>{{$setting->depot_id}}</td>
+							<td>{{$setting->item_id}}</td>
+							<td>{{$setting->min_stock}}</td>
+							<td>
+								@foreach($setting->notify_to as $key=>$admin)
+								@if($key == 0)
+								{{$admin->email}}
+								@else
+								{{', '.$admin->email}}
+								@endif
+								@endforeach
+							</td>
+							<td><a href="" onclick="openDepotStockEditModal(event, {{$setting->id}});"><span class="fa fa-edit"></span></a></td>
+						</tr>
+						@endforeach
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!-- Add center stock settings modal -->
+		<div class="modal fade" id="centerStockNotificationModal" role="dialog">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Center stock notification details</h4>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="inventorytype" class="label-control">Inventory Type</label>
+									<select id="inventorytype" class="form-control">
+										<option>Paper Ticket</option>
+										<option>Paper Roll</option>
+									</select>
+								</div>
+
+								<div class="form-group">
+									<label for="minlevel">Min Stock</label>
+									<input type="text" id="minlevel" name="minlevel" onkeypress="return numvalidate(event)" class="form-control">
+								</div>
+
+								<div class="form-group">
+									<label for="notifyto">Notify to</label>
+									<select id="notifyto" multiple class="form-control">
+										<option>Admin 1</option>
+										<option>Admin 2</option>
+									</select>
+								</div>
+								<div class="form-group">
+									<span id="error" class="label label-danger"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-success" id="saveSetting" data-id="">Save</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Add depot stock settings modal -->
+		<div class="modal fade" id="depotStockNotificationModal" role="dialog">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Center stock notification details</h4>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="depots" class="label-control">Depot</label>
+									<select id="depots" class="form-control">
+										<option>Paper Ticket</option>
+										<option>Paper Roll</option>
+									</select>
+								</div>
+
+								<div class="form-group">
+									<label for="depotinventorytype" class="label-control">Inventory Type</label>
+									<select id="depotinventorytype" class="form-control">
+										<option>Paper Ticket</option>
+										<option>Paper Roll</option>
+									</select>
+								</div>
+
+								<div class="form-group">
+									<label for="depotminlevel">Min Stock</label>
+									<input type="text" id="depotminlevel" name="depotminlevel" onkeypress="return numvalidate(event)" class="form-control">
+								</div>
+
+								<div class="form-group">
+									<label for="depotnotifyto">Notify to</label>
+									<select id="depotnotifyto" multiple class="form-control">
+										<option>Admin 1</option>
+										<option>Admin 2</option>
+									</select>
+								</div>
+								<div class="form-group">
+									<span id="errorDepot" class="label label-danger"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-success" id="depotSaveSetting" data-id="">Save</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
-	<!-- Add center stock settings modal -->
-  	<div class="modal fade" id="centerStockNotificationModal" role="dialog">
-	    <div class="modal-dialog modal-lg">
-	      <div class="modal-content">
-	        <div class="modal-header">
-	          <button type="button" class="close" data-dismiss="modal">&times;</button>
-	          <h4 class="modal-title">Center stock notification details</h4>
-	        </div>
-	        <div class="modal-body">
-		        <div class="row">
-			        <div class="col-md-12">
-					    <div class="form-group">
-				        	<label for="inventorytype" class="label-control">Inventory Type</label>
-				        	<select id="inventorytype" class="form-control">
-				        		<option>Paper Ticket</option>
-				        		<option>Paper Roll</option>
-				        	</select>
-				        </div>
-
-				        <div class="form-group">
-				        	<label for="minlevel">Min Stock</label>
-				        	<input type="text" id="minlevel" name="minlevel" onkeypress="return numvalidate(event)" class="form-control">
-				        </div>
-
-				        <div class="form-group">
-				        	<label for="notifyto">Notify to</label>
-				        	<select id="notifyto" multiple class="form-control">
-				        		<option>Admin 1</option>
-				        		<option>Admin 2</option>
-				        	</select>
-				        </div>
-				        <div class="form-group">
-				        	<span id="error" class="label label-danger"></span>
-				        </div>
-				    </div>
-		    	</div>
-	        </div>
-	        <div class="modal-footer">
-	          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-	          <button type="button" class="btn btn-success" id="saveSetting" data-id="">Save</button>
-	        </div>
-	      </div>
-	    </div>
-  	</div>
-
-  	<!-- Add depot stock settings modal -->
-  	<div class="modal fade" id="depotStockNotificationModal" role="dialog">
-	    <div class="modal-dialog modal-lg">
-	      <div class="modal-content">
-	        <div class="modal-header">
-	          <button type="button" class="close" data-dismiss="modal">&times;</button>
-	          <h4 class="modal-title">Center stock notification details</h4>
-	        </div>
-	        <div class="modal-body">
-		        <div class="row">
-			        <div class="col-md-12">
-			        	<div class="form-group">
-				        	<label for="depots" class="label-control">Depot</label>
-				        	<select id="depots" class="form-control">
-				        		<option>Paper Ticket</option>
-				        		<option>Paper Roll</option>
-				        	</select>
-				        </div>
-
-					    <div class="form-group">
-				        	<label for="depotinventorytype" class="label-control">Inventory Type</label>
-				        	<select id="depotinventorytype" class="form-control">
-				        		<option>Paper Ticket</option>
-				        		<option>Paper Roll</option>
-				        	</select>
-				        </div>
-
-				        <div class="form-group">
-				        	<label for="depotminlevel">Min Stock</label>
-				        	<input type="text" id="depotminlevel" name="depotminlevel" onkeypress="return numvalidate(event)" class="form-control">
-				        </div>
-
-				        <div class="form-group">
-				        	<label for="depotnotifyto">Notify to</label>
-				        	<select id="depotnotifyto" multiple class="form-control">
-				        		<option>Admin 1</option>
-				        		<option>Admin 2</option>
-				        	</select>
-				        </div>
-				        <div class="form-group">
-				        	<span id="errorDepot" class="label label-danger"></span>
-				        </div>
-				    </div>
-		    	</div>
-	        </div>
-	        <div class="modal-footer">
-	          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-	          <button type="button" class="btn btn-success" id="depotSaveSetting" data-id="">Save</button>
-	        </div>
-	      </div>
-	    </div>
-  	</div>
-</div>
-</div>
-</section>
 @include('partials.bustypes_order_header')
 @include('partials.table_script_order')
 @stop
