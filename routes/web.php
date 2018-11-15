@@ -262,7 +262,12 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     Route::group(['prefix'=>'notification', 'namespace'=>'Notification', 'as'=>'notification.'], function(){
-        Route::resource('inventory', 'InventoryController');
+        Route::group(['prefix'=>'inventory', 'as'=>'inventory.', 'namespace'=>'Inventory'], function(){
+            Route::get('/', 'IndexController@index')->name('index');
+            Route::resource('centerstock', 'CenterStockController')->only(['index', 'store', 'edit', 'update']);
+            Route::resource('depotstock', 'DepotStockController')->only(['index', 'store', 'edit', 'update']);
+            Route::get('getitemsandadmins', 'CenterStockController@getItemsandAdmins')->name('getitemsandadmins');
+        });
     });
     
     

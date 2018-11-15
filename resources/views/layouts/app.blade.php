@@ -246,7 +246,7 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                     
                   
 
-                    @php $pem=menuDisplayByUser($result, 'permissions','view'); @endphp
+                    @php $pem=menuDisplayByUser($result, 'centerstocks','view'); @endphp
                     @if($pem=='true')
                      <li  @if($segments_var[0]=='notification') class="treeview active" @else class="treeview" @endif>
                         <a href="#">
@@ -462,7 +462,27 @@ function removeLoader(){
       $( "#map" ).remove(); //makes page more lightweight 
       $( "#map1" ).hide(); //makes page more lightweight 
   });  
-}  
+} 
+function numvalidate(e) 
+{
+    var key;
+    var keychar;
+    if (window.event)
+    key = window.event.keyCode;
+    else if (e)
+    key = e.which;
+    else
+    return true;
+    keychar = String.fromCharCode(key);
+    keychar = keychar.toLowerCase();
+    // control keys
+    if ((key == null) || (key == 0) || (key == 8) || (key == 9)
+    || (key == 13) || (key == 27))
+    return true;
+    else if (!(("1234567890").indexOf(keychar) > -1)) {
+    return false;
+    }
+} 
 </script>
 @stack('scripts')
 </body>
