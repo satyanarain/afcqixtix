@@ -23,4 +23,9 @@ Route::group(['namespace'=>'Api\V1', 'prefix'=>'v1'], function(){
 	    Route::post('sellticket', 'TicketController@store');
 	    Route::post('importtickets', 'TicketController@importTickets');
 	});
+
+
+
+	/*Inventory Notification CRON JOBs*/
+	Route::get('notifications/inventory', 'Notifications\InventoryController@index');
 });
