@@ -56,7 +56,7 @@ class WaybillController extends Controller
                 ->where('status','=','g')
                 ->orderBy('waybills.id','desc')->count();
         //echo '<pre>';        print_r($waybills);die;
-    return view('waybills.index',compact('waybills'));
+        return view('waybills.index',compact('waybills'));
    
     }
     public function create()
@@ -238,15 +238,15 @@ class WaybillController extends Controller
       }
     }
     
-    public function close($id)
+    public function auditdetail($id)
     {
         if(!$this->checkActionPermission('waybills','edit'))
             return redirect()->route('401');
-       $waybills = DB::table('waybills')->select('*','waybills.id as id','depots.id as depot_id')
-            ->leftjoin('depots','depots.id','waybills.depot_id')
-            ->where('waybills.id',$id)
-            ->orderBy('waybills.id','desc')
-               ->first();
+        $waybills = DB::table('waybills')->select('*','waybills.id as id','depots.id as depot_id')
+                    ->leftjoin('depots','depots.id','waybills.depot_id')
+                    ->where('waybills.id',$id)
+                    ->orderBy('waybills.id','desc')
+                    ->first();
        $vehicles = DB::table('vehicles')
             ->where('depot_id', '=',$waybills->depot_id)
             ->orderBy('vehicle_registration_number','asc')
@@ -259,12 +259,19 @@ class WaybillController extends Controller
             ->where('bus_type_id', '=',$waybills->bus_type_id)
             ->orderBy('name','asc')
             ->pluck('name', 'id');
+       $amount_payable = DB::table('tickets')
+                    ->where('abstract_id','=',$waybills->abstract_no)
+                    ->sum('total_amt');
+        $crew = DB::table('crew')
+            ->where('depot_id', '=',$waybills->depot_id)
+            ->orderBy('crew_name','asc')
+            ->pluck('crew_name', 'id');
             //->get(); 
-       //echo '<pre>';print_r($query);die;
-        return view('waybills.submitform',compact('waybills','vehicles','duties','services'));
+       //echo '<pre>';print_r($duties);die;
+        return view('waybills.submitform',compact('waybills','vehicles','duties','services','crew'));
     }
     
-    public function auditlist()
+    public function close()
     {
         if(!$this->checkActionPermission('waybills','view'))
             return redirect()->route('401');
@@ -281,7 +288,7 @@ class WaybillController extends Controller
                 ->where('status','=','s')
                 ->orderBy('waybills.id','desc')->get();
         //echo '<pre>';        print_r($waybills);die;
-    return view('waybills.audit.auditlist',compact('waybills'));
+        return view('waybills.audit.auditlist',compact('waybills'));
    
     }
     
@@ -383,12 +390,15 @@ class WaybillController extends Controller
                 $action = '';
                 if($this->checkActionPermission('waybills','edit'))
                 {
-                    $action = '<a  href="'.route("waybills.edit",$val->id).'" class="" title="Edit Waybill" ><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;'
-                            . '<a  href="'.route("waybills.close",$val->id).'" class="" title="Submit Waybill" ><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
+                    $action = '<a  href="'.route("waybills.edit",$val->id).'" class="" title="Edit Waybill" ><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
                 }
                 if($this->checkActionPermission('waybills','view'))
-                    $action.= '<a style="cursor: pointer;" title="View" data-toggle="modal" data-target="#'.$val->id.'"  onclick="viewDetails('.$val->id.',\'view_detail\')"><span class="glyphicon glyphicon-search"></span></a>';
+                    $action.= '<a style="cursor: pointer;" title="View" data-toggle="modal" data-target="#'.$val->id.'"  onclick="viewDetails('.$val->id.',\'view_detail\')"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
                 
+                if($this->checkActionPermission('audits','create'))
+                {
+                    $action.='<a  href="'.route("waybills.auditdetail",$val->id).'" class="" title="Audit Waybill" ><span class="fa fa-briefcase"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
+                }
                 $nestedData[] = $action;
                 $nestedData[] = ' ';
                 $data[] = $nestedData;
@@ -403,13 +413,13 @@ class WaybillController extends Controller
     }
     
     public function cash_collection(){
-        if(!$this->checkActionPermission('waybills','view'))
+        if(!$this->checkActionPermission('cash_collections','edit'))
             return redirect()->route('401');
         return view('waybills.cash_collection.create',compact('waybills'));
     }
     
     public function storecash(Request $request){
-        if(!$this->checkActionPermission('waybills','view'))
+        if(!$this->checkActionPermission('cash_collections','edit'))
             return redirect()->route('401');
         //echo '<pre>';print_r($request->all());die;
         if ($request->input('amount_payable')){

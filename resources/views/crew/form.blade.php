@@ -16,9 +16,18 @@
 @endif
 
 <div class="form-group ">
+    {!! Form::label('crew_type', Lang::get('Service Type'), ['class' => 'col-md-3 control-label']) !!}
+    <div class="col-md-7 required">
+       <span id="crew_type"> {!! Form::select('crew_type', array('Permanent'=>'Permanent','Adhoc'=>'Adhoc'),isset($crew_details->crew_type) ? $crew_details->crew_type : selected,
+        ['class' => 'col-md-6 form-control', 'placeholder'=>'Select Service Type','required' => 'required']) !!}</span>
+    </div>
+</div>
+
+<div class="form-group ">
      {!! Form::label('role', Lang::get('Designation'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12 required">
-          {!! Form::text('role', null, ['class' => 'col-md-6 form-control','required' => 'required']) !!}
+            {!! Form::select('role', array('Conductor'=>'Conductor','Driver'=>'Driver','Inspector'=>'Inspector'),isset($crew_details->role) ? $crew_details->role : selected,
+        ['class' => 'col-md-6 form-control', 'placeholder'=>'Select Crew Designation','required' => 'required']) !!}
     </div>
 </div>
 <div class="form-group ">

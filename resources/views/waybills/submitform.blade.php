@@ -4,7 +4,7 @@
 {{BreadCrumb()}}
 @stop
 @section('content')
-@include('partials.form_header')
+@include('partials.form_header_full')
                {!! Form::model($waybills, [
         'method' => 'PATCH',
         'route' => ['waybills.update', $waybills->id],
