@@ -1,11 +1,7 @@
 @component('mail::message')
-# Introduction
+Dear {{$userName}},<br>
 
-The body of your message.
-
-@component('mail::button', ['url' => ''])
-Button Text
-@endcomponent
+Inventory for {{$itemName}} has gone below minimum level. Please look into and take the required action.
 
 Thanks,<br>
 {{ config('app.name') }}

@@ -11,14 +11,18 @@ class CenterStock extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $userName;
+    public $itemName;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($userName, $itemName)
     {
-        //
+        $this->userName = $userName;
+        $this->itemName = $itemName;
     }
 
     /**
@@ -28,6 +32,7 @@ class CenterStock extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.notifications.inventory.centerstock');
+        return $this->markdown('emails.notifications.inventory.centerstock')
+                    ->subject('Inventory below minimum stock | '.$this->itemName);
     }
 }
