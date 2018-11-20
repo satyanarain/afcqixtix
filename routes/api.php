@@ -23,6 +23,7 @@ Route::group(['namespace'=>'Api\V1', 'prefix'=>'v1'], function(){
 	    Route::post('sellticket', 'TicketController@store');
 	    Route::post('importtickets', 'TicketController@importTickets');
 	    Route::post('payouts', 'PayoutsController@store');
+	    Route::post('inspections', 'InspectionController@store');
 	});
 
 
