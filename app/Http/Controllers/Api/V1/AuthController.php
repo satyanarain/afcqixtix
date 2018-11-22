@@ -55,8 +55,6 @@ class AuthController extends Controller
         {
             $shift->end_timestamp = date('Y-m-d H:i:s');
             $shift->save();
-        }else{
-            return response()->json(['statusCode'=>'Error', 'data'=>'Invalid abstract number!']);
         }
 
         JWTAuth::parseToken()->invalidate();
