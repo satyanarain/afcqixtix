@@ -46,17 +46,10 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'abstract_no' => 'required'
-        ]);
-
-        if($validator->fails())
+        if($request->abstract_no)
         {
-            return response()->json(['statusCode'=>'Error', 'data'=>$validator->errors()]);
-        }
-        $abstract_no = $request->abstract_no;
-
-        $shift = ShiftStart::where('abstract_no', $abstract_no)->first();
+            $shift = ShiftStart::where('abstract_no', $abstract_no)->first();
+        }        
 
         if($shift)
         {
