@@ -324,6 +324,11 @@ class WaybillController extends Controller
         return view('waybills.submitform',compact('waybills','vehicles','duties','services','crew','etm_ticket_amount','etm_pass_amount','epurse_amount','pass_amount','items','total_payout','shift_details'));
     }
     
+    public function saveaudit()
+    {
+        echo '<pre>';print_r($_POST);die;
+    }
+
     public function close()
     {
         if(!$this->checkActionPermission('waybills','view'))

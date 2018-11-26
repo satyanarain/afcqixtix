@@ -1,3 +1,5 @@
+{{ csrf_field() }}   
+<input type="hidden" name="waybill_id" value="{{$waybills->id}}">
 <div class="form-group ">
      {!! Form::label('conductor', Lang::get('Conductor'), ['class' => 'col-md-2 control-label']) !!}
     <div class="col-md-2 col-sm-12">

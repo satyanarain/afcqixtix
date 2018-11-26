@@ -6,8 +6,8 @@
 @section('content')
 @include('partials.form_header_full')
                {!! Form::model($waybills, [
-        'method' => 'PATCH',
-        'route' => ['waybills.update', $waybills->id],
+        'method' => 'POST',
+        'route' => ['waybills.saveaudit'],
         'files'=>true,
         'enctype' => 'multipart/form-data',
          'class'=>'form-horizontal'
