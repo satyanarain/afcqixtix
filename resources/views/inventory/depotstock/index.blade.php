@@ -64,10 +64,6 @@
     </div>
     <!-- /.col -->
 </div>
- </div>
-
-<!-- /.row -->
-
-@include('partials.bustypes_order_header')
+</div>
 @include('partials.table_script_order')
 @stop

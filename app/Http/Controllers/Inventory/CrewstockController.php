@@ -266,7 +266,7 @@ class CrewStockController extends Controller
     public function summary()
     {
         $summary = DB::table('inv_crew_total_stock')
-                    ->select('items_id', 'qty', 'crew_id')
+                    ->select('items_id', 'qty', 'crew_id', 'denom_id', 'series')
                     ->get();
         foreach ($summary as $key => $value) 
         {
@@ -279,6 +279,14 @@ class CrewStockController extends Controller
                             ->where('id', $value->crew_id)
                             ->first()
                             ->crew_name;
+
+            if($value->denom_id)
+            {
+                $value->denom = DB::table('denominations')
+                            ->where('id', $value->denom_id)
+                            ->first()
+                            ->description;
+            }
         }
         return view('inventory.crewstock.summary', compact('summary'));
     }

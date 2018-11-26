@@ -265,7 +265,7 @@ class DepotstockController extends Controller
     public function summary()
     {
         $summary = DB::table('inv_centerstock_depotstock')
-                    ->select('items_id', 'qty', 'depot_id')
+                    ->select('items_id', 'qty', 'depot_id', 'denom_id', 'series')
                     ->get();
         foreach ($summary as $key => $value) 
         {
@@ -277,6 +277,14 @@ class DepotstockController extends Controller
                             ->where('id', $value->depot_id)
                             ->first()
                             ->name;
+
+            if($value->denom_id)
+            {
+                $value->denom = DB::table('denominations')
+                            ->where('id', $value->denom_id)
+                            ->first()
+                            ->description;
+            }
         }
         return view('inventory.depotstock.summary', compact('summary'));
     }
