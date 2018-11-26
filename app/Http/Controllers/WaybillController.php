@@ -268,9 +268,67 @@ class WaybillController extends Controller
             ->pluck('crew_name', 'id');
             //->get(); 
        //echo '<pre>';print_r($duties);die;
-        return view('waybills.submitform',compact('waybills','vehicles','duties','services','crew'));
+        $etm_ticket_amount = DB::table('tickets')
+                    ->where('abstract_id','=',$waybills->abstract_no)
+                    ->where('ticket_type','=','Ticket')
+                    ->sum('total_amt');
+        $etm_pass_amount = DB::table('tickets')
+                    ->where('abstract_id','=',$waybills->abstract_no)
+                    ->where('ticket_type','=','ETMPass')
+                    ->sum('total_amt');
+        $epurse_amount = DB::table('tickets')
+                    ->where('abstract_id','=',$waybills->abstract_no)
+                    ->where('ticket_type','=','EPurse')
+                    ->sum('total_amt');
+        $pass_amount = DB::table('tickets')
+                    ->where('abstract_id','=',$waybills->abstract_no)
+                    ->where('ticket_type','=','Pass')
+                    ->sum('total_amt');
+        $items = DB::table('inv_crew_stock')
+                    ->select('*','inv_crew_stock.id as stock_id','denominations.description as denom','denominations.id as denomination_id')
+                    ->leftjoin('inv_items_master','inv_items_master.id','inv_crew_stock.items_id')
+                    ->leftjoin('denominations','denominations.id','inv_crew_stock.denom_id')
+                    //->leftjoin('inv_items_master','inv_items_master.id','inv_crew_stock.items_id')
+                    ->where('inv_crew_stock.crew_id',$waybills->conductor_id)
+                    ->orderBy('inv_crew_stock.end_sequence','desc')
+                    ->get();
+        foreach($items as $key=>$item){
+            $items_audited = DB::table('audit_inventory')
+                    ->select('audit_inventory.*','inv_items_master.*','denominations.id as denomination_id')
+                    ->leftjoin('inv_items_master','inv_items_master.id','audit_inventory.items_id')
+                    ->leftjoin('denominations','denominations.id','audit_inventory.denom_id')
+                    ->where('audit_inventory.items_id',$item->items_id)
+                    ->where('audit_inventory.denom_id',$item->denom_id)
+                    ->get();
+            if(count($items_audited)){
+                $items[$key]->start_sequence = $items_audited[0]->end_sequence;
+            }
+            //echo '<pre>';print_r($items_audited);
+        }
+        $total_payout = DB::table('payouts')
+                    ->where('abstract_no','=',$waybills->abstract_no)
+                    ->sum('amount');
+        $shift_details = DB::table('shift_start')
+                    ->select('shift_start.*','crew.crew_name as conductor_name','crew1.crew_name as driver_name',
+                            'vehicles.vehicle_registration_number','bus_types.bus_type','routes.route','duties.duty_number','shifts.shift')
+                    ->leftjoin('crew','crew.id','shift_start.conductor_id')
+                    ->leftjoin('crew as crew1','crew1.id','shift_start.driver_id')
+                    ->leftjoin('routes','routes.id','shift_start.route_id')
+                    ->leftjoin('duties','duties.id','shift_start.duty_id')
+                    ->leftjoin('shifts','shifts.id','shift_start.shift_id')
+                    ->leftjoin('vehicles','vehicles.id','shift_start.vehicle_id')
+                    ->leftjoin('bus_types','vehicles.bus_type_id','bus_types.id')
+                    ->where('shift_start.abstract_no',$waybills->abstract_no)
+                    ->first();
+        //echo '<pre>';print_r($items);die;
+        return view('waybills.submitform',compact('waybills','vehicles','duties','services','crew','etm_ticket_amount','etm_pass_amount','epurse_amount','pass_amount','items','total_payout','shift_details'));
     }
     
+    public function saveaudit()
+    {
+        echo '<pre>';print_r($_POST);die;
+    }
+
     public function close()
     {
         if(!$this->checkActionPermission('waybills','view'))
@@ -395,7 +453,7 @@ class WaybillController extends Controller
                 if($this->checkActionPermission('waybills','view'))
                     $action.= '<a style="cursor: pointer;" title="View" data-toggle="modal" data-target="#'.$val->id.'"  onclick="viewDetails('.$val->id.',\'view_detail\')"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
                 
-                if($this->checkActionPermission('audits','create'))
+                if($this->checkActionPermission('audits','create') && $val->status=="s")
                 {
                     $action.='<a  href="'.route("waybills.auditdetail",$val->id).'" class="" title="Audit Waybill" ><span class="fa fa-briefcase"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
                 }
@@ -425,6 +483,10 @@ class WaybillController extends Controller
         if ($request->input('amount_payable')){
             $query = DB::table('cash_collection')
                     ->insertGetId(['abstract_no'=>$request['abstract_no'],'amount_payable'=>$request['amount_payable'],'cash_remitted'=>$request['cash_remitted'],'cash_challan_no'=>$request['cash_challan_no']]);
+        
+            $query = DB::table('waybills')
+            ->where('abstract_no', '=', $request['abstract_no'])
+            ->update(['status' => 's']);
         }
         return view('waybills.cash_collection.create');
     }

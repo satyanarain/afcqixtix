@@ -12,8 +12,8 @@
     <div class="col-xs-12">
       <div class="box">
             <div class="box-header">
-               <h3 class="box-title">Approve Master Log</h3>
-               
+               <h3 class="box-title">Approve Master Log </h3>
+               <button class="btn btn-success pull-right" onclick="window.history.back();" type="button">Back</button>
             </div>
              @include('partials.message')
             <!-- /.box-header -->

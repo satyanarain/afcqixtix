@@ -8,7 +8,7 @@ use Notifynder;
 use DB;
 use Schema;
 use Response;
-use App\Models\EtmDetail;
+use App\Models\ETMDetail;
 use App\Models\Country;
 use App\Http\Requests;
 use Illuminate\Http\Request;
