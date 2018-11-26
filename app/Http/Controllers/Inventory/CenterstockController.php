@@ -228,4 +228,26 @@ class CenterstockController extends Controller
      * @param  int  $id
      * @return Response
      */
+    public function summary()
+    {
+        $summary = DB::table('inv_itemsquantity_stock')
+                    ->select('items_id', 'qty', 'denom_id', 'series')
+                    ->get();
+        foreach ($summary as $key => $value) 
+        {
+            $value->item = DB::table('inv_items_master')
+                            ->where('id', $value->items_id)
+                            ->first()
+                            ->name;
+            if($value->denom_id)
+            {
+                $value->denom = DB::table('denominations')
+                            ->where('id', $value->denom_id)
+                            ->first()
+                            ->description;
+            }
+            
+        }
+        return view('inventory.centerstock.summary', compact('summary'));
+    }
  }

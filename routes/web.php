@@ -235,21 +235,27 @@ Route::group(['middleware' => ['auth']], function () {
     //Manage inventory route
     //@Auther Subhash Chandra, {email: subash_chandra@opiant.in}
     Route::group(['prefix'=>'inventory', 'namespace'=>'Inventory', 'as'=>'inventory.'], function(){
-        Route::resource('centerstock', 'CenterstockController');
-        Route::resource('depotstock', 'DepotstockController');
+        Route::resource('centerstock', 'CenterstockController')->except('show');
+        Route::group(['prefix'=>'centerstock', 'as'=>'centerstock.'], function(){
+            Route::get('summary', 'CenterstockController@summary')->name('summary');
+        });
+
+        Route::resource('depotstock', 'DepotstockController')->except('show');
         Route::group(['prefix'=>'depotstock', 'as'=>'depotstock.'], function(){
             Route::post('getseries', 'DepotstockController@getSeries')->name('getseries');
             Route::post('getstartsequence', 'DepotstockController@getStartSequence')->name('getstartsequence');
             Route::post('validateendsequence', 'DepotstockController@validateEndSequence')->name('validateendsequence');
             Route::post('validatequantity', 'DepotstockController@validateQuantity')->name('validatequantity');
+            Route::get('summary', 'DepotstockController@summary')->name('summary');
         });
 
-        Route::resource('crewstock', 'CrewstockController');
+        Route::resource('crewstock', 'CrewstockController')->except('show');
         Route::group(['prefix'=>'crewstock', 'as'=>'crewstock.'], function(){
             Route::post('getseries', 'CrewstockController@getSeries')->name('getseries');
             Route::post('getstartsequence', 'CrewstockController@getStartSequence')->name('getstartsequence');
             Route::post('validateendsequence', 'CrewstockController@validateEndSequence')->name('validateendsequence');
             Route::post('validatequantity', 'CrewstockController@validateQuantity')->name('validatequantity');
+            Route::get('summary', 'CrewstockController@summary')->name('summary');
         });
 
         Route::resource('returncrewstock', 'ReturnCrewstockController');

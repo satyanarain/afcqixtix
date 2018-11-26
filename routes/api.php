@@ -22,5 +22,12 @@ Route::group(['namespace'=>'Api\V1', 'prefix'=>'v1'], function(){
 		Route::post('tripstart', 'TripStartController@store');
 	    Route::post('sellticket', 'TicketController@store');
 	    Route::post('importtickets', 'TicketController@importTickets');
+	    Route::post('payouts', 'PayoutsController@store');
+	    Route::post('inspections', 'InspectionController@store');
 	});
+
+
+
+	/*Inventory Notification CRON JOBs*/
+	Route::get('notifications/inventory', 'Notifications\InventoryController@index');
 });

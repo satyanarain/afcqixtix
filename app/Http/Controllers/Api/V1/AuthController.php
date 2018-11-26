@@ -7,6 +7,7 @@ use JWTAuth;
 use Validator;
 use App\Models\Crew;
 use App\Models\Setting;
+use App\Models\ShiftStart;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -43,8 +44,19 @@ class AuthController extends Controller
     	}
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
+        if($request->abstract_no)
+        {
+            $shift = ShiftStart::where('abstract_no', $abstract_no)->first();
+        }        
+
+        if($shift)
+        {
+            $shift->end_timestamp = date('Y-m-d H:i:s');
+            $shift->save();
+        }
+
         JWTAuth::parseToken()->invalidate();
         return response()->json(['statusCode'=>'Ok', 'data'=>'Token destroyed successfully.']);
     }

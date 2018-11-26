@@ -262,4 +262,24 @@ class CrewStockController extends Controller
             return response()->json(['status'=>'Error', 'errorCode'=>'NO_STOCK', 'data'=>'No stock available. Please contact to admin.']);
         }
     }
+
+    public function summary()
+    {
+        $summary = DB::table('inv_crew_total_stock')
+                    ->select('items_id', 'qty', 'crew_id')
+                    ->get();
+        foreach ($summary as $key => $value) 
+        {
+            $value->item = DB::table('inv_items_master')
+                            ->where('id', $value->items_id)
+                            ->first()
+                            ->name;
+
+            $value->crew = DB::table('crew')
+                            ->where('id', $value->crew_id)
+                            ->first()
+                            ->crew_name;
+        }
+        return view('inventory.crewstock.summary', compact('summary'));
+    }
 }

@@ -261,4 +261,23 @@ class DepotstockController extends Controller
             return response()->json(['status'=>'Error', 'errorCode'=>'NO_STOCK', 'data'=>'No stock available. Please contact to admin.']);
         }
     }
+
+    public function summary()
+    {
+        $summary = DB::table('inv_centerstock_depotstock')
+                    ->select('items_id', 'qty', 'depot_id')
+                    ->get();
+        foreach ($summary as $key => $value) 
+        {
+            $value->item = DB::table('inv_items_master')
+                            ->where('id', $value->items_id)
+                            ->first()
+                            ->name;
+            $value->depot = DB::table('depots')
+                            ->where('id', $value->depot_id)
+                            ->first()
+                            ->name;
+        }
+        return view('inventory.depotstock.summary', compact('summary'));
+    }
 }
