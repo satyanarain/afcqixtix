@@ -33,7 +33,7 @@ class InventoryController extends Controller
 			{
 				if($svalue->item_id == $rvalue->items_id)
 				{
-					if($rvalue->item_qty < $svalue->min_stock)
+					if($rvalue->item_qty <= $svalue->min_stock)
 					{
 						$notifyTos = User::whereIn('id', json_decode($svalue->notify_to))->select('email', 'name')->get();
 						$item = DB::table('inv_items_master')->where('id', $svalue->item_id)->select('name')->first();
@@ -67,7 +67,7 @@ class InventoryController extends Controller
 			{
 				if($svalue->item_id == $rvalue->items_id && $svalue->depot_id == $rvalue->depot_id)
 				{
-					if($rvalue->item_qty < $svalue->min_stock)
+					if($rvalue->item_qty <= $svalue->min_stock)
 					{
 						$notifyTos = User::whereIn('id', json_decode($svalue->notify_to))->select('email', 'name')->get();
 						$item = DB::table('inv_items_master')->where('id', $svalue->item_id)->select('name')->first();
