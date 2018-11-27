@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Inventory;
 
 use DB;
+use Session;
 use Validator;
 use App\Models\Crew;
 use App\Models\Depot;
@@ -66,8 +67,46 @@ class CrewStockController extends Controller
      */
     public function store(StoreCrewStockRequest $request)
     {
-        $stock = $this->crewstock->create($request);
+        if($request->items_id == 2)
+        {
+            $centerStock = DB::table('inv_centerstock_depotstock')->where('items_id', $request->items_id)->first();
+            if($centerStock)
+            {
+                if($centerStock->qty < $request->quantity)
+                {
+                    Session::flash('flash_message_warning', "Stock is below the required quantity.");
+                    return redirect()->back();
+                }
+            }
+        }
 
+        if($request->items_id == 1)
+        {
+            //return $request->quantity;
+            //return response()->json($request->all());
+            $denominations = $request->denom_id;
+            $serieses = $request->series;
+            $start_sequences = $request->start_sequence;
+            $end_sequences = $request->end_sequence;
+            //return response()->json($denominations);
+            foreach ($denominations as $key => $denomination) 
+            {
+                $centerStock = DB::table('inv_centerstock_depotstock')->where([['items_id', $request->items_id], ['denom_id', $denomination], ['series', $serieses[$key]], ['depot_id', $request->depot_id]])->first();
+                //return response()->json($centerStock);
+                $quantityToAssign = $end_sequence[$key] - $start_sequences[$key] + 1;
+                if($centerStock)
+                {
+                    if($centerStock->qty < $quantityToAssign)
+                    {
+                        Session::flash('flash_message_warning', "Stock is below the required quantity.");
+                        return redirect()->back();
+                    }
+                }
+            }
+            
+        }
+
+        $stock = $this->crewstock->create($request);
         return redirect()->route('inventory.crewstock.index');
     }
 

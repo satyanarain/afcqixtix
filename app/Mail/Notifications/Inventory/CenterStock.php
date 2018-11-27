@@ -13,16 +13,20 @@ class CenterStock extends Mailable
 
     public $userName;
     public $itemName;
+    public $minStock;
+    public $remainingStock;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($userName, $itemName)
+    public function __construct($userName, $itemName, $minStock, $remainingStock)
     {
         $this->userName = $userName;
         $this->itemName = $itemName;
+        $this->minStock = $minStock;
+        $this->remainingStock = $remainingStock;
     }
 
     /**

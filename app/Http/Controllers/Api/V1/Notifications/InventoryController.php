@@ -41,7 +41,7 @@ class InventoryController extends Controller
 						{
 							foreach ($notifyTos as $key => $notifyTo) 
 							{
-								Mail::to($notifyTo->email)->send(new CenterStock($notifyTo->name, $item->name));
+								Mail::to($notifyTo->email)->send(new CenterStock($notifyTo->name, $item->name, $svalue->min_stock, $rvalue->item_qty));
 							}
 						}
 					}
@@ -77,7 +77,7 @@ class InventoryController extends Controller
 						{
 							foreach ($notifyTos as $key => $notifyTo) 
 							{
-								Mail::to($notifyTo->email)->send(new DepotStock($notifyTo->name, $item->name, $depot->name));
+								Mail::to($notifyTo->email)->send(new DepotStock($notifyTo->name, $item->name, $depot->name, $svalue->min_stock, $rvalue->item_qty));
 							}
 						}
 					}

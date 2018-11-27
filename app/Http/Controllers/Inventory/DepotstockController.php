@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Inventory;
 
 use DB;
+use Session;
 use Validator;
 use App\Models\Depot;
 use App\Models\DepotStock;
@@ -64,12 +65,34 @@ class DepotstockController extends Controller
      */
     public function store(StoreDepotStockRequest $request)
     {
-        $stock = DB::table('inv_itemsquantity_stock')->where([['denom_id', $request->denom_id], ['items_id', $request->items_id], ['series', $request->series]])->first();
-        if($stock){
-            $stock = $this->depotstock->create($request);
-        }else{
-            return response()->json(['status'=>'Error', 'errorCode'=>'NO_STOCK', 'data'=>'No stock available. Please contact to admin.']);
-        }        
+        if($request->items_id == 2)
+        {
+            $centerStock = DB::table('inv_itemsquantity_stock')->where('items_id', $request->items_id)->first();
+            if($centerStock)
+            {
+                if($centerStock->qty < $request->quantity)
+                {
+                    Session::flash('flash_message_warning', "Stock is below the required quantity.");
+                    return redirect()->back();
+                }
+            }
+        }
+
+        if($request->items_id == 1)
+        {
+            $centerStock = DB::table('inv_itemsquantity_stock')->where([['items_id', $request->items_id], ['denom_id', $request->denom_id], ['series', $request->series]])->first();
+            if($centerStock)
+            {
+                if($centerStock->qty < $request->quantity)
+                {
+                    Session::flash('flash_message_warning', "Stock is below the required quantity.");
+                    return redirect()->back();
+                }
+            }
+        }
+        
+        $stock = $this->depotstock->create($request);
+              
 
         return redirect()->route('inventory.depotstock.index');
     }

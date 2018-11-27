@@ -14,17 +14,21 @@ class DepotStock extends Mailable
     public $userName;
     public $itemName;
     public $depot;
+    public $minStock;
+    public $remainingStock;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($userName, $itemName, $depot)
+    public function __construct($userName, $itemName, $depot, $minStock, $remainingStock)
     {
         $this->userName = $userName;
         $this->itemName = $itemName;
         $this->depot = $depot;
+        $this->minStock = $minStock;
+        $this->remainingStock = $remainingStock;
     }
 
     /**

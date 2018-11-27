@@ -28,18 +28,6 @@ class DepotStockRepository implements DepotStockRepositoryContract
 
     public function create($requestData) 
     { 
-        if($requestData->items_id == 2)
-        {
-            $centerStock = DB::table('inv_itemsquantity_stock')->where('items_id', $requestData->items_id)->first();
-            if($centerStock)
-            {
-                if($centerStock->qty < $requestData->quantity)
-                {
-                    Session::flash('flash_message', "Stock is below the required quantity.");
-                    return;
-                }
-            }
-        }
         $input = $requestData->all();
         $input['center_head_id'] = Auth::id();
         /*if($requestData->items_id == 1)
