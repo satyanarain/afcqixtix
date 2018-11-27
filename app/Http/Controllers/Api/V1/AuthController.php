@@ -31,6 +31,9 @@ class AuthController extends Controller
     	{
     		$token = JWTAuth::fromUser($crew);
 
+            //update token in database
+            Crew::where([['crew_id', $request->username], ['password', $request->password]])->update(['login_jwt'=>$token]);
+
     		//get etm data sync time in seconds form settings
             $sync_time = 120; //default value
             $settings = Setting::where('setting_name', 'ticket_dat')->first();

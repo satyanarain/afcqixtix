@@ -54,5 +54,5 @@
         </div>
     </div>
 </div>
-@include('partials.table_script_order')
+@include('partials.table_script_order')	
 @endsection

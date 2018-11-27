@@ -16,7 +16,7 @@ class InventoryController extends Controller
 {
 	public function index()
 	{
-		/*$settingsCenterStock = DB::table('inv_notification_centerstock')
+		$settingsCenterStock = DB::table('inv_notification_centerstock')
 								->select('item_id', 'min_stock', 'notify_to')
 								->get();
 
@@ -47,7 +47,7 @@ class InventoryController extends Controller
 					}
 				}
 			}
-		}*/
+		}
 
 
 		$settingsDepotStock = DB::table('inv_notification_depotstock')

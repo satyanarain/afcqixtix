@@ -64,8 +64,12 @@ class DepotstockController extends Controller
      */
     public function store(StoreDepotStockRequest $request)
     {
-        //return response()->json($request->all());
-        $stock = $this->depotstock->create($request);
+        $stock = DB::table('inv_itemsquantity_stock')->where([['denom_id', $request->denom_id], ['items_id', $request->items_id], ['series', $request->series]])->first();
+        if($stock){
+            $stock = $this->depotstock->create($request);
+        }else{
+            return response()->json(['status'=>'Error', 'errorCode'=>'NO_STOCK', 'data'=>'No stock available. Please contact to admin.']);
+        }        
 
         return redirect()->route('inventory.depotstock.index');
     }
