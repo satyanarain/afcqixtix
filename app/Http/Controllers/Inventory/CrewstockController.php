@@ -93,7 +93,8 @@ class CrewStockController extends Controller
             {
                 $centerStock = DB::table('inv_centerstock_depotstock')->where([['items_id', $request->items_id], ['denom_id', $denomination], ['series', $serieses[$key]], ['depot_id', $request->depot_id]])->first();
                 //return response()->json($centerStock);
-                $quantityToAssign = $end_sequence[$key] - $start_sequences[$key] + 1;
+                $quantityToAssign = $end_sequences[$key] - $start_sequences[$key] + 1;
+                //return $quantityToAssign."Hello";
                 if($centerStock)
                 {
                     if($centerStock->qty < $quantityToAssign)
