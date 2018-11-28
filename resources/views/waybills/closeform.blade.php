@@ -1,5 +1,5 @@
 {{ csrf_field() }}   
-<input type="hidden" name="waybill_id" value="{{$waybills->id}}">
+<input type="hidden" name="waybill_id" value="{{$waybills->id}}" readonly="readonly">
 <div class="form-group ">
      {!! Form::label('conductor', Lang::get('Conductor'), ['class' => 'col-md-2 control-label']) !!}
     <div class="col-md-2 col-sm-12">
@@ -20,15 +20,15 @@
 </div> 
 <div class="form-group ">
     <div class="actual_conductor_id" style="display: none;">
-    {!! Form::label('conductor', Lang::get('Actual Conductor'), ['class' => 'col-md-2 control-label']) !!}
+    {!! Form::label('new_conductor_id', Lang::get('Actual Conductor'), ['class' => 'col-md-2 control-label']) !!}
     <div class="col-md-4 col-sm-12">
-    {!! Form::select('conductor', $crew,null, ['class' => 'col-md-6 form-control']) !!}
+    {!! Form::select('new_conductor_id', $crew,null, ['class' => 'col-md-6 form-control','placeholder'=>'Select New Conductor']) !!}
     </div>
     </div>
     <div class="actual_driver_id" style="display: none;">
-    {!! Form::label('driver', Lang::get('Actual Driver'), ['class' => 'col-md-2 control-label']) !!}
+    {!! Form::label('new_driver_id', Lang::get('Actual Driver'), ['class' => 'col-md-2 control-label']) !!}
     <div class="col-md-4 col-sm-12">
-        {!! Form::select('driver', $crew,null, ['class' => 'col-md-6 form-control']) !!}
+        {!! Form::select('new_driver_id', $crew,null, ['class' => 'col-md-6 form-control','placeholder'=>'Select New Driver']) !!}
     </div>
     </div>
 </div>
@@ -88,7 +88,7 @@
 
 
 
-<div class="form-group ">
+<!--<div class="form-group ">
      {!! Form::label('paper_roll_issued', Lang::get('Paper Roll Issued'), ['class' => 'col-md-2 control-label']) !!}
     <div class="col-md-4 col-sm-12">
           {!! Form::text('paper_roll_issued', null, ['class' => 'col-md-6 form-control']) !!}
@@ -98,7 +98,7 @@
     <div class="col-md-4 col-sm-12">
           {!! Form::text('paper_roll_received', null, ['class' => 'col-md-6 form-control']) !!}
     </div>
-</div>
+</div>-->
 <div class="form-group ">
      {!! Form::label('portable_ups_issued', Lang::get('Portable UPS Issued'), ['class' => 'col-md-2 control-label']) !!}
     <div class="col-md-4 col-sm-12">
@@ -198,9 +198,9 @@
                     <td>'.$item->start_sequence.'</td>
                     <td>';
                     if($item->end_sequence){
-                        echo '<input name="ticketstock-'.$item->id.'-'.$item->denomination_id.'" value="0" min="'.$item->start_sequence.'" price="'.$item->price.'" count="'.$count.'" max="'.$item->end_sequence.'" class="audit_items" type="text" style="width:50px;height:15px;">'.$item->end_sequence;
+                        echo '<input name="itemstock['.$item->id.']" value="0" min="'.$item->start_sequence.'" price="'.$item->price.'" count="'.$count.'" max="'.$item->end_sequence.'" class="audit_items" type="text" style="width:50px;height:15px;">'.$item->end_sequence;
                     }else{
-                        echo '<input name="item-stock-'.$item->id.'" value="0" min="'.$item->quantity.'" price="0" count="'.$count.'" max="'.$item->quantity.'" class="audit_items" type="text" style="width:50px;height:15px;">'.$item->quantity;
+                        echo '<input name="itemstock['.$item->id.']" value="0" min="'.$item->start_sequence.'" price="0" count="'.$count.'" max="'.$item->quantity.'" class="audit_items" type="text" style="width:50px;height:15px;">'.$item->quantity;
                     }
                     echo '</td>
                     <td style="text-align: right" class="ticket_sold_count'.$count.'">0</td>
@@ -233,13 +233,16 @@
     <div class="col-md-4 col-sm-12 total_cash">
          <?php echo $etm_ticket_amount+$etm_pass_amount;?>
     </div>
+    <input type="hidden" name="total_cash_value" class="total_cash_value" value="<?php echo $etm_ticket_amount+$etm_pass_amount;?>">
+    <input type="hidden" name="abstract_no" value="<?php echo $waybills->abstract_no?>" readonly="readonly">
+    <input type="hidden" name="depot_id" value="<?php echo $waybills->depot_id?>" readonly="readonly">
     <div class="col-md-2 col-sm-12 control-label">
         Total Payout (Rs.)
     </div>
     <div class="col-md-4 col-sm-12 total_payout">
          <?php echo $total_payout;?>
     </div>
-
+    <input type="hidden" name="total_payout_value" class="total_payout_value" value="<?php echo $total_payout;?>" readonly="readonly">
      
 </div> 
 <div class="form-group ">
@@ -269,7 +272,7 @@
     <div class="col-md-4 col-sm-12 payable_amount">
           <?php echo $etm_ticket_amount+$etm_pass_amount-$total_payout;?>
     </div>
-
+     <input type="hidden" name="payable_amount_value" class="payable_amount_value" value="<?php echo $etm_ticket_amount+$etm_pass_amount-$total_payout;?>" readonly="readonly">
      {!! Form::label('remarks', Lang::get('Remarks'), ['class' => 'col-md-2 control-label']) !!}
     <div class="col-md-4 col-sm-12">
           {!! Form::text('remarks', null, ['class' => 'col-md-6 form-control']) !!}
@@ -310,13 +313,16 @@
         var curr_val = parseInt($(this).val());
         var counter = $(this).attr('count');
         var price = $(this).attr('price');
-        if(parseInt(price)==0)
-            return false;
+//        alert(min);
+//        alert(curr_val);
+//        alert(max);
         if(curr_val<min || curr_val>max)
         {
             alert('invalid number');
             $(this).val(0);
             $(this).focus()
+            return false;
+        }else if(parseInt(price)==0){
             return false;
         }else{
             var ticketcount = curr_val-min;
@@ -328,8 +334,13 @@
             payable_amount += ticketvalue;
         }
         $(".total_ticket_value").html(sum);
+        //alert(total_cash);
+        $(".total_cash_value").val(parseInt(total_cash));
         $(".total_cash").html(total_cash);
+        
+        $(".payable_amount_value").val(payable_amount);
         $(".payable_amount").html(payable_amount);
+        
     });
     
     $(document).on("change", ".batta, .driver_incentive, .conductor_incentive, .tea_allowance", function() {
@@ -339,7 +350,9 @@
         var conductor_incentive = parseInt($(".conductor_incentive").val());
         var tea_allowance = parseInt($(".tea_allowance").val());
         var updated_payable_amount = payable_amount-batta-driver_incentive-conductor_incentive-tea_allowance;
+        $(".payable_amount_value").val(updated_payable_amount);
         $(".payable_amount").html(updated_payable_amount);
+        
     });
     
 
