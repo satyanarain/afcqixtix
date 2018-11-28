@@ -31,7 +31,7 @@
                             <th>@lang('Start Sequence')</th>
                             <th>@lang('End Sequence')</th>
                             <th>@lang('Quantity')</th>
-                            <th>@lang('Vender_name')</th>
+                            <th>@lang('Vendor Name')</th>
                             <th>@lang('Date Received')</th>
                             <th>@lang('Challan Number')</th>
                             <th>File (if any)</th>
@@ -78,10 +78,6 @@
     </div>
     <!-- /.col -->
 </div>
- </div>
-
-<!-- /.row -->
-
-@include('partials.bustypes_order_header')
+</div>
 @include('partials.table_script_order')
 @stop

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Inventory;
 
 use DB;
+use Session;
 use Validator;
 use App\Models\Depot;
 use App\Models\DepotStock;
@@ -64,8 +65,34 @@ class DepotstockController extends Controller
      */
     public function store(StoreDepotStockRequest $request)
     {
-        //return response()->json($request->all());
+        if($request->items_id == 2)
+        {
+            $centerStock = DB::table('inv_itemsquantity_stock')->where('items_id', $request->items_id)->first();
+            if($centerStock)
+            {
+                if($centerStock->qty < $request->quantity)
+                {
+                    Session::flash('flash_message_warning', "Stock is below the required quantity.");
+                    return redirect()->back();
+                }
+            }
+        }
+
+        if($request->items_id == 1)
+        {
+            $centerStock = DB::table('inv_itemsquantity_stock')->where([['items_id', $request->items_id], ['denom_id', $request->denom_id], ['series', $request->series]])->first();
+            if($centerStock)
+            {
+                if($centerStock->qty < $request->quantity)
+                {
+                    Session::flash('flash_message_warning', "Stock is below the required quantity.");
+                    return redirect()->back();
+                }
+            }
+        }
+        
         $stock = $this->depotstock->create($request);
+              
 
         return redirect()->route('inventory.depotstock.index');
     }
@@ -265,7 +292,7 @@ class DepotstockController extends Controller
     public function summary()
     {
         $summary = DB::table('inv_centerstock_depotstock')
-                    ->select('items_id', 'qty', 'depot_id')
+                    ->select('items_id', 'qty', 'depot_id', 'denom_id', 'series')
                     ->get();
         foreach ($summary as $key => $value) 
         {
@@ -277,6 +304,14 @@ class DepotstockController extends Controller
                             ->where('id', $value->depot_id)
                             ->first()
                             ->name;
+
+            if($value->denom_id)
+            {
+                $value->denom = DB::table('denominations')
+                            ->where('id', $value->denom_id)
+                            ->first()
+                            ->description;
+            }
         }
         return view('inventory.depotstock.summary', compact('summary'));
     }

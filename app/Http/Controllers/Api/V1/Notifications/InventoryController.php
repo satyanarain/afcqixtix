@@ -16,7 +16,7 @@ class InventoryController extends Controller
 {
 	public function index()
 	{
-		/*$settingsCenterStock = DB::table('inv_notification_centerstock')
+		$settingsCenterStock = DB::table('inv_notification_centerstock')
 								->select('item_id', 'min_stock', 'notify_to')
 								->get();
 
@@ -33,7 +33,7 @@ class InventoryController extends Controller
 			{
 				if($svalue->item_id == $rvalue->items_id)
 				{
-					if($rvalue->item_qty < $svalue->min_stock)
+					if($rvalue->item_qty <= $svalue->min_stock)
 					{
 						$notifyTos = User::whereIn('id', json_decode($svalue->notify_to))->select('email', 'name')->get();
 						$item = DB::table('inv_items_master')->where('id', $svalue->item_id)->select('name')->first();
@@ -41,13 +41,13 @@ class InventoryController extends Controller
 						{
 							foreach ($notifyTos as $key => $notifyTo) 
 							{
-								Mail::to($notifyTo->email)->send(new CenterStock($notifyTo->name, $item->name));
+								Mail::to($notifyTo->email)->send(new CenterStock($notifyTo->name, $item->name, $svalue->min_stock, $rvalue->item_qty));
 							}
 						}
 					}
 				}
 			}
-		}*/
+		}
 
 
 		$settingsDepotStock = DB::table('inv_notification_depotstock')
@@ -67,7 +67,7 @@ class InventoryController extends Controller
 			{
 				if($svalue->item_id == $rvalue->items_id && $svalue->depot_id == $rvalue->depot_id)
 				{
-					if($rvalue->item_qty < $svalue->min_stock)
+					if($rvalue->item_qty <= $svalue->min_stock)
 					{
 						$notifyTos = User::whereIn('id', json_decode($svalue->notify_to))->select('email', 'name')->get();
 						$item = DB::table('inv_items_master')->where('id', $svalue->item_id)->select('name')->first();
@@ -77,7 +77,7 @@ class InventoryController extends Controller
 						{
 							foreach ($notifyTos as $key => $notifyTo) 
 							{
-								Mail::to($notifyTo->email)->send(new DepotStock($notifyTo->name, $item->name, $depot->name));
+								Mail::to($notifyTo->email)->send(new DepotStock($notifyTo->name, $item->name, $depot->name, $svalue->min_stock, $rvalue->item_qty));
 							}
 						}
 					}

@@ -76,7 +76,7 @@
         <div class="input-group-addon">
           <i class="fa fa-calendar"></i>
         </div>
-        {!! Form::text('date_received', isset($stock)?date('d-m-Y', strtotime($stock->date_received)):null, ['class' => 'multiple_date','readonly'=>'readonly','required' => 'required']) !!}
+        {!! Form::text('date_received', isset($stock)?date('d-m-Y', strtotime($stock->date_received)):null, ['class' => 'multiple_date readonly','required' => 'required']) !!}
       </div>
     </div>
     <!-- /.input group -->
@@ -84,7 +84,7 @@
   <div class="form-group" >
     {!! Form::label('fileupload', Lang::get('Upload File (if any)'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12 required">
-      {!! Form::file('fileupload', ['class' => 'col-md-6 form-control','required' => 'required']) !!}
+      {!! Form::file('fileupload', ['class' => 'col-md-6 form-control', 'accept'=>"image/*,.pdf"]) !!}
     </div>
   </div>  
 </div>    
@@ -102,6 +102,15 @@
   </div>
 </div>
 <script type="text/javascript">
+  $(document).on('click', '.fa-calendar', function(){
+      //alert('Hi');
+      $('#date_received').focus();
+  });
+
+  $(".readonly").on('keydown paste', function(e){
+      e.preventDefault();
+  });
+
   $(document).ready(function(){
     var itemsid = document.getElementById("items_id").value;
     if(parseInt(itemsid) == 1)
@@ -205,5 +214,15 @@ var myLimit = 1;
   $(document).on('click', '.removeDenominationsRow', function(){
     $(this).parent().parent().remove();
   });
+
+$(document).on('change', '#fileupload', function() 
+{
+    var fileSize =  this.files[0].size/1024/1024;
+    if(fileSize > 1)
+    {
+        $('#fileupload').val('');
+        alert('File must me less than 1MB.');
+    }
+});
 </script>
 

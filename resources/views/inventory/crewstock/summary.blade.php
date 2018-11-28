@@ -20,6 +20,8 @@
 	                         <tr>
 	                         	<th>@lang('Crew Name')</th>
 	                            <th>@lang('Items')</th>
+	                            <th>@lang('Denomination')</th>
+	                            <th>@lang('Series')</th>
 	                            <th>Quantity</th>
 	                        </tr>
 	                    </thead>
@@ -28,6 +30,20 @@
 	                        <tr class="nor_f">
 	                        	<td>{{$value->crew}}</td>
 	                            <td>{{$value->item}}</td>
+	                            <td>
+	                            	@if($value->denom)
+	                            	{{$value->denom}}
+	                            	@else
+	                            	{{'N/A'}}
+	                            	@endif
+	                            </td>
+	                            <td>
+	                            	@if($value->series)
+	                            	{{$value->series}}
+	                            	@else
+	                            	{{'N/A'}}
+	                            	@endif
+	                            </td>
 	                            <td>{{$value->qty}}</td>
 	                        </tr>
 	                        @endforeach
@@ -38,4 +54,5 @@
         </div>
     </div>
 </div>
+@include('partials.table_script_order')
 @endsection

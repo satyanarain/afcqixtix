@@ -9,6 +9,7 @@
 </ol>
 @stop
 @section('content')
+@include('partials.message')
 @include('partials.form_header')
                 {!! Form::open([
                 'route' => 'inventory.centerstock.store',

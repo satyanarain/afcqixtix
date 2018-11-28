@@ -10,6 +10,7 @@
 @stop
 @section('content')
 @include('partials.form_header')
+@include('partials.message')
                 {!! Form::open([
                 'route' => 'inventory.crewstock.store',
                 'files'=>true,
