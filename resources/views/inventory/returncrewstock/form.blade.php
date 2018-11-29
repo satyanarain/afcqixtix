@@ -8,7 +8,7 @@
 <div class="form-group" >
   <label class ='col-md-3 control-label'>Crews</label>
   <div class="col-md-7 col-sm-12 required">
-    {!!Form::select('crew_id', $crews, isset($stock)?$stock->crew_id:null, ['placeholder'=>'Please select a crew', 'class'=>'form-control', 'id'=>'crew_id', 'required'])!!}
+    {!!Form::select('crew_id', [], isset($stock)?$stock->crew_id:null, ['placeholder'=>'Please select a crew', 'class'=>'form-control', 'id'=>'crew_id', 'required'])!!}
  </div>
 </div>
 
@@ -504,6 +504,47 @@ $(document).on('click', '.removeDenominationsRow', function(){
         });
 
   });*/
+
+
+  $(document).on('change', '#depot_id', function(){
+      var depot_id = $(this).val();
+
+      if(!depot_id)
+      {
+          return alert('Please select a valid depot');
+      }
+
+      var url = "{{route('inventory.crewstock.getdepotwisecrew', ':depotId')}}";
+
+      url = url.replace(':depotId', depot_id);
+
+      $.ajax({
+            url: url,
+            type: "GET",
+            dataType: "JSON",
+            success: function(response)
+            {   
+                var data = response;
+                if(data.status == 'Ok')
+                {
+                    var crews = data.data;      
+                    var options = "";
+                    $.each(crews, function(index, crew){
+                        options += '<option value="'+crew.id+'">'+crew.crew_name+'</option>'
+                    });                           
+
+                    $('#crew_id').html(options);
+                }else{
+                    
+                }
+            },
+            error: function(data)
+            {
+                console.log(data);
+            }
+        });
+
+  });
 
   $(document).on('blur', '.start_sequence', function(){
     var num = $(this).val();

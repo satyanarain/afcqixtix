@@ -33,6 +33,7 @@
                             <th>@lang('Start Sequence')</th>
                             <th>@lang('End Sequence')</th>
                             <th>@lang('Quantity')</th>
+                            <th>Created At</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -70,6 +71,9 @@
                                 @endif
                             </td>
                             <td>{{$value->quantity}}</td>
+                            <td>
+                                {{date('d-m-Y H:i:s', strtotime($value->created_at))}}
+                            </td>
                          </tr>
                         @endforeach
                         </tbody>

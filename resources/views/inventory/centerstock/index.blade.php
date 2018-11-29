@@ -35,6 +35,7 @@
                             <th>@lang('Date Received')</th>
                             <th>@lang('Challan Number')</th>
                             <th>File (if any)</th>
+                            <th>Created At</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -81,6 +82,9 @@
                                 @else
                                 {{'NA'}}
                                 @endif
+                            </td>
+                            <td>
+                                {{date('d-m-Y H:i:s', strtotime($value->created_at))}}
                             </td>
                          </tr>
                         @endforeach
