@@ -30,6 +30,7 @@ class WaybillRepository implements WaybillRepositoryContract {
 
     public function create($requestData) {
        $input = $requestData->all();
+       //echo '<pre>';echo '';print_r($requestData->all());die;
        $input['user_id'] = Auth::id();
        $crew_detail = Waybill::create($input);
        Session::flash('flash_message', "Waybill Created Successfully.");

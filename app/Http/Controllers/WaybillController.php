@@ -285,7 +285,7 @@ class WaybillController extends Controller
                     ->where('ticket_type','=','Pass')
                     ->sum('total_amt');
         $items = DB::table('inv_crew_stock')
-                    ->select('*','inv_crew_stock.id as stock_id','denominations.description as denom','denominations.id as denomination_id')
+                    ->select('*','inv_crew_stock.id as stock_id','inv_crew_stock.id as id','denominations.description as denom','denominations.id as denomination_id')
                     ->leftjoin('inv_items_master','inv_items_master.id','inv_crew_stock.items_id')
                     ->leftjoin('denominations','denominations.id','inv_crew_stock.denom_id')
                     //->leftjoin('inv_items_master','inv_items_master.id','inv_crew_stock.items_id')
@@ -295,16 +295,20 @@ class WaybillController extends Controller
         foreach($items as $key=>$item){
             $items_audited = DB::table('audit_inventory')
                     ->select('audit_inventory.*','inv_items_master.*','denominations.id as denomination_id')
-                    ->leftjoin('inv_items_master','inv_items_master.id','audit_inventory.items_id')
+                    ->leftjoin('inv_crew_stock','inv_crew_stock.id','audit_inventory.inv_crew_stock_id')
+                    ->leftjoin('inv_items_master','inv_items_master.id','inv_crew_stock.items_id')
                     ->leftjoin('denominations','denominations.id','audit_inventory.denom_id')
-                    ->where('audit_inventory.items_id',$item->items_id)
+                    ->where('audit_inventory.inv_crew_stock_id',$item->id)
                     ->where('audit_inventory.denom_id',$item->denom_id)
-                    ->get();
+                    ->orderBy('audit_inventory.id','desc')
+                    ->first();
+                   
             if(count($items_audited)){
-                $items[$key]->start_sequence = $items_audited[0]->end_sequence;
+                $items[$key]->start_sequence = $items_audited->start_sequence;
             }
             //echo '<pre>';print_r($items_audited);
         }
+        //echo '<pre>';print_r($items);die;
         $total_payout = DB::table('payouts')
                     ->where('abstract_no','=',$waybills->abstract_no)
                     ->sum('amount');
@@ -326,7 +330,45 @@ class WaybillController extends Controller
     
     public function saveaudit()
     {
-        echo '<pre>';print_r($_POST);die;
+        //echo '<pre>';print_r($_POST);die;
+        $query = DB::table('waybills')
+                    ->where('id', '=', $_POST['waybill_id'])
+                    ->update(['new_driver_id' => $_POST['new_driver_id'],'new_conductor_id' => $_POST['new_conductor_id'],
+                        'etm_no' => $_POST['etm_no'],'vehicle_id' => $_POST['vehicle_id'],
+                        'bag_no' => $_POST['bag_no'],'waybill_no' => $_POST['waybill_no'],'portable_ups_issued' => $_POST['portable_ups_issued'],
+                        'portable_ups_received' => $_POST['portable_ups_received'],'remarks' => $_POST['remarks']]);
+        foreach($_POST['itemstock'] as $stock_id=>$quantity)
+        {
+            if($quantity)
+            {
+                $stock_item_detail = DB::table('inv_crew_stock')
+                    ->leftjoin('denominations','denominations.id','inv_crew_stock.denom_id')
+                    ->select('inv_crew_stock.*','denominations.price')
+                    ->where('inv_crew_stock.id',$stock_id)
+                    ->first();
+                $updated_quantity = $quantity-$stock_item_detail->start_sequence;
+                $sold_ticket_value = $updated_quantity*$stock_item_detail->price;
+                //echo '<pre>';print_r($stock_item_detail);die;
+                $query = DB::table('audit_inventory')
+                    ->insertGetId(['inv_crew_stock_id'=>$stock_item_detail->id,'waybill_number'=>$_POST['abstract_no'],
+                    'depot_id'=>$stock_item_detail->depot_id,'crew_id'=>$stock_item_detail->crew_id,'denom_id'=>$stock_item_detail->denom_id,
+                    'series'=>$stock_item_detail->series,'start_sequence'=>$quantity,
+                    'end_sequence'=>$stock_item_detail->end_sequence,'sold_ticket_value'=>$sold_ticket_value,'quantity'=>$quantity]);
+            }
+        }
+        //echo '<pre>';print_r($_POST);die;
+
+        //echo '<pre>';print_r($stock_item_detail);die;
+        $query = DB::table('audit_remittance')
+                    ->insertGetId(['depot_id'=>$_POST['depot_id'],'waybill_number'=>$_POST['abstract_no'],
+                    'total_cash'=>$_POST['total_cash_value'],'total_payout'=>$_POST['total_payout_value'],'batta'=>$_POST['batta'],
+                    'driver_incentive'=>$_POST['driver_incentive'],'conductor_incentive'=>$_POST['conductor_incentive'],
+                    'tea_allowance'=>$_POST['tea_allowance'],'remarks'=>$_POST['remarks'],'payable_amount'=>$_POST['payable_amount_value']]);
+            
+        $query = DB::table('waybills')
+                    ->where('abstract_no', '=', $_POST['abstract_no'])
+                    ->update(['status' => 'c']);
+        return redirect()->route('waybills.index');
     }
 
     public function close()
@@ -480,7 +522,7 @@ class WaybillController extends Controller
         if(!$this->checkActionPermission('cash_collections','edit'))
             return redirect()->route('401');
         //echo '<pre>';print_r($request->all());die;
-        if ($request->input('amount_payable')){
+        if ($request->input('cash_remitted')){
             $query = DB::table('cash_collection')
                     ->insertGetId(['abstract_no'=>$request['abstract_no'],'amount_payable'=>$request['amount_payable'],'cash_remitted'=>$request['cash_remitted'],'cash_challan_no'=>$request['cash_challan_no']]);
         
