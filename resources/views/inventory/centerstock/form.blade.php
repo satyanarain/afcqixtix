@@ -33,7 +33,7 @@
         {!! Form::text('series[]', null, ['class' => 'col-md-6 form-control','required' => 'required']) !!}
       </td>
       <td>
-        {!! Form::text('start_sequence[]', null, ['class' => 'col-md-6 form-control','required' => 'required', 'onkeypress'=>'return numvalidate(event)']) !!}
+        {!! Form::text('start_sequence[]', null, ['class' => 'col-md-6 form-control start_sequence','required' => 'required', 'onkeypress'=>'return numvalidate(event)']) !!}
       </td>
       <td>
         {!! Form::text('end_sequence[]', null, ['class' => 'col-md-6 form-control','required' => 'required', 'onkeypress'=>'return numvalidate(event)']) !!}
@@ -196,7 +196,7 @@ var myLimit = 1;
         str += '<input class="col-md-6 form-control" required="required" name="series[]" type="text">'
         str += '</td>'
         str += '<td>'
-        str += '<input class="col-md-6 form-control" required="required" name="start_sequence[]" type="text" onkeypress="return numvalidate(event)">'
+        str += '<input class="col-md-6 form-control start_sequence" required="required" name="start_sequence[]" type="text" onkeypress="return numvalidate(event)">'
         str += '</td>'
         str += '<td>'
         str += '<input class="col-md-6 form-control" style="width:75%;" required="required" name="end_sequence[]" type="text" onkeypress="return numvalidate(event)"><button type="button" class="removeDenominationsRow btn btn-danger pull-right"><span class="fa fa-trash"></span></button>'
@@ -222,6 +222,15 @@ $(document).on('change', '#fileupload', function()
     {
         $('#fileupload').val('');
         alert('File must me less than 1MB.');
+    }
+});
+
+$(document).on('blur', '.start_sequence', function(){
+    var num = $(this).val();
+    if(num == 0)
+    {
+        $(this).val('');
+        return alert('Start Sequence can not be 0.');
     }
 });
 </script>

@@ -19,7 +19,7 @@ class CenterStockController extends Controller
     		$value->item_id = DB::table('inv_items_master')->where('id', $value->item_id)->first()->name;
     		$value->notify_to = DB::table('users')
                 ->whereIn('id', json_decode($value->notify_to))
-                ->select('email')
+                ->select('email', 'name')
                 ->get();
     	}
 
@@ -33,7 +33,7 @@ class CenterStockController extends Controller
             $value->depot_id = DB::table('depots')->where('id', $value->depot_id)->first()->name;
             $value->notify_to = DB::table('users')
                 ->whereIn('id', json_decode($value->notify_to))
-                ->select('email')
+                ->select('email', 'name')
                 ->get();
         }
 
@@ -53,7 +53,7 @@ class CenterStockController extends Controller
     				->get();
 
     	$admins = DB::table('users')
-    				->select('name', 'id')
+    				->select('name', 'id', 'email')
     				->orderBy('name', 'asc')
     				->get();
 
@@ -117,7 +117,7 @@ class CenterStockController extends Controller
                     ->get();
 
         $admins = DB::table('users')
-                    ->select('name', 'id')
+                    ->select('name', 'id', 'email')
                     ->orderBy('name', 'asc')
                     ->get();
 

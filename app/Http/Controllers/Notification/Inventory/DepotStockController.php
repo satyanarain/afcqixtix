@@ -38,7 +38,7 @@ class DepotStockController extends Controller
     				->get();
 
     	$admins = DB::table('users')
-    				->select('name', 'id')
+    				->select('name', 'id', 'email')
     				->orderBy('name', 'asc')
     				->get();
 
@@ -103,7 +103,7 @@ class DepotStockController extends Controller
                     ->get();
 
         $admins = DB::table('users')
-                    ->select('name', 'id')
+                    ->select('name', 'id', 'email')
                     ->orderBy('name', 'asc')
                     ->get();
 

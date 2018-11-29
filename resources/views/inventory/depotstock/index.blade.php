@@ -32,7 +32,6 @@
                             <th>@lang('Start Sequence')</th>
                             <th>@lang('End Sequence')</th>
                             <th>@lang('Quantity')</th>
-                           {{  actionHeading('Action', $newaction='') }}
                         </tr>
                     </thead>
                     <tbody>
@@ -40,19 +39,35 @@
                         <tr class="nor_f">
                             <td>{{$value->depot_name}}</td>
                             <td>{{$value->name}}</td>
-                            <td>{{$value->description}}</td>
-                            <td>{{$value->series}}</td>
-                            <td>{{$value->start_sequence}}</td>
-                            <td>{{$value->end_sequence}}</td>
-                            <td>{{$value->quantity}}</td>
                             <td>
-                                <?php $permission = getAllModulePermission('depotstocks');
-                                if(in_array('edit',$permission)){
-                                    echo '<a  href="'.route("inventory.depotstock.edit",$value->id).'" class="" title="Edit" ><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
-                                }elseif(in_array('edit',$permission)){?>
-                                        <a class="disabled"><span class="glyphicon glyphicon-pencil "></span></a>&nbsp;&nbsp;&nbsp;&nbsp;   
-                                <?php }?>
+                                @if($value->description)
+                                {{$value->description}}
+                                @else
+                                {{'N/A'}}
+                                @endif
                             </td>
+                            <td>
+                                @if($value->series)
+                                {{$value->series}}
+                                @else
+                                {{'N/A'}}
+                                @endif
+                            </td>
+                            <td>
+                                @if($value->start_sequence)
+                                {{$value->start_sequence}}
+                                @else
+                                {{'N/A'}}
+                                @endif
+                            </td>
+                            <td>
+                                @if($value->end_sequence)
+                                {{$value->end_sequence}}
+                                @else
+                                {{'N/A'}}
+                                @endif
+                            </td>
+                            <td>{{$value->quantity}}</td>
                          </tr>
                         @endforeach
                         </tbody>

@@ -504,5 +504,52 @@ $(document).on('click', '.removeDenominationsRow', function(){
         });
 
   });
+
+  $(document).on('change', '#depot_id', function(){
+      var depot_id = $(this).val();
+
+      if(!depot_id)
+      {
+          return alert('Please select a valid depot');
+      }
+
+      $.ajax({
+            url: "{{route('inventory.crewstock.getdepotwisecrew')}}",
+            type: "POST",
+            data: data,
+            dataType: "JSON",
+            success: function(response)
+            {   
+                var data = response;
+                if(data.status == 'Ok')
+                {
+                    $('#quantyty_errors').hide();                                 
+                }else{
+                    if(data.errorCode == 'NO_STOCK')
+                    {
+                      $('#quantyty_errors').text('Inventory not available in stock. Please contact to central stock head').show();
+                    }
+                    if(data.errorCode == 'NO_SERIES')
+                    {
+                      $('#quantyty_errors').text('End sequence is beyond the stock end sequence. Please contact to admin.').show();
+                    }
+                }
+            },
+            error: function(data)
+            {
+                console.log(data);
+            }
+        });
+
+  });
+
+  $(document).on('blur', '.start_sequence', function(){
+    var num = $(this).val();
+    if(num == 0)
+    {
+        $(this).val('');
+        return alert('Start Sequence can not be 0.');
+    }
+});
 </script>
 
