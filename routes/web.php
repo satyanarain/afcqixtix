@@ -256,6 +256,7 @@ Route::group(['middleware' => ['auth']], function () {
             Route::post('validateendsequence', 'CrewstockController@validateEndSequence')->name('validateendsequence');
             Route::post('validatequantity', 'CrewstockController@validateQuantity')->name('validatequantity');
             Route::get('summary', 'CrewstockController@summary')->name('summary');
+            Route::get('getdepotwisecrew/{depotId}', 'CrewstockController@getDepotWiseCrews')->name('getdepotwisecrew');
         });
 
         Route::resource('returncrewstock', 'ReturnCrewstockController');

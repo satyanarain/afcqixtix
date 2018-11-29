@@ -8,7 +8,7 @@
 <div class="form-group" >
   <label class ='col-md-3 control-label'>Crews</label>
   <div class="col-md-7 col-sm-12 required">
-    {!!Form::select('crew_id', $crews, isset($stock)?$stock->crew_id:null, ['placeholder'=>'Please select a crew', 'class'=>'form-control', 'id'=>'crew_id', 'required'])!!}
+    {!!Form::select('crew_id', [], isset($stock)?$stock->crew_id:null, ['placeholder'=>'Please select a crew', 'class'=>'form-control', 'id'=>'crew_id', 'required'])!!}
  </div>
 </div>
 
@@ -513,26 +513,28 @@ $(document).on('click', '.removeDenominationsRow', function(){
           return alert('Please select a valid depot');
       }
 
+      var url = "{{route('inventory.crewstock.getdepotwisecrew', ':depotId')}}";
+
+      url = url.replace(':depotId', depot_id);
+
       $.ajax({
-            url: "{{route('inventory.crewstock.getdepotwisecrew')}}",
-            type: "POST",
-            data: data,
+            url: url,
+            type: "GET",
             dataType: "JSON",
             success: function(response)
             {   
                 var data = response;
                 if(data.status == 'Ok')
                 {
-                    $('#quantyty_errors').hide();                                 
+                    var crews = data.data;      
+                    var options = "";
+                    $.each(crews, function(index, crew){
+                        options += '<option value="'+crew.id+'">'+crew.crew_name+'</option>'
+                    });                           
+
+                    $('#crew_id').html(options);
                 }else{
-                    if(data.errorCode == 'NO_STOCK')
-                    {
-                      $('#quantyty_errors').text('Inventory not available in stock. Please contact to central stock head').show();
-                    }
-                    if(data.errorCode == 'NO_SERIES')
-                    {
-                      $('#quantyty_errors').text('End sequence is beyond the stock end sequence. Please contact to admin.').show();
-                    }
+                    
                 }
             },
             error: function(data)

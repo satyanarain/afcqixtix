@@ -338,6 +338,10 @@ class CrewStockController extends Controller
             return response()->json(['status'=>'Error', 'data'=>'Invalid depot ID']);
         }
 
-        $crews = Crew::where('depot_id', $depotId)->get();
+        $crews = Crew::where([['depot_id', $depotId], ['role', 'Conductor']])
+                    ->select('crew_name', 'id')
+                    ->get();
+
+        return response()->json(['status'=>'Ok', 'data'=>$crews]);
     }
 }
