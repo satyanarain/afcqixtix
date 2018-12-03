@@ -8,9 +8,18 @@ use Notifynder;
 use DB;
 use Schema;
 use Response;
+use App\Models\Crew;
+use App\Models\Duty;
+use App\Models\Depot;
+use App\Models\Shift;
+use App\Models\Route;
+use App\Models\Ticket;
+use App\Models\Vehicle;
+use App\Models\Waybill;
 use App\Models\ETMDetail;
 use App\Models\Country;
 use App\Http\Requests;
+use App\Models\ETMLoginLog;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ETMDetail\UpdateETMDetailRequest;
@@ -22,7 +31,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Traits\activityLog;
 use App\Traits\Ac;
 use App\Traits\checkPermission;
-//use Illuminate\Support\Facades\Validator;
+
 class ETMDetailController extends Controller
 {
     protected $etm_details;
@@ -50,6 +59,7 @@ class ETMDetailController extends Controller
         return view('etm_details.index',compact('etm_details'))->withETMDetails($depot);
    
     }
+
     public function create()
     {
         if(!$this->checkActionPermission('etm_details','create'))
@@ -218,4 +228,43 @@ class ETMDetailController extends Controller
     </div>
     <?php   
     }
-  }
+
+
+    /**
+    *-------------------------------------------------------------------------------------------
+    *display the etm health status
+    *@return Response etm health status
+    */
+    public function healthStatus()
+    {
+        $statusData = DB::table('waybills')
+                            ->join('crew as conductor', 'waybills.conductor_id', 'conductor.id')
+                            ->join('crew as driver', 'waybills.driver_id', 'driver.id')
+                            ->join('routes', 'waybills.route_id', 'routes.id')
+                            ->join('duties', 'waybills.duty_id', 'duties.id')
+                            ->join('shifts', 'waybills.shift_id', 'shifts.id')
+                            ->join('vehicles', 'waybills.vehicle_id', 'vehicles.id')
+                            ->join('etm_login_log', function($join){
+                                $join->on('etm_login_log.conductor_id', '=', 'waybills.conductor_id');
+                                $join->whereDate('etm_login_log.login_timestamp', '=', DB::raw('DATE(waybills.etm_issue_time)'));
+                            })
+                            ->select('waybills.gprs_level', 'waybills.battery_percentage', 'waybills.etm_no', 'waybills.abstract_no', 'conductor.crew_name as conductor_name', 'conductor.crew_id as conductor_id', 'conductor.mobile', 'driver.crew_name as driver_name', 'driver.crew_id as driver_id', 'routes.route', 'duties.duty_number', 'shifts.shift', 'vehicles.vehicle_registration_number', 'etm_login_log.login_timestamp', 'etm_login_log.logout_timestamp')
+                            ->get();
+
+        $depots = Depot::all(['id', 'name']);
+
+        foreach ($statusData as $key => $value) 
+        {
+            if($value->abstract_no)
+            {
+                $lastTicket = Ticket::where('abstract_id', $value->abstract_no)->orderBy('id', 'desc')->first();
+                $value->last_ticket_issued = $lastTicket->sold_at;
+                $value->last_communicated = $lastTicket->created_at;
+            }
+        }
+
+        //return response()->json($statusData);
+
+        return view('etm_details.healthstatus', compact('statusData', 'depots'));
+    }
+}
