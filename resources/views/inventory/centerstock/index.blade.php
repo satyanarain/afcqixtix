@@ -35,17 +35,41 @@
                             <th>@lang('Date Received')</th>
                             <th>@lang('Challan Number')</th>
                             <th>File (if any)</th>
-                           {{  actionHeading('Action', $newaction='') }}
+                            <th>Created At</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($centerstock as $value)
                         <tr class="nor_f">
                             <td>{{$value->name}}</td>
-                            <td>{{$value->description}}</td>
-                            <td>{{$value->series}}</td>
-                            <td>{{$value->start_sequence}}</td>
-                            <td>{{$value->end_sequence}}</td>
+                            <td>
+                                @if($value->description)
+                                {{$value->description}}
+                                @else
+                                {{'N/A'}}
+                                @endif
+                            </td>
+                            <td>
+                                @if($value->series)
+                                {{$value->series}}
+                                @else
+                                {{'N/A'}}
+                                @endif
+                            </td>
+                            <td>
+                                @if($value->start_sequence)
+                                {{$value->start_sequence}}
+                                @else
+                                {{'N/A'}}
+                                @endif
+                            </td>
+                            <td>
+                                @if($value->end_sequence)
+                                {{$value->end_sequence}}
+                                @else
+                                {{'N/A'}}
+                                @endif
+                            </td>
                             <td>{{$value->quantity}}</td>
                             <td>{{$value->vender_name}}</td>
                             <td>{{date('d-m-Y', strtotime($value->date_received))}}</td>
@@ -60,12 +84,7 @@
                                 @endif
                             </td>
                             <td>
-                                <?php $permission = getAllModulePermission('centerstocks');
-                                if(in_array('edit',$permission)){
-                                    echo '<a  href="'.route("inventory.centerstock.edit",$value->id).'" class="" title="Edit" ><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
-                                }elseif(in_array('edit',$permission)){?>
-                                        <a class="disabled"><span class="glyphicon glyphicon-pencil "></span></a>&nbsp;&nbsp;&nbsp;&nbsp;   
-                                <?php }?>
+                                {{date('d-m-Y H:i:s', strtotime($value->created_at))}}
                             </td>
                          </tr>
                         @endforeach

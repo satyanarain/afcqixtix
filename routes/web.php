@@ -207,6 +207,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('etm_details/data', 'EtmDetailController@anyData')->name('etm_details.data');
     Route::get('etm_details/view_detail/{id}', 'EtmDetailController@viewDetail');
     Route::resource('etm_details', 'EtmDetailController');
+    Route::get('etm/health_status', 'EtmDetailController@healthStatus');
     /* ROLES */
     Route::get('roles/data', 'RolesController@anyData')->name('roles.data');
     Route::get('roles/view_detail/{id}', 'RolesController@viewDetail');
@@ -256,6 +257,7 @@ Route::group(['middleware' => ['auth']], function () {
             Route::post('validateendsequence', 'CrewstockController@validateEndSequence')->name('validateendsequence');
             Route::post('validatequantity', 'CrewstockController@validateQuantity')->name('validatequantity');
             Route::get('summary', 'CrewstockController@summary')->name('summary');
+            Route::get('getdepotwisecrew/{depotId}', 'CrewstockController@getDepotWiseCrews')->name('getdepotwisecrew');
         });
 
         Route::resource('returncrewstock', 'ReturnCrewstockController');

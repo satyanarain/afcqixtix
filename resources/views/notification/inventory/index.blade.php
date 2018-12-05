@@ -30,9 +30,9 @@
 							<td>
 								@foreach($setting->notify_to as $key=>$admin)
 								@if($key == 0)
-								{{$admin->email}}
+								{{$admin->name.' ('.$admin->email.')'}}
 								@else
-								{{', '.$admin->email}}
+								{{', '.$admin->name.' ('.$admin->email.')'}}
 								@endif
 								@endforeach
 							</td>
@@ -71,9 +71,9 @@
 							<td>
 								@foreach($setting->notify_to as $key=>$admin)
 								@if($key == 0)
-								{{$admin->email}}
+								{{$admin->name.' ('.$admin->email.')'}}
 								@else
-								{{', '.$admin->email}}
+								{{', '.$admin->name.' ('.$admin->email.')'}}
 								@endif
 								@endforeach
 							</td>
@@ -213,7 +213,7 @@
 				{
 					var adminsString = "";//"<option value=''>Please select who to notify</option>";
 					$.each(admins, function(index, admin){
-						adminsString += '<option value='+admin.id+'>'+admin.name+'</option>';
+						adminsString += '<option value='+admin.id+'>'+admin.name+" ("+admin.email+")"+'</option>';
 					});
 
 					$('#notifyto').html(adminsString);
@@ -339,9 +339,9 @@
 						$.each(admins, function(index, admin){
 							if($.inArray(admin.id, selectedOptions) !== -1)
 							{
-								adminsString += '<option value='+admin.id+' selected>'+admin.name+'</option>';
+								adminsString += '<option value='+admin.id+' selected>'+admin.name+" ("+admin.email+")"+'</option>';
 							}else{
-								adminsString += '<option value='+admin.id+'>'+admin.name+'</option>';
+								adminsString += '<option value='+admin.id+'>'+admin.name+" ("+admin.email+")"+'</option>';
 							}
 							
 						});
@@ -389,7 +389,7 @@
 				{
 					var adminsString = "";//"<option value=''>Please select who to notify</option>";
 					$.each(admins, function(index, admin){
-						adminsString += '<option value='+admin.id+'>'+admin.name+'</option>';
+						adminsString += '<option value='+admin.id+'>'+admin.name+" ("+admin.email+")"+'</option>';
 					});
 
 					$('#depotnotifyto').html(adminsString);
@@ -534,9 +534,9 @@
 						$.each(admins, function(index, admin){
 							if($.inArray(admin.id, selectedOptions) !== -1)
 							{
-								adminsString += '<option value='+admin.id+' selected>'+admin.name+'</option>';
+								adminsString += '<option value='+admin.id+' selected>'+admin.name+" ("+admin.email+")"+'</option>';
 							}else{
-								adminsString += '<option value='+admin.id+'>'+admin.name+'</option>';
+								adminsString += '<option value='+admin.id+'>'+admin.name+" ("+admin.email+")"+'</option>';
 							}
 							
 						});

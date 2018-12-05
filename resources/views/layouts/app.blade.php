@@ -36,6 +36,7 @@
         <link rel="stylesheet" href="{{URL::asset('plugins/datatables/dataTables.bootstrap.css')}}">
         <link rel="stylesheet" href="{{URL::asset('css/AdminLTE.min.css')}}">
         <link rel="stylesheet" href="{{URL::asset('css/custom.css')}}">
+        <link rel="stylesheet" href="{{URL::asset('css/style.css')}}">
         <script src="{{ asset('js/custom.js') }}"></script>
         <script>    
  window.Laravel = <?php
@@ -271,6 +272,23 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                         </a>
                         <ul @if($segments_var[1]=='inventory') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
                           <li @if($segments_var[1]=='inventory') class="active" @endif><a href="{{route('notification.inventory.index')}}"><i class="fa fa-edit"></i>@lang('Inventory')</a>
+                          </li>                      
+                         </ul>
+                    </li>
+                    @endif
+
+
+                    @php $pem=menuDisplayByUser($result, 'centerstocks','view'); @endphp
+                    @if($pem=='true')
+                     <li  @if($segments_var[1]=='health_status') class="treeview active" @else class="treeview" @endif>
+                        <a href="#">
+                            <i class="fa fa-calculator" aria-hidden="true"></i> <span>ETM</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul @if($segments_var[1]=='health_status') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
+                          <li @if($segments_var[1]=='inventory') class="active" @endif><a href="{{url('etm/health_status')}}"><i class="fa fa-medkit"></i>Health Status</a>
                           </li>                      
                          </ul>
                     </li>

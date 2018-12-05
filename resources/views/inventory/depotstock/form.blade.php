@@ -470,5 +470,13 @@ $(document).on('click', '.removeDenominationsRow', function(){
         });
 
   });
+  $(document).on('blur', '.start_sequence', function(){
+    var num = $(this).val();
+    if(num == 0)
+    {
+        $(this).val('');
+        return alert('Start Sequence can not be 0.');
+    }
+});
 </script>
 

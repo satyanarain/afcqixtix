@@ -33,7 +33,7 @@
                             <th>@lang('Start Sequence')</th>
                             <th>@lang('End Sequence')</th>
                             <th>@lang('Quantity')</th>
-                           {{  actionHeading('Action', $newaction='') }}
+                            <th>Created At</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -42,18 +42,37 @@
                             <td>{{$value->name}}</td>
                             <td>{{$value->depot_name}}</td>
                             <td>{{$value->crew_name}}</td>
-                            <td>{{$value->description}}</td>
-                            <td>{{$value->series}}</td>
-                            <td>{{$value->start_sequence}}</td>
-                            <td>{{$value->end_sequence}}</td>
+                            <td>
+                                @if($value->description)
+                                {{$value->description}}
+                                @else
+                                {{'N/A'}}
+                                @endif
+                            </td>
+                            <td>
+                                @if($value->series)
+                                {{$value->series}}
+                                @else
+                                {{'N/A'}}
+                                @endif
+                            </td>
+                            <td>
+                                @if($value->start_sequence)
+                                {{$value->start_sequence}}
+                                @else
+                                {{'N/A'}}
+                                @endif
+                            </td>
+                            <td>
+                                @if($value->end_sequence)
+                                {{$value->end_sequence}}
+                                @else
+                                {{'N/A'}}
+                                @endif
+                            </td>
                             <td>{{$value->quantity}}</td>
                             <td>
-                                <?php $permission = getAllModulePermission('crewstocks');
-                                if(in_array('edit',$permission)){
-                                    echo '<a  href="'.route("inventory.crewstock.edit",$value->id).'" class="" title="Edit" ><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
-                                }elseif(in_array('edit',$permission)){?>
-                                        <a class="disabled"><span class="glyphicon glyphicon-pencil "></span></a>&nbsp;&nbsp;&nbsp;&nbsp;   
-                                <?php }?>
+                                {{date('d-m-Y H:i:s', strtotime($value->created_at))}}
                             </td>
                          </tr>
                         @endforeach
