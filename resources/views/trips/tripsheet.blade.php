@@ -85,7 +85,7 @@
                            <option value="">Select</option>
                            @foreach($trips as $key=>$trip)
                               <option value="{{$trip->id}}">
-                                {{$trip->start_timestamp."=>".$trip->fromStop->short_name."=>".$trip->toStop->short_name}}
+                                {{$trip->start_timestamp."-".$trip->fromStop->short_name."To".$trip->toStop->short_name}}
                               </option>
                            @endforeach
                        </select>

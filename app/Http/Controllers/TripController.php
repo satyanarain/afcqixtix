@@ -265,4 +265,9 @@ $duties = DB::table($table_name)->select('*')->where('route_id',$id)->get();
         //return response()->json($trips);
         return view('trips.tripsheet', compact('depots', 'trips', 'routes', 'duties'));
     }
+
+    public function getTripSheetByParameters(Requests $request)
+    {
+        
+    }
 }
