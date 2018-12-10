@@ -271,4 +271,11 @@ class TicketController extends Controller
 
         return response()->json($insertedData);
     }
+
+
+    public function testAPI(Request $request)
+    {
+        var_dump($request->all());
+        return response()->json($request->all());
+    }
 }

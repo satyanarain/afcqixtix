@@ -35,4 +35,7 @@ Route::group(['namespace'=>'Api\V1', 'prefix'=>'v1'], function(){
 
 	/*Inventory Notification CRON JOBs*/
 	Route::get('notifications/inventory', 'Notifications\InventoryController@index');
+
+	//Route::get('notifications/inventory', 'Notifications\InventoryController@index');
+	
 });
