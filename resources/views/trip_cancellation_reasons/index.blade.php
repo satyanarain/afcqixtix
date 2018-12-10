@@ -64,5 +64,4 @@
 <!-- /.row -->
 
 @include('partials.trip_cancellation_reason_order_header')
-@include('partials.table_script_order')
 @stop

@@ -19,7 +19,9 @@ class AuthController extends Controller
     	$validator = Validator::make($request->all(), [
     		'username' => 'required',
     		'password' => 'required',
-            'etm_id' => 'required'
+            'etm_id' => 'required',
+            'gprs_level' => 'required',
+            'battery_percentage' => 'required'
     	]);
 
     	if($validator->fails())
@@ -52,7 +54,7 @@ class AuthController extends Controller
             //return response()->json($log);
             if(!$log)
             {
-                ETMLoginLog::insert(['conductor_id'=>$crew->id, 'etm_id'=>$request->etm_id, 'login_timestamp'=>date('Y-m-d H:i:s')]);
+                ETMLoginLog::insert(['conductor_id'=>$crew->id, 'etm_id'=>$request->etm_id, 'login_timestamp'=>date('Y-m-d H:i:s'), 'gprs_level'=>$request->gprs_level, 'battery_percentage'=>$request->battery_percentage]);
             }
             
     		return response()->json(['statusCode'=>'Ok', 'token'=>$token, 'sync_time'=>$sync_time, 'server_year'=>(int)date('Y'), 'server_month'=>(int)date('m'), 'server_date'=>(int)date('d'), 'server_hour'=>(int)date('H'), 'server_minute'=>(int)date('i'), 'server_second'=>(int)date('s'), 'server_day'=>(int)date('w')]);

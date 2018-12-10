@@ -30,7 +30,8 @@
     </div>
 </div>
 <div class="modal fade" id="view_detail" role="dialog">
- </div>
+</div>
+@push('scripts')
 <script>
     
    function orderList(order_id,order_list)
@@ -101,3 +102,4 @@ function updateOrder() {
 	});
 }  
 </script>
+@endpush

@@ -1,5 +1,6 @@
 <div class="modal fade" id="view_detail" role="dialog">
  </div>
+ @push('scripts')
 <script>
     
     function viewDetails(id,view_detail)
@@ -19,3 +20,4 @@
   
    }
    </script>
+@endpush

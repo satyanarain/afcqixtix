@@ -2,27 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Gate;
 use Carbon;
-use Notifynder;
-use DB;
 use Schema;
 use Response;
+use Notifynder;
 use App\Models\Trip;
+use App\Models\Duty;
+use App\Models\Depot;
+use App\Models\Route;
 use App\Models\Country;
 use App\Http\Requests;
+use App\Models\TripStart;
 use Illuminate\Http\Request;
+use App\Traits\checkPermission;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Trip\UpdateTripRequest;
-use App\Http\Requests\Trip\StoreTripRequest;
-use App\Repositories\Trip\TripRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use App\Traits\checkPermission;
-class TripController extends Controller {
+use App\Http\Requests\Trip\StoreTripRequest;
+use App\Http\Requests\Trip\UpdateTripRequest;
+use App\Repositories\Trip\TripRepositoryContract;
 
+class TripController extends Controller 
+{
     protected $trips;
     use checkPermission;
+
     public function __construct(
     TripRepositoryContract $tripss
     ) {
@@ -242,9 +248,21 @@ $duties = DB::table($table_name)->select('*')->where('route_id',$id)->get();
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Get the tripsheet details.
      *
-     * @param  int  $id
      * @return Response
      */
+
+    public function tripSheet()
+    {
+        $depots = Depot::all(['id', 'name']);
+        $trips = TripStart::with('fromStop:id,short_name')
+                    ->with('toStop:id,short_name')
+                    ->get();
+        $routes = Route::all(['id', 'route']);
+        $duties = Duty::all(['id', 'duty_number']);
+
+        //return response()->json($trips);
+        return view('trips.tripsheet', compact('depots', 'trips', 'routes', 'duties'));
+    }
 }

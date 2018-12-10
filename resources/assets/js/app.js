@@ -16,8 +16,9 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example', require('./components/Example.vue'));
-    $scope.tasks = [];
+//Vue.component('Healthstatus', require('./components/ETMHealthStatus.vue'));
+Vue.component('Leaderboard', require('./components/Leaderboard.vue'));
+    /*$scope.tasks = [];
 
     // List tasks
     $scope.loadTasks = function () {
@@ -27,12 +28,12 @@ Vue.component('example', require('./components/Example.vue'));
                 $scope.tasks = e.data.tasks;
             });
     };
-    $scope.loadTasks();
+    $scope.loadTasks();*/
 
 const app = new Vue({
     el: '#app'
 });
-$scope.errors = [];
+/*$scope.errors = [];
 
     $scope.task = {
         name: '',
@@ -73,6 +74,6 @@ $scope.errors = [];
         $scope.task.name = '';
         $scope.task.description = '';
         $scope.errors = [];
-    };
+    };*/
     
     

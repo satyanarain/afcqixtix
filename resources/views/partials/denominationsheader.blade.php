@@ -31,6 +31,7 @@
     </div>
 </div>
 @endforeach
+@push('scripts')
 <script>
 function viewDetails(id,view_detail)
    {
@@ -46,3 +47,4 @@ function viewDetails(id,view_detail)
 	});
   }
 </script>
+@endpush

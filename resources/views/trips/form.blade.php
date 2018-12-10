@@ -54,13 +54,15 @@
   {!! Form::submit(Lang::get('common.titles.save'), ['class' => 'btn btn-success']) !!}
   <div class="col-md-3" style="margin-right: 15px;">{{ Form::button('Cancel', array('class' => 'btn btn-success pull-left','onclick'=>'window.history.back();')) }}</div>
 </div>
- </div>
+</div>
+
+@push('scripts')
 <script src="{{ asset(elixir('js/bootstrap-clockpicker.min.js')) }}"></script>
 <script type="text/javascript">
 $('.clockpicker1').clockpicker({ 
 placement: 'bottom',
-	align: 'left',
-	donetext: 'Done',
+  align: 'left',
+  donetext: 'Done',
         autoclose: true,
   twelvehour: true
  });
@@ -160,8 +162,8 @@ $("#input_fields_wrap_classes").append('<div id="div_remove_field'+ x +'" style=
    function bindClockPicker() {
         $('.clockpicker').clockpicker({
           placement: 'top',
-	align: 'left',
-	donetext: 'Done',
+  align: 'left',
+  donetext: 'Done',
         autoclose: true,
   twelvehour: true
         });
@@ -178,4 +180,5 @@ function removeFunction(id)
     
 }
 </script>
+@endpush
  

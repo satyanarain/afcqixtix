@@ -61,5 +61,4 @@
 <!-- /.row -->
 
 @include('partials.inspector_remark_order_header')
-@include('partials.table_script_order')
 @stop

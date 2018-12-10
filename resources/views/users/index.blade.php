@@ -60,9 +60,11 @@
         </div>
     </div>
 </div>
+@stop
 
+@push('scripts')
 <script type="text/javascript">
- function statusUpdate(id)
+function statusUpdate(id)
 {
  $.ajax({
     type:'get',
@@ -84,9 +86,5 @@
     }
 });
 }  
-    
-    
 </script>
-<!-- /.row -->
-@include('partials.table_script') 
-@stop
+@endpush

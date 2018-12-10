@@ -169,10 +169,9 @@ class VersionController extends Controller
         
         //echo public_path();die;
         $vals=array();
-        if(env(APP_ENV)=="local")
-            $pdoMy=new PDO('mysql:dbname=afcqixtix','root','') or die("can't connect to afc");
-        else
-            $pdoMy=new PDO('mysql:dbname=afcqixtix','root','root@1234!') or die("can't connect to afc");
+        $dbname = env('DB_DATABASE');
+        $pdoMy=new PDO('mysql:dbname='.$dbname, env('DB_USERNAME'), env('DB_PASSWORD')) or die("can't connect to afc");
+        
         $pdoLi=new PDO('sqlite:'.public_path().'/supportingdocs/data'.$version_id.'.sqlite') or die("can't connect to data1");
 
         $tbls=array('depots','vehicles','crew','bus_types','services','fares','concession_fare_slabs','concessions',
@@ -289,10 +288,9 @@ class VersionController extends Controller
         
         //echo public_path();die;
         $vals=array();
-        if(env(APP_ENV)=="local")
-            $pdoLi=new PDO('mysql:dbname=afcqixtix','root','') or die("can't connect to afc");
-        else
-            $pdoLi=new PDO('mysql:dbname=afcqixtix','root','root@1234!') or die("can't connect to afc");
+
+        $dbname = env('DB_DATABASE');
+        $pdoLi=new PDO('mysql:dbname='.$dbname, env('DB_USERNAME'), env('DB_PASSWORD')) or die("can't connect to afc");
         
         $result = $pdoLi->query('INSERT INTO bus_type_logs SELECT * FROM bus_types');
         $result = $pdoLi->query('INSERT INTO concession_fare_slab_logs SELECT * FROM concession_fare_slabs');

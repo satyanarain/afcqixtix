@@ -88,7 +88,4 @@
  </div>
 
 <!-- /.row -->
-
-@include('partials.bustypes_order_header')
-@include('partials.table_script_order')
 @stop

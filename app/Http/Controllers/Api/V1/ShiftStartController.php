@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use DB;
 use Validator;
 use App\Models\ShiftStart;
 use Illuminate\Http\Request;
@@ -20,7 +21,8 @@ class ShiftStartController extends Controller
     		'shift_id' => 'required',
     		'odo_reading' => 'required',
     		'start_timestamp' => 'required',
-            'abstract_no' => 'required'
+            'abstract_no' => 'required',
+            'etm_id' => 'required'
     	]);
 
     	if($validator->fails())
@@ -28,8 +30,22 @@ class ShiftStartController extends Controller
     		return response()->json(['statusCode'=>'Error', 'data'=>$validator->errors()]);
     	}
 
-    	$shiftStart = ShiftStart::create($request->all());
+        $input = $request->all();
 
-    	return response()->json(['statusCode'=>'Ok', 'data'=>$shiftStart]);
+        unset($input['etm_id']);
+
+    	$shiftStart = ShiftStart::create($input);
+
+        if($shiftStart)
+        {
+            //update abstract number in etm login log
+            DB::table('etm_login_log')
+                ->where([['conductor_id', $request->conductor_id], ['etm_id', $request->etm_id]])
+                ->whereDate('login_timestamp', DB::raw('CURDATE()'))
+                ->update(['abstract_no' => $request->abstract_no]);
+            return response()->json(['statusCode'=>'Ok', 'data'=>$shiftStart]);
+        }else {
+            return response()->json(['statusCode'=>'Error', 'data'=>'Some error occured!']);
+        }
     }
 }

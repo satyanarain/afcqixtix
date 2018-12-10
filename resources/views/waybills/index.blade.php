@@ -111,6 +111,8 @@
 <!-- /.row -->
 </div>
 <div class="modal fade" id="view_detail" role="dialog"></div>
+@stop
+@push('scripts')
 <script type="text/javascript" language="javascript" >
 $(document).ready(function() {
     var token = window.Laravel.csrfToken;
@@ -200,6 +202,4 @@ function viewDetails(id,view_detail)
    }
    
 </script>
-@include('partials.table_script')
-
-@stop
+@endpush
