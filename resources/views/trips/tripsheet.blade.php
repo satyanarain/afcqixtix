@@ -20,7 +20,7 @@
                        <select id="depot_id" class="form-control w-50-percent">
                             <option value="">Select</option>
                             @foreach($depots as $depot)
-                                <option value="{{$depot->id}}">{{$depot->name}}</option>
+                                <option value="{{$depot->id}}">{{ucfirst($depot->name)}}</option>
                             @endforeach
                        </select>
                    </td>
@@ -28,22 +28,22 @@
                <tr>
                    <td>From Date</td>
                    <td>
-                      <div class="input-group date">
+                      <div class="input-group date w-50-percent">
                           <div class="input-group-addon">
                               <i class="fa fa-calendar"></i>
                           </div>
-                          <input type="text" id="from_data" class="form-control w-50-percent multiple_date">
+                          <input type="text" id="from_date" value="{{date('Y-m-d 00:00')}}" class="form-control w-100-percent">
                       </div>
                    </td>
                </tr>
                <tr>
                    <td>To Date</td>
                    <td>
-                        <div class="input-group date">
+                        <div class="input-group date w-50-percent">
                           <div class="input-group-addon">
                               <i class="fa fa-calendar"></i>
                           </div>
-                          <input type="text" id="to_date" class="form-control w-50-percent multiple_date">
+                          <input type="text" id="to_date" value="{{date('Y-m-d H:i')}}" class="form-control w-100-percent">
                         </div>
                    </td>
                </tr>
@@ -72,14 +72,13 @@
                <tr>
                    <td>Login *</td>
                    <td>
-                       <select id="status" class="form-control w-50-percent">
-                           <option value="1">Logged In</option>
+                       <select id="logins" class="form-control w-50-percent">
+                           <option value="">Select</option>
                        </select>
                    </td>
                </tr>
                <tr>
                    <td>Trip</td>
-
                    <td>
                        <select id="trip" class="form-control w-50-percent">
                            <option value="">Select</option>
@@ -94,16 +93,27 @@
                <tr>
                    <td>Ticket Types</td>
                    <td>
-                       <select id="status" class="form-control w-50-percent">
-                           <option value="1">Logged In</option>
-                       </select>
+                        <div class="form-group" style="display: inline-block;margin-right: 40px;">
+                          <input type="checkbox" checked id="ticket_types_normal" name="ticket_types">
+                          <label for="ticket_types_normal">Normal</label>
+                        </div>
+
+                        <div class="form-group" style="display: inline-block;margin-right: 40px;">
+                          <input type="checkbox" id="ticket_types_cancel" name="ticket_types">
+                          <label for="ticket_types_cancel">Cancel</label>
+                        </div>
+
+                        <div class="form-group" style="display: inline-block;margin-right: 40px;">
+                          <input type="checkbox" id="ticket_types_fine" name="ticket_types">
+                          <label for="ticket_types_fine">Fine</label>
+                        </div>
                    </td>
                </tr>
                <tr>
                    <td>
                    </td>
                    <td>
-                        <button class="btn btn-success" id="viewHealthStatus">View</button>
+                        <button class="btn btn-success" id="viewTripSheetDetails">View</button>
                    </td>
                </tr>
              </table>
@@ -122,7 +132,7 @@
                     <th>Total Amt.</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="tripsheetbody">
                   <tr>
                     <th>No Items Found!</th>
                     <th></th>
@@ -144,7 +154,154 @@
 @endsection
 
 @push('scripts')
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css"></script>
+
 <script type="text/javascript">
-  
+$(document).ready(function(){
+    $('#from_date').datetimepicker();
+    $('#to_date').datetimepicker();
+
+    $(document).on('change', '#duty', function(){
+        var route = $('#route').val();
+        if(!route)
+        {
+          return alert('Please select a route.');
+        }
+
+        var duty = $('#duty').val();
+        if(!duty)
+        {
+          return alert('Please select a duty.');
+        }
+
+        var from_date = $('#from_date').val();
+        var to_date = $('#to_date').val();
+
+
+        $.ajax({
+            url: "{{route('gettripsbyrouteandduty')}}",
+            type: "POST",
+            data:{
+              route: route,
+              duty: duty,
+              from_date: from_date,
+              to_date: to_date
+            },
+            dataType: "JSON",
+            success: function(response){
+              console.log(response)
+              if(response.status == 'Ok')
+              {
+                var data = response.data;
+                var optionsStr = '<option value="">Select</option>';
+                if(data.length > 0)
+                {
+                  var selectedRoute = $('#route :selected').text();
+                  var selectedDuty = $('#duty :selected').text();
+                  $.each(data, function(index, login){
+                      optionsStr += '<option value="'+login.id+'">'+login.login_timestamp+' - '+selectedRoute+'/'+selectedDuty+" - "+login.conductor.crew_name+ ' ('+login.conductor.crew_id + ')'+'</option>'
+                  })
+                  $('#logins').html(optionsStr);
+                }else{
+                  $('#logins').html(optionsStr);
+                }
+              }
+            },
+            error: function(error){
+              console.log(error);
+            } 
+        });
+    }); 
+
+    $(document).on('click', '#viewTripSheetDetails', function(){
+        var depot_id = $('#depot_id').val();
+        if(!depot_id)
+        {
+          return alert('Please select a depot.');
+        }
+
+        var from_date = $('#from_date').val();
+        if(!from_date)
+        {
+          return alert('Please enter from date.');
+        }
+
+        var to_date = $('#to_date').val();
+        if(!to_date)
+        {
+          return alert('Please enter to date.');
+        }
+
+        var route = $('#route').val();
+        if(!route)
+        {
+          return alert('Please select a route.');
+        }
+
+        var duty = $('#duty').val();
+        if(!duty)
+        {
+          return alert('Please select a duty.');
+        }
+
+        var logins = $('#logins').val();
+        if(!logins)
+        {
+          return alert('Please select a login.');
+        }
+
+        var trip = $('#trip').val();
+        if(!trip)
+        {
+          return alert('Please select a trip.');
+        }
+
+        $.ajax({
+            url: "{{route('getticketsbyparams')}}",
+            type: "POST",
+            data:{
+              depot_id: depot_id,
+              route: route,
+              duty: duty,
+              from_date: from_date,
+              to_date: to_date,
+              logins: logins,
+              trip: trip
+            },
+            dataType: "JSON",
+            success: function(response){
+              console.log(response)
+              if(response.status == 'Ok')
+              {
+                var data = response.data;
+                var tableData = '';
+                if(data.length > 0)
+                {
+                  $.each(data, function(index, tdata){
+                      tableData += '<tr>'
+                      tableData += '<td>'+tdata.trip_id+'</td>'
+                      tableData += '<td>'+tdata.from_stop.short_name+'</td>'
+                      tableData += '<td>'+tdata.to_stop.short_name+'</td>'
+                      tableData += '<td>'+tdata.ticket_number+'</td>'
+                      tableData += '<td>'+tdata.sold_at+'</td>'
+                      tableData += '<td>'+tdata.adults+'</td>'
+                      tableData += '<td>'+tdata.childs+'</td>'
+                      tableData += '<td>'+0+'</td>'
+                      tableData += '<td>'+tdata.total_amt+'</td>'
+                      tableData += '</tr>'
+                  })
+                  $('#tripsheetbody').html(tableData);
+                }else{
+                  tableData = "<tr><th>No Items Found!</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th></tr>"
+                  $('#tripsheetbody').html(tableData);
+                }
+              }
+            },
+            error: function(error){
+              console.log(error);
+            } 
+        });        
+    });  
+})
 </script>
 @endpush
