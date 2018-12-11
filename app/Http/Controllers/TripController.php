@@ -7,14 +7,18 @@ use Gate;
 use Carbon;
 use Schema;
 use Response;
+use Validator;
 use Notifynder;
 use App\Models\Trip;
 use App\Models\Duty;
 use App\Models\Depot;
 use App\Models\Route;
-use App\Models\Country;
+use App\Models\Ticket;
 use App\Http\Requests;
+use App\Models\Waybill;
+use App\Models\Country;
 use App\Models\TripStart;
+use App\Models\ETMLoginLog;
 use Illuminate\Http\Request;
 use App\Traits\checkPermission;
 use App\Http\Controllers\Controller;
@@ -29,9 +33,8 @@ class TripController extends Controller
     protected $trips;
     use checkPermission;
 
-    public function __construct(
-    TripRepositoryContract $tripss
-    ) {
+    public function __construct(TripRepositoryContract $tripss) 
+    {
         $this->trips = $tripss;
     }
 
@@ -40,7 +43,8 @@ class TripController extends Controller
      *
      * @return Response
      */
-    public function index($route_master_id,$duty_id,Request $request) {
+    public function index($route_master_id,$duty_id,Request $request) 
+    {
        if(!$this->checkActionPermission('trips','view'))
             return redirect()->route('401');
        //die($route_master_id);
@@ -53,7 +57,8 @@ class TripController extends Controller
         return view('trips.index',compact('trips','route_master_id','duty_id'));
     }
 
-    public function create($route_master_id,$duty_id) {
+    public function create($route_master_id,$duty_id) 
+    {
         if(!$this->checkActionPermission('trips','create'))
             return redirect()->route('401');
         //$trips = Trip::findOrFail();
@@ -266,8 +271,84 @@ $duties = DB::table($table_name)->select('*')->where('route_id',$id)->get();
         return view('trips.tripsheet', compact('depots', 'trips', 'routes', 'duties'));
     }
 
-    public function getTripSheetByParameters(Requests $request)
+
+    /**
+     * Get the trips by route and duty.
+     *
+     * @return Response
+     */
+    public function getTripsByRouteAndDuty(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'route' => 'required',
+            'duty' => 'required'
+        ]);
+
+        if($validator->fails())
+        {
+            return response()->json(['status'=>'Error', 'data'=>$validator->fails()]);
+        }
+
+        if($request->from_date)
+        {
+            $from_date = date('Y-m-d H:i', strtotime($request->from_date));
+        }else{
+            $from_date = date('Y-m-d 00:00');
+        }
+
+        if($request->to_date)
+        {
+            $to_date = date('Y-m-d H:i', strtotime($request->to_date));
+        }else{
+            $to_date = date('Y-m-d H:i');
+        }       
         
+
+        $waybills = Waybill::where([['route_id', $request->route], ['duty_id', $request->duty]])
+                    ->whereBetween(DB::raw('DATE(created_at)'), array($from_date, $to_date))
+                    ->get()
+                    ->pluck('abstract_no');
+
+        if($waybills)
+        {            
+            $logins = ETMLoginLog::with('conductor:id,crew_name,crew_id')
+                        ->whereIN('abstract_no', $waybills)
+                        ->get(['id', 'abstract_no', 'conductor_id', 'login_timestamp']);
+            
+        }else{
+            $logins = [];
+        }
+
+        return response()->json(['status'=>'Ok', 'data'=>$logins]);
+    }
+
+    public function getTicketsByParams(Request $request)
+    {   
+        $validator = Validator::make($request->all(), [
+            'logins' => 'required'
+        ]);
+
+        if($validator->fails())
+        {
+            return response()->json(['status'=>'Error', 'data'=>$validator->fails()]);
+        }
+
+        $log = ETMLoginLog::whereId($request->logins)->first();
+        if($log)
+        {
+            $tickets = Ticket::with(['fromStop:id,short_name', 'toStop:id,short_name'])
+                        ->where('abstract_id', $log->abstract_no);
+            if($request->trip)
+            {
+                $tickets = $tickets->where('trip_id', $request->trip);
+            }
+            $tickets = $tickets->orderBy('id', 'desc')
+                        ->limit(10)
+                        ->get(['trip_id', 'ticket_number', 'sold_at', 'adults', 'childs', 'total_amt', 'stage_to', 'stage_from']);
+        }else{
+            $tickets = [];
+        }
+
+        return response()->json(['status'=>'Ok', 'data'=>$tickets]);
     }
 }
