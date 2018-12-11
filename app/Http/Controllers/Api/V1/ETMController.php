@@ -315,6 +315,9 @@ class ETMController extends Controller
 
         $parameters = DB::table('etm_health_status_params')->get();
 
+        $dataToBeBoradcasted = [];
+        $i = 0;
+
         foreach ($statusData as $key => $value) 
         {
             if($value->abstract_no)
@@ -502,7 +505,28 @@ class ETMController extends Controller
             }
         }
 
-        $broadcastData = ['flag'=>1, 'data'=>$statusData];
+        $dataToBeBoradcasted[$i]['etm_abstract'] = $value->etm_abstract; 
+        $dataToBeBoradcasted[$i]['etm_abstract_box_class'] = $value->etm_abstract_box_class; 
+        $dataToBeBoradcasted[$i]['conductor_driver'] = $value->conductor_driver; 
+        $dataToBeBoradcasted[$i]['conductor_driver_box_class'] = $value->conductor_driver_box_class;
+        $dataToBeBoradcasted[$i]['login_logout'] = $value->login_logout; 
+        $dataToBeBoradcasted[$i]['mobile'] = $value->mobile; 
+        $dataToBeBoradcasted[$i]['route_duty_shift'] = $value->route_duty_shift; 
+        $dataToBeBoradcasted[$i]['route_duty_shift_box_class'] = $value->route_duty_shift_box_class; 
+        $dataToBeBoradcasted[$i]['bus'] = $value->bus; 
+        $dataToBeBoradcasted[$i]['bus_box_class'] = $value->bus_box_class; 
+        $dataToBeBoradcasted[$i]['last_communicated'] = $value->last_communicated; 
+        $dataToBeBoradcasted[$i]['last_communicated_box_class'] = $value->last_communicated_box_class; 
+        $dataToBeBoradcasted[$i]['last_ticket_issued'] = $value->last_ticket_issued; 
+        $dataToBeBoradcasted[$i]['last_ticket_issued_box_class'] = $value->last_ticket_issued_box_class;
+        $dataToBeBoradcasted[$i]['gprs_level'] = $value->gprs_level;
+        $dataToBeBoradcasted[$i]['gprs_level_box_class'] = $value->gprs_level_box_class;
+        $dataToBeBoradcasted[$i]['battery_percentage'] = $value->battery_percentage;
+        $dataToBeBoradcasted[$i]['battery_percentage_box_class'] = $value->battery_percentage_box_class;
+
+        $broadcastData = ['flag'=>1, 'data'=>$dataToBeBoradcasted];
+        $i++;
+        //return response()->json($broadcastData);
 
         event(new ETMDataUpdated($broadcastData));
 
