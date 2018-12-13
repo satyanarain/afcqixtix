@@ -79,13 +79,6 @@
                    <td>
                        <select id="trip" class="form-control w-50-percent">
                            <option value="">Select</option>
-                           @foreach($trips as $key=>$trip)
-                              <option value="{{$trip->id}}">
-
-                                {{$trip->start_timestamp." - ".$trip->fromStop->short_name." To ".$trip->toStop->short_name}}
-
-                              </option>
-                           @endforeach
                        </select>
                    </td>
                </tr>
@@ -338,7 +331,45 @@ $(document).ready(function(){
               console.log(error);
             } 
         });        
-    });  
+    }); 
+
+
+    $(document).on('change', '#logins', function(){
+        var logins = $('#logins').val();
+        if(!logins)
+        {
+          return alert('Please select a login.');
+        }
+
+        $.ajax({
+            url: "{{route('gettripsbylogin')}}",
+            type: "POST",
+            data:{
+              logins: logins
+            },
+            dataType: "JSON",
+            success: function(response){
+              console.log(response)
+              if(response.status == 'Ok')
+              {
+                var data = response.data;
+                var optionsStr = '<option value="">Select</option>';
+                if(data.length > 0)
+                {
+                  $.each(data, function(index, trip){
+                      optionsStr += '<option value="'+duty.id+'">'+duty.duty_number+'</option>'
+                  })
+                  $('#trip').html(optionsStr);
+                }else{
+                  $('#trip').html(optionsStr);
+                }
+              }
+            },
+            error: function(error){
+              console.log(error);
+            } 
+        });
+    }); 
 })
 </script>
 @endpush
