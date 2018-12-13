@@ -361,7 +361,10 @@ class ETMController extends Controller
                     $value->bus_box_class = "";
                 }
 
-                $lastTicket = Ticket::where('abstract_id', $value->abstract_no)->orderBy('id', 'desc')->first();
+                $lastTicket = Ticket::where('abstract_id', $value->abstract_no)
+                                ->whereDate('created_at', DB::raw('CURDATE()'))
+                                ->orderBy('id', 'desc')
+                                ->first();
                 if($lastTicket)
                 {
                     $value->last_ticket_issued = $lastTicket->sold_at;
@@ -376,7 +379,10 @@ class ETMController extends Controller
 
                     $value->last_communicated = date('Y-m-d H:i:s', strtotime($lastTicket->created_at)) . " (".(int)$lastCommunicated. ")";
                 }else{
-                    $lastTrip = TripStart::where('abstract_no', $value->abstract_no)->orderBy('id', 'desc')->first();
+                    $lastTrip = TripStart::where('abstract_no', $value->abstract_no)
+                                ->whereDate('created_at', DB::raw('CURDATE()'))
+                                ->orderBy('id', 'desc')
+                                ->first();
                     if($lastTrip)
                     {
                         $value->last_ticket_issued = "";
@@ -506,6 +512,7 @@ class ETMController extends Controller
             }
         }
 
+        $dataToBeBoradcasted[$i]['abstract_no'] = $value->abstract_no; 
         $dataToBeBoradcasted[$i]['etm_abstract'] = $value->etm_abstract; 
         $dataToBeBoradcasted[$i]['etm_abstract_box_class'] = $value->etm_abstract_box_class; 
         $dataToBeBoradcasted[$i]['conductor_driver'] = $value->conductor_driver; 

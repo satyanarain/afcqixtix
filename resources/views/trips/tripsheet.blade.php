@@ -63,9 +63,6 @@
                    <td>
                        <select id="duty" class="form-control w-50-percent">
                            <option value="">Select</option>
-                           @foreach($duties as $duty)
-                                <option value="{{$duty->id}}">{{$duty->duty_number}}</option>
-                            @endforeach
                        </select>
                    </td>
                </tr>
@@ -160,6 +157,44 @@
 $(document).ready(function(){
     $('#from_date').datetimepicker();
     $('#to_date').datetimepicker();
+
+    $(document).on('change', '#route', function(){
+        var route = $('#route').val();
+        if(!route)
+        {
+          return alert('Please select a route.');
+        }
+
+
+        $.ajax({
+            url: "{{route('getdutiesbyroute')}}",
+            type: "POST",
+            data:{
+              route: route
+            },
+            dataType: "JSON",
+            success: function(response){
+              console.log(response)
+              if(response.status == 'Ok')
+              {
+                var data = response.data;
+                var optionsStr = '<option value="">Select</option>';
+                if(data.length > 0)
+                {
+                  $.each(data, function(index, duty){
+                      optionsStr += '<option value="'+duty.id+'">'+duty.duty_number+'</option>'
+                  })
+                  $('#duty').html(optionsStr);
+                }else{
+                  $('#duty').html(optionsStr);
+                }
+              }
+            },
+            error: function(error){
+              console.log(error);
+            } 
+        });
+    });
 
     $(document).on('change', '#duty', function(){
         var route = $('#route').val();

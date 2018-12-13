@@ -163,6 +163,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('tripsheet', 'TripController@tripSheet')->name('tripsheet');
     Route::post('gettripsbyrouteandduty', 'TripController@getTripsByRouteAndDuty')->name('gettripsbyrouteandduty');
     Route::post('getticketsbyparams', 'TripController@getTicketsByParams')->name('getticketsbyparams');
+    Route::post('getdutiesbyroute', 'TripController@getDutiesByRoute')->name('getdutiesbyroute');
+    
+
     //Route::get('targets/data', 'TargetController@anyData')->name('targets.data');
     //Route::post('targets/store', 'TargetController@store');
     //Route::get('targets/getduties/{id}', 'TargetController@getDuty');

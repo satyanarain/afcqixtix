@@ -350,4 +350,21 @@ $duties = DB::table($table_name)->select('*')->where('route_id',$id)->get();
 
         return response()->json(['status'=>'Ok', 'data'=>$tickets]);
     }
+
+
+    public function getDutiesByRoute(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'route' => 'required'
+        ]);
+
+        if($validator->fails())
+        {
+            return response()->json(['status'=>'Error', 'data'=>$validator->fails()]);
+        }
+
+        $duties = Duty::where('route_id', $request->route)->get(['id', 'duty_number']);
+
+        return response()->json(['status'=>'Ok', 'data'=>$duties]);
+    }
 }
