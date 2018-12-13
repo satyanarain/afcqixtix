@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 Route::group(['namespace'=>'Api\V1', 'prefix'=>'v1'], function(){
 	Route::post('login', 'AuthController@login');
 	Route::get('getsqlitedbname', 'CommonController@getSqliteDbName');
-	Route::group(['middleware'=>'jwt.auth'], function(){
+	Route::group([], function(){
 		Route::post('logout', 'AuthController@logout');
 		Route::post('shiftstart', 'ShiftStartController@store');
 		Route::post('tripstart', 'TripStartController@store');
