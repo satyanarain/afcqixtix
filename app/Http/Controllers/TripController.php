@@ -324,7 +324,7 @@ $duties = DB::table($table_name)->select('*')->where('route_id',$id)->get();
     public function getTicketsByParams(Request $request)
     {   
         $validator = Validator::make($request->all(), [
-            'logins' => 'required'
+            'trip' => 'required'
         ]);
 
         if($validator->fails())
@@ -332,21 +332,11 @@ $duties = DB::table($table_name)->select('*')->where('route_id',$id)->get();
             return response()->json(['status'=>'Error', 'data'=>$validator->fails()]);
         }
 
-        $log = ETMLoginLog::whereId($request->logins)->first();
-        if($log)
-        {
-            $tickets = Ticket::with(['fromStop:id,short_name', 'toStop:id,short_name'])
-                        ->where('abstract_id', $log->abstract_no);
-            if($request->trip)
-            {
-                $tickets = $tickets->where('trip_id', $request->trip);
-            }
-            $tickets = $tickets->orderBy('id', 'desc')
+        $tickets = Ticket::with(['fromStop:id,short_name', 'toStop:id,short_name'])
+                        ->where('trip_id', $request->trip);
+                        ->orderBy('id', 'desc')
                         ->limit(10)
                         ->get(['trip_id', 'ticket_number', 'sold_at', 'adults', 'childs', 'total_amt', 'stage_to', 'stage_from']);
-        }else{
-            $tickets = [];
-        }
 
         return response()->json(['status'=>'Ok', 'data'=>$tickets]);
     }
@@ -366,5 +356,31 @@ $duties = DB::table($table_name)->select('*')->where('route_id',$id)->get();
         $duties = Duty::where('route_id', $request->route)->get(['id', 'duty_number']);
 
         return response()->json(['status'=>'Ok', 'data'=>$duties]);
+    }
+
+    public function getTripsByLogin(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'logins' => 'required'
+        ]);
+
+        if($validator->fails())
+        {
+            return response()->json(['status'=>'Error', 'data'=>$validator->fails()]);
+        }
+
+        $log = ETMLoginLog::whereId($request->logins)->first();
+
+        if($log)
+        {
+            $trips = TripStart::with('fromStop:id,short_name')
+                    ->with('toStop:id,short_name')
+                    ->where('abstract_no', $log->abstract_no)
+                    ->get();
+        }else {
+            $trips = [];
+        }
+
+        return response()->json(['status'=>'Ok', 'data'=>$trips]);
     }
 }
