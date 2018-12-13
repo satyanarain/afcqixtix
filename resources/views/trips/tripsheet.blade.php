@@ -118,10 +118,10 @@
                     <th>To Stop</th>
                     <th>Ticket</th>
                     <th>Tkt Issued At</th>
-                    <th>No. Adult Tkts</th>
-                    <th>No. Child Tkts</th>
-                    <th>Pass Amt.</th>
-                    <th>Total Amt.</th>
+                    <th style="text-align:right;">No. Adult Tkts</th>
+                    <th style="text-align:right;">No. Child Tkts</th>
+                    <th style="text-align:right;">Pass Amt.</th>
+                    <th style="text-align:right;">Total Amt.</th>
                   </tr>
                 </thead>
                 <tbody id="tripsheetbody">
@@ -314,9 +314,9 @@ $(document).ready(function(){
                       tableData += '<td>'+tdata.to_stop.short_name+'</td>'
                       tableData += '<td>'+tdata.ticket_number+'</td>'
                       tableData += '<td>'+tdata.sold_at+'</td>'
-                      tableData += '<td>'+tdata.adults+'</td>'
-                      tableData += '<td>'+tdata.childs+'</td>'
-                      tableData += '<td style="text-align:right;">'+0.00+'</td>'
+                      tableData += '<td style="text-align:right;">'+tdata.adults+'</td>'
+                      tableData += '<td style="text-align:right;">'+tdata.childs+'</td>'
+                      tableData += '<td style="text-align:right;">'+'0.00'+'</td>'
                       tableData += '<td style="text-align:right;">'+parseFloat(tdata.total_amt).toFixed(2)+'</td>'
                       tableData += '</tr>'
                   })
