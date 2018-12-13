@@ -357,7 +357,7 @@ $(document).ready(function(){
                 if(data.length > 0)
                 {
                   $.each(data, function(index, trip){
-                      optionsStr += '<option value="'+duty.id+'">'+duty.duty_number+'</option>'
+                      optionsStr += '<option value="'+trip.id+'">'+trip.start_timestamp+' - '+trip.from_stop.short_name+' To '+trip.to_stop.short_name+'</option>'
                   })
                   $('#trip').html(optionsStr);
                 }else{
