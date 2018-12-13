@@ -325,7 +325,8 @@ $duties = DB::table($table_name)->select('*')->where('route_id',$id)->get();
     public function getTicketsByParams(Request $request)
     {   
         $validator = Validator::make($request->all(), [
-            'trip' => 'required'
+            'trip' => 'required|numeric',
+            'logins' => 'required|numeric'
         ]);
 
         if($validator->fails())
@@ -333,11 +334,18 @@ $duties = DB::table($table_name)->select('*')->where('route_id',$id)->get();
             return response()->json(['status'=>'Error', 'data'=>$validator->fails()]);
         }
 
-        $tickets = Ticket::with(['fromStop:id,short_name', 'toStop:id,short_name'])
-                        ->where('trip_id', $request->trip)
+        $log = ETMLoginLog::whereId($request->logins)->first();
+
+        if($log)
+        {
+            $tickets = Ticket::with(['fromStop:id,short_name', 'toStop:id,short_name'])
+                        ->where([['trip_id', $request->trip], ['abstract_no', $log->abstract_no]])
                         ->orderBy('id', 'desc')
                         ->limit(10)
                         ->get(['trip_id', 'ticket_number', 'sold_at', 'adults', 'childs', 'total_amt', 'stage_to', 'stage_from']);
+        }else{
+            $tickets = [];
+        }        
 
         return response()->json(['status'=>'Ok', 'data'=>$tickets]);
     }
