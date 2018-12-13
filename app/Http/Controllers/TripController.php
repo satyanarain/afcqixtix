@@ -339,7 +339,7 @@ $duties = DB::table($table_name)->select('*')->where('route_id',$id)->get();
         if($log)
         {
             $tickets = Ticket::with(['fromStop:id,short_name', 'toStop:id,short_name'])
-                        ->where([['trip_id', $request->trip], ['abstract_no', $log->abstract_no]])
+                        ->where([['trip_id', $request->trip], ['abstract_id', $log->abstract_no]])
                         ->orderBy('id', 'desc')
                         ->limit(10)
                         ->get(['trip_id', 'ticket_number', 'sold_at', 'adults', 'childs', 'total_amt', 'stage_to', 'stage_from']);
