@@ -53,7 +53,7 @@
                        <select id="route" class="form-control w-50-percent">
                            <option value="">Select</option>
                            @foreach($routes as $route)
-                                <option value="{{$route->id}}">{{$route->route}}</option>
+                                <option value="{{$route->id}}">{{$route->route_name}}</option>
                             @endforeach
                        </select>
                    </td>

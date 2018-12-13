@@ -12,13 +12,13 @@ use Notifynder;
 use App\Models\Trip;
 use App\Models\Duty;
 use App\Models\Depot;
-use App\Models\Route;
 use App\Models\Ticket;
 use App\Http\Requests;
 use App\Models\Waybill;
 use App\Models\Country;
 use App\Models\TripStart;
 use App\Models\ETMLoginLog;
+use App\Models\RouteMaster;
 use Illuminate\Http\Request;
 use App\Traits\checkPermission;
 use App\Http\Controllers\Controller;
@@ -264,7 +264,7 @@ $duties = DB::table($table_name)->select('*')->where('route_id',$id)->get();
         $trips = TripStart::with('fromStop:id,short_name')
                     ->with('toStop:id,short_name')
                     ->get();
-        $routes = Route::all(['id', 'route']);
+        $routes = RouteMaster::all(['id', 'route_name']);
         $duties = Duty::all(['id', 'duty_number']);
 
         //return response()->json($trips);

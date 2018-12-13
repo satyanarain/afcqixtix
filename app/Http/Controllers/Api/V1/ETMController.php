@@ -290,7 +290,8 @@ class ETMController extends Controller
                         ->leftJoin('duties', 'shift_start.duty_id', '=', 'duties.id')
                         ->leftJoin('shifts', 'shift_start.shift_id', '=', 'shifts.id')
                         ->leftJoin('vehicles', 'shift_start.vehicle_id', '=', 'vehicles.id')
-                        ->leftJoin('crew as driver', 'shift_start.driver_id', '=', 'driver.id');
+                        ->leftJoin('crew as driver', 'shift_start.driver_id', '=', 'driver.id')
+                        ->where('conductor.role', 'Conductor');
 
         //return $statusData;
 
