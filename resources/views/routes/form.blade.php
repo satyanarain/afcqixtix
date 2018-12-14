@@ -93,7 +93,7 @@
   <div class="col-md-3" style="margin-right: 15px;">{{ Form::button('Cancel', array('class' => 'btn btn-success pull-left','onclick'=>'window.history.back();')) }}</div>
 </div>
  </div>
-
+@push('scripts')
 <script type="text/javascript">
 function checkDest(id)
 {
@@ -172,3 +172,4 @@ function removeFunction(id)
     
 }
 </script>
+@endpush
