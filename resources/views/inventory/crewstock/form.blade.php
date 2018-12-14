@@ -90,6 +90,7 @@
     </div>
   </div>
 </div>
+@push('scripts')
 <script type="text/javascript">
   $(document).ready(function(){
     var itemsid = document.getElementById("items_id").value;
@@ -554,4 +555,4 @@ $(document).on('click', '.removeDenominationsRow', function(){
     }
 });
 </script>
-
+@endpush

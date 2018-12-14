@@ -101,6 +101,7 @@
     </div>
   </div>
 </div>
+@push('scripts')
 <script type="text/javascript">
   $(document).on('click', '.fa-calendar', function(){
       //alert('Hi');
@@ -234,4 +235,5 @@ $(document).on('blur', '.start_sequence', function(){
     }
 });
 </script>
+@endpush
 

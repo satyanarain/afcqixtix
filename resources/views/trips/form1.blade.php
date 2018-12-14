@@ -64,6 +64,7 @@
   <div class="col-md-3" style="margin-right: 15px;">{{ Form::button('Cancel', array('class' => 'btn btn-success pull-left','onclick'=>'window.history.back();')) }}</div>
 </div>
  </div>
+ @push('scripts')
 <script src="{{ asset(elixir('js/bootstrap-clockpicker.min.js')) }}"></script>
 <script type="text/javascript">
 $('.clockpicker1').clockpicker({ 
@@ -187,4 +188,4 @@ function removeFunction(id)
     
 }
 </script>
- 
+@endpush 
