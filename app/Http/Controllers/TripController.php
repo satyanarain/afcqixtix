@@ -2,30 +2,39 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Gate;
 use Carbon;
-use Notifynder;
-use DB;
 use Schema;
 use Response;
+use Validator;
+use Notifynder;
 use App\Models\Trip;
-use App\Models\Country;
+use App\Models\Duty;
+use App\Models\Depot;
+use App\Models\Ticket;
 use App\Http\Requests;
+use App\Models\Waybill;
+use App\Models\Country;
+use App\Models\TripStart;
+use App\Models\ETMLoginLog;
+use App\Models\RouteMaster;
 use Illuminate\Http\Request;
+use App\Traits\checkPermission;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Trip\UpdateTripRequest;
-use App\Http\Requests\Trip\StoreTripRequest;
-use App\Repositories\Trip\TripRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use App\Traits\checkPermission;
-class TripController extends Controller {
+use App\Http\Requests\Trip\StoreTripRequest;
+use App\Http\Requests\Trip\UpdateTripRequest;
+use App\Repositories\Trip\TripRepositoryContract;
 
+class TripController extends Controller 
+{
     protected $trips;
     use checkPermission;
-    public function __construct(
-    TripRepositoryContract $tripss
-    ) {
+
+    public function __construct(TripRepositoryContract $tripss) 
+    {
         $this->trips = $tripss;
     }
 
@@ -34,7 +43,8 @@ class TripController extends Controller {
      *
      * @return Response
      */
-    public function index($route_master_id,$duty_id,Request $request) {
+    public function index($route_master_id,$duty_id,Request $request) 
+    {
        if(!$this->checkActionPermission('trips','view'))
             return redirect()->route('401');
        //die($route_master_id);
@@ -47,7 +57,8 @@ class TripController extends Controller {
         return view('trips.index',compact('trips','route_master_id','duty_id'));
     }
 
-    public function create($route_master_id,$duty_id) {
+    public function create($route_master_id,$duty_id) 
+    {
         if(!$this->checkActionPermission('trips','create'))
             return redirect()->route('401');
         //$trips = Trip::findOrFail();
@@ -242,9 +253,143 @@ $duties = DB::table($table_name)->select('*')->where('route_id',$id)->get();
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Get the tripsheet details.
      *
-     * @param  int  $id
      * @return Response
      */
+
+    public function tripSheet()
+    {
+        $depots = Depot::all(['id', 'name']);
+        $trips = TripStart::with('fromStop:id,short_name')
+                    ->with('toStop:id,short_name')
+                    ->get();
+        $routes = RouteMaster::all(['id', 'route_name']);
+        $duties = Duty::all(['id', 'duty_number']);
+
+        //return response()->json($trips);
+        return view('trips.tripsheet', compact('depots', 'trips', 'routes', 'duties'));
+    }
+
+
+    /**
+     * Get the trips by route and duty.
+     *
+     * @return Response
+     */
+    public function getTripsByRouteAndDuty(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'route' => 'required',
+            'duty' => 'required'
+        ]);
+
+        if($validator->fails())
+        {
+            return response()->json(['status'=>'Error', 'data'=>$validator->fails()]);
+        }
+
+        if($request->from_date)
+        {
+            $from_date = date('Y-m-d H:i', strtotime($request->from_date));
+        }else{
+            $from_date = date('Y-m-d 00:00');
+        }
+
+        if($request->to_date)
+        {
+            $to_date = date('Y-m-d H:i', strtotime($request->to_date));
+        }else{
+            $to_date = date('Y-m-d H:i');
+        }       
+        
+
+        $waybills = Waybill::where([['route_id', $request->route], ['duty_id', $request->duty]])
+                    ->whereBetween(DB::raw('DATE(created_at)'), array($from_date, $to_date))
+                    ->get()
+                    ->pluck('abstract_no');
+
+        if($waybills)
+        {            
+            $logins = ETMLoginLog::with('conductor:id,crew_name,crew_id')
+                        ->whereIN('abstract_no', $waybills)
+                        ->get(['id', 'abstract_no', 'conductor_id', 'login_timestamp']);
+            
+        }else{
+            $logins = [];
+        }
+
+        return response()->json(['status'=>'Ok', 'data'=>$logins]);
+    }
+
+    public function getTicketsByParams(Request $request)
+    {   
+        $validator = Validator::make($request->all(), [
+            'trip' => 'required|numeric',
+            'logins' => 'required|numeric'
+        ]);
+
+        if($validator->fails())
+        {
+            return response()->json(['status'=>'Error', 'data'=>$validator->fails()]);
+        }
+
+        $log = ETMLoginLog::whereId($request->logins)->first();
+
+        if($log)
+        {
+            $tickets = Ticket::with(['fromStop:id,short_name', 'toStop:id,short_name'])
+                        ->where([['trip_id', $request->trip], ['abstract_id', $log->abstract_no]])
+                        ->orderBy('id', 'desc')
+                        ->limit(10)
+                        ->get(['trip_id', 'ticket_number', 'sold_at', 'adults', 'childs', 'total_amt', 'stage_to', 'stage_from']);
+        }else{
+            $tickets = [];
+        }        
+
+        return response()->json(['status'=>'Ok', 'data'=>$tickets]);
+    }
+
+
+    public function getDutiesByRoute(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'route' => 'required'
+        ]);
+
+        if($validator->fails())
+        {
+            return response()->json(['status'=>'Error', 'data'=>$validator->fails()]);
+        }
+
+        $duties = Duty::where('route_id', $request->route)->get(['id', 'duty_number']);
+
+        return response()->json(['status'=>'Ok', 'data'=>$duties]);
+    }
+
+    public function getTripsByLogin(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'logins' => 'required'
+        ]);
+
+        if($validator->fails())
+        {
+            return response()->json(['status'=>'Error', 'data'=>$validator->fails()]);
+        }
+
+        $log = ETMLoginLog::whereId($request->logins)->first();
+
+        if($log)
+        {
+            $trips = TripStart::with('fromStop:id,short_name')
+                    ->with('toStop:id,short_name')
+                    ->where('abstract_no', $log->abstract_no)
+                    ->get();
+        }else {
+            $trips = [];
+        }
+
+        return response()->json(['status'=>'Ok', 'data'=>$trips]);
+    }
 }

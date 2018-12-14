@@ -98,5 +98,4 @@
     <!-- /.col -->
 </div>
 </div>
-@include('partials.table_script_order')
 @stop

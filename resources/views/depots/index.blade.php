@@ -1,4 +1,3 @@
-
 @extends('layouts.master')
 @section('header')
 <h1>{{headingBold()}}</h1>
@@ -77,6 +76,5 @@
 </div>
 <!-- /.row -->
 @include('partials.depotsheader')
-@include('partials.table_script')
 @stop
 

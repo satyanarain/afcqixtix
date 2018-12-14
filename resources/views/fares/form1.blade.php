@@ -30,7 +30,8 @@
 
 
 <!--<div id="b" style="position:absolute; top:50px"><i class="fa fa-bus" style="font-size:48px;color:red"></i></div>-->
-<script type="text/javascript">
+@push('scripts')
+ <script type="text/javascript">
 $(document).ready(function() {
     
     function beeLeft() {
@@ -106,3 +107,4 @@ function removeFunction(id)
     
 }
 </script>
+@endpush

@@ -234,37 +234,96 @@ class ETMDetailController extends Controller
     *-------------------------------------------------------------------------------------------
     *display the etm health status
     *@return Response etm health status
+    *-------------------------------------------------------------------------------------------
     */
     public function healthStatus()
     {
-        $statusData = DB::table('waybills')
-                            ->join('crew as conductor', 'waybills.conductor_id', 'conductor.id')
-                            ->join('crew as driver', 'waybills.driver_id', 'driver.id')
-                            ->join('routes', 'waybills.route_id', 'routes.id')
-                            ->join('duties', 'waybills.duty_id', 'duties.id')
-                            ->join('shifts', 'waybills.shift_id', 'shifts.id')
-                            ->join('vehicles', 'waybills.vehicle_id', 'vehicles.id')
-                            ->join('etm_login_log', function($join){
-                                $join->on('etm_login_log.conductor_id', '=', 'waybills.conductor_id');
-                                $join->whereDate('etm_login_log.login_timestamp', '=', DB::raw('DATE(waybills.etm_issue_time)'));
-                            })
-                            ->select('waybills.gprs_level', 'waybills.battery_percentage', 'waybills.etm_no', 'waybills.abstract_no', 'conductor.crew_name as conductor_name', 'conductor.crew_id as conductor_id', 'conductor.mobile', 'driver.crew_name as driver_name', 'driver.crew_id as driver_id', 'routes.route', 'duties.duty_number', 'shifts.shift', 'vehicles.vehicle_registration_number', 'etm_login_log.login_timestamp', 'etm_login_log.logout_timestamp')
-                            ->get();
-
         $depots = Depot::all(['id', 'name']);
-
-        foreach ($statusData as $key => $value) 
-        {
-            if($value->abstract_no)
-            {
-                $lastTicket = Ticket::where('abstract_id', $value->abstract_no)->orderBy('id', 'desc')->first();
-                $value->last_ticket_issued = $lastTicket->sold_at;
-                $value->last_communicated = $lastTicket->created_at;
-            }
-        }
-
-        //return response()->json($statusData);
-
         return view('etm_details.healthstatus', compact('statusData', 'depots'));
     }
+
+
+    public function parameters()
+    {
+        $colors = DB::table('etm_health_status_colors')->get();
+        return view('etm_details.parameters', compact('colors'));
+    }
+
+
+    public function storeParameters(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'color_id' => 'required',
+            'battery_percentage_min' => 'required',
+            'battery_percentage_max' => 'required',
+            'gprs_level_min' => 'required',
+            'gprs_level_max' => 'required',
+            'last_communicated_min' => 'required',
+            'last_communicated_max' => 'required',
+            'last_ticket_issued_min' => 'required',
+            'last_ticket_issued_max' => 'required',
+        ], ['color_id.required'=>'Status is required.']);
+
+        if($validator->fails())
+        {
+            return redirect()->back()->withErrors($validator->errors());
+        }
+
+        $parameter = DB::table('etm_health_status_params')->where('color_id', $request->color_id)->first();
+
+        if($parameter)
+        {
+            DB::table('etm_health_status_params')
+                ->where('color_id', $request->color_id)
+                ->update(
+                            ['color_id' => $request->color_id,
+                            'battery_percentage_min' => $request->battery_percentage_min,
+                            'battery_percentage_max' => $request->battery_percentage_max,
+                            'gprs_level_min' => $request->gprs_level_min,
+                            'gprs_level_max' => $request->gprs_level_max,
+                            'last_communicated_min' => $request->last_communicated_min,
+                            'last_communicated_max' => $request->last_communicated_max,
+                            'last_ticket_issued_min' => $request->last_ticket_issued_min,
+                            'last_ticket_issued_max' => $request->last_ticket_issued_max]
+                        );
+
+            Session::flash('flash_message', 'Parameters updated successfully.');
+
+            return redirect()->route('etm.parameters');
+
+        }else {
+            DB::table('etm_health_status_params')
+                ->insert(
+                            ['color_id' => $request->color_id,
+                            'battery_percentage_min' => $request->battery_percentage_min,
+                            'battery_percentage_max' => $request->battery_percentage_max,
+                            'gprs_level_min' => $request->gprs_level_min,
+                            'gprs_level_max' => $request->gprs_level_max,
+                            'last_communicated_min' => $request->last_communicated_min,
+                            'last_communicated_max' => $request->last_communicated_max,
+                            'last_ticket_issued_min' => $request->last_ticket_issued_min,
+                            'last_ticket_issued_max' => $request->last_ticket_issued_max]
+                        );
+            Session::flash('flash_message', 'Parameters saved successfully.');
+
+            return redirect()->route('etm.parameters');
+        }
+    }
+
+    public function getParametersByStatus($status)
+    {
+        $validator = Validator::make(['color_id'=>$status], [
+            'color_id' => 'required'
+        ], ['color_id.required'=>'Status is required.']);
+
+        if($validator->fails())
+        {
+            return response()->json(['status'=>'Error', 'data'=>'Invalid status!']);
+        }
+
+        $parameter = DB::table('etm_health_status_params')->where('color_id', $status)->first();
+
+        return response()->json(['status'=>'Ok', 'data'=>$parameter]);
+    }
+
 }

@@ -65,5 +65,4 @@
 </div>
 <!-- /.row -->
 @include('partials.shifts_order_header')
-@include('partials.table_script')  
 @stop

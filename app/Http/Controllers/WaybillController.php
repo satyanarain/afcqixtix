@@ -216,26 +216,34 @@ class WaybillController extends Controller
     {
         try
         {
-           $query = DB::table($request->table)
-            ->select($request->table.'.'.$request->column.' as name',$request->table.'.id')
-            ->where($request->dropdown, '=', $request->id)
-            ->get(); 
-          if(count($query) < 1)
-          {
-            $result = array('code'=>404, "description"=>"No Records Found");
-            return response()->json($result, 404);
-          }
-          else
-          {
-            $result = array('data'=>$query,'code'=>200);
-            return response()->json($result, 200);
-          }
-        
-      }
-      catch(Exception $e)
-      {
-        return response()->json(['error' => 'Something is wrong'], 500);
-      }
+            $query = DB::table($request->table)
+              ->select($request->table.'.'.$request->column.' as name',$request->table.'.id')
+              ->where($request->dropdown, '=', $request->id);
+            if($request->ele == 'conductor_id')
+            {
+              $query = $query->where('role', 'Conductor');
+            }else if($request->ele == 'driver_id'){
+              $query = $query->where('role', 'Driver');
+            }else{
+              $query = $query;
+            }
+            
+            $query = $query->get(); 
+            if(count($query) < 1)
+            {
+              $result = array('code'=>404, "description"=>"No Records Found");
+              return response()->json($result, 404);
+            }
+            else
+            {
+              $result = array('data'=>$query,'code'=>200);
+              return response()->json($result, 200);
+            }        
+        }
+        catch(Exception $e)
+        {
+          return response()->json(['error' => 'Something is wrong'], 500);
+        }
     }
     
     public function auditdetail($id)

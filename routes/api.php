@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 Route::group(['namespace'=>'Api\V1', 'prefix'=>'v1'], function(){
 	Route::post('login', 'AuthController@login');
 	Route::get('getsqlitedbname', 'CommonController@getSqliteDbName');
-	Route::group(['middleware'=>'jwt.auth'], function(){
+	Route::group([], function(){
 		Route::post('logout', 'AuthController@logout');
 		Route::post('shiftstart', 'ShiftStartController@store');
 		Route::post('tripstart', 'TripStartController@store');
@@ -26,10 +26,16 @@ Route::group(['namespace'=>'Api\V1', 'prefix'=>'v1'], function(){
 	    Route::post('inspections', 'InspectionController@store');
 
 	    Route::post('updatebatteryandgprslevel', 'ETMController@updateBatteryAndGPRSLevel');
-	});
 
+	    Route::post('startmidlogoff', 'ETMController@startMidLogOff');
+	});	
 
+	Route::get('getetmhealthstatusdata', 'ETMController@getETMHealthStatusData');
+	Route::get('getetmhealthstatusdata/{depot}/{etmNo}/{status}', 'ETMController@getETMHealthStatusDataByParameters')->name('getetmhealthstatusdata');
 
 	/*Inventory Notification CRON JOBs*/
 	Route::get('notifications/inventory', 'Notifications\InventoryController@index');
+
+	//Route::get('notifications/inventory', 'Notifications\InventoryController@index');
+	
 });

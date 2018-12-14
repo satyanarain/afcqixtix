@@ -2,3 +2,34 @@
 {
 	width: 50% !important;
 }
+.w-100-percent
+{
+	width: 100% !important;
+}
+.w-33-percent
+{
+	width: 33.33% !important;
+}
+.green
+{
+	background: #00ad6e !important;
+}
+
+.red
+{
+	background: #e72530 !important;
+}
+
+.amber
+{
+	background: #eaab0e !important;
+}
+
+.blue
+{
+	background: #187ad3 !important;
+}
+.borderless td, .borderless th 
+{
+    border: none !important;
+}

@@ -160,7 +160,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('trips/view_detail/{id}', 'TripController@viewDetail');
 //    Route::post('trips/store', 'TripController@store');
     Route::resource('route_master.duties.trips', 'TripController');
-    
+    Route::get('tripsheet', 'TripController@tripSheet')->name('tripsheet');
+    Route::post('gettripsbyrouteandduty', 'TripController@getTripsByRouteAndDuty')->name('gettripsbyrouteandduty');
+    Route::post('getticketsbyparams', 'TripController@getTicketsByParams')->name('getticketsbyparams');
+    Route::post('getdutiesbyroute', 'TripController@getDutiesByRoute')->name('getdutiesbyroute');
+    Route::post('gettripsbylogin', 'TripController@getTripsByLogin')->name('gettripsbylogin');
+
     //Route::get('targets/data', 'TargetController@anyData')->name('targets.data');
     //Route::post('targets/store', 'TargetController@store');
     //Route::get('targets/getduties/{id}', 'TargetController@getDuty');
@@ -203,6 +208,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('etm_details/view_detail/{id}', 'EtmDetailController@viewDetail');
     Route::resource('etm_details', 'EtmDetailController');
     Route::get('etm/health_status', 'EtmDetailController@healthStatus');
+    Route::get('etm/parameters', 'EtmDetailController@parameters')->name('etm.parameters');
+    Route::post('etm/parameters', 'EtmDetailController@storeParameters');
+    Route::get('etm/getparametersbystatus/{status}', 'EtmDetailController@getParametersByStatus')->name('etm.getparametersbystatus');
     /* ROLES */
     Route::get('roles/data', 'RolesController@anyData')->name('roles.data');
     Route::get('roles/view_detail/{id}', 'RolesController@viewDetail');

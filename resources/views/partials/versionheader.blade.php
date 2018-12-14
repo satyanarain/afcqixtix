@@ -1,5 +1,6 @@
 <div class="modal fade" id="view_detail" role="dialog">
  </div>
+@push('scripts')
 <script>
 function viewDetails(tablename,id,logtable)
 {
@@ -40,3 +41,4 @@ function approveChange(tablename,id)
      })   
 }
 </script>
+@endpush

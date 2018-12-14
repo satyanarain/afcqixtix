@@ -60,6 +60,13 @@
     </div>
     <!-- /.col -->
 </div>
+
+<!-- /.row -->
+@include('partials.etm_details_header')
+
+@endsection
+
+@push('scripts')
 <script>
 function statusUpdate(id)
 {
@@ -84,8 +91,4 @@ function statusUpdate(id)
 });
 }
 </script>
-<!-- /.row -->
-@include('partials.etm_details_header')
-@include('partials.table_script')
-
-@stop
+@endpush

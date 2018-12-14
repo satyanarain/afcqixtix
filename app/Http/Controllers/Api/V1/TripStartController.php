@@ -19,7 +19,8 @@ class TripStartController extends Controller
     		'end_stop_id' => 'required',
     		'start_timestamp' => 'required',
             'bus_type' => 'required',
-            'abstract_no' => 'required'
+            'abstract_no' => 'required',
+            'trip_id' => 'required'
     	]);
 
     	if($validator->fails())

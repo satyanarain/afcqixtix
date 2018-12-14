@@ -70,24 +70,24 @@
 <!-- /.row -->
 <div class="modal fade" id="view_detail" role="dialog">
  </div>
+@stop
+@push('scripts')
 <script>
    function viewDetails(id,view_detail)
    {
    var urldata=   '/route_master/' + view_detail + '/' +id;
   //  alert(urldata)
     $.ajax({
-		type: "GET",
-		url: urldata,
-		cache: false,
-		success: function(data){
+        type: "GET",
+        url: urldata,
+        cache: false,
+        success: function(data){
               //  alert(data);
                  $("#" + view_detail).modal('show');
                   $("#"+view_detail).html(data);
-		}
-	});
+        }
+    });
   
    }
 </script>
-
-@include('partials.table_script')
-@stop
+@endpush

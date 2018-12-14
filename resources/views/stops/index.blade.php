@@ -60,5 +60,4 @@
 </div>
 <!-- /.row -->
 @include('partials.stopsheader')
-@include('partials.table_script') 
 @stop

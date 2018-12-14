@@ -45,6 +45,8 @@
        
 
 @stop
+
+@push('scripts')
 <script type="text/javascript">
     function checkDuplicate()
     {
@@ -83,3 +85,4 @@
 }
 
 </script>
+@endpush

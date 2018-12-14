@@ -63,6 +63,5 @@
     <!-- /.col -->
 </div>
 <!-- /.row -->
-@include('partials.versionheader')
-@include('partials.table_script') 
+@include('partials.versionheader') 
 @stop
