@@ -132,9 +132,10 @@ echo json_encode([
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
+                       
+                       
                         @php
-$array= array('depots','bus_types','services','vehicles','shifts','stops','routes','route_master','duties','targets','trips','fares','concession_fare_slabs'
-,'concessions','trip_cancellation_reasons','inspector_remarks','payout_reasons','denominations','pass_types','crew','etm_details')
+$array= array('depots')
                        @endphp
                         <ul @if(in_array($segments_var[0],$array)) class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
                              
@@ -276,8 +277,32 @@ $array= array('depots','bus_types','services','vehicles','shifts','stops','route
                          </ul>
                     </li>
                     @endif
-
-
+<!--manage reports-->
+                    
+                      <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                        <a href="#">
+                            <i class="fa fa-bus"></i> <span>Manage Reports</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        @php
+                        $array= array('audit_statuses')
+                       @endphp
+                        <ul @if(in_array($segments_var[0],$array)) class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
+                             
+                          @if(menuPermission('audit_statuses')==1)
+                          
+                          <li @if($segments_var[0]=='audit_statuses') class="active" @endif><a href="{{route('report.audit_statuses.index')}}">
+                               
+                                    <i class="depot-icon"></i> @lang('Audit Status')
+                             </a>
+                           </li>
+                              @endif
+                           
+                         </ul>
+                    </li>               
+                    
                     @php $pem=menuDisplayByUser($result, 'centerstocks','view'); @endphp
                     @if($pem=='true')
                      <li  @if($segments_var[1]=='health_status') class="treeview active" @else class="treeview" @endif>

@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 use App\Models\Fare;
-
+use DB;
 trait activityLog {
 
 	function createLog($controllerModel='',$controllerModelLog='',$id='')
@@ -18,6 +18,13 @@ trait activityLog {
         
 	}
         
+        function findNameById($table='',$fieldname='',$id='')
+	{
+	  $name = DB::table($table)->select('id',$fieldname)->first($id);
+          $name = $name->$fieldname;
+	 return $name;
+	}
+	
         function mySqlDate($date='')
 	{ 
         if ($date!= '') {

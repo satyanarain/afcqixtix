@@ -189,6 +189,8 @@ return [
         App\Services\Validation\ValidationServiceProvider::class,  
         Felixkiss\UniqueWithValidator\ServiceProvider::class,
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
+        Jimmyjs\ReportGenerator\ServiceProvider::class,
+
       ],
 
     /*
@@ -238,11 +240,14 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Notifynder' => Fenos\Notifynder\Facades\Notifynder::class,
-        
         'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
         'Form' => Collective\Html\FormFacade::class,
         'HTML' => Collective\Html\HtmlFacade::class,
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
+        'PdfReport' => Jimmyjs\ReportGenerator\Facades\PdfReportFacade::class,
+        'ExcelReport' => Jimmyjs\ReportGenerator\Facades\ExcelReportFacade::class,
+       'CSVReport' => Jimmyjs\ReportGenerator\Facades\CSVReportFacade::class,
+        
 
 
     ],

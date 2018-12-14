@@ -16,6 +16,14 @@ function displayIdBaseName($table = '', $id = '', $fieldname = '') {
         echo "N/A";
     }
 }
+/**************************************************************************/
+/**************************************************************************/
+
+
+function displaySelectFormat($data) {
+        $status_type=array('1'=>"PDF",'2'=>"Excel");
+    return $status_type;
+}
 
 function displayView($fieldname) {
     if ($fieldname != '') {

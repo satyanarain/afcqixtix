@@ -1,0 +1,48 @@
+<?php
+
+namespace App\Http\Requests\Report\ETM\AuditStatus;
+
+use App\Http\Requests\Request;
+
+class StoreAuditStatusRequest extends Request
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+       //return auth()->user()->can('user-create');
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        
+            return [
+                   'depot_id' => 'required',
+                   // 'depot_id' => 'required|unique:depots,depot_id',
+                  // 'short_name' => 'required',
+                  // 'depot_location' => 'required',
+                  // 'service_id' => 'required'
+             ];
+        
+    }
+     public function messages()
+    {
+        return [
+             'depot_id' => 'Please select depot name',
+              ];
+        
+    }
+    
+    
+    
+    
+}

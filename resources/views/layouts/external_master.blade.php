@@ -3,8 +3,6 @@
 $segments_var = '';
 $segments_var = Request::segments();
 
-$segments_var[0];
-$segments_var[1];
 $testerere= Config::get('app.locales');
 $testerere[0];
 App::setLocale($testerere[0]);

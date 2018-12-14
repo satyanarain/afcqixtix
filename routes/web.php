@@ -199,11 +199,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('denominations/store', 'DenominationController@store');
     Route::resource('denominations', 'DenominationController');
    
-    
-    
-    
-    
-    
     Route::get('etm_details/data', 'EtmDetailController@anyData')->name('etm_details.data');
     Route::get('etm_details/view_detail/{id}', 'EtmDetailController@viewDetail');
     Route::resource('etm_details', 'EtmDetailController');
@@ -291,5 +286,28 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('waybills/getdata/{id}', 'WaybillController@getData');
     Route::post('waybills/getfiltereddata', 'WaybillController@getfiltereddata')->name('waybills/getfiltereddata');
     Route::resource('waybills', 'WaybillController')->except('show');
+    
+    /******************************Created by satya 06-12-2018**************************************************/
+    /******************************Start Report Routes**************************************************/
+    //   Route::resource('centerstock', 'CenterStockController')->only(['index', 'store', 'edit', 'update']);
+    
+     Route::group(['prefix'=>'report', 'namespace'=>'Report', 'as'=>'report.'], function(){
+       //   Route::group(['prefix'=>'report', 'as'=>'report.'], function(){
+       //  Route::resource('audit_statuses', 'AuditStatusController')->except('show');
+         Route::resource('audit_statuses', 'AuditStatusController'); 
+
+       // });
+        });
+
+       
+        
+        
+        
+//    Route::namespace('Admin')
+//    ->prefix('admin')
+//    ->group(function () {
+//        Route::resource('users', 'UsersController');
+//    });
+    
     
 });
