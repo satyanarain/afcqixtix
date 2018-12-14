@@ -65,6 +65,14 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'username' => 'required'
+        ]);
+
+        if($validator->fails())
+        {
+            return response()->json(['statusCode'=>'Error', 'data'=>$validator->errors()]);
+        }
         if($request->abstract_no)
         {
             $shift = ShiftStart::where('abstract_no', $abstract_no)->first();
@@ -76,16 +84,16 @@ class AuthController extends Controller
             $shift->save();
         }
 
-        $conductor = JWTAuth::toUser($token);
+        $conductor = Crew::where('crew_id', $request->username)->first();
 
-        //return response()->json($conductor);
-
-        //Update logout in ETM login log
-        ETMLoginLog::where([['conductor_id', $conductor->id], ['logout_timestamp', NULL]])
+        if($conductor)
+        {
+            ETMLoginLog::where([['conductor_id', $conductor->id], ['logout_timestamp', NULL]])
                     ->whereDate('login_timestamp', DB::raw('CURDATE()'))
                     ->update(['logout_timestamp' => date('Y-m-d H:i:s')]);
-
-        JWTAuth::parseToken()->invalidate();
-        return response()->json(['statusCode'=>'Ok', 'data'=>'Token destroyed successfully.']);
+            return response()->json(['statusCode'=>'Ok', 'data'=>'Logged out successfully.']);
+        }else{
+            return response()->json(['statusCode'=>'Error', 'data'=>'Invalid conductor id.']);
+        }
     }
 }
