@@ -234,7 +234,7 @@ class AuditStatusController extends Controller
             }else{
                 $audited = "No";
             }
-            $row = [(string)($key+1), (string)$value->etm->etm_no, $value->etmLoginDetails->login_timestamp, $value->route->route_name." / ".$value->duty->duty_number." / ".$value->shift->shift, $value->etmLoginDetails->logout_timestamp, $value->conductor->crew_name, $value->vehicle->vehicle_registration_number, '', $audited];
+            $row = [(string)($key+1), (string)$value->etm->etm_no, (string)($value->etmLoginDetails->login_timestamp), (string)($value->route->route_name." / ".$value->duty->duty_number." / ".$value->shift->shift), (string)($value->etmLoginDetails->logout_timestamp), (string)($value->conductor->crew_name), (string)($value->vehicle->vehicle_registration_number), '', (string)($audited)];
 
             //return $row;
 
