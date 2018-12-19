@@ -77,13 +77,13 @@ $input['is_this_by'] = $requestData->is_this_by;
 
 $route = $requestData->route;
       $sql=Route::where([['route',$route],['id','!=',$id]])->first();
-     if(count($sql)>0)
-     {
-         return redirect('routes/' . $id . '/edit')->withErrors(['Route has already been taken.']);
- 
-      } else {
+//     if(count($sql)>0)
+//     {
+//         return redirect('routes/' . $id . '/edit')->withErrors(['Route has already been taken.']);
+// 
+//      } else {
 $routes = $routes->fill($input)->save();
-      }
+      //}
 
 $stop_id = $requestData->stop_id;
 $stage_number = $requestData->stage_number;
