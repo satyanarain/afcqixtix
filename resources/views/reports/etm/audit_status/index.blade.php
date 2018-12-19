@@ -173,7 +173,7 @@
                             }
                         }
                     };
-                    pdfMake.createPdf(docDefinition).open();
+                    pdfMake.createPdf(docDefinition).download(reportName+'.pdf');
                 }
             });
         }
