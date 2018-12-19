@@ -77,6 +77,47 @@ $(document).ready(function() {
 
         ]
     } );
+
+
+    var table2= $('#reportTable').DataTable( {
+          "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+       "paging": true,
+      "lengthChange": true,
+      "searching": true,
+      "ordering": true,
+      //"order": [[0,'asc']],
+      "info": true,
+      "autoWidth": false,
+    "colVis": [{
+            exclude: [ 0 ]
+        }],
+  dom: 'Bfrtip',
+    lengthMenu: [
+            [ 10, 25, 50, -1 ],
+            [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+        ],
+        buttons: [
+            'pageLength',
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'pdfHtml5',
+                exportOptions: {
+                     columns: ':visible'
+                },
+                orientation: 'landscape'
+            },
+            {
+                extend: 'colvis',
+                columns: ':gt(0)'
+            }
+
+        ]
+    } );
     
 } );
 

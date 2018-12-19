@@ -284,12 +284,12 @@ $pem=menuDisplayByUser($result, 'centerstocks','view');
       </span>
   </a>
 @php
-$array= array('etm_reports')
+$array= array('etm', 'revenue', 'ppt')
 @endphp
-<ul @if(in_array($segments_var[0],$array)) class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
+<ul @if(in_array($segments_var[1],$array)) class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
 <?php //print_r($segments_var);die;?>
     @if(menuPermission('etm_reports')==1)
-        <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+        <li @if($segments_var[1]=='etm') class="treeview active" @else class="treeview" @endif>
             <a href="#">
               <i class="fa fa-bus"></i> <span>ETM Reports</span>
               <span class="pull-right-container">
@@ -298,22 +298,16 @@ $array= array('etm_reports')
           </a>
             <ul @if(in_array($segments_var[0],$array)) class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
 
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="{{route('report.audit_statuses.index')}}">
+                <li @if($segments_var[1]=='etm' && $segments_var[2]=='audit_status') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.etm.audit_status.index')}}">
                         <i class="depot-icon"></i> @lang('Audit Status')
                     </a>
                 </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="{{route('report.audit_statuses.index')}}">
-                        <i class="depot-icon"></i> @lang('Audit Status')
-                    </a>
-                </li>
-
             </ul>
         </li>
     @endif
     @if(menuPermission('ppt_reports')==1)
-        <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+        <li @if($segments_var[1]=='ppt') class="treeview active" @else class="treeview" @endif>
             <a href="#">
               <i class="fa fa-bus"></i> <span>PPT Reports</span>
               <span class="pull-right-container">
@@ -322,12 +316,7 @@ $array= array('etm_reports')
           </a>
             <ul @if(in_array($segments_var[0],$array)) class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
                 <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="{{route('report.audit_statuses.index')}}">
-                        <i class="depot-icon"></i> @lang('Audit Status')
-                    </a>
-                </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="{{route('report.audit_statuses.index')}}">
+                    <a href="{{route('reports.etm.audit_status.index')}}">
                         <i class="depot-icon"></i> @lang('Audit Status')
                     </a>
                 </li>
@@ -335,7 +324,7 @@ $array= array('etm_reports')
         </li>
     @endif
     @if(menuPermission('revenue_reports')==1)
-        <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+        <li @if($segments_var[1]=='revenue') class="treeview active" @else class="treeview" @endif>
             <a href="#">
               <i class="fa fa-bus"></i> <span>Revenue Reports</span>
               <span class="pull-right-container">
@@ -344,12 +333,7 @@ $array= array('etm_reports')
             </a>
             <ul @if(in_array($segments_var[0],$array)) class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
                 <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="{{route('report.audit_statuses.index')}}">
-                        <i class="depot-icon"></i> @lang('Audit Status')
-                    </a>
-                </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="{{route('report.audit_statuses.index')}}">
+                    <a href="{{route('reports.etm.audit_status.index')}}">
                         <i class="depot-icon"></i> @lang('Audit Status')
                     </a>
                 </li>
