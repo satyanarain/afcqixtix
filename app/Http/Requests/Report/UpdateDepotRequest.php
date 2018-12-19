@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Depot;
+namespace App\Http\Requests\Report;
 
 use App\Http\Requests\Request;
 
-class UpdateDepotRequest extends Request
+class UpdateReportRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.

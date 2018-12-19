@@ -26,7 +26,7 @@
             </div><!-- /.box-header -->
             <div class="box-body">
                 {!! Form::open([
-                'route' => 'report.audit_statuses.store',
+                'route' => 'reports.etm.audit_status.store',
                 'files'=>true,
                 'enctype' => 'multipart/form-data',
                 'class'=>'form-horizontal',

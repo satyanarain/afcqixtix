@@ -299,13 +299,27 @@ Route::group(['middleware' => ['auth']], function () {
     /******************************Start Report Routes**************************************************/
     //   Route::resource('centerstock', 'CenterStockController')->only(['index', 'store', 'edit', 'update']);
     
-     Route::group(['prefix'=>'report', 'namespace'=>'Report', 'as'=>'report.'], function(){
-       //   Route::group(['prefix'=>'report', 'as'=>'report.'], function(){
-       //  Route::resource('audit_statuses', 'AuditStatusController')->except('show');
-         Route::resource('audit_statuses', 'AuditStatusController'); 
+    Route::group(['prefix'=>'reports', 'namespace'=>'Reports', 'as'=>'reports.'], function(){
 
-       // });
+        Route::group(['prefix'=>'etm', 'namespace'=>'ETM', 'as'=>'etm.'], function(){
+      
+            Route::resource('audit_status', 'AuditStatusController')->only('index'); 
+            Route::post('audit_status/getdata', 'AuditStatusController@getData')->name('audit_status.getdata');
+            Route::get('audit_status/displayData', 'AuditStatusController@displayData')->name('audit_status.displaydata');
         });
+
+        Route::group(['prefix'=>'ppt', 'namespace'=>'PPT', 'as'=>'ppt.'], function(){
+      
+            Route::resource('audit_statuses', 'AuditStatusController'); 
+
+        });
+
+        Route::group(['prefix'=>'revenue', 'namespace'=>'Revenue', 'as'=>'revenue.'], function(){
+      
+            Route::resource('audit_statuses', 'AuditStatusController'); 
+
+        });
+    });
 
        
         
