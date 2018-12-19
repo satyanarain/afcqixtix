@@ -303,9 +303,9 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::group(['prefix'=>'etm', 'namespace'=>'ETM', 'as'=>'etm.'], function(){
       
-            Route::resource('audit_status', 'AuditStatusController')->only(['index', 'store']); 
+            Route::resource('audit_status', 'AuditStatusController')->only('index'); 
             Route::post('audit_status/getdata', 'AuditStatusController@getData')->name('audit_status.getdata');
-
+            Route::get('audit_status/displayData', 'AuditStatusController@displayData')->name('audit_status.displaydata');
         });
 
         Route::group(['prefix'=>'ppt', 'namespace'=>'PPT', 'as'=>'ppt.'], function(){

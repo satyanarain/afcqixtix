@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Reports\ETM;
 
 use DB;
+use Auth;
 use Validator;
 use PdfReport;
 use CSVReport;
 use ExcelReport;
 use App\Models\Crew;
+use App\Models\Shift;
 use App\Models\Depot;
 use App\Models\Waybill;
 use App\Traits\activityLog;
@@ -46,7 +48,7 @@ class AuditStatusController extends Controller
      * Created By satya
      * Date 12-12-2018
      */
-    public function store(StoreAuditStatusRequest $request)
+    public function displaydata(StoreAuditStatusRequest $request)
     {       
         $input = $request->all();
         $depot_id = $input['depot_id'];
@@ -94,8 +96,9 @@ class AuditStatusController extends Controller
         
                 
         $data = $data->orderBy('waybills.id')
+                ->paginate(15);
                 //->limit(5)
-                ->get(['status', 'abstract_no', 'etm_no', 'route_id', 'duty_id', 'shift_id', 'conductor_id', 'vehicle_id']);
+                //->get(['status', 'abstract_no', 'etm_no', 'route_id', 'duty_id', 'shift_id', 'conductor_id', 'vehicle_id']);
 
         //return response()->json($data);
 
@@ -112,23 +115,74 @@ class AuditStatusController extends Controller
     {
         $input = $request->all();
         $depot_id = $input['depot_id'];
-        $report_date = $input['report_date'];
+        $report_date = $input['report_date'] ? date('Y-m-d', strtotime($input['report_date'])) : '';
         $status_type = $input['status_type'];
         $etm_no = $input['etm_no'];
         $shift_id = $input['shift_id'];
         $select_format = $input['select_format'];
         $name =$this->findNameById('depots','name',$depot_id);
     
-        $title = 'Audit Status Report'; // Report title
+        $title = 'ETM Audit Status Report'; // Report title
+
+        if($depot_id)
+        {
+            $depot = Depot::whereId($depot_id)->first();
+            if($depot)
+            {
+                $depotName = $depot->name;
+            }else{
+                $depotName = '';
+            }
+        }else{
+            $depotName = '';
+        }
+
+        if($status_type == 's')
+        {
+            $status = 'Submitted';
+        }elseif($status_type == 'c')
+        {
+            $status = 'Completed';
+        }else{
+            $status = 'Generated';
+        }
+
+        if($shift_id)
+        {
+            $shift = Shift::whereId($shift_id)->first();
+            if($shift)
+            {
+                $shiftName = $shift->shift;
+            }else{
+                $shiftName = "";
+            }
+        }else{
+            $shiftName = "";
+        }
+
+        if($etm_no)
+        {
+            $etm = ETMDetail::whereId($etm_no)->first();
+            if($etm)
+            {
+                $etmNumber = $etm->etm_no;
+            }else{
+                $etmNumber = '';
+            }
+        }else{
+            $etmNumber = '';
+        }
 
         $meta = [ // For displaying filters description on header
-            'Date' => $report_date ,
-            'Status Type' => $status_type,
-            'Shift' => $status_type,
-            'Title' => $title
+            'Depot : ' . $depotName,
+            'Date : ' . $report_date,
+            'Shift : ' . $shiftName,
+            'Status Type : ' . $status,
+            'ETM No. : ' . $etmNumber
         ];   
     
         $data = Waybill::with(['etm:id,etm_no', 'route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'conductor:id,crew_name,crew_id', 'vehicle:id,vehicle_registration_number', 'etmLoginDetails:abstract_no,login_timestamp,logout_timestamp']);
+
         if($depot_id)
         {
             $data = $data->where('depot_id', $depot_id);
@@ -168,7 +222,9 @@ class AuditStatusController extends Controller
             ...
         ]
         */
-        $reportData = [['S. No.', 'ETM No.', 'Login Time', 'Route-Duty-Shift', 'Logout Time', 'Conductor', 'Vehicle No.', 'Handed Over To', 'Audited']];
+        $reportData = [
+                        ['S. No.', 'ETM No.', 'Login Time', 'Route-Duty-Shift', 'Logout Time', 'Conductor', 'Vehicle No.', 'Handed Over To', 'Audited']
+                    ];
         foreach ($data as $key => $value) 
         {
             $sno = $key +1;
@@ -187,7 +243,7 @@ class AuditStatusController extends Controller
 
         //return $reportData;
 
-        return response()->json(['status'=>'Ok', 'data'=>$reportData], 200);
+        return response()->json(['status'=>'Ok', 'title'=>$title, 'meta'=>$meta, 'data'=>$reportData, 'serverDate'=>date('d-m-Y H:i:s'), 'takenBy'=>Auth::user()->name], 200);
     }
 
    
