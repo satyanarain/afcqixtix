@@ -29,7 +29,7 @@ class StoreRouteRequest extends Request
                 //   'route' => 'required',
                    'source' => 'required',
                    'direction' => 'required',
-                    'route' => 'unique_with:routes,route,direction',
+                    //'route' => 'unique_with:routes,direction',
                    //'default_path' => 'required',
                    //'default_path' => 'required',
 //                   'stop_id' => 'required',
