@@ -23,7 +23,7 @@
        $status_type=array('g'=>"Generated",'s'=>"Submitted",'c'=>"Completed");
      ?>
      
-    {!! Form::label('status_uype', Lang::get('Status Type'), ['class' => 'control-label']) !!}
+    {!! Form::label('status_type', Lang::get('Status Type'), ['class' => 'control-label']) !!}
        {!! Form::select('status_type',$status_type,isset($status_type->status_uype) ? $status_type->status_type : selected,['class' => 'form-control','placeholder'=>"Select Status Type"]) !!}
 </div>
 </div>

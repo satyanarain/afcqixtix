@@ -173,6 +173,11 @@ class AuditStatusController extends Controller
             $etmNumber = '';
         }
 
+        /*
+        *meta data shoul be an array as below
+        *['Depot : Balewadi', 'ETM No. : 1222', 'ETC.']
+        */
+
         $meta = [ // For displaying filters description on header
             'Depot : ' . $depotName,
             'Date : ' . $report_date,
@@ -227,7 +232,6 @@ class AuditStatusController extends Controller
                     ];
         foreach ($data as $key => $value) 
         {
-            $sno = $key +1;
             if($value->status == 'c')
             {
                 $audited = "Yes";

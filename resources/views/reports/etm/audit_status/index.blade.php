@@ -65,11 +65,11 @@
                                     <td></td>
                                     <td>
                                         @if($da->status == 'c')
-                                            {{'Completed'}}
+                                            {{'Yes'}}
                                         @elseif($da->status == 's')
-                                            {{'Submitted'}}
+                                            {{'No'}}
                                         @else
-                                            {{'Generated'}}
+                                            {{'No'}}
                                         @endif
                                     </td>
                                 </tr>
@@ -185,6 +185,9 @@
                                 // paddingBottom: function(i, node) { return 2; },
                                 fillColor: function (rowIndex, node, columnIndex) { 
                                     return (rowIndex === 0) ? '#eee' : ''; 
+                                },
+                                style: function(rowIndex, node, columnIndex){
+                                    return (rowIndex === 0) ? 'tableHeader' : ''; 
                                 }
                             }
                         }],
@@ -206,6 +209,9 @@
                             },
                             tableStyle: {
                                 fontSize: 8
+                            },
+                            tableHeader: {
+                                bold: true
                             }
                         }
                     };
@@ -239,12 +245,19 @@ $(document).ready(function(){
                 console.log(response);
                 if(response.status == 'Ok')
                 {
+                    var columns = response.columns
                     var data = response.data;
                     var metaData = response.meta;
                     var title = response.title;
                     var takenBy = response.takenBy;
                     var serverDate = response.serverDate;
-                    Export(metaData, title, data, takenBy, serverDate);
+                    if(data.length > 1)
+                    {
+                        Export(metaData, title, data, takenBy, serverDate);
+                    }else{
+                        return alert('No records to download!');
+                    }
+                    
                 }                
             },
             error: function(error)
