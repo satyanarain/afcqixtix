@@ -94,7 +94,7 @@ class TicketSectionStockController extends Controller
 
         if($denom_id)
         {
-            $data = $data->where('denomination_id', $denom_id);
+            $data = $data->where('denom_id', $denom_id);
         }
 
         if($series)
@@ -164,7 +164,7 @@ class TicketSectionStockController extends Controller
 
         if($denom_id)
         {
-            $data = $data->where('denomination_id', $denom_id);
+            $data = $data->where('denom_id', $denom_id);
         }
 
         if($series)
