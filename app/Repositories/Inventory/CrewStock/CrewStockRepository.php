@@ -4,10 +4,10 @@ namespace App\Repositories\Inventory\CrewStock;
 
 use DB;
 use Notifynder;
-use App\Models\CrewStock;
 use App\Traits\activityLog;
 use App\Mail\BusTypeCreated;
 use Illuminate\Http\Request;
+use App\Models\Inventory\CrewStock;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;

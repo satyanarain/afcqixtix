@@ -1,47 +1,56 @@
 <?php
-
 namespace App\Traits;
-use App\Models\Fare;
+
 use DB;
+use App\Models\Fare;
+
 trait activityLog {
 
 	function createLog($controllerModel='',$controllerModelLog='',$id='')
 	{
-	$fares_log = $controllerModel::where('id', '=', $id )->get()->toArray();
-       unset($fares_log[0]['id']);
-     //  unset($fares_log[0]['created_at']);
-       unset($fares_log[0]['updated_at']);
-       foreach ($fares_log as $item) 
-        {
+	    $fares_log = $controllerModel::where('id', '=', $id )->get()->toArray();
+      unset($fares_log[0]['id']);
+      //  unset($fares_log[0]['created_at']);
+      unset($fares_log[0]['updated_at']);
+      foreach ($fares_log as $item) 
+      {
           return  $controllerModelLog::insert($item);
-        }
-        
+      }        
 	}
         
-        function findNameById($table='',$fieldname='',$id='')
+  function findNameById($table='',$fieldname='',$id='')
 	{
-	  $name = DB::table($table)->select('id',$fieldname)->first($id);
+	    $name = DB::table($table)
+                  ->select('id',$fieldname)
+                  ->whereId($id)
+                  ->first();
+      if($name)
+      {
           $name = $name->$fieldname;
-	 return $name;
+      }else{
+          $name = '';
+      }
+      
+	    return $name;
 	}
 	
-        function mySqlDate($date='')
+  function mySqlDate($date='')
 	{ 
         if ($date!= '') {
            return date('Y-m-d', strtotime($date));
         } else {
            return NULL;
         
-	}
-        }
+	      }
+  }
         
-        function displayView($fieldname) {
+  function displayView($fieldname) {
     if ($fieldname != '') {
         echo $fieldname;
     } else {
         echo "N/A";
     }
-}
+  }
 
 function dateView($date_blank) {
     if ($date_blank == "0000-00-00" || $date_blank == '') {

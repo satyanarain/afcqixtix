@@ -300,7 +300,52 @@ $array= array('etm', 'revenue', 'ppt')
 
                 <li @if($segments_var[1]=='etm' && $segments_var[2]=='audit_status') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.etm.audit_status.index')}}">
-                        <i class="depot-icon"></i> @lang('Audit Status')
+                        <i class="depot-icon"></i> Audit Status
+                    </a>
+                </li>
+                <li @if($segments_var[1]=='etm' && $segments_var[2]=='audit_status') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Trip Cancellation
+                    </a>
+                </li>
+                <li @if($segments_var[1]=='etm' && $segments_var[2]=='audit_status') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Route Change
+                    </a>
+                </li>
+                <li @if($segments_var[1]=='etm' && $segments_var[2]=='audit_status') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Penality Ticket Details
+                    </a>
+                </li>
+                <li @if($segments_var[1]=='etm' && $segments_var[2]=='audit_status') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> SAM Data
+                    </a>
+                </li>
+                <li @if($segments_var[1]=='etm' && $segments_var[2]=='audit_status') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Passes Validated
+                    </a>
+                </li>
+                <li @if($segments_var[1]=='etm' && $segments_var[2]=='audit_status') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> ETM Not Sync
+                    </a>
+                </li>
+                <li @if($segments_var[1]=='etm' && $segments_var[2]=='audit_status') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> ETM Issue Details
+                    </a>
+                </li>
+                <li @if($segments_var[1]=='etm' && $segments_var[2]=='audit_status') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> ETM Activity Log Report
+                    </a>
+                </li>
+                <li @if($segments_var[1]=='etm' && $segments_var[2]=='audit_status') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> ETM Pending Activity Log Report
                     </a>
                 </li>
             </ul>
@@ -316,8 +361,48 @@ $array= array('etm', 'revenue', 'ppt')
           </a>
             <ul @if(in_array($segments_var[0],$array)) class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
                 <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="{{route('reports.etm.audit_status.index')}}">
-                        <i class="depot-icon"></i> @lang('Audit Status')
+                    <a href="#">
+                        <i class="depot-icon"></i> Depot Stock
+                    </a>
+                </li>
+                <li @if($segments_var[2]=='ticket_section_stock') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.ppt.ticket_section_stock.index')}}">
+                        <i class="depot-icon"></i> Ticket Section Stock
+                    </a>
+                </li>
+                <li @if($segments_var[2]=='crew_stock') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.ppt.crew_stock.index')}}">
+                        <i class="depot-icon"></i> Crew Stock
+                    </a>
+                </li>
+                <li @if($segments_var[2]=='receipt_from_main_office') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.ppt.receipt_from_main_office.index')}}">
+                        <i class="depot-icon"></i> Receipts From Main Office
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Issues To Ticket Section
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Issues To Crew
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Consumption Of Pre-Printed Ticket
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Returned By Conductor
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Denom-wise Stock Ledger
                     </a>
                 </li>
             </ul>
@@ -332,9 +417,145 @@ $array= array('etm', 'revenue', 'ppt')
               </span>
             </a>
             <ul @if(in_array($segments_var[0],$array)) class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
+                
                 <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="{{route('reports.etm.audit_status.index')}}">
-                        <i class="depot-icon"></i> @lang('Audit Status')
+                    <a href="#">
+                        <i class="depot-icon"></i> Depot wise Revenue Collection
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Route wise Revenue Collection
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Crew wise Revenue Collection
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Trip wise Revenue Collection
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Daily Revenue Collection Statement
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Date wise Revenue Collection
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Revenue EPKM
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Vehicle wise Collection
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Payout
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Passenger Profiling Bus Stop wise
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Pass Sold
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Passenger Profiling Route wise
+                    </a>
+                </li>
+                 <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Concession Ticket Collection
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Passesnger Profiling Origin-Dest Stop wise
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> ETM wise Transaction Count 
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Bus wise Earning
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Date wise BOT Share Details
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Conductor wise Earning
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Shift Details Earning
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Conductor Ledger
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Route wise Summary
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Schedule wise EPKM
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Conductor wise Income Compared To Target Income
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Comparative Statement for Last Year
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Print Error Details
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Date wise Denominations Report
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Route wise Denominations Report
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="depot-icon"></i> Cash Collection Report
                     </a>
                 </li>
             </ul>

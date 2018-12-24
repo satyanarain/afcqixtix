@@ -1,6 +1,9 @@
 <?php
-namespace App\Models;
+
+namespace App\Models\Inventory;
+
 use Illuminate\Database\Eloquent\Model;
+
 class CenterStock extends Model
 {
   /**
@@ -10,6 +13,7 @@ class CenterStock extends Model
      */
     protected $table = 'inv_center_stock';
     protected $guarded = [];
+    
     public function services()
     {  
         return $this->hasMany('App\Models\Service', 'center_stock_id');

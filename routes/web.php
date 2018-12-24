@@ -305,12 +305,28 @@ Route::group(['middleware' => ['auth']], function () {
       
             Route::resource('audit_status', 'AuditStatusController')->only('index'); 
             Route::post('audit_status/getdata', 'AuditStatusController@getData')->name('audit_status.getdata');
+            Route::get('audit_status/getexcelreport', 'AuditStatusController@getExcelReport')->name('audit_status.getexcelreport');
             Route::get('audit_status/displayData', 'AuditStatusController@displayData')->name('audit_status.displaydata');
         });
 
         Route::group(['prefix'=>'ppt', 'namespace'=>'PPT', 'as'=>'ppt.'], function(){
-      
-            Route::resource('audit_statuses', 'AuditStatusController'); 
+            /*ticket_section_stock*/
+            Route::resource('ticket_section_stock', 'TicketSectionStockController')->only('index'); 
+            Route::post('ticket_section_stock/getpdfreport', 'TicketSectionStockController@getPdfReport')->name('ticket_section_stock.getpdfreport');
+            Route::get('ticket_section_stock/getexcelreport', 'TicketSectionStockController@getExcelReport')->name('ticket_section_stock.getexcelreport');
+            Route::get('ticket_section_stock/displayData', 'TicketSectionStockController@displayData')->name('ticket_section_stock.displaydata');
+
+            /*crew_stock*/
+            Route::resource('crew_stock', 'CrewStockController')->only('index'); 
+            Route::post('crew_stock/getpdfreport', 'CrewStockController@getPdfReport')->name('crew_stock.getpdfreport');
+            Route::get('crew_stock/getexcelreport', 'CrewStockController@getExcelReport')->name('crew_stock.getexcelreport');
+            Route::get('crew_stock/displayData', 'CrewStockController@displayData')->name('crew_stock.displaydata');
+
+            /*receipt_from_main_office*/
+            Route::resource('receipt_from_main_office', 'ReceiptFromMainOfficeController')->only('index'); 
+            Route::post('receipt_from_main_office/getpdfreport', 'ReceiptFromMainOfficeController@getPdfReport')->name('receipt_from_main_office.getpdfreport');
+            Route::get('receipt_from_main_office/getexcelreport', 'ReceiptFromMainOfficeController@getExcelReport')->name('receipt_from_main_office.getexcelreport');
+            Route::get('receipt_from_main_office/displayData', 'ReceiptFromMainOfficeController@displayData')->name('receipt_from_main_office.displaydata');
 
         });
 

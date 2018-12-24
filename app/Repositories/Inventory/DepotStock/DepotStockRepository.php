@@ -4,12 +4,12 @@ namespace App\Repositories\Inventory\DepotStock;
 
 use DB;
 use Notifynder;
-use App\Models\DepotStock;
 use App\Traits\activityLog;
 use App\Mail\BusTypeCreated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use App\Models\Inventory\DepotStock;
 use Illuminate\Support\Facades\Session;
 
 class DepotStockRepository implements DepotStockRepositoryContract 

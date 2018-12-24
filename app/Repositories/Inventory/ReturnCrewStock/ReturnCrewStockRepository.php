@@ -4,13 +4,13 @@ namespace App\Repositories\Inventory\ReturnCrewStock;
 
 use DB;
 use Notifynder;
-use App\Models\ReturnCrewStock;
 use App\Traits\activityLog;
 use App\Mail\BusTypeCreated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use App\Models\Inventory\ReturnCrewStock;
 
 class ReturnCrewStockRepository implements ReturnCrewStockRepositoryContract 
 {

@@ -1,30 +1,33 @@
 <?php
+
 namespace App\Http\Controllers\Inventory;
 
+use DB;
 use Gate;
 use Carbon;
-use Notifynder;
-use DB;
 use Schema;
 use Response;
-use App\Models\CenterStock;
+use Notifynder;
 use App\Models\Country;
 use App\Http\Requests;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Inventory\CenterStock\StoreCenterStockRequest;
-use App\Repositories\Inventory\CenterStock\CenterStockRepository;
-use App\Repositories\Inventory\CenterStock\CenterStockRepositoryContract;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 use App\Traits\activityLog;
+use Illuminate\Http\Request;
 use App\Traits\checkPermission;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Inventory\CenterStock;
+use Illuminate\Support\Facades\Session;
+use App\Repositories\Inventory\CenterStock\CenterStockRepository;
+use App\Http\Requests\Inventory\CenterStock\StoreCenterStockRequest;
+use App\Repositories\Inventory\CenterStock\CenterStockRepositoryContract;
 
 class CenterstockController extends Controller
 {
     use activityLog;
     use checkPermission;
+
     protected $centerstock;
+
     public function __construct(CenterStockRepositoryContract $centerstock) 
     {
         $this->centerstock = $centerstock;

@@ -4,13 +4,13 @@ namespace App\Repositories\Inventory\CenterStock;
 
 use DB;
 use Notifynder;
-use App\Models\CenterStock;
+use App\Traits\activityLog;
 use App\Mail\BusTypeCreated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use App\Models\Inventory\CenterStock;
 use Illuminate\Support\Facades\Session;
-use App\Traits\activityLog;
 
 class CenterStockRepository implements CenterStockRepositoryContract {
     use activityLog;
