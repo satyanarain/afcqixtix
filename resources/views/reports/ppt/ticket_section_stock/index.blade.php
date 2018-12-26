@@ -142,12 +142,7 @@ $(document).ready(function(){
                     var title = response.title;
                     var takenBy = response.takenBy;
                     var serverDate = response.serverDate;
-                    if(data.length > 1)
-                    {
-                        Export(metaData, title, reportData, takenBy, serverDate);
-                    }else{
-                        return alert('No records to download!');
-                    }
+                    Export(metaData, title, reportData, takenBy, serverDate);
                     
                 }                
             },
