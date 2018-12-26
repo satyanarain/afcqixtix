@@ -6,10 +6,10 @@
             /*html2canvas(document.getElementById('afcsReportTable'), {
                 onrendered: function (canvas) {*/
                     var docDefinition = {
-                        watermark: {text: 'Opiant Tech Solutions Pvt. Ltd.', color: '#367fa9', opacity: 0.3, bold: true, italics: false},
+                        watermark: {text: 'Opiant Tech Solutions Pvt. Ltd.', color: '#367fa9', opacity: 0.1, bold: true, italics: false},
                         pageSize: 'A4',
                         pageOrientation: 'landscape',
-                        pageMargins: [ 40, 100, 40, 60 ],
+                        pageMargins: [ 40, 100, 40, 40 ],
                         header: {
                             columns: [
                                 {
@@ -90,25 +90,32 @@
                                 fontSize: 18,
                                 bold: true,
                                 alignment: 'center',
-                                marginTop: 10
+                                marginTop: 10, 
+                                color: '#367fa9'
                             },
                             middleHeader: {
                                 fontSize: 12,
                                 alignment: 'center',
                                 marginBottom: 15,
-                                bold: true
+                                bold: true, 
+                                color: '#367fa9'
                             },
                             metaStyle: {
-                                bold: true
+                                fontSize: 12,
+                                bold: true,
+                                color: '367fa9'
                             },
                             tableStyle: {
-                                fontSize: 8
+                                fontSize: 8,
+                                color: '#333'
                             },
                             tableHeader: {
                                 bold: true
+
                             },
                             tableHeaderStyle: {
                                 fillColor: '#eee',
+                                color: '#333',
                                 bold: true
                             }
                         }

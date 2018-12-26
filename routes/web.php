@@ -328,6 +328,30 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('receipt_from_main_office/getexcelreport', 'ReceiptFromMainOfficeController@getExcelReport')->name('receipt_from_main_office.getexcelreport');
             Route::get('receipt_from_main_office/displayData', 'ReceiptFromMainOfficeController@displayData')->name('receipt_from_main_office.displaydata');
 
+            /*issues_to_ticket_section*/
+            Route::resource('issues_to_ticket_section', 'IssuesToTicketSectionController')->only('index'); 
+            Route::post('issues_to_ticket_section/getpdfreport', 'IssuesToTicketSectionController@getPdfReport')->name('issues_to_ticket_section.getpdfreport');
+            Route::get('issues_to_ticket_section/getexcelreport', 'IssuesToTicketSectionController@getExcelReport')->name('issues_to_ticket_section.getexcelreport');
+            Route::get('issues_to_ticket_section/displayData', 'IssuesToTicketSectionController@displayData')->name('issues_to_ticket_section.displaydata');
+
+            /*issues_to_crew*/
+            Route::resource('issues_to_crew', 'IssuesToTicketCrewController')->only('index'); 
+            Route::post('issues_to_crew/getpdfreport', 'IssuesToTicketCrewController@getPdfReport')->name('issues_to_crew.getpdfreport');
+            Route::get('issues_to_crew/getexcelreport', 'IssuesToTicketCrewController@getExcelReport')->name('issues_to_crew.getexcelreport');
+            Route::get('issues_to_crew/displayData', 'IssuesToTicketCrewController@displayData')->name('issues_to_crew.displaydata');
+
+            /*consumption*/
+            Route::resource('consumption', 'ConsumptionController')->only('index'); 
+            Route::post('consumption/getpdfreport', 'ConsumptionController@getPdfReport')->name('consumption.getpdfreport');
+            Route::get('consumption/getexcelreport', 'ConsumptionController@getExcelReport')->name('consumption.getexcelreport');
+            Route::get('consumption/displayData', 'ConsumptionController@displayData')->name('consumption.displaydata');
+
+            /*returned_by_conductor*/
+            Route::resource('returned_by_conductor', 'ReturnedByConductorController')->only('index'); 
+            Route::post('returned_by_conductor/getpdfreport', 'ReturnedByConductorController@getPdfReport')->name('returned_by_conductor.getpdfreport');
+            Route::get('returned_by_conductor/getexcelreport', 'ReturnedByConductorController@getExcelReport')->name('returned_by_conductor.getexcelreport');
+            Route::get('returned_by_conductor/displayData', 'ReturnedByConductorController@displayData')->name('returned_by_conductor.displaydata');
+
         });
 
         Route::group(['prefix'=>'revenue', 'namespace'=>'Revenue', 'as'=>'revenue.'], function(){

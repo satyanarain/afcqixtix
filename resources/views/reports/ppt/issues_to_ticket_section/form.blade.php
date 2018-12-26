@@ -22,7 +22,7 @@
     <div class="col-md-3">
         @php $orders=['created_at'=>'By Date', 'denom_id'=>'By Denomination']@endphp
         {!! Form::label('order_by', Lang::get('Order By'), ['class' => 'control-label']) !!}
-        {!! Form::select('order_by', $orders, 'created_at', ['class' => 'form-control','placeholder'=>"Select Order By"]) !!}  
+        {!! Form::select('order_by', $orders, null, ['class' => 'form-control','placeholder'=>"Select Order By"]) !!}  
     </div>
 
     <div class="col-md-3">

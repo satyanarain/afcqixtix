@@ -360,14 +360,14 @@ $array= array('etm', 'revenue', 'ppt')
               </span>
           </a>
             <ul @if(in_array($segments_var[0],$array)) class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                <!-- <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
                         <i class="depot-icon"></i> Depot Stock
                     </a>
-                </li>
+                </li> -->
                 <li @if($segments_var[2]=='ticket_section_stock') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.ppt.ticket_section_stock.index')}}">
-                        <i class="depot-icon"></i> Ticket Section Stock
+                        <i class="depot-icon"></i> Depot Stock
                     </a>
                 </li>
                 <li @if($segments_var[2]=='crew_stock') class="treeview active" @else class="treeview" @endif>
@@ -380,23 +380,23 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="depot-icon"></i> Receipts From Main Office
                     </a>
                 </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                <!-- <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
                         <i class="depot-icon"></i> Issues To Ticket Section
                     </a>
-                </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
+                </li> -->
+                <li @if($segments_var[2]=='issues_to_crew') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.ppt.issues_to_crew.index')}}">
                         <i class="depot-icon"></i> Issues To Crew
                     </a>
                 </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
+                <li @if($segments_var[2]=='consumption') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.ppt.consumption.index')}}">
                         <i class="depot-icon"></i> Consumption Of Pre-Printed Ticket
                     </a>
                 </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
+                <li @if($segments_var[2]=='returned_by_conductor') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.ppt.returned_by_conductor.index')}}">
                         <i class="depot-icon"></i> Returned By Conductor
                     </a>
                 </li>

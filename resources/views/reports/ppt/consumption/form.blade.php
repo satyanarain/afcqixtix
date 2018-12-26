@@ -20,9 +20,15 @@
     </div>
 
     <div class="col-md-3">
-        @php $orders=['created_at'=>'By Date', 'denom_id'=>'By Denomination']@endphp
-        {!! Form::label('order_by', Lang::get('Order By'), ['class' => 'control-label']) !!}
-        {!! Form::select('order_by', $orders, 'created_at', ['class' => 'form-control','placeholder'=>"Select Order By"]) !!}  
+        @php $orders=['ticket'=>'Ticket']@endphp
+        {!! Form::label('ticket_type', Lang::get('Ticket Type'), ['class' => 'control-label']) !!}
+        {!! Form::select('ticket_type', $orders, 'ticket', ['class' => 'form-control']) !!}  
+    </div>
+
+    <div class="col-md-3">
+        @php $orders=['detail'=>'Detail', 'summary'=>'Summary']@endphp
+        {!! Form::label('report_type', Lang::get('Report Type'), ['class' => 'control-label']) !!}
+        {!! Form::select('report_type', $orders, 'detail', ['class' => 'form-control']) !!}  
     </div>
 
     <div class="col-md-3">

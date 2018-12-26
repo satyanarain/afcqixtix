@@ -151,17 +151,7 @@ $(document).ready(function(){
                     var columns = response.columns
                     var data = response.data;
                     var reportData = [];
-                    var firstCol = '';
-                    var secondCol = '';
-                    if(orderBy == 'created_at')
-                    {
-                        firstCol = 'Date';
-                        secondCol = 'Denomination';
-                    }else{
-                        firstCol = 'Denomination';
-                        secondCol = 'Date';
-                    }
-                    reportData.push([{'text':firstCol, 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Ticket Type', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':secondCol, 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Challan No.', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Series', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Opening Ticket No.', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Closing Ticket No.', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Ticket Count', 'bold':true, 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Ticket Value', 'bold':true, 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Received By', 'bold':true, 'style': 'tableHeaderStyle'}]);
+                    reportData.push([{'text':'Date', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Ticket Type', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Denomination', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Series', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Challan No.', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Opening Ticket No.', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Closing Ticket No.', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Ticket Count', 'bold':true, 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Ticket Value', 'bold':true, 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Received By', 'bold':true, 'style': 'tableHeaderStyle'}]);
                     
                     $.each(data, function(index, stock){
                         
@@ -173,14 +163,7 @@ $(document).ready(function(){
                                 console.log(d);
                                 totalTicketCount += parseInt(d.quantity);
                                 totalTicketValue += parseInt(d.quantity*d.denomination.price);
-                                console.log(orderBy)
-                                if(orderBy == 'created_at')
-                                {   
-                                    var secondColVal = d.denomination.description;
-                                }else{                                    
-                                    var secondColVal = d.created_at;
-                                }
-                                reportData.push([{'text':index}, {'text':d.item.name}, {'text':secondColVal }, {'text':d.challan_no?d.challan_no:""}, {'text':d.series}, {'text':d.start_sequence?''+d.start_sequence:"", 'alignment':'right'}, {'text':d.end_sequence?''+d.end_sequence:"", 'alignment':'right'}, {'text':''+d.quantity, 'alignment':'right'}, {'text':''+d.quantity*d.denomination.price, 'alignment':'right'}, {'text': d.depot_head.name}]);
+                                reportData.push([{'text':index}, {'text':d.item.name}, {'text':d.denomination.description}, {'text':d.challan_no?d.challan_no:""}, {'text':d.series}, {'text':d.start_sequence?''+d.start_sequence:"", 'alignment':'right'}, {'text':d.end_sequence?''+d.end_sequence:"", 'alignment':'right'}, {'text':''+d.quantity, 'alignment':'right'}, {'text':''+d.quantity*d.denomination.price, 'alignment':'right'}, {'text': d.depot_head.name}]);
                             });
                             reportData.push([{'text':'Grand Total', 'bold':true, 'style': 'tableHeaderStyle', 'colSpan':7, 'alignment': 'right'}, {}, {}, {}, {}, {}, {}, {'text':''+totalTicketCount+'', 'bold':true, 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':''+totalTicketValue+'', 'bold':true, 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'', 'bold':true, 'style': 'tableHeaderStyle'}]);
                         }

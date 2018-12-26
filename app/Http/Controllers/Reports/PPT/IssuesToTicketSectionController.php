@@ -20,7 +20,7 @@ use App\Traits\checkPermission;
 use App\Http\Controllers\Controller;
 use App\Models\Inventory\DepotStock;
 
-class ReceiptFromMainOfficeController extends Controller
+class IssuesToTicketSectionController extends Controller
 {
     use activityLog;
     use checkPermission;
@@ -126,34 +126,17 @@ class ReceiptFromMainOfficeController extends Controller
 
         $reportData = [];
 
-        if($orderBy == 'denom_id')
-        {
-            $denominations = DepotStock::with(['denomination:id,description'])
-                            ->whereDate('created_at', '>=', $from_date)
-                            ->whereDate('created_at', '<=', $to_date)
-                            ->distinct('denom_id')->get(['denom_id']);
-            if($denominations)
-            {
-                foreach ($denominations as $key => $value) 
-                {
-                    $queryBuilder = clone $data;
-                    $reportData[$value->denomination->description] = $queryBuilder->where('denom_id', $value->denom_id)
-                                                    ->get();
-                }
-            }
-        }else{
-            $dates = DepotStock::whereDate('created_at', '>=', $from_date)
-                            ->whereDate('created_at', '<=', $to_date)
-                            ->distinct('created_at')->get(['created_at']);
+        $dates = DepotStock::whereDate('created_at', '>=', $from_date)
+        				 	->whereDate('created_at', '<=', $to_date)
+        				 	->distinct('created_at')->get(['created_at']);
 
-            if($dates)
+        if($dates)
+        {
+            foreach ($dates as $key => $value) 
             {
-                foreach ($dates as $key => $value) 
-                {
-                    $queryBuilder = clone $data;
-                    $reportData[date('m/d/Y', strtotime($value->created_at))] = $queryBuilder->whereDate('created_at', date('Y-m-d', strtotime($value->created_at)))
-                                                    ->get();
-                }
+                $queryBuilder = clone $data;
+                $reportData[date('m-d-Y', strtotime($value->created_at))] = $queryBuilder->whereDate('created_at', date('Y-m-d', strtotime($value->created_at)))
+                                                ->get();
             }
         }
 
@@ -238,12 +221,6 @@ class ReceiptFromMainOfficeController extends Controller
                         'Received By' => function($row){
                             return $row->depotHead->name;
                         }];
-        if($orderBy == 'created_at')
-        {
-            $groupBy = 'Date';
-        }else{
-            $groupBy = 'Denomination';
-        }
 
         return ExcelReport::of($title, $meta, $data, $columns)
                     ->editColumns(['Ticket Count', 'Ticket Value'], [
@@ -251,7 +228,7 @@ class ReceiptFromMainOfficeController extends Controller
                     ])->showTotal([
                         'Ticket Count' => 'point',
                         'Ticket Value' => 'point',
-                    ])->groupBy($groupBy)
+                    ])->groupBy('Date')
                     ->download($title.'.xlsx');
     }
 }

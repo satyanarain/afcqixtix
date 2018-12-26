@@ -1,9 +1,9 @@
 @extends('layouts.master')
 @section('header')
-<h1>Receipt From Main Office Report</h1>
+<h1>Issues to Crew Report</h1>
 <ol class="breadcrumb">
             <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"></i>Receipt From Main Office</a></li>
+            <li><a href="#"></i>Issues to Crew</a></li>
             </ol>
 @stop
 @section('content')
@@ -12,14 +12,14 @@
         <div class="box box-default" style="min-height:0px;">
             <div class="box-header with-border">
                 <div class="col-md-12 col-sm-12 alert-danger cash-collection-error hide"></div>
-                <h3 class="box-title">Create Receipt From Main Office</h3>
+                <h3 class="box-title">Create Issues to Crew</h3>
                 <div class="box-tools pull-right">
                     <button class="slideout-menu-toggle btn btn-box-tool btn-box-tool-lg" data-toggle="tooltip" title="Help"><i class="fa fa-question"></i></button>
                 </div>
             </div><!-- /.box-header -->
             <div class="box-body">
                 {!! Form::open([
-                'route' => 'reports.ppt.receipt_from_main_office.displaydata',
+                'route' => 'reports.ppt.issues_to_crew.displaydata',
                 'files'=>true,
                 'enctype' => 'multipart/form-data',
                 'class'=>'form-horizontal',
@@ -27,7 +27,7 @@
                 'method'=> 'GET',
                 'onsubmit'=>'return validateForm();'
                 ]) !!}
-                @include('reports.ppt.receipt_from_main_office.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
+                @include('reports.ppt.issues_to_crew.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 
                 {!! Form::close() !!}
 
@@ -51,6 +51,7 @@
                                     <th>Closing Ticket No.</th>
                                     <th>Ticket Count</th>
                                     <th>Ticket Value</th>
+                                    <th>Issued By</th>
                                     <th>Received By</th>
                                 </tr>
                             </thead>
@@ -68,7 +69,8 @@
                                     <td>{{$da->end_sequence}}</td>
                                     <td>{{$da->quantity}}</td>
                                     <td>{{$da->quantity*$da->denomination->price}}</td>
-                                    <td>{{$da->depotHead->name}}</td>
+                                    <td>{{$da->issuedBy->name}}</td>
+                                    <td>{{$da->conductor->crew_name.' ('.$da->conductor->crew_id.')'}}</td>
                                 </tr>
                             @endforeach
                             @else
@@ -107,6 +109,7 @@ $(document).ready(function(){
     $(document).on('click', '#exportAsPDF', function(){
         var depot_id = $('#depot_id').val();
         var denom_id = $('#denomination_id').val();
+        var conductor_id = $('#conductor_id').val();
         var orderBy = $('#order_by').val();
         var fromDate = $('#from_date').val();
         if(!fromDate)
@@ -133,12 +136,13 @@ $(document).ready(function(){
         }
 
         $.ajax({
-            url: "{{route('reports.ppt.receipt_from_main_office.getpdfreport')}}",
+            url: "{{route('reports.ppt.issues_to_crew.getpdfreport')}}",
             type: "POST",
             dataType: "JSON",
             data: {
                 depot_id: depot_id,
                 denomination_id: denom_id,
+                conductor_id:conductor_id,
                 order_by: orderBy,
                 from_date: fromDate,
                 to_date: toDate
@@ -150,9 +154,6 @@ $(document).ready(function(){
                 {
                     var columns = response.columns
                     var data = response.data;
-                    var reportData = [];
-                    var firstCol = '';
-                    var secondCol = '';
                     if(orderBy == 'created_at')
                     {
                         firstCol = 'Date';
@@ -161,7 +162,8 @@ $(document).ready(function(){
                         firstCol = 'Denomination';
                         secondCol = 'Date';
                     }
-                    reportData.push([{'text':firstCol, 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Ticket Type', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':secondCol, 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Challan No.', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Series', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Opening Ticket No.', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Closing Ticket No.', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Ticket Count', 'bold':true, 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Ticket Value', 'bold':true, 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Received By', 'bold':true, 'style': 'tableHeaderStyle'}]);
+                    var reportData = [];
+                    reportData.push([{'text':firstCol, 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Ticket Type', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':secondCol, 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Challan No. / Receipt No.', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Series', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Opening Ticket No.', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Closing Ticket No.', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Ticket Count', 'bold':true, 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Ticket Value', 'bold':true, 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Issued By', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Received By', 'bold':true, 'style': 'tableHeaderStyle'}]);
                     
                     $.each(data, function(index, stock){
                         
@@ -173,17 +175,16 @@ $(document).ready(function(){
                                 console.log(d);
                                 totalTicketCount += parseInt(d.quantity);
                                 totalTicketValue += parseInt(d.quantity*d.denomination.price);
-                                console.log(orderBy)
                                 if(orderBy == 'created_at')
                                 {   
                                     var secondColVal = d.denomination.description;
                                 }else{                                    
                                     var secondColVal = d.created_at;
                                 }
-                                reportData.push([{'text':index}, {'text':d.item.name}, {'text':secondColVal }, {'text':d.challan_no?d.challan_no:""}, {'text':d.series}, {'text':d.start_sequence?''+d.start_sequence:"", 'alignment':'right'}, {'text':d.end_sequence?''+d.end_sequence:"", 'alignment':'right'}, {'text':''+d.quantity, 'alignment':'right'}, {'text':''+d.quantity*d.denomination.price, 'alignment':'right'}, {'text': d.depot_head.name}]);
+                                reportData.push([{'text':index}, {'text':d.item.name}, {'text':secondColVal}, {'text':d.challan_no?d.challan_no:""}, {'text':d.series}, {'text':d.start_sequence?''+d.start_sequence:"", 'alignment':'right'}, {'text':d.end_sequence?''+d.end_sequence:"", 'alignment':'right'}, {'text':''+d.quantity, 'alignment':'right'}, {'text':''+d.quantity*d.denomination.price, 'alignment':'right'}, {'text': d.issued_by.name}, {'text': d.conductor.crew_name}]);
                             });
-                            reportData.push([{'text':'Grand Total', 'bold':true, 'style': 'tableHeaderStyle', 'colSpan':7, 'alignment': 'right'}, {}, {}, {}, {}, {}, {}, {'text':''+totalTicketCount+'', 'bold':true, 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':''+totalTicketValue+'', 'bold':true, 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'', 'bold':true, 'style': 'tableHeaderStyle'}]);
-                        }
+                            reportData.push([{'text':'Grand Total', 'bold':true, 'style': 'tableHeaderStyle', 'colSpan':7, 'alignment': 'right'}, {}, {}, {}, {}, {}, {}, {'text':''+totalTicketCount+'', 'bold':true, 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':''+totalTicketValue+'', 'bold':true, 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'', 'bold':true, 'style': 'tableHeaderStyle'}]);
+                        }   
                     });
 
                     var metaData = response.meta;
@@ -203,6 +204,7 @@ $(document).ready(function(){
     $(document).on('click', '#exportAsXLS', function(){
         var depot_id = $('#depot_id').val();
         var denom_id = $('#denomination_id').val();
+        var conductor_id = $('#conductor_id').val();
         var orderBy = $('#order_by').val();
         var fromDate = $('#from_date').val();
         if(!fromDate)
@@ -230,11 +232,12 @@ $(document).ready(function(){
 
         var queryParams = "?depot_id="+depot_id
                         + "&denomination_id="+denom_id
+                        + "&conductor_id="+conductor_id
                         + "&from_date="+fromDate
                         + "&to_date="+toDate
                         + "&order_by="+orderBy;
 
-        var url = "{{route('reports.ppt.receipt_from_main_office.getexcelreport')}}"+queryParams;
+        var url = "{{route('reports.ppt.issues_to_crew.getexcelreport')}}"+queryParams;
 
         window.open(url,'_blank');
     });
