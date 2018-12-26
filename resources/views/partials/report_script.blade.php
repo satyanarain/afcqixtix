@@ -108,7 +108,8 @@
                                 bold: true
                             },
                             tableHeaderStyle: {
-                                fillColor: '#eee'
+                                fillColor: '#eee',
+                                bold: true
                             }
                         }
                     };
