@@ -310,11 +310,11 @@ Route::group(['middleware' => ['auth']], function () {
         });
 
         Route::group(['prefix'=>'ppt', 'namespace'=>'PPT', 'as'=>'ppt.'], function(){
-            /*ticket_section_stock*/
-            Route::resource('ticket_section_stock', 'TicketSectionStockController')->only('index'); 
-            Route::post('ticket_section_stock/getpdfreport', 'TicketSectionStockController@getPdfReport')->name('ticket_section_stock.getpdfreport');
-            Route::get('ticket_section_stock/getexcelreport', 'TicketSectionStockController@getExcelReport')->name('ticket_section_stock.getexcelreport');
-            Route::get('ticket_section_stock/displayData', 'TicketSectionStockController@displayData')->name('ticket_section_stock.displaydata');
+            /*depot_stock*/
+            Route::resource('depot_stock', 'DepotStockController')->only('index'); 
+            Route::post('depot_stock/getpdfreport', 'DepotStockController@getPdfReport')->name('depot_stock.getpdfreport');
+            Route::get('depot_stock/getexcelreport', 'DepotStockController@getExcelReport')->name('depot_stock.getexcelreport');
+            Route::get('depot_stock/displayData', 'DepotStockController@displayData')->name('depot_stock.displaydata');
 
             /*crew_stock*/
             Route::resource('crew_stock', 'CrewStockController')->only('index'); 
@@ -351,6 +351,12 @@ Route::group(['middleware' => ['auth']], function () {
             Route::post('returned_by_conductor/getpdfreport', 'ReturnedByConductorController@getPdfReport')->name('returned_by_conductor.getpdfreport');
             Route::get('returned_by_conductor/getexcelreport', 'ReturnedByConductorController@getExcelReport')->name('returned_by_conductor.getexcelreport');
             Route::get('returned_by_conductor/displayData', 'ReturnedByConductorController@displayData')->name('returned_by_conductor.displaydata');
+
+            /*denomination_wise_stock_ledger*/
+            Route::resource('denomination_wise_stock_ledger', 'DenominationWiseStockLedgerController')->only('index'); 
+            Route::post('denomination_wise_stock_ledger/getpdfreport', 'DenominationWiseStockLedgerController@getPdfReport')->name('denomination_wise_stock_ledger.getpdfreport');
+            Route::get('denomination_wise_stock_ledger/getexcelreport', 'DenominationWiseStockLedgerController@getExcelReport')->name('denomination_wise_stock_ledger.getexcelreport');
+            Route::get('denomination_wise_stock_ledger/displayData', 'DenominationWiseStockLedgerController@displayData')->name('denomination_wise_stock_ledger.displaydata');
 
         });
 

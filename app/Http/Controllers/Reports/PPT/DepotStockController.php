@@ -2,11 +2,6 @@
 
 namespace App\Http\Controllers\Reports\PPT;
 
-use App\Traits\activityLog;
-use Illuminate\Http\Request;
-use App\Traits\checkPermission;
-use App\Http\Controllers\Controller;
-use App\Models\Inventory\DepotSummary;
 use DB;
 use Auth;
 use Validator;
@@ -18,9 +13,14 @@ use App\Models\Shift;
 use App\Models\Depot;
 use App\Models\Waybill;
 use App\Models\CenterStock;
+use App\Traits\activityLog;
+use Illuminate\Http\Request;
+use App\Traits\checkPermission;
 use App\Models\ReturnCrewStock;
+use App\Http\Controllers\Controller;
+use App\Models\Inventory\DepotSummary;
 
-class TicketSectionStockController extends Controller
+class DepotStockController extends Controller
 {
     use activityLog;
     use checkPermission;
@@ -32,7 +32,7 @@ class TicketSectionStockController extends Controller
      */
     public function index()
     {
-        return view('reports.ppt.ticket_section_stock.index');
+        return view('reports.ppt.depot_stock.index');
     }
 
     public function displaydata(Request $request)
@@ -62,7 +62,7 @@ class TicketSectionStockController extends Controller
         $data = $data->where('items_id', 1)
                     ->paginate(10);
 
-        return view('reports.ppt.ticket_section_stock.index', compact('data'));
+        return view('reports.ppt.depot_stock.index', compact('data'));
     }
 
     /**

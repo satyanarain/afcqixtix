@@ -29,7 +29,7 @@ class ReturnCrewStockRepository implements ReturnCrewStockRepositoryContract
     public function create($requestData) 
     {      
         $input = $requestData->except(['_token']);
-        $input['user_id'] = Auth::id();
+        $input['returned_to'] = Auth::id();
         $input['date_received'] = date('Y-m-d H:i:s', strtotime($input['date_received']));
         //update the depot inventory
         if($requestData->items_id == 1)

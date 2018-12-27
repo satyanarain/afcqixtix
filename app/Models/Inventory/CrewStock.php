@@ -12,7 +12,7 @@ class CrewStock extends Model
 {
     protected $table = 'inv_crew_stock';
 
-    protected $fillable = ['items_id', 'depot_id', 'crew_id', 'denom_id', 'series', 'start_sequence', 'end_sequence', 'remark', 'quantity'];
+    protected $fillable = ['issued_by', 'items_id', 'depot_id', 'crew_id', 'challan_no', 'denom_id', 'series', 'start_sequence', 'end_sequence', 'remark', 'quantity'];
 
     public function item()
     {

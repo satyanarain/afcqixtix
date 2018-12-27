@@ -365,8 +365,8 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="depot-icon"></i> Depot Stock
                     </a>
                 </li> -->
-                <li @if($segments_var[2]=='ticket_section_stock') class="treeview active" @else class="treeview" @endif>
-                    <a href="{{route('reports.ppt.ticket_section_stock.index')}}">
+                <li @if($segments_var[2]=='depot_stock') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.ppt.depot_stock.index')}}">
                         <i class="depot-icon"></i> Depot Stock
                     </a>
                 </li>
@@ -400,8 +400,8 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="depot-icon"></i> Returned By Conductor
                     </a>
                 </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
+                <li @if($segments_var[2]=='denomination_wise_stock_ledger') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.ppt.denomination_wise_stock_ledger.index')}}">
                         <i class="depot-icon"></i> Denom-wise Stock Ledger
                     </a>
                 </li>

@@ -1,9 +1,9 @@
 @extends('layouts.master')
 @section('header')
-<h1>Ticket Section Stock Report</h1>
+<h1>Depot Stock Report</h1>
 <ol class="breadcrumb">
             <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"></i>Ticket Section Stock</a></li>
+            <li><a href="#"></i>Depot Stock</a></li>
             </ol>
 @stop
 @section('content')
@@ -12,21 +12,21 @@
         <div class="box box-default" style="min-height:0px;">
             <div class="box-header with-border">
                 <div class="col-md-12 col-sm-12 alert-danger cash-collection-error hide"></div>
-                <h3 class="box-title">Create Ticket Section Stock</h3>
+                <h3 class="box-title">Create Depot Stock</h3>
                 <div class="box-tools pull-right">
                     <button class="slideout-menu-toggle btn btn-box-tool btn-box-tool-lg" data-toggle="tooltip" title="Help"><i class="fa fa-question"></i></button>
                 </div>
             </div><!-- /.box-header -->
             <div class="box-body">
                 {!! Form::open([
-                'route' => 'reports.ppt.ticket_section_stock.displaydata',
+                'route' => 'reports.ppt.depot_stock.displaydata',
                 'files'=>true,
                 'enctype' => 'multipart/form-data',
                 'class'=>'form-horizontal',
                 'autocomplete'=>'off',
                 'method'=> 'GET'
                 ]) !!}
-                @include('reports.ppt.ticket_section_stock.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
+                @include('reports.ppt.depot_stock.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 
                 {!! Form::close() !!}
 
@@ -105,7 +105,7 @@ $(document).ready(function(){
         var series = $('#series').val();
 
         $.ajax({
-            url: "{{route('reports.ppt.ticket_section_stock.getpdfreport')}}",
+            url: "{{route('reports.ppt.depot_stock.getpdfreport')}}",
             type: "POST",
             dataType: "JSON",
             data: {
@@ -162,7 +162,7 @@ $(document).ready(function(){
                         + "&denomination_id="+denom_id
                         + "&series="+series;
 
-        var url = "{{route('reports.ppt.ticket_section_stock.getexcelreport')}}"+queryParams;
+        var url = "{{route('reports.ppt.depot_stock.getexcelreport')}}"+queryParams;
 
         window.open(url,'_blank');
     });

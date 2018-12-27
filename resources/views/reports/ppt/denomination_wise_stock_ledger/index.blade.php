@@ -1,9 +1,9 @@
 @extends('layouts.master')
 @section('header')
-<h1>Consumption of PPT Report</h1>
+<h1>Denomination Wise Stock Ledger Report</h1>
 <ol class="breadcrumb">
             <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"></i>Consumption of PPT</a></li>
+            <li><a href="#"></i>Denomination Wise Stock Ledger</a></li>
             </ol>
 @stop
 @section('content')
@@ -12,14 +12,14 @@
         <div class="box box-default" style="min-height:0px;">
             <div class="box-header with-border">
                 <div class="col-md-12 col-sm-12 alert-danger cash-collection-error hide"></div>
-                <h3 class="box-title">Create Consumption of PPT</h3>
+                <h3 class="box-title">Create Denomination Wise Stock Ledger</h3>
                 <div class="box-tools pull-right">
                     <button class="slideout-menu-toggle btn btn-box-tool btn-box-tool-lg" data-toggle="tooltip" title="Help"><i class="fa fa-question"></i></button>
                 </div>
             </div><!-- /.box-header -->
             <div class="box-body">
                 {!! Form::open([
-                'route' => 'reports.ppt.consumption.displaydata',
+                'route' => 'reports.ppt.denomination_wise_stock_ledger.displaydata',
                 'files'=>true,
                 'enctype' => 'multipart/form-data',
                 'class'=>'form-horizontal',
@@ -27,7 +27,7 @@
                 'method'=> 'GET',
                 'onsubmit'=>'return validateForm();'
                 ]) !!}
-                @include('reports.ppt.consumption.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
+                @include('reports.ppt.denomination_wise_stock_ledger.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 
                 {!! Form::close() !!}
 
@@ -42,23 +42,37 @@
                             <thead>
                                 <tr>
                                     <th>S. No.</th>
-                                    <th>Date</th>
                                     <th>Ticket Type</th>
                                     <th>Denomination</th>
-                                    <th>Ticket Count</th>
-                                    <th>Ticket Value</th>
+                                    <th>Date</th>
+                                    <th>Challan No. / Receipt No.</th>
+                                    <th>Series</th>
+                                    <th>Opening Ticket No.</th>
+                                    <th>Closing Ticket No.</th>
+                                    <th style="text-align: right">Ticket Count</th>
+                                    <th style="text-align: right">Ticket Value (Rs.)</th>
+                                    <th>Transaction Type</th>
+                                    <th style="text-align: right">Balance Count</th>
+                                    <th style="text-align: right">Balance Value (Rs.)</th>
                                 </tr>
                             </thead>
                             <tbody>
                             @if(count($data) > 0)
                             @foreach($data as $key=>$da)
                                 <tr>
-                                    <td>{{$key+1}}</td>
-                                    <td>{{date('d/m/Y', strtotime($da->created_at))}}</td>
-                                    <td>{{'Ticket'}}</td>
+                                    <td>{{$key+1}}</td>                                    
+                                    <td>{{$da->item->name}}</td>
                                     <td>{{$da->denomination->description}}</td>
-                                    <td>{{$da->quantity}}</td>
-                                    <td>{{$da->quantity*$da->denomination->price}}</td>
+                                    <td>{{date('d/m/Y', strtotime($da->transaction_date))}}</td>
+                                    <td>{{$da->challan_no}}</td>
+                                    <td>{{$da->series}}</td>
+                                    <td>{{$da->start_sequence}}</td>
+                                    <td>{{$da->end_sequence}}</td>
+                                    <td style="text-align: right">{{$da->item_quantity}}</td>
+                                    <td style="text-align: right">{{$da->item_quantity*$da->denomination->price}}</td>
+                                    <td>{{$da->transaction_type}}</td>
+                                    <td style="text-align: right">{{$da->balance_quantity}}</td>
+                                    <td style="text-align: right">{{$da->balance_quantity*$da->denomination->price}}</td>
                                 </tr>
                             @endforeach
                             @else
@@ -94,7 +108,8 @@ $(document).ready(function(){
     $(document).on('click', '#exportAsPDF', function(){
         var depot_id = $('#depot_id').val();
         var denom_id = $('#denomination_id').val();
-        var report_type = $('#report_type').val();
+        var conductor_id = $('#conductor_id').val();
+        var ledger = $('#ledger').val();
         var fromDate = $('#from_date').val();
         if(!fromDate)
         {
@@ -120,70 +135,34 @@ $(document).ready(function(){
         }
 
         $.ajax({
-            url: "{{route('reports.ppt.consumption.getpdfreport')}}",
+            url: "{{route('reports.ppt.denomination_wise_stock_ledger.getpdfreport')}}",
             type: "POST",
             dataType: "JSON",
             data: {
                 depot_id: depot_id,
                 denomination_id: denom_id,
-                report_type:report_type,
+                conductor_id: conductor_id,
                 from_date: fromDate,
-                to_date: toDate
+                to_date: toDate,
+                ledger: ledger
             },
             success: function(response)
             {
                 console.log(response);
                 if(response.status == 'Ok')
                 {
-                    var columns = response.columns
                     var data = response.data;
-                    
-                    var firstCol = 'Date';
-                    var secondCol = 'Denomination';
-
                     var reportData = [];
-                    if(report_type == 'detail')
-                    {
-                        reportData.push([{'text':firstCol, 'style': 'tableHeaderStyle'}, {'text':'Ticket Type', 'style': 'tableHeaderStyle'}, {'text':secondCol, 'style': 'tableHeaderStyle'}, {'text':'Ticket Count', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Ticket Value', 'style': 'tableHeaderStyle', 'alignment':'right'}]);
-                        
-                        $.each(data, function(index, stock){
+                    reportData.push([{'text':'Ticket Type', 'style': 'tableHeaderStyle'}, {'text':'Denomination', 'style': 'tableHeaderStyle'}, {'text':'Date', 'style': 'tableHeaderStyle'}, {'text':'Challan No. / Receipt No.', 'style': 'tableHeaderStyle'}, {'text':'Series', 'style': 'tableHeaderStyle'}, {'text':'Opening Ticket No.', 'style': 'tableHeaderStyle'}, {'text':'Closing Ticket No.', 'style': 'tableHeaderStyle'}, {'text':'Ticket Count', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Ticket Value', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Transaction Type', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Balance Count', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Balance Value', 'style': 'tableHeaderStyle', 'alignment':'right'}]);
                             
-                            if(stock.length > 0)
-                            {
-                                var totalTicketCount = 0;
-                                var totalTicketValue = 0;
-                                stock.map((d) => {
-                                    console.log(d);
-                                    totalTicketCount += parseInt(d.quantity);
-                                    totalTicketValue += parseInt(d.quantity*d.denomination.price);
-                                     
-                                    var secondColVal = d.denomination.description;
-                                    
-                                    reportData.push([{'text':index}, {'text':'Ticket'}, {'text':secondColVal}, {'text':''+d.quantity, 'alignment':'right'}, {'text':''+d.quantity*d.denomination.price, 'alignment':'right'}]);
-                                });
-                                reportData.push([{'text':'Grand Total', 'style': 'tableHeaderStyle', 'colSpan':3, 'alignment': 'right'}, {}, {}, {'text':''+totalTicketCount+'', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':''+totalTicketValue+'', 'style': 'tableHeaderStyle', 'alignment':'right'}]);
-                            }   
+                    if(data.length > 0)
+                    {
+                        data.map((d) => {
+                            console.log(d);                                    
+                            reportData.push([{'text':d.item.name}, {'text':d.denomination.description}, {'text':d.transaction_date}, {'text':d.challan_no}, {'text':d.series}, {'text':''+d.start_sequence}, {'text':''+d.end_sequence}, {'text':''+d.item_quantity, 'alignment':'right'}, {'text':''+d.item_quantity*d.denomination.price, 'alignment':'right'}, {'text':d.transaction_type}, {'text':''+d.balance_quantity, 'alignment':'right'}, {'text':''+d.balance_quantity*d.denomination.price, 'alignment':'right'}]);
                         });
-                    }else{
-                        reportData.push([{'text':'Ticket Type', 'style': 'tableHeaderStyle'}, {'text':secondCol, 'style': 'tableHeaderStyle'}, {'text':'Ticket Count', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Ticket Value', 'style': 'tableHeaderStyle', 'alignment':'right'}]);
-
-                        if(data.length > 0)
-                        {
-                            var totalTicketCount = 0;
-                            var totalTicketValue = 0;
-                            data.map((d) => {
-                                console.log(d);
-                                totalTicketCount += parseInt(d.quantity);
-                                totalTicketValue += parseInt(d.quantity*d.denomination.price);
-                                     
-                                var secondColVal = d.denomination.description;
-                                    
-                                reportData.push([{'text':'Ticket'}, {'text':secondColVal}, {'text':''+d.quantity, 'alignment':'right'}, {'text':''+d.quantity*d.denomination.price, 'alignment':'right'}]);
-                            });
-                        }
-                        reportData.push([{'text':'Grand Total', 'style': 'tableHeaderStyle', 'colSpan':2, 'alignment': 'right'}, {}, {'text':''+totalTicketCount+'', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':''+totalTicketValue+'', 'style': 'tableHeaderStyle', 'alignment':'right'}]);
                     }
-
+                    console.log(reportData);
                     var metaData = response.meta;
                     var title = response.title;
                     var takenBy = response.takenBy;
@@ -201,8 +180,7 @@ $(document).ready(function(){
     $(document).on('click', '#exportAsXLS', function(){
         var depot_id = $('#depot_id').val();
         var denom_id = $('#denomination_id').val();
-        var report_type = $('#report_type').val();
-        var orderBy = $('#order_by').val();
+        var ledger = $('#ledger').val();
         var fromDate = $('#from_date').val();
         if(!fromDate)
         {
@@ -229,12 +207,11 @@ $(document).ready(function(){
 
         var queryParams = "?depot_id="+depot_id
                         + "&denomination_id="+denom_id
-                        + "&report_type="+report_type
+                        + "&ledger="+ledger
                         + "&from_date="+fromDate
-                        + "&to_date="+toDate
-                        + "&order_by="+orderBy;
+                        + "&to_date="+toDate;
 
-        var url = "{{route('reports.ppt.consumption.getexcelreport')}}"+queryParams;
+        var url = "{{route('reports.ppt.denomination_wise_stock_ledger.getexcelreport')}}"+queryParams;
 
         window.open(url,'_blank');
     });

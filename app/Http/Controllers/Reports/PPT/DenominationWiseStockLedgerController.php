@@ -15,12 +15,11 @@ use App\Models\Waybill;
 use App\Traits\activityLog;
 use App\Models\CenterStock;
 use Illuminate\Http\Request;
-use App\Models\AuditInventory;
 use App\Traits\checkPermission;
 use App\Http\Controllers\Controller;
+use App\Models\Inventory\DepotStockLedger;
 
-
-class ConsumptionController extends Controller
+class DenominationWiseStockLedgerController extends Controller
 {
     use activityLog;
     use checkPermission;
@@ -32,7 +31,7 @@ class ConsumptionController extends Controller
      */
     public function index()
     {
-        return view('reports.ppt.consumption.index');
+        return view('reports.ppt.denomination_wise_stock_ledger.index');
     }
 
     public function displayData(Request $request)
@@ -42,9 +41,10 @@ class ConsumptionController extends Controller
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
         $denom_id = $input['denomination_id'];
-        $report_type = $input['report_type'];
+        $ledger = $input['ledger'];
+        $conductor_id = $input['conductor_id'];
     
-        $data = AuditInventory::with(['denomination:id,description,price']);
+        $data = DepotStockLedger::with(['denomination:id,description,price', 'item:id,name']);
 
         if($depot_id)
         {
@@ -63,11 +63,13 @@ class ConsumptionController extends Controller
         }
                 
         $data = $data->orderBy('denom_id', 'ASC')
+        			 ->orderBy('created_at', 'ASC')
+        			 ->select('depot_id', 'denom_id', 'challan_no', 'series', 'start_sequence', 'end_sequence', 'item_quantity', 'balance_quantity', 'transaction_type', 'item_id', 'transaction_date')
         			 ->paginate(10);
 
         //return response()->json($data);
 
-        return view('reports.ppt.consumption.index', compact('data'));
+        return view('reports.ppt.denomination_wise_stock_ledger.index', compact('data'));
     }
 
     /**
@@ -83,9 +85,10 @@ class ConsumptionController extends Controller
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
         $denom_id = $input['denomination_id'];
-        $report_type = $input['report_type'];
+        $ledger = $input['ledger'];
+        $conductor_id = $input['conductor_id'];
     
-        $data = AuditInventory::with(['denomination:id,description,price']);
+        $data = DepotStockLedger::with(['denomination:id,description,price', 'item:id,name']);
 
         if($depot_id)
         {
@@ -103,13 +106,15 @@ class ConsumptionController extends Controller
         				 ->whereDate('created_at', '<=', $to_date);
         }
                 
-        $data = $data->orderBy('denom_id', 'ASC');
+        $data = $data->orderBy('denom_id', 'ASC')
+        			 ->orderBy('created_at', 'ASC')
+        			 ->select('depot_id', 'denom_id', 'challan_no', 'series', 'start_sequence', 'end_sequence', 'item_quantity', 'balance_quantity', 'transaction_type', 'item_id', 'transaction_date');
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
         $conductorName = $this->findNameById('crew', 'crew_name', $conductor_id) ? $this->findNameById('crew', 'crew_name', $conductor_id) : 'All';
         $denomination = $this->findNameById('denominations', 'description', $denom_id) ? $this->findNameById('denominations', 'description', $denom_id) : 'All';
     
-        $title = 'Consumption of PPT'; // Report title
+        $title = 'Denomination wise Stock Ledger'; // Report title
 
         /*
         *meta data shoul be an array as below
@@ -122,30 +127,9 @@ class ConsumptionController extends Controller
             'From : '.date('d-m-Y', strtotime($from_date)).' To : '.date('d-m-Y', strtotime($to_date))
         ];   
 
-        $reportData = [];
+        $reportData = $data->get();
 
-        if($report_type == 'detail')
-        {
-	        $dates = AuditInventory::whereDate('created_at', '>=', $from_date)
-	        				 	->whereDate('created_at', '<=', $to_date)
-	        				 	->distinct('created_at')->get(['created_at']);
-	        if($dates)
-		    {
-		       	foreach ($dates as $key => $value) 
-		        {
-		            $queryBuilder = clone $data;
-		            $reportData[date('m/d/Y', strtotime($value->created_at))] = $queryBuilder->whereDate('created_at', date('Y-m-d', strtotime($value->created_at)))
-		                                ->get();
-		        }
-		    } 
-		}else{
-			$reportData = AuditInventory::with(['denomination:id,description,price'])
-								->whereDate('created_at', '>=', $from_date)
-	        				 	->whereDate('created_at', '<=', $to_date)
-	        				 	->groupBy('denom_id')
-   								->selectRaw('*, sum(quantity) as quantity')
-   								->get();
-		}       
+            
 
         //return $reportData;
 
@@ -159,9 +143,10 @@ class ConsumptionController extends Controller
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
         $denom_id = $input['denomination_id'];
-        $report_type = $input['report_type'];
+        $ledger = $input['ledger'];
+        $conductor_id = $input['conductor_id'];
     
-        $data = AuditInventory::with(['denomination:id,description,price']);
+        $data = DepotStockLedger::with(['denomination:id,description,price', 'item:id,name']);
 
         if($depot_id)
         {
@@ -179,13 +164,15 @@ class ConsumptionController extends Controller
         				 ->whereDate('created_at', '<=', $to_date);
         }
                 
-        $data = $data->orderBy('denom_id', 'ASC');
+        $data = $data->orderBy('denom_id', 'ASC')
+        			 ->orderBy('created_at', 'ASC')
+        			 ->select('depot_id', 'denom_id', 'challan_no', 'series', 'start_sequence', 'end_sequence', 'item_quantity', 'balance_quantity', 'transaction_type', 'item_id', 'transaction_date');
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
         $conductorName = $this->findNameById('crew', 'crew_name', $conductor_id) ? $this->findNameById('crew', 'crew_name', $conductor_id) : 'All';
         $denomination = $this->findNameById('denominations', 'description', $denom_id) ? $this->findNameById('denominations', 'description', $denom_id) : 'All';
     
-        $title = 'Consumption of PPT'; // Report title
+        $title = 'Denomination wise Stock Ledger'; // Report title
 
         /*
         *meta data shoul be an array as below
@@ -199,64 +186,48 @@ class ConsumptionController extends Controller
             'To : '=> date('d-m-Y', strtotime($to_date))
         ]; 
 
-        if($report_type == 'detail')
-        {
-        	$columns = [
+        $columns = [
                         'Ticket Type'=> function($row){
                             return 'Ticket';
+                        },
+                        'Denomination' => function($row){
+                            return $row->denomination->description;
                         },
                         'Date'=> function($row){
-                            return date('d-m-Y', strtotime($row->created_at));
+                            return date('d-m-Y', strtotime($row->transaction_date));
                         },
-                        'Denomination' => function($row){
-                            return $row->denomination->description;
+                        'Challan No. / Receipt No.' => function($row){
+                            return $row->challan_no;
+                        },
+                        'Series' => function($row){
+                            return $row->series;
+                        },
+                        'Opening Ticket No.' => function($row){
+                            return $row->start_sequence;
+                        },
+                        'Closing Ticket No.' => function($row){
+                            return $row->end_sequence;
                         }, 
                         'Ticket Count' => function($row){
-                            return $row->quantity;
+                            return $row->item_quantity;
                         }, 
                         'Ticket Value' => function($row){
-                            return $row->quantity * $row->denomination->price;
+                            return $row->item_quantity * $row->denomination->price;
+                        },
+                        'Transaction Type' => function($row){
+                            return $row->transaction_type;
+                        }, 
+                        'Balance Count' => function($row){
+                            return $row->balance_quantity;
+                        }, 
+                        'Balance Value' => function($row){
+                            return $row->balance_quantity * $row->denomination->price;
                         }];
 
         	return ExcelReport::of($title, $meta, $data, $columns)
-                    ->editColumns(['Ticket Count', 'Ticket Value'], [
+                    ->editColumns(['Ticket Count', 'Ticket Value', 'Balance Count', 'Balance Value'], [
                         'class' => 'right bold',
-                    ])->showTotal([
-                        'Ticket Count' => 'point',
-                        'Ticket Value' => 'point',
-                    ])->groupBy('Date')
-                    ->download($title.'.xlsx');
-        }else{
-        	$columns = [
-                        'Ticket Type'=> function($row){
-                            return 'Ticket';
-                        },
-                        'Denomination' => function($row){
-                            return $row->denomination->description;
-                        }, 
-                        'Ticket Count' => function($row){
-                            return $row->quantity;
-                        }, 
-                        'Ticket Value' => function($row){
-                            return $row->quantity * $row->denomination->price;
-                        }];
-
-            $data = AuditInventory::with(['denomination:id,description,price'])
-								->whereDate('created_at', '>=', $from_date)
-	        				 	->whereDate('created_at', '<=', $to_date)
-	        				 	->groupBy('denom_id')
-   								->selectRaw('*, sum(quantity) as quantity');
-
-        	return ExcelReport::of($title, $meta, $data, $columns)
-                    ->editColumns(['Ticket Count', 'Ticket Value'], [
-                        'class' => 'right bold',
-                    ])->showTotal([
-                        'Ticket Count' => 'point',
-                        'Ticket Value' => 'point',
                     ])
                     ->download($title.'.xlsx');
-        }
-
-        
     }
 }
