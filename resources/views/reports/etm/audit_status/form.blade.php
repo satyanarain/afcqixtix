@@ -6,12 +6,7 @@
 </div> 
 <div class="col-md-3">
         {!! Form::label('report_date', Lang::get('Date'), ['class' => 'control-label']) !!}
-        <div class="input-group date">
-        <div class="input-group-addon">
-          <i class="fa fa-calendar"></i>
-        </div>
-        {!! Form::text('report_date', null, ['class' => 'form-control multiple_date']) !!}
-      </div>
+        {!! Form::text('report_date', date('d-m-Y'), ['class' => 'form-control multiple_date']) !!}
 </div>
 <div class="col-md-3">
      @php $shifts_value=displayList('shifts','shift')@endphp
