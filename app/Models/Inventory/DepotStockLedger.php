@@ -13,7 +13,7 @@ class DepotStockLedger extends Model
 {
     protected $table = 'inv_depotstock_ledger';
 
-    protected $fillable = ['depot_head_id', 'crew_id', 'depot_id', 'transaction_date', 'item_id', 'denom_id', 'start_sequence', 'end_sequence', 'item_quantity', 'challan_no', 'balance_quantity', 'transaction_type'];
+    protected $fillable = ['depot_head_id', 'crew_id', 'depot_id', 'transaction_date', 'item_id', 'denom_id', 'series', 'start_sequence', 'end_sequence', 'item_quantity', 'challan_no', 'balance_quantity', 'transaction_type'];
 
     public function depot()
     {

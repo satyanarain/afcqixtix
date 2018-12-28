@@ -64,7 +64,7 @@ class CrewStockRepository implements CrewStockRepositoryContract
                 $centerstock = CrewStock::create($input); 
 
                 //update DepotStockLedger 
-                DepotStockLedger::create(['depot_head_id'=>Auth::id(), 'crew_id'=>$requestData->crew_id, 'depot_id'=>$requestData->depot_id, 'transaction_date'=>date('Y-m-d'), 'item_id'=>$requestData->items_id, 'denom_id'=>$input['denom_id'], 'series'=>$input['series'], 'start_sequence'=>$input['start_sequence'], 'end_sequence'=>$input['end_sequence'], 'item_quantity'=>$qty, 'challan_no'=>$requestData->challan_no, 'balance_quantity'=>$balance_quantity, 'transaction_type'=>'Received']);
+                DepotStockLedger::create(['depot_head_id'=>Auth::id(), 'crew_id'=>$requestData->crew_id, 'depot_id'=>$requestData->depot_id, 'transaction_date'=>date('Y-m-d'), 'item_id'=>$requestData->items_id, 'denom_id'=>$input['denom_id'], 'series'=>$input['series'], 'start_sequence'=>$input['start_sequence'], 'end_sequence'=>$input['end_sequence'], 'item_quantity'=>$qty, 'challan_no'=>$requestData->challan_no, 'balance_quantity'=>$balance_quantity, 'transaction_type'=>'Issued']);
 
                 //update total stock crewwise
                 $total = DB::table('inv_crew_total_stock')
@@ -101,7 +101,7 @@ class CrewStockRepository implements CrewStockRepositoryContract
             $centerstock = CrewStock::create($input);
 
             //update DepotStockLedger
-            DepotStockLedger::create(['depot_head_id'=>Auth::id(), 'crew_id'=>null, 'depot_id'=>$requestData->depot_id, 'transaction_date'=>date('Y-m-d'), 'item_id'=>$requestData->items_id, 'denom_id'=>null, 'series'=>null, 'start_sequence'=>null, 'end_sequence'=>null, 'item_quantity'=>$qty, 'challan_no'=>$requestData->challan_no, 'balance_quantity'=>$balance_quantity, 'transaction_type'=>'Received']);
+            DepotStockLedger::create(['depot_head_id'=>Auth::id(), 'crew_id'=>null, 'depot_id'=>$requestData->depot_id, 'transaction_date'=>date('Y-m-d'), 'item_id'=>$requestData->items_id, 'denom_id'=>null, 'series'=>null, 'start_sequence'=>null, 'end_sequence'=>null, 'item_quantity'=>$qty, 'challan_no'=>$requestData->challan_no, 'balance_quantity'=>$balance_quantity, 'transaction_type'=>'Issued']);
 
             //update total stock crewwise
             $total = DB::table('inv_crew_total_stock')
