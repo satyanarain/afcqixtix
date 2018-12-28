@@ -29,7 +29,6 @@ class TripCancellationController extends Controller
         {
             try{
                 //check if abstract number is available in waybills
-
                 $waybill = Waybill::where('abstract_no', $value['abstract_no'])
                                     ->whereDate('date', date('Y-m-d', strtotime($value['cancellation_timestamp'])))
                                     ->first();

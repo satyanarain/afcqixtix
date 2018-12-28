@@ -18,7 +18,6 @@ use Illuminate\Http\Request;
 use App\Traits\checkPermission;
 use App\Models\ReturnCrewStock;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Report\ETM\AuditStatus\StoreAuditStatusRequest;
 
 class AuditStatusController extends Controller
 {
@@ -48,7 +47,7 @@ class AuditStatusController extends Controller
      * Created By satya
      * Date 12-12-2018
      */
-    public function displaydata(StoreAuditStatusRequest $request)
+    public function displaydata(Request $request)
     {       
         $input = $request->all();
         $depot_id = $input['depot_id'];
@@ -111,7 +110,7 @@ class AuditStatusController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function getData(Request $request)
+    public function getPdfReport(Request $request)
     {
         $input = $request->all();
         $depot_id = $input['depot_id'];

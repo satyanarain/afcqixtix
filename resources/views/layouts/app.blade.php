@@ -303,8 +303,8 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="depot-icon"></i> Audit Status
                     </a>
                 </li>
-                <li @if($segments_var[1]=='etm' && $segments_var[2]=='audit_status') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
+                <li @if($segments_var[2]=='trip_cancellation') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.etm.trip_cancellation.index')}}">
                         <i class="depot-icon"></i> Trip Cancellation
                     </a>
                 </li>

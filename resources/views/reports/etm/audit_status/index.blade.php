@@ -115,7 +115,7 @@ $(document).ready(function(){
         var etm_no = $('#etm_no').val();
 
         $.ajax({
-            url: "{{route('reports.etm.audit_status.getdata')}}",
+            url: "{{route('reports.etm.audit_status.getpdfreport')}}",
             type: "POST",
             dataType: "JSON",
             data: {

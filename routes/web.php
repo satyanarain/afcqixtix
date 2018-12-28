@@ -302,11 +302,17 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['prefix'=>'reports', 'namespace'=>'Reports', 'as'=>'reports.'], function(){
 
         Route::group(['prefix'=>'etm', 'namespace'=>'ETM', 'as'=>'etm.'], function(){
-      
+            /*audit_status*/
             Route::resource('audit_status', 'AuditStatusController')->only('index'); 
-            Route::post('audit_status/getdata', 'AuditStatusController@getData')->name('audit_status.getdata');
+            Route::post('audit_status/getpdfreport', 'AuditStatusController@getPdfReport')->name('audit_status.getpdfreport');
             Route::get('audit_status/getexcelreport', 'AuditStatusController@getExcelReport')->name('audit_status.getexcelreport');
             Route::get('audit_status/displayData', 'AuditStatusController@displayData')->name('audit_status.displaydata');
+
+            /*trip_cancellation*/
+            Route::resource('trip_cancellation', 'TripCancellationController')->only('index'); 
+            Route::post('trip_cancellation/getpdfreport', 'TripCancellationController@getPdfReport')->name('trip_cancellation.getpdfreport');
+            Route::get('trip_cancellation/getexcelreport', 'TripCancellationController@getExcelReport')->name('trip_cancellation.getexcelreport');
+            Route::get('trip_cancellation/displayData', 'TripCancellationController@displayData')->name('trip_cancellation.displaydata');
         });
 
         Route::group(['prefix'=>'ppt', 'namespace'=>'PPT', 'as'=>'ppt.'], function(){
