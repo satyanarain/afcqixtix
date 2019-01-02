@@ -160,6 +160,7 @@ $(document).ready(function(){
                             var toStop = '';
                             var cardNumber = '';
                             var totalAmt = '0.00';
+                            var concession = 0;
                             if(d.card_number)
                             {
                                 cardNumber = d.card_number;
@@ -179,7 +180,14 @@ $(document).ready(function(){
                                 toStop = "N/A";
                             }
 
-                            reportData.push([{'text':fromStop}, {'text':toStop}, {'text':d.sold_at}, {'text':''+d.adults}, {'text':''+d.adults_amt, 'alignment':'right'}, {'text':''+d.childs}, {'text':''+d.childs_amt}, {'text':''+d.concession.flat_fare_amount}, {'text':'0.00'}, {'text':'0.00'}, {'text':'0.00'}, {'text':totalAmt}, {'text':cardNumber}]);
+                            if(d.concession)
+                            {
+                                concession = d.concession.flat_fare_amount;
+                            }else {
+                                concession = '0.00';
+                            }
+
+                            reportData.push([{'text':fromStop}, {'text':toStop}, {'text':d.sold_at}, {'text':''+d.adults}, {'text':''+d.adults_amt, 'alignment':'right'}, {'text':''+d.childs}, {'text':''+d.childs_amt}, {'text':''+concession}, {'text':'0.00'}, {'text':'0.00'}, {'text':'0.00'}, {'text':totalAmt}, {'text':cardNumber}]);
                         });                            
                     }
 
