@@ -71,7 +71,7 @@
                                     <td style="text-align: right;">{{'0.00'}}</td>
                                     <td style="text-align: right;">{{'0.00'}}</td>
                                     <td style="text-align: right;">{{'0.00'}}</td>
-                                    <td style="text-align: right;">{{'0.00'}}</td>
+                                    <td style="text-align: right;">{{$da->adults_amt+$da->childs_amt-$da->concession->flat_fare_amount}}</td>
                                     <td>{{$da->card_number}}</td>
                                 </tr>
                             @endforeach
@@ -186,8 +186,9 @@ $(document).ready(function(){
                             }else {
                                 concession = '0.00';
                             }
+                            totalAmt = d.childs_amt + d.adults_amt - concession;
 
-                            reportData.push([{'text':fromStop}, {'text':toStop}, {'text':d.sold_at}, {'text':''+d.adults}, {'text':''+d.adults_amt, 'alignment':'right'}, {'text':''+d.childs}, {'text':''+d.childs_amt}, {'text':''+concession}, {'text':'0.00'}, {'text':'0.00'}, {'text':'0.00'}, {'text':totalAmt}, {'text':cardNumber}]);
+                            reportData.push([{'text':fromStop}, {'text':toStop}, {'text':d.sold_at}, {'text':''+d.adults}, {'text':''+d.adults_amt, 'alignment':'right'}, {'text':''+d.childs}, {'text':''+d.childs_amt, 'alignment':'right'}, {'text':''+concession, 'alignment':'right'}, {'text':'0.00', 'alignment':'right'}, {'text':'0.00', 'alignment':'right'}, {'text':'0.00', 'alignment':'right'}, {'text':''+totalAmt, 'alignment':'right'}, {'text':cardNumber}]);
                         });                            
                     }
 

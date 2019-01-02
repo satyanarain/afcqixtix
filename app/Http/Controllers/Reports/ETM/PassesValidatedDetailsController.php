@@ -173,7 +173,7 @@ class PassesValidatedDetailsController extends Controller
                             return '0.00';
                         }, 
                         'Total Amount (Rs.)' => function($row){
-                            return '0.00';
+                            return $row->adults_amt  + $row->childs_amt -$row->concession->flat_fare_amount;
                         }, 
                         'Card Number' => function($row){
                             return $row->card_number;
