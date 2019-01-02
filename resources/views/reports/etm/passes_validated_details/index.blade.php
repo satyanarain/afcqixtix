@@ -45,9 +45,9 @@
                                     <th>To Stop</th>
                                     <th>Date and Time</th>
                                     <th>Adult Count</th>
-                                    <th style="text-align: right;">Adult Amount (Rs.)</th>
+                                    <th style="text-align: right;">Adult Amt (Rs.)</th>
                                     <th>Child Count</th>
-                                    <th style="text-align: right;">Child Amount (Rs.)</th>
+                                    <th style="text-align: right;">Child Amt (Rs.)</th>
                                     <th style="text-align: right;">Concession (Rs.)</th>
                                     <th style="text-align: right;">Pass</th>
                                     <th style="text-align: right;">Cash</th>
@@ -151,7 +151,7 @@ $(document).ready(function(){
                     var reportData = [];
                     if(data.length > 0)
                     {
-                        reportData.push([{'text':'From Stop', 'style': 'tableHeaderStyle'}, {'text':'To Stop', 'style': 'tableHeaderStyle'}, {'text':'Date and Time', 'style': 'tableHeaderStyle'}, {'text':'Adult Count', 'style': 'tableHeaderStyle'}, {'text':'Adult Amount (Rs.)', 'style': 'tableHeaderStyle'}, {'text':'Child Count', 'style': 'tableHeaderStyle'}, {'text':'Child Amount (Rs.)', 'style': 'tableHeaderStyle'}, {'text':'Concession', 'style': 'tableHeaderStyle'}, {'text':'Pass', 'style': 'tableHeaderStyle'}, {'text':'Cash', 'style': 'tableHeaderStyle'}, {'text':'E-Purse', 'style': 'tableHeaderStyle'}, {'text':'Total Amt (Rs.)', 'style': 'tableHeaderStyle'}, {'text':'Card Number', 'style': 'tableHeaderStyle'}]);
+                        reportData.push([{'text':'From Stop', 'style': 'tableHeaderStyle'}, {'text':'To Stop', 'style': 'tableHeaderStyle'}, {'text':'Date and Time', 'style': 'tableHeaderStyle'}, {'text':'Adult Count', 'style': 'tableHeaderStyle'}, {'text':'Adult Amt (Rs.)', 'style': 'tableHeaderStyle'}, {'text':'Child Count', 'style': 'tableHeaderStyle'}, {'text':'Child Amt (Rs.)', 'style': 'tableHeaderStyle'}, {'text':'Concession', 'style': 'tableHeaderStyle'}, {'text':'Pass', 'style': 'tableHeaderStyle'}, {'text':'Cash', 'style': 'tableHeaderStyle'}, {'text':'E-Purse', 'style': 'tableHeaderStyle'}, {'text':'Total Amt (Rs.)', 'style': 'tableHeaderStyle'}, {'text':'Card Number', 'style': 'tableHeaderStyle'}]);
                         
                         
                         data.map((d) => {
