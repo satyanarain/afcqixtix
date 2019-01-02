@@ -37,7 +37,7 @@
                                     width: '*'
                                 }
                             ],
-                            margin: [40, 0, 30, 0]
+                            margin: [20, 0, 30, 0]
                         },
                         footer: function(currentPage, pageCount)
                         {
@@ -47,7 +47,7 @@
                                     { text: 'Page '+currentPage+' of '+pageCount, alignment: 'center' },
                                     { text: serverDate, alignment: 'right' }
                                 ],
-                                margin: [40, 0, 30, 0]
+                                margin: [20, 0, 30, 0]
                             }
                         },
                         content: [
@@ -58,32 +58,7 @@
                                 widths: '*',
                                 body: data
                             },
-                            layout: {
-                                hLineWidth: function (i, node) {
-                                    return (i === 0 || i === node.table.body.length) ? 1 : 1;
-                                },
-                                /*vLineWidth: function (i, node) {
-                                    return (i === 0 || i === node.table.widths.length) ? 1 : 1;
-                                },*/
-                                hLineColor: function (i, node) {
-                                    return (i === 0 || i === node.table.body.length) ? 'black' : 'gray';
-                                },
-                                /*vLineColor: function (i, node) {
-                                    return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
-                                },*/
-                                // hLineStyle: function (i, node) { return {dash: { length: 10, space: 4 }}; },
-                                // vLineStyle: function (i, node) { return {dash: { length: 10, space: 4 }}; },
-                                // paddingLeft: function(i, node) { return 4; },
-                                // paddingRight: function(i, node) { return 4; },
-                                // paddingTop: function(i, node) { return 2; },
-                                // paddingBottom: function(i, node) { return 2; },
-                                fillColor: function (rowIndex, node, columnIndex) { 
-                                    return (rowIndex === 0) ? '#eee' : ''; 
-                                },
-                                style: function(rowIndex, node, columnIndex){
-                                    return (rowIndex === 0) ? 'tableHeader' : ''; 
-                                }
-                            }
+                            layout: 'lightHorizontalLines'
                         }],
                         styles: {
                             topHeader: {
