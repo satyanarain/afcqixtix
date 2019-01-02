@@ -9,7 +9,7 @@
                         watermark: {text: 'Opiant Tech Solutions Pvt. Ltd.', color: '#367fa9', opacity: 0.1, bold: true, italics: false},
                         pageSize: 'A4',
                         pageOrientation: 'landscape',
-                        pageMargins: [ 40, 100, 40, 40 ],
+                        pageMargins: [ 20, 100, 40, 20 ],
                         header: {
                             columns: [
                                 {
@@ -62,15 +62,15 @@
                                 hLineWidth: function (i, node) {
                                     return (i === 0 || i === node.table.body.length) ? 1 : 1;
                                 },
-                                vLineWidth: function (i, node) {
+                                /*vLineWidth: function (i, node) {
                                     return (i === 0 || i === node.table.widths.length) ? 1 : 1;
-                                },
+                                },*/
                                 hLineColor: function (i, node) {
                                     return (i === 0 || i === node.table.body.length) ? 'black' : 'gray';
                                 },
-                                vLineColor: function (i, node) {
+                                /*vLineColor: function (i, node) {
                                     return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
-                                },
+                                },*/
                                 // hLineStyle: function (i, node) { return {dash: { length: 10, space: 4 }}; },
                                 // vLineStyle: function (i, node) { return {dash: { length: 10, space: 4 }}; },
                                 // paddingLeft: function(i, node) { return 4; },
