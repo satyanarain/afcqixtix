@@ -46,6 +46,6 @@ class TripCancellationController extends Controller
             }            
         }
 
-        return response()->json(['statusCode'=>'Ok', 'data'=>$insertedData]);
+        return response()->json($insertedData);
     }
 }
