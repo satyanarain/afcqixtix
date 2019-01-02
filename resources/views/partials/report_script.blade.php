@@ -66,19 +66,19 @@
                                 bold: true,
                                 alignment: 'center',
                                 marginTop: 10, 
-                                color: '#367fa9'
+                                color: '#000'
                             },
                             middleHeader: {
                                 fontSize: 12,
                                 alignment: 'center',
                                 marginBottom: 15,
                                 bold: true, 
-                                color: '#367fa9'
+                                color: '#000'
                             },
                             metaStyle: {
                                 fontSize: 12,
                                 bold: true,
-                                color: '367fa9'
+                                color: '#000'
                             },
                             tableStyle: {
                                 fontSize: 8,
