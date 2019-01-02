@@ -8,20 +8,14 @@ use Validator;
 use PdfReport;
 use CSVReport;
 use ExcelReport;
-use App\Models\Crew;
-use App\Models\Shift;
-use App\Models\Depot;
-use App\Models\Waybill;
+use App\Models\Ticket;
 use App\Traits\activityLog;
 use App\Models\CenterStock;
 use Illuminate\Http\Request;
-use App\Models\AuditInventory;
 use App\Traits\checkPermission;
-use App\Models\TripCancellation;
 use App\Http\Controllers\Controller;
 
-
-class TripCancellationController extends Controller
+class PassesValidatedDetailsController extends Controller
 {
     use activityLog;
     use checkPermission;
@@ -33,7 +27,7 @@ class TripCancellationController extends Controller
      */
     public function index()
     {
-        return view('reports.etm.trip_cancellation.index');
+        return view('reports.etm.passes_validated_details.index');
     }
 
     public function displayData(Request $request)
@@ -42,19 +36,8 @@ class TripCancellationController extends Controller
         $depot_id = $input['depot_id'];
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
-        $route_id = $input['route_id'];
     
-        $data = TripCancellation::with(['wayBill'=>function($query) use ($depot_id, $route_id){
-	        	if($depot_id)
-		        {
-	        		$query->where('depot_id', $depot_id);
-	        	}
-
-	        	if($route_id)
-		        {
-	        		$query->where('route_id', $route_id);
-	        	}
-        }, 'wayBill.route', 'wayBill.duty', 'wayBill.shift', 'wayBill.vehicle', 'wayBill.conductor', 'stop:id,stop', 'reason:id,reason_description']);
+        $data = Ticket::with(['fromStop', 'toStop', 'concession:id,flat_fare_amount']);
 
         if($from_date && $to_date)
         {
@@ -62,12 +45,11 @@ class TripCancellationController extends Controller
         				 ->whereDate('created_at', '<=', $to_date);
         }
                 
-        $data = $data->orderBy('id', 'ASC')
+        $data = $data->where('ticket_type', 'Pass')
+        			 ->orderBy('id', 'ASC')
         			 ->paginate(10);
 
-        //return response()->json($data);
-
-        return view('reports.etm.trip_cancellation.index', compact('data'));
+        return view('reports.etm.passes_validated_details.index', compact('data'));
     }
 
     /**
@@ -82,19 +64,8 @@ class TripCancellationController extends Controller
         $depot_id = $input['depot_id'];
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
-        $route_id = $input['route_id'];
     
-        $data = TripCancellation::with(['wayBill'=>function($query) use ($depot_id, $route_id){
-	        	if($depot_id)
-		        {
-	        		$query->where('depot_id', $depot_id);
-	        	}
-
-	        	if($route_id)
-		        {
-	        		$query->where('route_id', $route_id);
-	        	}
-        }, 'wayBill.route', 'wayBill.duty', 'wayBill.shift', 'wayBill.vehicle', 'wayBill.conductor', 'stop:id,stop', 'reason:id,reason_description']);
+        $data = Ticket::with(['fromStop', 'toStop', 'concession:id,flat_fare_amount']);
 
         if($from_date && $to_date)
         {
@@ -102,11 +73,12 @@ class TripCancellationController extends Controller
         				 ->whereDate('created_at', '<=', $to_date);
         }
                 
-        $reportData = $data->orderBy('id', 'ASC');
+        $data = $data->where('ticket_type', 'Pass')
+        			->orderBy('id', 'ASC');
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
     
-        $title = 'Trip Cancellation - Report'; // Report title
+        $title = 'Passes Validated Details Report'; // Report title
 
         /*
         *meta data shoul be an array as below
@@ -131,19 +103,8 @@ class TripCancellationController extends Controller
         $depot_id = $input['depot_id'];
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
-        $route_id = $input['route_id'];
     
-        $data = TripCancellation::with(['wayBill'=>function($query) use ($depot_id, $route_id){
-	        	if($depot_id)
-		        {
-	        		$query->where('depot_id', $depot_id);
-	        	}
-
-	        	if($route_id)
-		        {
-	        		$query->where('route_id', $route_id);
-	        	}
-        }, 'wayBill.route', 'wayBill.duty', 'wayBill.shift', 'wayBill.vehicle', 'wayBill.conductor', 'stop:id,stop', 'reason:id,reason_description']);
+        $data = Ticket::with(['fromStop', 'toStop', 'concession:id,flat_fare_amount']);
 
         if($from_date && $to_date)
         {
@@ -151,7 +112,8 @@ class TripCancellationController extends Controller
         				 ->whereDate('created_at', '<=', $to_date);
         }
                 
-        $data = $data->orderBy('id', 'ASC');
+        $data = $data->where('ticket_type', 'Pass')
+        			->orderBy('id', 'ASC');
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
         if($route_id)
@@ -161,7 +123,7 @@ class TripCancellationController extends Controller
         	$routeName = 'All';
         }
     
-        $title = 'Trip Cancellation - Report'; // Report title
+        $title = 'Passes Validated Details Report'; // Report title
 
         /*
         *meta data shoul be an array as below
@@ -177,29 +139,44 @@ class TripCancellationController extends Controller
 
       
         $columns = [
-                        'Time'=> function($row){
-                            return date('H:i:s', strtotime($row->cancellation_timestamp));
+                        'From Stop'=> function($row){
+                            return $row->fromStop->short_name;
                         },
-                        'Route'=> function($row){
-                            return $row->wayBill->route->route_name;
+                        'To Stop'=> function($row){
+                            return $row->toStop->short_name;
                         },
-                        'Duty' => function($row){
-                            return $row->wayBill->duty->duty_number;
+                        'Date and Time'=> function($row){
+                            return date('d-m-Y H:i:s', strtotime($row->sold_at));
+                        },
+                        'Adult Count' => function($row){
+                            return $row->adults;
                         }, 
-                        'Shift' => function($row){
-                            return $row->wayBill->shift->shift;
+                        'Adult Amount (Rs.)' => function($row){
+                            return $row->adults_amt;
                         }, 
-                        'Bus No.' => function($row){
-                            return $row->wayBill->vehicle->vehicle_registration_number;
+                        'Child Count' => function($row){
+                            return $row->childs;
                         }, 
-                        'Conductor' => function($row){
-                            return $row->wayBill->conductor->crew_name.' ('.$row->wayBill->conductor->crew_name.')';
+                        'Child Amount (Rs.)' => function($row){
+                            return $row->childs_amt;
                         }, 
-                        'Stop' => function($row){
-                            return $row->stop ? $row->stop->stop : 'N/A';
+                        'Concession' => function($row){
+                            return $row->concession->flat_fare_amount;
                         }, 
-                        'Reason' => function($row){
-                            return $row->reason->reason_description;
+                        'Pass' => function($row){
+                            return '0.00';
+                        }, 
+                        'Cash' => function($row){
+                            return '0.00';
+                        }, 
+                        'E-Purse' => function($row){
+                            return '0.00';
+                        }, 
+                        'Total Amount (Rs.)' => function($row){
+                            return '0.00';
+                        }, 
+                        'Card Number' => function($row){
+                            return $row->card_number;
                         }];
 
         return ExcelReport::of($title, $meta, $data, $columns)

@@ -313,6 +313,18 @@ Route::group(['middleware' => ['auth']], function () {
             Route::post('trip_cancellation/getpdfreport', 'TripCancellationController@getPdfReport')->name('trip_cancellation.getpdfreport');
             Route::get('trip_cancellation/getexcelreport', 'TripCancellationController@getExcelReport')->name('trip_cancellation.getexcelreport');
             Route::get('trip_cancellation/displayData', 'TripCancellationController@displayData')->name('trip_cancellation.displaydata');
+
+            /*penalty_ticket_details*/
+            Route::resource('penalty_ticket_details', 'PenaltyTicketDetailsController')->only('index'); 
+            Route::post('penalty_ticket_details/getpdfreport', 'PenaltyTicketDetailsController@getPdfReport')->name('penalty_ticket_details.getpdfreport');
+            Route::get('penalty_ticket_details/getexcelreport', 'PenaltyTicketDetailsController@getExcelReport')->name('penalty_ticket_details.getexcelreport');
+            Route::get('penalty_ticket_details/displayData', 'PenaltyTicketDetailsController@displayData')->name('penalty_ticket_details.displaydata');
+
+            /*passes_validated_details*/
+            Route::resource('passes_validated_details', 'PassesValidatedDetailsController')->only('index'); 
+            Route::post('passes_validated_details/getpdfreport', 'PassesValidatedDetailsController@getPdfReport')->name('passes_validated_details.getpdfreport');
+            Route::get('passes_validated_details/getexcelreport', 'PassesValidatedDetailsController@getExcelReport')->name('passes_validated_details.getexcelreport');
+            Route::get('passes_validated_details/displayData', 'PassesValidatedDetailsController@displayData')->name('passes_validated_details.displaydata');
         });
 
         Route::group(['prefix'=>'ppt', 'namespace'=>'PPT', 'as'=>'ppt.'], function(){

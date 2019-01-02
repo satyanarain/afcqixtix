@@ -8,20 +8,16 @@ use Validator;
 use PdfReport;
 use CSVReport;
 use ExcelReport;
-use App\Models\Crew;
-use App\Models\Shift;
 use App\Models\Depot;
 use App\Models\Waybill;
+use App\Models\Inspection;
 use App\Traits\activityLog;
 use App\Models\CenterStock;
 use Illuminate\Http\Request;
-use App\Models\AuditInventory;
 use App\Traits\checkPermission;
-use App\Models\TripCancellation;
 use App\Http\Controllers\Controller;
 
-
-class TripCancellationController extends Controller
+class PenaltyTicketDetailsController extends Controller
 {
     use activityLog;
     use checkPermission;
@@ -33,7 +29,7 @@ class TripCancellationController extends Controller
      */
     public function index()
     {
-        return view('reports.etm.trip_cancellation.index');
+        return view('reports.etm.penalty_ticket_details.index');
     }
 
     public function displayData(Request $request)
@@ -43,18 +39,11 @@ class TripCancellationController extends Controller
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
         $route_id = $input['route_id'];
+        //$duty_id = $input['duty_id'];
+        //$shift_id = $input['shift_id'];
+        $inspector_id = $input['inspector_id'];
     
-        $data = TripCancellation::with(['wayBill'=>function($query) use ($depot_id, $route_id){
-	        	if($depot_id)
-		        {
-	        		$query->where('depot_id', $depot_id);
-	        	}
-
-	        	if($route_id)
-		        {
-	        		$query->where('route_id', $route_id);
-	        	}
-        }, 'wayBill.route', 'wayBill.duty', 'wayBill.shift', 'wayBill.vehicle', 'wayBill.conductor', 'stop:id,stop', 'reason:id,reason_description']);
+        $data = Inspection::with(['route:id,route_name', 'stop:id,stop', 'remark:id,remark_description', 'inspector:id,crew_name', 'conductor:id,crew_name']);
 
         if($from_date && $to_date)
         {
@@ -67,7 +56,7 @@ class TripCancellationController extends Controller
 
         //return response()->json($data);
 
-        return view('reports.etm.trip_cancellation.index', compact('data'));
+        return view('reports.etm.penalty_ticket_details.index', compact('data'));
     }
 
     /**
@@ -83,18 +72,11 @@ class TripCancellationController extends Controller
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
         $route_id = $input['route_id'];
+        //$duty_id = $input['duty_id'];
+        //$shift_id = $input['shift_id'];
+        $inspector_id = $input['inspector_id'];
     
-        $data = TripCancellation::with(['wayBill'=>function($query) use ($depot_id, $route_id){
-	        	if($depot_id)
-		        {
-	        		$query->where('depot_id', $depot_id);
-	        	}
-
-	        	if($route_id)
-		        {
-	        		$query->where('route_id', $route_id);
-	        	}
-        }, 'wayBill.route', 'wayBill.duty', 'wayBill.shift', 'wayBill.vehicle', 'wayBill.conductor', 'stop:id,stop', 'reason:id,reason_description']);
+        $data = Inspection::with(['route:id,route_name', 'stop:id,stop', 'remark:id,remark_description', 'inspector:id,crew_name', 'conductor:id,crew_name']);
 
         if($from_date && $to_date)
         {
@@ -102,11 +84,11 @@ class TripCancellationController extends Controller
         				 ->whereDate('created_at', '<=', $to_date);
         }
                 
-        $reportData = $data->orderBy('id', 'ASC');
+        $data = $data->orderBy('id', 'ASC');
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
     
-        $title = 'Trip Cancellation - Report'; // Report title
+        $title = 'Penalty Ticket Details Report'; // Report title
 
         /*
         *meta data shoul be an array as below
@@ -132,18 +114,11 @@ class TripCancellationController extends Controller
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
         $route_id = $input['route_id'];
+        //$duty_id = $input['duty_id'];
+        //$shift_id = $input['shift_id'];
+        $inspector_id = $input['inspector_id'];
     
-        $data = TripCancellation::with(['wayBill'=>function($query) use ($depot_id, $route_id){
-	        	if($depot_id)
-		        {
-	        		$query->where('depot_id', $depot_id);
-	        	}
-
-	        	if($route_id)
-		        {
-	        		$query->where('route_id', $route_id);
-	        	}
-        }, 'wayBill.route', 'wayBill.duty', 'wayBill.shift', 'wayBill.vehicle', 'wayBill.conductor', 'stop:id,stop', 'reason:id,reason_description']);
+        $data = Inspection::with(['route:id,route_name', 'stop:id,stop', 'remark:id,remark_description', 'inspector:id,crew_name', 'conductor:id,crew_name']);
 
         if($from_date && $to_date)
         {
@@ -161,7 +136,7 @@ class TripCancellationController extends Controller
         	$routeName = 'All';
         }
     
-        $title = 'Trip Cancellation - Report'; // Report title
+        $title = 'Penalty Ticket Details Report'; // Report title
 
         /*
         *meta data shoul be an array as below
@@ -177,29 +152,32 @@ class TripCancellationController extends Controller
 
       
         $columns = [
-                        'Time'=> function($row){
-                            return date('H:i:s', strtotime($row->cancellation_timestamp));
+                        'Inspection Date - Time'=> function($row){
+                            return date('d-m-Y H:i:s', strtotime($row->cancellation_timestamp));
+                        },
+                        'Inspector'=> function($row){
+                            return $row->inspector->crew_name;
                         },
                         'Route'=> function($row){
-                            return $row->wayBill->route->route_name;
+                            return $row->route->route_name;
                         },
-                        'Duty' => function($row){
-                            return $row->wayBill->duty->duty_number;
+                        'Direction' => function($row){
+                            return $row->direction;
                         }, 
-                        'Shift' => function($row){
-                            return $row->wayBill->shift->shift;
+                        'Panalty Amount' => function($row){
+                            return $row->penalty_amount;
                         }, 
-                        'Bus No.' => function($row){
-                            return $row->wayBill->vehicle->vehicle_registration_number;
-                        }, 
-                        'Conductor' => function($row){
-                            return $row->wayBill->conductor->crew_name.' ('.$row->wayBill->conductor->crew_name.')';
+                        'Passenger' => function($row){
+                            return $row->passenger->crew_name;
                         }, 
                         'Stop' => function($row){
-                            return $row->stop ? $row->stop->stop : 'N/A';
+                            return $row->stop->stop;
                         }, 
-                        'Reason' => function($row){
-                            return $row->reason->reason_description;
+                        'Conductor' => function($row){
+                            return $row->conductor->crew_name;
+                        }, 
+                        'Remark' => function($row){
+                            return $row->remark->remark_description;
                         }];
 
         return ExcelReport::of($title, $meta, $data, $columns)

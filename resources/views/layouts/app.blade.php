@@ -313,9 +313,9 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="depot-icon"></i> Route Change
                     </a>
                 </li>
-                <li @if($segments_var[1]=='etm' && $segments_var[2]=='audit_status') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
-                        <i class="depot-icon"></i> Penality Ticket Details
+                <li @if($segments_var[2]=='penalty_ticket_details') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.etm.penalty_ticket_details.index')}}">
+                        <i class="depot-icon"></i> Penalty Ticket Details
                     </a>
                 </li>
                 <li @if($segments_var[1]=='etm' && $segments_var[2]=='audit_status') class="treeview active" @else class="treeview" @endif>
@@ -323,8 +323,8 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="depot-icon"></i> SAM Data
                     </a>
                 </li>
-                <li @if($segments_var[1]=='etm' && $segments_var[2]=='audit_status') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
+                <li @if($segments_var[2]=='passes_validated_details') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.etm.passes_validated_details.index')}}">
                         <i class="depot-icon"></i> Passes Validated
                     </a>
                 </li>

@@ -19,4 +19,9 @@ class Ticket extends Model
     {
     	return $this->hasOne(Stop::class, 'id', 'stage_to');
     }
+
+    public function concession()
+    {
+        return $this->belongsTo(Concession::class, 'concession_id', 'id');
+    }
 }
