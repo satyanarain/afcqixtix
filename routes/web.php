@@ -331,6 +331,18 @@ Route::group(['middleware' => ['auth']], function () {
             Route::post('issue_details/getpdfreport', 'IssueDetailsController@getPdfReport')->name('issue_details.getpdfreport');
             Route::get('issue_details/getexcelreport', 'IssueDetailsController@getExcelReport')->name('issue_details.getexcelreport');
             Route::get('issue_details/displayData', 'IssueDetailsController@displayData')->name('issue_details.displaydata');
+
+            /*activity_log*/
+            Route::resource('activity_log', 'ActivityLogController')->only('index'); 
+            Route::post('activity_log/getpdfreport', 'ActivityLogController@getPdfReport')->name('activity_log.getpdfreport');
+            Route::get('activity_log/getexcelreport', 'ActivityLogController@getExcelReport')->name('activity_log.getexcelreport');
+            Route::get('activity_log/displayData', 'ActivityLogController@displayData')->name('activity_log.displaydata');
+
+            /*pending_activity_log*/
+            Route::resource('pending_activity_log', 'PendingActivityLogController')->only('index'); 
+            Route::post('pending_activity_log/getpdfreport', 'PendingActivityLogController@getPdfReport')->name('pending_activity_log.getpdfreport');
+            Route::get('pending_activity_log/getexcelreport', 'PendingActivityLogController@getExcelReport')->name('pending_activity_log.getexcelreport');
+            Route::get('pending_activity_log/displayData', 'PendingActivityLogController@displayData')->name('pending_activity_log.displaydata');
         });
 
         Route::group(['prefix'=>'ppt', 'namespace'=>'PPT', 'as'=>'ppt.'], function(){

@@ -278,7 +278,7 @@ $pem=menuDisplayByUser($result, 'centerstocks','view');
                     
 <li @if($segments_var[0]=='etm_reports' || $segments_var[0]=='ppt_reports' || $segments_var[0]=='revenue_reports') class="treeview active" @else class="treeview" @endif>
   <a href="#">
-      <i class="fa fa-bus"></i> <span>Manage Reports</span>
+      <i class="fa fa-book"></i> <span>Manage Reports</span>
       <span class="pull-right-container">
           <i class="fa fa-angle-left pull-right"></i>
       </span>
@@ -291,14 +291,14 @@ $array= array('etm', 'revenue', 'ppt')
     @if(menuPermission('etm_reports')==1)
         <li @if($segments_var[1]=='etm') class="treeview active" @else class="treeview" @endif>
             <a href="#">
-              <i class="fa fa-bus"></i> <span>ETM Reports</span>
+              <i class="fa fa-calculator"></i> <span>ETM Reports</span>
               <span class="pull-right-container">
                   <i class="fa fa-angle-left pull-right"></i>
               </span>
           </a>
             <ul @if(in_array($segments_var[0],$array)) class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
 
-                <li @if($segments_var[1]=='etm' && $segments_var[2]=='audit_status') class="treeview active" @else class="treeview" @endif>
+                <li @if($segments_var[2]=='audit_status') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.etm.audit_status.index')}}">
                         <i class="depot-icon"></i> Audit Status
                     </a>
@@ -308,7 +308,7 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="depot-icon"></i> Trip Cancellation
                     </a>
                 </li>
-                <li @if($segments_var[1]=='etm' && $segments_var[2]=='audit_status') class="treeview active" @else class="treeview" @endif>
+                <li @if($segments_var[2]=='route_change') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
                         <i class="depot-icon"></i> Route Change
                     </a>
@@ -318,7 +318,7 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="depot-icon"></i> Penalty Ticket Details
                     </a>
                 </li>
-                <li @if($segments_var[1]=='etm' && $segments_var[2]=='audit_status') class="treeview active" @else class="treeview" @endif>
+                <li @if($segments_var[2]=='sam_data') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
                         <i class="depot-icon"></i> SAM Data
                     </a>
@@ -328,7 +328,7 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="depot-icon"></i> Passes Validated
                     </a>
                 </li>
-                <li @if($segments_var[1]=='etm' && $segments_var[2]=='audit_status') class="treeview active" @else class="treeview" @endif>
+                <li @if($segments_var[2]=='not_sync') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
                         <i class="depot-icon"></i> ETM Not Sync
                     </a>
@@ -338,14 +338,14 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="depot-icon"></i> ETM Issue Details
                     </a>
                 </li>
-                <li @if($segments_var[1]=='etm' && $segments_var[2]=='audit_status') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
+                <li @if($segments_var[2]=='activity_log') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.etm.activity_log.index')}}">
                         <i class="depot-icon"></i> ETM Activity Log Report
                     </a>
                 </li>
-                <li @if($segments_var[1]=='etm' && $segments_var[2]=='audit_status') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
-                        <i class="depot-icon"></i> ETM Pending Activity Log Report
+                <li @if($segments_var[2]=='pending_activity_log') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.etm.pending_activity_log.index')}}">
+                        <i class="depot-icon"></i> ETM Pending Activity Log
                     </a>
                 </li>
             </ul>
@@ -354,7 +354,7 @@ $array= array('etm', 'revenue', 'ppt')
     @if(menuPermission('ppt_reports')==1)
         <li @if($segments_var[1]=='ppt') class="treeview active" @else class="treeview" @endif>
             <a href="#">
-              <i class="fa fa-bus"></i> <span>PPT Reports</span>
+              <i class="fa fa-ticket"></i> <span>PPT Reports</span>
               <span class="pull-right-container">
                   <i class="fa fa-angle-left pull-right"></i>
               </span>
@@ -411,7 +411,7 @@ $array= array('etm', 'revenue', 'ppt')
     @if(menuPermission('revenue_reports')==1)
         <li @if($segments_var[1]=='revenue') class="treeview active" @else class="treeview" @endif>
             <a href="#">
-              <i class="fa fa-bus"></i> <span>Revenue Reports</span>
+              <i class="fa fa-inr"></i> <span>Revenue Reports</span>
               <span class="pull-right-container">
                   <i class="fa fa-angle-left pull-right"></i>
               </span>

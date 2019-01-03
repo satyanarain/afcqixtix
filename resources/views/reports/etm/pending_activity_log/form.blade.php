@@ -15,15 +15,9 @@
     </div>
 
     <div class="col-md-3">
-        @php $routes=displayList('route_master','route_name')@endphp
-        {!! Form::label('route_id', Lang::get('Route'), ['class' => 'control-label']) !!}
-        {!! Form::select('route_id', $routes, null, ['class' => 'form-control','placeholder'=>"All"]) !!}  
-    </div>
-
-    <div class="col-md-3">
-        @php $inspectors=displayList('crew','crew_name')@endphp
-        {!! Form::label('inspector_id', Lang::get('Inspector'), ['class' => 'control-label']) !!}
-        {!! Form::select('inspector_id', $inspectors, null, ['class' => 'form-control','placeholder'=>"All"]) !!}  
+        @php $activities=['logout'=>'Logout', 'audit'=>'Audit', 'remittance'=>'Remittance']@endphp
+        {!! Form::label('pending_activity', Lang::get('Pending Activity'), ['class' => 'control-label']) !!}    
+        {!! Form::select('pending_activity', $activities, null, ['class' => 'form-control', 'placeholder'=>'All']) !!}
     </div>
 
     <div class="col-md-3">

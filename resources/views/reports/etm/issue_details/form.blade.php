@@ -15,8 +15,9 @@
     </div>
 
     <div class="col-md-3">
+        @php $etms=displayList('etm_details','etm_no')@endphp
         {!! Form::label('etm_no', Lang::get('ETM No.'), ['class' => 'control-label']) !!}    
-        {!! Form::text('etm_no', null, ['class' => 'form-control']) !!}
+        {!! Form::select('etm_no', $etms, null, ['class' => 'form-control', 'placeholder'=>'All']) !!}
     </div>
 
     <!-- <div class="col-md-3">
