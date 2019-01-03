@@ -333,8 +333,8 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="depot-icon"></i> ETM Not Sync
                     </a>
                 </li>
-                <li @if($segments_var[1]=='etm' && $segments_var[2]=='audit_status') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
+                <li @if($segments_var[2]=='issue_details') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.etm.issue_details.index')}}">
                         <i class="depot-icon"></i> ETM Issue Details
                     </a>
                 </li>

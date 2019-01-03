@@ -325,6 +325,12 @@ Route::group(['middleware' => ['auth']], function () {
             Route::post('passes_validated_details/getpdfreport', 'PassesValidatedDetailsController@getPdfReport')->name('passes_validated_details.getpdfreport');
             Route::get('passes_validated_details/getexcelreport', 'PassesValidatedDetailsController@getExcelReport')->name('passes_validated_details.getexcelreport');
             Route::get('passes_validated_details/displayData', 'PassesValidatedDetailsController@displayData')->name('passes_validated_details.displaydata');
+
+            /*issue_details*/
+            Route::resource('issue_details', 'IssueDetailsController')->only('index'); 
+            Route::post('issue_details/getpdfreport', 'IssueDetailsController@getPdfReport')->name('issue_details.getpdfreport');
+            Route::get('issue_details/getexcelreport', 'IssueDetailsController@getExcelReport')->name('issue_details.getexcelreport');
+            Route::get('issue_details/displayData', 'IssueDetailsController@displayData')->name('issue_details.displaydata');
         });
 
         Route::group(['prefix'=>'ppt', 'namespace'=>'PPT', 'as'=>'ppt.'], function(){

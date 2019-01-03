@@ -14,6 +14,11 @@
         {!! Form::text('to_date', date('d-m-Y'), ['class' => 'multiple_date','readonly' => 'readonly', 'placeholder'=>'DD-MM-YY']) !!}
     </div>
 
+    <div class="col-md-3">
+        {!! Form::label('etm_no', Lang::get('ETM No.'), ['class' => 'control-label']) !!}    
+        {!! Form::text('etm_no', null, ['class' => 'form-control']) !!}
+    </div>
+
     <!-- <div class="col-md-3">
         @php $routes=displayList('route_master','route_name')@endphp
         {!! Form::label('route_id', Lang::get('Route'), ['class' => 'control-label']) !!}
@@ -26,11 +31,11 @@
         {!! Form::select('duty_id', $duties, null, ['class' => 'form-control','placeholder'=>"All"]) !!}  
     </div> -->
 
-    <!-- <div class="col-md-3">
+    <div class="col-md-3">
         @php $shifts=displayList('shifts','shift')@endphp
         {!! Form::label('shift_id', Lang::get('Shift'), ['class' => 'control-label']) !!}
         {!! Form::select('shift_id', $shifts, null, ['class' => 'form-control','placeholder'=>"All"]) !!}  
-    </div> -->
+    </div>
 
     <!-- <div class="col-md-3">
         @php $inspectors=displayList('crew','crew_name')@endphp

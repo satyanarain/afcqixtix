@@ -55,7 +55,7 @@
                             style: 'tableStyle',
                             table:{
                                 headerRows: 1,
-                                widths: 'auto',
+                                widths: '*',
                                 body: data
                             },
                             layout: 'lightHorizontalLines'

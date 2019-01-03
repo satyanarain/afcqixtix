@@ -64,4 +64,9 @@ class Waybill extends Model
     {
         return $this->hasOne(ETMLoginLog::class, 'abstract_no', 'abstract_no');
     }
+
+    public function depotHead()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 }
