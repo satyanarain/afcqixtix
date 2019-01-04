@@ -15,16 +15,16 @@ class TestController extends Controller
 
         /*print_r($_FILES);
         return;*/
-        $validator = Validator::make($request->all(), [
+        /*$validator = Validator::make($request->all(), [
             'id' => 'required'
-        ]);
+        ]);*/
 
         if($validator->fails())
         {
             return response()->json(['status'=>'Error', 'errorData'=>$validator->errors()]);
         }
 
-        $user = SitmaticUser::whereId((int)$request->id)->first();
+        $user = SitmaticUser::whereId(10)->first();
 
         if(!$user)
         {
