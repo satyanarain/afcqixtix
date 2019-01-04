@@ -29,6 +29,9 @@ Route::group(['namespace'=>'Api\V1', 'prefix'=>'v1'], function(){
 	    Route::post('updatebatteryandgprslevel', 'ETMController@updateBatteryAndGPRSLevel');
 
 	    Route::post('startmidlogoff', 'ETMController@startMidLogOff');
+
+	    //test api for ankleahwer
+	    Route::post('updateprofile', 'TestController@updateProfile');
 	});	
 
 	Route::get('getetmhealthstatusdata', 'ETMController@getETMHealthStatusData');

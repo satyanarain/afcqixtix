@@ -35,44 +35,38 @@ class PendingActivityLogController extends Controller
     {       
         $input = $request->all();
         $depot_id = $input['depot_id'];
-        $date = date('Y-m-d', strtotime($input['date']));
-        $etm_no = $input['etm_no'];
+        $from_date = date('Y-m-d', strtotime($input['from_date']));
+        $to_date = date('Y-m-d', strtotime($input['to_date']));
+        $pending_activity = $input['pending_activity'];
 
-        $log = ETMLoginLog::where('etm_id', $etm_no)
-        					->whereDate('login_timestamp', $date)
-        					->first();
         $flag = 0;
 
-       	if($log)
-       	{
-       		$abstract_no = $log->abstract_no;
-       		if($abstract_no)
-       		{
-       			$data = Waybill::with(['route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'depotHead:id,name', 'conductor:id,crew_name', 'vehicle:id,vehicle_registration_number', 'etmLoginDetails'])
+        $pendingAbstracts = Waybill();
+
+        if($pending_activity == 'audit')
+        {
+        	$pendingAbstracts = $pendingAbstracts->where('status', '!=', 'c');
+        }elseif($pending_activity == 'remittance')
+        {
+        	$pendingAbstracts = $pendingAbstracts->where([['status', '!=', 'c'], ['status', '!=', 's']]);
+        }elseif($pending_activity == 'logout'){
+        	$pendingAbstracts = $pendingAbstracts->with(['etmLoginDetails' => function($query){
+        		$query->whereNull('logout_timestamp');
+        	}]);
+        }else{
+        	$flag = 0;
+        	return view('reports.etm.pending_activity_log.index', compact('data', 'flag'));
+        }
+
+
+        $pendingAbstracts = $pendingAbstracts->get()
+        								->pluck('abstract_no');
+        
+        Waybill::with(['route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'depotHead:id,name', 'conductor:id,crew_name', 'vehicle:id,vehicle_registration_number', 'etmLoginDetails'])
        					->where('abstract_no', $abstract_no)
        					->first();
-       			//return $data;
-       			if($data->etmLoginDetails->login_timestamp)
-       			{
-       				$logoutSeconds = strtotime($data->etmLoginDetails->logout_timestamp);
-       			}else {
-       				$logoutSeconds = strtotime("now");
-       			}
-       			$loginSeconds = strtotime($data->etmLoginDetails->login_timestamp);
-
-       			$totalTicket = Ticket::where('abstract_id', $abstract_no)->count();
-       			//return;
-       			$dutyHours = (int)(($logoutSeconds - $loginSeconds) / 3600);
-       			$flag = 1;
-       			return view('reports.etm.pending_activity_log.index', compact('data', 'flag', 'dutyHours', 'totalTicket'));
-       		}else{
-       			$flag = 0;
-       			return view('reports.etm.pending_activity_log.index', compact('data', 'flag'));
-       		}
-       	}else {
-       		$flag = 0;
-       		return view('reports.etm.pending_activity_log.index', compact('data', 'flag'));
-       	}
+       			
+       	return view('reports.etm.pending_activity_log.index', compact('data', 'flag'));
     }
 
     /**
