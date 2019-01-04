@@ -57,7 +57,7 @@
                             @if(count($data) > 0)
                             @foreach($data as $da)
                                 <tr>
-                                    <td>{{$da->date}}</td>
+                                    <td>{{date('d-m-Y', strtotime($da->date))}}</td>
                                     <td>{{$da->etm->etm_no}}</td>
                                     <td>{{$da->conductor->crew_id}}</td>
                                     <td>{{$da->route->route_name}}</td>
@@ -103,8 +103,7 @@
 $(document).ready(function(){
     $(document).on('click', '#exportAsPDF', function(){
         var depot_id = $('#depot_id').val();
-        var etm_no = $('#etm_no').val();
-        var shift_id = $('#shift_id').val();
+        var pending_activity = $('#pending_activity').val();
         var fromDate = $('#from_date').val();
         if(!fromDate)
         {
@@ -137,8 +136,7 @@ $(document).ready(function(){
                 depot_id: depot_id,
                 from_date: fromDate,
                 to_date: toDate,
-                etm_no: etm_no,
-                shift_id: shift_id
+                pending_activity: pending_activity
             },
             success: function(response)
             {
@@ -151,11 +149,42 @@ $(document).ready(function(){
                     var reportData = [];
                     if(data.length > 0)
                     {
-                        reportData.push([{'text':'Abstract', 'style': 'tableHeaderStyle'}, {'text':'Waybill', 'style': 'tableHeaderStyle'}, {'text':'Route', 'style': 'tableHeaderStyle'}, {'text':'Duty', 'style': 'tableHeaderStyle'}, {'text':'Shift', 'style': 'tableHeaderStyle'}, {'text':'Conductor', 'style': 'tableHeaderStyle'}, {'text':'Vehicle', 'style': 'tableHeaderStyle'}, {'text':'ETM No.', 'style': 'tableHeaderStyle'}, {'text':'Issued By', 'style': 'tableHeaderStyle'}, {'text':'Received By', 'style': 'tableHeaderStyle'}, {'text':'Issuance Timestamp', 'style': 'tableHeaderStyle'}]);
+                        reportData.push([{'text':'Date', 'style': 'tableHeaderStyle'}, {'text':'ETM No.', 'style': 'tableHeaderStyle'}, {'text':'Conductor ID', 'style': 'tableHeaderStyle'}, {'text':'Route', 'style': 'tableHeaderStyle'}, {'text':'Duty', 'style': 'tableHeaderStyle'}, {'text':'Shift', 'style': 'tableHeaderStyle'}, {'text':'Login Timestamp', 'style': 'tableHeaderStyle'}, {'text':'Logout Timestamp', 'style': 'tableHeaderStyle'}, {'text':'Audit Timestamp', 'style': 'tableHeaderStyle'}, {'text':'Remittance Timestamp', 'style': 'tableHeaderStyle'}]);
                         
                         
                         data.map((d) => {
-                            reportData.push([{'text':''+d.abstract_no}, {'text':d.waybill_no}, {'text':d.route.route_name}, {'text':''+d.duty.duty_number}, {'text':''+d.shift.shift}, {'text':''+d.conductor.crew_name}, {'text':''+d.vehicle.vehicle_registration_number}, {'text':''+d.etm.etm_no}, {'text':d.depot_head.name}, {'text':d.conductor.crew_name}, {'text':d.etm_issue_time}]);
+                            var login_timestamp = '';
+                            var logout_timestamp = '';
+                            var audit_timestamp = '';
+                            var remittance_timestamp = '';
+                            if(d.etm_login_details)
+                            {
+                                login_timestamp = d.etm_login_details.login_timestamp;
+                            }else{
+                                login_timestamp = 'Pending';
+                            }
+
+                            if(d.etm_login_details.logout_timestamp)
+                            {
+                                logout_timestamp = d.etm_login_details.logout_timestamp;
+                            }else{
+                                logout_timestamp = 'Pending';
+                            }
+
+                            if(d.audit_remittance)
+                            {
+                                audit_timestamp = d.audit_remittance.created_date;
+                            }else{
+                                audit_timestamp = 'Pending';
+                            }
+
+                            if(d.cash_collection)
+                            {
+                                remittance_timestamp = d.cash_collection.submitted_at;
+                            }else{
+                                remittance_timestamp = 'Pending';
+                            }
+                            reportData.push([{'text':d.date}, {'text':''+d.etm.etm_no}, {'text':''+d.conductor.crew_id}, {'text':d.route.route_name}, {'text':''+d.duty.duty_number}, {'text':''+d.shift.shift}, {'text':login_timestamp}, {'text':logout_timestamp}, {'text':audit_timestamp}, {'text':remittance_timestamp}]);
                         });                            
                     }
 
@@ -175,6 +204,7 @@ $(document).ready(function(){
 
     $(document).on('click', '#exportAsXLS', function(){
         var depot_id = $('#depot_id').val();
+        var pending_activity = $('#pending_activity').val();
         var fromDate = $('#from_date').val();
         if(!fromDate)
         {
@@ -188,6 +218,7 @@ $(document).ready(function(){
         }
 
         var queryParams = "?depot_id="+depot_id
+                        + "&pending_activity="+pending_activity
                         + "&from_date="+fromDate
                         + "&to_date="+toDate;
 

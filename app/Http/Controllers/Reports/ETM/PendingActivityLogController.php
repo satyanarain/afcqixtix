@@ -58,34 +58,13 @@ class PendingActivityLogController extends Controller
     {
         $input = $request->all();
         $depot_id = $input['depot_id'];
-        $date = date('Y-m-d', strtotime($input['date']));
-        $etm_no = $input['etm_no'];
+        $from_date = date('Y-m-d', strtotime($input['from_date']));
+        $to_date = date('Y-m-d', strtotime($input['to_date']));
+        $pending_activity = $input['pending_activity'];
 
-        $data = Waybill::with(['route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'depotHead:id,name', 'conductor:id,crew_name', 'vehicle:id,vehicle_registration_number', 'etm:id,etm_no']);
-
-        if($etm_no)
-        {
-        	$data = $data->where('etm_no', $etm_no);
-        }
-
-        if($shift_id)
-        {
-        	$data = $data->where('shift_id', $shift_id);
-        }
-
-        if($from_date && $to_date)
-        {
-        	$data = $data->whereDate('created_at', '>=', $from_date)
-        				 ->whereDate('created_at', '<=', $to_date);
-        }
-                
-        $data = $data->orderBy('id', 'ASC');
+        $getQueryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $pending_activity);
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
-        $etmNo = $this->findNameById('etm_details', 'etm_no', $etm_no);
-        $shift = $this->findNameById('shifts', 'shift', $shift_id);
-
-        $shift = $shift ? $shift : 'All';
     
         $title = 'ETM Pending Activity Log Report'; // Report title
 
@@ -97,11 +76,10 @@ class PendingActivityLogController extends Controller
         $meta = [ // For displaying filters description on header
             'Depot : ' . $depotName,
             'From : '.date('d-m-Y', strtotime($from_date)).' To : '.date('d-m-Y', strtotime($to_date)),
-            'ETM No. : '.$etmNo,
-            'Shift : '.$shift
+            'Pending Activity : '.ucfirst($pending_activity)
         ];   
 
-        $reportData = $data->get();      
+        $reportData = $getQueryBuilder->get();      
 
         //return $reportData;
 
@@ -114,34 +92,11 @@ class PendingActivityLogController extends Controller
         $depot_id = $input['depot_id'];
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
-        $etm_no = $input['etm_no'];
-        $shift_id = $input['shift_id'];
+        $pending_activity = $input['pending_activity'];
 
-        $data = Waybill::with(['route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'depotHead:id,name', 'conductor:id,crew_name', 'vehicle:id,vehicle_registration_number', 'etm:id,etm_no']);
-
-        if($etm_no)
-        {
-        	$data = $data->where('etm_no', $etm_no);
-        }
-
-        if($shift_id)
-        {
-        	$data = $data->where('shift_id', $shift_id);
-        }
-
-        if($from_date && $to_date)
-        {
-        	$data = $data->whereDate('created_at', '>=', $from_date)
-        				 ->whereDate('created_at', '<=', $to_date);
-        }
-                
-        $data = $data->orderBy('id', 'ASC');
+        $data = $this->getQueryBuilder($depot_id, $from_date, $to_date, $pending_activity);
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
-        $etmNo = $this->findNameById('etm_details', 'etm_no', $etm_no);
-        $shift = $this->findNameById('shifts', 'shift', $shift_id);
-
-        $shift = $shift ? $shift : 'All';
     
         $title = 'ETM Pending Activity Log Report'; // Report title
 
@@ -154,17 +109,19 @@ class PendingActivityLogController extends Controller
             'Depot : ' => $depotName,
             'From : '=> date('d-m-Y', strtotime($from_date)),
             'To : '=> date('d-m-Y', strtotime($to_date)),
-            'ETM No. : '=>$etmNo,
-            'Shift : '=>$shift
+            'Pending Activity : '=>ucfirst($pending_activity)
         ]; 
 
       
         $columns = [
-                        'Abstract'=> function($row){
-                            return $row->abstract_no;
+                        'Date'=> function($row){
+                            return date('d-m-Y', strtotime($row->date));
                         },
-                        'Waybill'=> function($row){
-                            return $row->waybill_no;
+                        'ETM No.'=> function($row){
+                            return $row->etm->etm_no;
+                        }, 
+                        'Conductor ID' => function($row){
+                            return $row->conductor->crew_id;
                         },
                         'Route'=> function($row){
                             return $row->route->route_name;
@@ -175,23 +132,17 @@ class PendingActivityLogController extends Controller
                         'Shift' => function($row){
                             return $row->shift->shift;
                         }, 
-                        'Conductor' => function($row){
-                            return $row->conductor->crew_name;
+                        'Login Timestamp' => function($row){
+                            return $row->etmLoginDetails->login_timestamp ? date('d-m-Y H:i:s', strtotime($row->etmLoginDetails->login_timestamp)) : 'Pending';
                         }, 
-                        'Vehicle' => function($row){
-                            return $row->vehicle->vehicle_registration_number;
+                        'Logout Timestamp' => function($row){
+                            return $row->etmLoginDetails->logout_timestamp ? date('d-m-Y H:i:s', strtotime($row->etmLoginDetails->logout_timestamp)) : 'Pending';
                         }, 
-                        'ETM No.' => function($row){
-                            return $row->etm->etm_no;
+                        'Audit Timestamp' => function($row){
+                            return $row->auditRemittance->created_date?date('d-m-Y H:i:s', strtotime($row->auditRemittance->created_date)):'Pending';
                         }, 
-                        'Issued By' => function($row){
-                            return $row->depotHead->name;
-                        }, 
-                        'Received By' => function($row){
-                            return $row->conductor->crew_name;
-                        }, 
-                        'Issuance Timestamp' => function($row){
-                            return date('d-m-Y H:i:s', strtotime($row->etm_issue_time));
+                        'Remittance Timestamp' => function($row){
+                            return $row->cashCollection->submitted_at?date('d-m-Y H:i:s', strtotime($row->cashCollection->submitted_at)):'Pending';
                         }];
 
         return ExcelReport::of($title, $meta, $data, $columns)
