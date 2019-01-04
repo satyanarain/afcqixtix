@@ -31,14 +31,14 @@ class TestController extends Controller
             return response()->json(['status'=>'Error', 'errorData'=>'Invalid User ID']);
         }
 
-        if($request->hasFile('image'))
+        if($request->hasFile('image_tag'))
         {
             if(!is_dir(public_path('profileImages')))
             {
                 mkdir(public_path('profileImages'), 0700, true);
             }
 
-            $file = $request->file('image');
+            $file = $request->file('image_tag');
 
             $fileName = str_random(8).'_'.$file->getClientOriginalName(); 
 
