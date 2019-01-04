@@ -128,7 +128,7 @@ class ActivityLogController extends Controller
             'ETM No. : '.$etmNo
         ];   
 
-        $reportData = $data->get();   
+        $reportData = $data;   
 
         return response()->json(['status'=>'Ok', 'title'=>$title, 'meta'=>$meta, 'data'=>$reportData, 'serverDate'=>date('d-m-Y H:i:s'), 'takenBy'=>Auth::user()->name], 200);
     }

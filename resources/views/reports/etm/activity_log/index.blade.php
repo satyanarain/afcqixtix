@@ -129,13 +129,16 @@ $(document).ready(function(){
                         data.map((d) => {
                             reportData.push([{'text':''+d.abstract_no}, {'text':d.waybill_no}, {'text':d.route.route_name}, {'text':''+d.duty.duty_number}, {'text':''+d.shift.shift}, {'text':''+d.conductor.crew_name}, {'text':''+d.vehicle.vehicle_registration_number}, {'text':''+d.etm.etm_no}, {'text':d.depot_head.name}, {'text':d.conductor.crew_name}, {'text':d.etm_issue_time}]);
                         });                            
-                    }
+                    
 
-                    var metaData = response.meta;
-                    var title = response.title;
-                    var takenBy = response.takenBy;
-                    var serverDate = response.serverDate;
-                    Export(metaData, title, reportData, takenBy, serverDate);                    
+                        var metaData = response.meta;
+                        var title = response.title;
+                        var takenBy = response.takenBy;
+                        var serverDate = response.serverDate;
+                        Export(metaData, title, reportData, takenBy, serverDate);  
+                    }else{
+                        alert('No record found');
+                    }                  
                 }                
             },
             error: function(error)

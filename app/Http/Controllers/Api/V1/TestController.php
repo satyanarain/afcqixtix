@@ -24,7 +24,7 @@ class TestController extends Controller
             return response()->json(['status'=>'Error', 'errorData'=>$validator->errors()]);
         }
 
-        $user = SitmaticUser::whereId($request->id)->first();
+        $user = SitmaticUser::whereId((int)$request->id)->first();
 
         if(!$user)
         {
