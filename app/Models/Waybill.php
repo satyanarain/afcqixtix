@@ -69,4 +69,14 @@ class Waybill extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+
+    public function cashCollection()
+    {
+        return $this->hasOne(CashCollection::class, 'abstract_no', 'abstract_no');
+    }
+
+    public function auditRemittance()
+    {
+        return $this->hasOne(AuditRemittance::class, 'waybill_number', 'abstract_no');
+    }
 }

@@ -41,32 +41,34 @@
                         <table class="table" id="afcsReportTable">
                             <thead>
                                 <tr>
-                                    <th>Conductor Name</th>
+                                    <th>Date</th>
+                                    <th>ETM No.</th>
+                                    <th>Conductor ID</th>
                                     <th>Route</th>
                                     <th>Duty</th>
-                                    <th>Login On</th>
-                                    <th>Logout On</th>
-                                    <th>Duty Hours</th>
-                                    <th>Tkt + Pass</th>
-                                    <th>Error Tkts Prntd.</th>
-                                    <th>Battery Percentage on Login</th>
-                                    <th>Battery Percentage on Logout</th>
+                                    <th>Shift</th>
+                                    <th>Login Timestamp</th>
+                                    <th>Logout Timestamp</th>
+                                    <th>Audit Time</th>
+                                    <th>Cash Remittance Time</th>
                                 </tr>
                             </thead>
                             <tbody>
                             @if(count($data) > 0)
+                            @foreach($data as $da)
                                 <tr>
-                                    <td>{{$data->conductor->crew_name}}</td>
-                                    <td>{{$data->route->route_name}}</td>
-                                    <td>{{$data->duty->duty_number}}</td>
-                                    <td>{{date('d-m-Y H:i:s', strtotime($data->etmLoginDetails->login_timestamp))}}</td>
-                                    <td>{{$data->etmLoginDetails->logout_timestamp ? date('d-m-Y H:i:s', strtotime($data->etmLoginDetails->logout_timestamp)) : ''}}</td>
-                                    <td>{{$dutyHours}}</td>
-                                    <td>{{$totalTicket}}</td>
-                                    <td>{{'0'}}</td>
-                                    <td>{{$data->etmLoginDetails->battery_percentage}}</td>
-                                    <td>{{$data->etmLoginDetails->battery_percentage}}</td>
+                                    <td>{{$da->date}}</td>
+                                    <td>{{$da->etm->etm_no}}</td>
+                                    <td>{{$da->conductor->crew_id}}</td>
+                                    <td>{{$da->route->route_name}}</td>
+                                    <td>{{$da->duty->duty_number}}</td>
+                                    <td>{{$da->shift->shift}}</td>
+                                    <td>{{$da->etmLoginDetails->login_timestamp}}</td>
+                                    <td>{{$da->etmLoginDetails->logout_timestamp}}</td>
+                                    <td>{{$da->auditRemittance->created_date}}</td>
+                                    <td>{{$da->cashCollection->submitted_at}}</td>
                                 </tr>
+                            @endforeach
                             @else
                                 <tr>
                                     <td>No Record Found!</td>
@@ -79,6 +81,7 @@
                             @endif
                             </tbody>
                         </table>
+                        {{$data->appends(request()->input())->links()}}
                     </div>
                 </div>
                 @elseif(isset($flag) && $flag == 0)
@@ -194,24 +197,38 @@ $(document).ready(function(){
     });
 });
 function validateForm()
-{
-    var date = $('#date').val();
-    if(!date)
     {
-        alert('Please enter date.');
-        return false;
+        var fromDate = $('#from_date').val();
+        if(!fromDate)
+        {
+            alert('Please enter from date.');
+            return false;
+        }
+
+        var toDate = $('#to_date').val();
+        if(!toDate)
+        {
+            alert('Please enter to date.');
+            return false;
+        }
+
+        var splitFrom = fromDate.split('-');
+        var splitTo = toDate.split('-');
+
+        console.log(splitFrom)
+
+        //Create a date object from the arrays
+        fromDate = new Date(splitFrom[2], splitFrom[1]-1, splitFrom[0]);
+        toDate = new Date(splitTo[2], splitTo[1]-1, splitTo[0]);
+
+        if(fromDate > toDate)
+        {
+            alert('From Date must be smaller than or equal to To Date.');
+            return false;
+        }
+
+        return true;
     }
-
-    var etm_no = $('#etm_no').val();
-
-    if(!etm_no)
-    {
-        alert('Please enter etm number.');
-        return false;
-    }
-
-    return true;
-}
 </script>
 @endpush
 

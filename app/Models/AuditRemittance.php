@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class AuditRemittance extends Model
 {
-    //
+    protected $table = 'audit_remittance';
 }

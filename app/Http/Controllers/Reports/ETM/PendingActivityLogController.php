@@ -39,32 +39,11 @@ class PendingActivityLogController extends Controller
         $to_date = date('Y-m-d', strtotime($input['to_date']));
         $pending_activity = $input['pending_activity'];
 
-        $flag = 0;
+        $getQueryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $pending_activity);
 
-        $pendingAbstracts = Waybill();
+        return $data = $getQueryBuilder->paginate(10);
 
-        if($pending_activity == 'audit')
-        {
-        	$pendingAbstracts = $pendingAbstracts->where('status', '!=', 'c');
-        }elseif($pending_activity == 'remittance')
-        {
-        	$pendingAbstracts = $pendingAbstracts->where([['status', '!=', 'c'], ['status', '!=', 's']]);
-        }elseif($pending_activity == 'logout'){
-        	$pendingAbstracts = $pendingAbstracts->with(['etmLoginDetails' => function($query){
-        		$query->whereNull('logout_timestamp');
-        	}]);
-        }else{
-        	$flag = 0;
-        	return view('reports.etm.pending_activity_log.index', compact('data', 'flag'));
-        }
-
-
-        $pendingAbstracts = $pendingAbstracts->get()
-        								->pluck('abstract_no');
-        
-        Waybill::with(['route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'depotHead:id,name', 'conductor:id,crew_name', 'vehicle:id,vehicle_registration_number', 'etmLoginDetails'])
-       					->where('abstract_no', $abstract_no)
-       					->first();
+        $flag = 1;
        			
        	return view('reports.etm.pending_activity_log.index', compact('data', 'flag'));
     }
@@ -217,5 +196,36 @@ class PendingActivityLogController extends Controller
 
         return ExcelReport::of($title, $meta, $data, $columns)
         					->download($title.'.xlsx');        
+    }
+
+    public function getQueryBuilder($depot_id, $from_date, $to_date, $pending_activity)
+    {
+        $getQueryBuilder = Waybill::with(['etmLoginDetails:abstract_no,login_timestamp,logout_timestamp', 'etm:id,etm_no', 'route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'conductor:id,crew_name,crew_id', 'auditRemittance:waybill_number:created_date', 'cashCollection:abstract_no,submitted_at']);
+
+        if($pending_activity == 'audit')
+        {
+            $getQueryBuilder = $getQueryBuilder->where('status', 's');
+        }elseif($pending_activity == 'remittance'){
+            $getQueryBuilder = $getQueryBuilder->where('status', 'g');
+        }elseif($pending_activity == 'logout'){
+            $getQueryBuilder = $getQueryBuilder->with(['etmLoginDetails' => function($query){
+                $query->whereNull('logout_timestamp');
+            }]);
+        }else{
+            $getQueryBuilder = $getQueryBuilder;
+        }
+
+        if($depot_id)
+        {
+            $getQueryBuilder = $getQueryBuilder->where('depot_id', $depot_id);
+        }
+
+        if($from_date && $to_date)
+        {
+            $getQueryBuilder = $getQueryBuilder->whereDate('created_at', '>=', $from_date)
+                                                ->whereDate('created_at', '<=', $to_date);
+        }
+
+        return $getQueryBuilder;
     }
 }
