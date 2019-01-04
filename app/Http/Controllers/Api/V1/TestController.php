@@ -19,10 +19,10 @@ class TestController extends Controller
             'id' => 'required'
         ]);*/
 
-        if($validator->fails())
+        /*if($validator->fails())
         {
             return response()->json(['status'=>'Error', 'errorData'=>$validator->errors()]);
-        }
+        }*/
 
         $user = SitmaticUser::whereId(10)->first();
 

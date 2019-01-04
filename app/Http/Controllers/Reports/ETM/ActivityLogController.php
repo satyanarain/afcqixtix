@@ -92,8 +92,7 @@ class ActivityLogController extends Controller
             $query->whereDate('login_timestamp', $date);
         }]);
         
-        $data = $data->where('abstract_no', $abstract_no)
-                     ->first();
+        $data = $data->first();
         if($data)
         {
             if($data->etmLoginDetails->login_timestamp)
