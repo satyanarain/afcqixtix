@@ -101,6 +101,22 @@
 @include('partials.report_script')
 <script type="text/javascript">
 $(document).ready(function(){
+    $(document).on('change', '#depot_id', function(){
+        clearReportData();
+    });
+
+    $(document).on('change', '#from_date', function(){
+        clearReportData();
+    });
+
+    $(document).on('change', '#to_date', function(){
+        clearReportData();
+    });
+
+    $(document).on('change', '#pending_activity', function(){
+        clearReportData();
+    });
+
     $(document).on('click', '#exportAsPDF', function(){
         var depot_id = $('#depot_id').val();
         var pending_activity = $('#pending_activity').val();
@@ -266,7 +282,7 @@ function validateForm()
         return true;
     }
 
-function clearData()
+function clearReportData()
 {
     $('#reportDataBox').remove();
 }

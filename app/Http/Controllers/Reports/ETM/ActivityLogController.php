@@ -88,32 +88,33 @@ class ActivityLogController extends Controller
         $date = date('Y-m-d', strtotime($input['date']));
         $etm_no = $input['etm_no'];
 
-        $data = Waybill::with(['route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'depotHead:id,name', 'conductor:id,crew_name', 'vehicle:id,vehicle_registration_number', 'etm:id,etm_no']);
-
-        if($etm_no)
+        $data = Waybill::with(['route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'depotHead:id,name', 'conductor:id,crew_name', 'vehicle:id,vehicle_registration_number', 'etmLoginDetails'=>function($query){
+            $query->whereDate('login_timestamp', $date);
+        }]);
+        
+        $data = $data->where('abstract_no', $abstract_no)
+                     ->first();
+        if($data)
         {
-        	$data = $data->where('etm_no', $etm_no);
-        }
+            if($data->etmLoginDetails->login_timestamp)
+            {
+                $logoutSeconds = strtotime($data->etmLoginDetails->logout_timestamp);
+            }else {
+                $logoutSeconds = strtotime("now");
+            }
+            $loginSeconds = strtotime($data->etmLoginDetails->login_timestamp);
 
-        if($shift_id)
-        {
-        	$data = $data->where('shift_id', $shift_id);
-        }
+            $totalTicket = Ticket::where('abstract_id', $abstract_no)->count();
+            //return;
+            $dutyHours = (int)(($logoutSeconds - $loginSeconds) / 3600);  
 
-        if($from_date && $to_date)
-        {
-        	$data = $data->whereDate('created_at', '>=', $from_date)
-        				 ->whereDate('created_at', '<=', $to_date);
-        }
-                
-        $data = $data->orderBy('id', 'ASC');
+            $data->dutyHours = $dutyHours;
+            $data->totalTicket = $totalTicket;
+        }            
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
         $etmNo = $this->findNameById('etm_details', 'etm_no', $etm_no);
-        $shift = $this->findNameById('shifts', 'shift', $shift_id);
 
-        $shift = $shift ? $shift : 'All';
-    
         $title = 'ETM Activity Log Report'; // Report title
 
         /*
@@ -124,13 +125,10 @@ class ActivityLogController extends Controller
         $meta = [ // For displaying filters description on header
             'Depot : ' . $depotName,
             'From : '.date('d-m-Y', strtotime($from_date)).' To : '.date('d-m-Y', strtotime($to_date)),
-            'ETM No. : '.$etmNo,
-            'Shift : '.$shift
+            'ETM No. : '.$etmNo
         ];   
 
-        $reportData = $data->get();      
-
-        //return $reportData;
+        $reportData = $data->get();   
 
         return response()->json(['status'=>'Ok', 'title'=>$title, 'meta'=>$meta, 'data'=>$reportData, 'serverDate'=>date('d-m-Y H:i:s'), 'takenBy'=>Auth::user()->name], 200);
     }

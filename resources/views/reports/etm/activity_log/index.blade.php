@@ -101,30 +101,7 @@ $(document).ready(function(){
     $(document).on('click', '#exportAsPDF', function(){
         var depot_id = $('#depot_id').val();
         var etm_no = $('#etm_no').val();
-        var shift_id = $('#shift_id').val();
-        var fromDate = $('#from_date').val();
-        if(!fromDate)
-        {
-            return alert('Please enter from date.');
-        }
-
-        var toDate = $('#to_date').val();
-        if(!toDate)
-        {
-            return alert('Please enter to date.');
-        }
-
-        var splitFrom = fromDate.split('-');
-        var splitTo = toDate.split('-');
-
-        //Create a date object from the arrays
-        fDate = new Date(splitFrom[2], splitFrom[1]-1, splitFrom[0]);
-        tDate = new Date(splitTo[2], splitTo[1]-1, splitTo[0]);
-
-        if(fDate > tDate)
-        {
-            return alert('From Date must be smaller than or equal to To Date.');
-        }
+        var date = $('#date').val();
 
         $.ajax({
             url: "{{route('reports.etm.activity_log.getpdfreport')}}",
@@ -132,10 +109,8 @@ $(document).ready(function(){
             dataType: "JSON",
             data: {
                 depot_id: depot_id,
-                from_date: fromDate,
-                to_date: toDate,
-                etm_no: etm_no,
-                shift_id: shift_id
+                date: date,
+                etm_no: etm_no
             },
             success: function(response)
             {

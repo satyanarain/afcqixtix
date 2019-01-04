@@ -16,7 +16,7 @@ class TestController extends Controller
         /*print_r($_FILES);
         return;*/
         $validator = Validator::make($request->all(), [
-            'id' => 'required|numeric'
+            'id' => 'required'
         ]);
 
         if($validator->fails())

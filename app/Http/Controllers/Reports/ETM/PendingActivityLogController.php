@@ -79,9 +79,7 @@ class PendingActivityLogController extends Controller
             'Pending Activity : '.ucfirst($pending_activity)
         ];   
 
-        $reportData = $getQueryBuilder->get();      
-
-        //return $reportData;
+        $reportData = $getQueryBuilder->get();   
 
         return response()->json(['status'=>'Ok', 'title'=>$title, 'meta'=>$meta, 'data'=>$reportData, 'serverDate'=>date('d-m-Y H:i:s'), 'takenBy'=>Auth::user()->name], 200);
     }
