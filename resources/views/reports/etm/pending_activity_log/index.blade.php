@@ -64,9 +64,9 @@
                                     <td>{{$da->duty->duty_number}}</td>
                                     <td>{{$da->shift->shift}}</td>
                                     <td>{{$da->etmLoginDetails->login_timestamp}}</td>
-                                    <td>{{$da->etmLoginDetails->logout_timestamp}}</td>
-                                    <td>{{$da->auditRemittance->created_date}}</td>
-                                    <td>{{$da->cashCollection->submitted_at}}</td>
+                                    <td>{{isset($da->etmLoginDetails)?$da->etmLoginDetails->logout_timestamp:'Pending'}}</td>
+                                    <td>{{isset($da->auditRemittance)?$da->auditRemittance->created_date:'Pending'}}</td>
+                                    <td>{{isset($da->cashCollection)?$da->cashCollection->submitted_at:'Pending'}}</td>
                                 </tr>
                             @endforeach
                             @else

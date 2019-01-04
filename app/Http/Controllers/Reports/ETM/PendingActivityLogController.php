@@ -41,7 +41,7 @@ class PendingActivityLogController extends Controller
 
         $getQueryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $pending_activity);
 
-        return $data = $getQueryBuilder->paginate(10);
+        $data = $getQueryBuilder->paginate(10);
 
         $flag = 1;
        			
@@ -200,7 +200,7 @@ class PendingActivityLogController extends Controller
 
     public function getQueryBuilder($depot_id, $from_date, $to_date, $pending_activity)
     {
-        $getQueryBuilder = Waybill::with(['etmLoginDetails:abstract_no,login_timestamp,logout_timestamp', 'etm:id,etm_no', 'route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'conductor:id,crew_name,crew_id', 'auditRemittance:waybill_number:created_date', 'cashCollection:abstract_no,submitted_at']);
+        $getQueryBuilder = Waybill::with(['etmLoginDetails:abstract_no,login_timestamp,logout_timestamp', 'etm:id,etm_no', 'route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'conductor:id,crew_name,crew_id', 'auditRemittance:waybill_number,created_date', 'cashCollection:abstract_no,submitted_at']);
 
         if($pending_activity == 'audit')
         {
