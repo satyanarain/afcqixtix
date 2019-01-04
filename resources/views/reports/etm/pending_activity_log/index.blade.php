@@ -164,9 +164,14 @@ $(document).ready(function(){
                                 login_timestamp = 'Pending';
                             }
 
-                            if(d.etm_login_details.logout_timestamp)
+                            if(d.etm_login_details)
                             {
-                                logout_timestamp = d.etm_login_details.logout_timestamp;
+                                if(d.etm_login_details.logout_timestamp)
+                                {
+                                    logout_timestamp = d.etm_login_details.logout_timestamp;
+                                }else{
+                                    logout_timestamp = 'Pending';
+                                }
                             }else{
                                 logout_timestamp = 'Pending';
                             }
