@@ -32,7 +32,7 @@
                 {!! Form::close() !!}
 
                 @if(isset($data) && isset($flag) && $flag == 1)
-                <div class="row" style="margin-top: 50px;">
+                <div class="row" style="margin-top: 50px;" id="reportDataBox">
                     <div class="col-md-12">
                         <h4>
                             <button class="btn btn-primary pull-right" id="exportAsPDF">Export as PDF</button> 
@@ -265,6 +265,11 @@ function validateForm()
 
         return true;
     }
+
+function clearData()
+{
+    $('#reportDataBox').remove();
+}
 </script>
 @endpush
 

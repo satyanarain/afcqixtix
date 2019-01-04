@@ -13,8 +13,8 @@ class TestController extends Controller
 	public function updateProfile(Request $request)
     {
 
-        print_r($_FILES);
-        return;
+        /*print_r($_FILES);
+        return;*/
         $validator = Validator::make($request->all(), [
             'id' => 'required|numeric'
         ]);
