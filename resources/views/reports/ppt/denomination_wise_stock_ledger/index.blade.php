@@ -32,7 +32,7 @@
                 {!! Form::close() !!}
 
                 @if(isset($data))
-                <div class="row" style="margin-top: 50px;">
+                <div class="row" style="margin-top: 50px;" id="reportDataBox">
                     <div class="col-md-12">
                         <h4>
                             <button class="btn btn-primary pull-right" id="exportAsPDF">Export as PDF</button> 

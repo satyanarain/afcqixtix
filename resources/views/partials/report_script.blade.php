@@ -99,7 +99,7 @@
                 /*}
             });*/
         }
-
+$(document).ready(function(){
         $(document).on('change', '#depot_id', function(){
         clearReportData();
         });
@@ -112,7 +112,27 @@
             clearReportData();
         });
 
-        function clearReportData()
+        $(document).on('change', '#date', function(){
+            clearReportData();
+        });
+
+        $(document).on('change', '#report_date', function(){
+            clearReportData();
+        });
+
+        $(document).on('change', '#shift_date', function(){
+            clearReportData();
+        });
+
+        $(document).on('change', '#status_type', function(){
+            clearReportData();
+        });
+
+        $(document).on('change', '#etm_no', function(){
+            clearReportData();
+        });
+});
+function clearReportData()
         {
             $('#reportDataBox').remove();
         }
