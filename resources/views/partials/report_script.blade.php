@@ -120,7 +120,7 @@ $(document).ready(function(){
             clearReportData();
         });
 
-        $(document).on('change', '#shift_date', function(){
+        $(document).on('change', '#shift_id', function(){
             clearReportData();
         });
 
@@ -132,7 +132,7 @@ $(document).ready(function(){
             clearReportData();
         });
 
-        $(document).on('change', '#denom_id', function(){
+        $(document).on('change', '#denomination_id', function(){
             clearReportData();
         });
 

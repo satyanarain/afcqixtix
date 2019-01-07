@@ -21,7 +21,6 @@
     </div>
 
     <div class="col-md-3">
-        @php $inspectors=displayList('crew','crew_name')@endphp
         {!! Form::label('inspector_id', Lang::get('Inspector'), ['class' => 'control-label']) !!}
         {!! Form::select('inspector_id', $inspectors, null, ['class' => 'form-control','placeholder'=>"All"]) !!}  
     </div>

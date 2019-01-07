@@ -8,6 +8,7 @@ use Validator;
 use PdfReport;
 use CSVReport;
 use ExcelReport;
+use App\Models\Crew;
 use App\Models\Depot;
 use App\Models\Waybill;
 use App\Models\Inspection;
@@ -29,7 +30,8 @@ class PenaltyTicketDetailsController extends Controller
      */
     public function index()
     {
-        return view('reports.etm.penalty_ticket_details.index');
+        $inspectors = Crew::where('role', 'Inspector')->pluck('crew_name', 'id');
+        return view('reports.etm.penalty_ticket_details.index', compact('inspectors'));
     }
 
     public function displayData(Request $request)
@@ -56,7 +58,9 @@ class PenaltyTicketDetailsController extends Controller
 
         //return response()->json($data);
 
-        return view('reports.etm.penalty_ticket_details.index', compact('data'));
+        $inspectors = Crew::where('role', 'Inspector')->pluck('crew_name', 'id');
+
+        return view('reports.etm.penalty_ticket_details.index', compact('data', 'inspectors'));
     }
 
     /**
