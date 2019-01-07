@@ -118,16 +118,40 @@ $(document).ready(function(){
                 if(response.status == 'Ok')
                 {
                     var columns = response.columns
-                    var data = response.data;
+                    var d = response.data;
 
                     var reportData = [];
-                    if(data)
+                    if(d)
                     {
-                        reportData.push([{'text':'Conductor Name', 'style': 'tableHeaderStyle'}, {'text':'Route', 'style': 'tableHeaderStyle'}, {'text':'Duty', 'style': 'tableHeaderStyle'}, {'text':'Login On', 'style': 'tableHeaderStyle'}, {'text':'Logout On', 'style': 'tableHeaderStyle'}, {'text':'Duty Hours', 'style': 'tableHeaderStyle'}, {'text':'ETM No.', 'style': 'tableHeaderStyle'}, {'text':'Issued By', 'style': 'tableHeaderStyle'}, {'text':'Received By', 'style': 'tableHeaderStyle'}, {'text':'Issuance Timestamp', 'style': 'tableHeaderStyle'}]);
+                        reportData.push([{'text':'Conductor Name', 'style': 'tableHeaderStyle'}, {'text':'Route', 'style': 'tableHeaderStyle'}, {'text':'Duty', 'style': 'tableHeaderStyle'}, {'text':'Login On', 'style': 'tableHeaderStyle'}, {'text':'Logout On', 'style': 'tableHeaderStyle'}, {'text':'Duty Hours', 'style': 'tableHeaderStyle'}, {'text':'Tkt + Pass', 'style': 'tableHeaderStyle'}, {'text':'Error Tkt Prntd.', 'style': 'tableHeaderStyle'}, {'text':'Battery Percentage On Login', 'style': 'tableHeaderStyle'}, {'text':'Battery Percentage On Logout', 'style': 'tableHeaderStyle'}]);
                         
                         
+                        var login_timestamp = "";
+                        var logout_timestamp = "";
+                        var battery_percentage_on_login = "";
+                        var battery_percentage_on_logout = "";
+
+                        if(d.etm_login_details)
+                        {
+                            if(d.etm_login_details.login_timestamp)
+                            {
+                                login_timestamp = d.etm_login_details.login_timestamp; 
+                            }else {
+                                login_timestamp = "";
+                            }
+
+                            if(d.etm_login_details.logout_timestamp)
+                            {
+                                logout_timestamp = d.etm_login_details.logout_timestamp; 
+                            }else {
+                                logout_timestamp = "";
+                            }
+
+                            battery_percentage_on_login = d.etm_login_details.battery_percentage;
+                            battery_percentage_on_logout = d.etm_login_details.battery_percentage;
+                        }
                         
-                        reportData.push([{'text':''+d.abstract_no}, {'text':d.waybill_no}, {'text':d.route.route_name}, {'text':''+d.duty.duty_number}, {'text':''+d.shift.shift}, {'text':''+d.conductor.crew_name}, {'text':''+d.vehicle.vehicle_registration_number}, {'text':''+d.etm.etm_no}, {'text':d.depot_head.name}, {'text':d.conductor.crew_name}, {'text':d.etm_issue_time}]);
+                        reportData.push([{'text':''+d.conductor.crew_name}, {'text':d.route.route_name}, {'text':''+d.duty.duty_number}, {'text':''+login_timestamp}, {'text':''+logout_timestamp}, {'text':''+d.dutyHours}, {'text':''+d.totalTicket}, {'text':'0'}, {'text':''+battery_percentage_on_login}, {'text':''+battery_percentage_on_logout}]);
 
                         var metaData = response.meta;
                         var title = response.title;
@@ -148,21 +172,12 @@ $(document).ready(function(){
 
     $(document).on('click', '#exportAsXLS', function(){
         var depot_id = $('#depot_id').val();
-        var fromDate = $('#from_date').val();
-        if(!fromDate)
-        {
-            return alert('Please enter date.');
-        }
-
-        var toDate = $('#to_date').val();
-        if(!toDate)
-        {
-            return alert('Please enter to date.');
-        }
+        var date = $('#date').val();
+        var etm_no = $('#etm_no').val();
 
         var queryParams = "?depot_id="+depot_id
-                        + "&from_date="+fromDate
-                        + "&to_date="+toDate;
+                        + "&date="+date
+                        + "&etm_no="+etm_no;
 
         var url = "{{route('reports.etm.activity_log.getexcelreport')}}"+queryParams;
 

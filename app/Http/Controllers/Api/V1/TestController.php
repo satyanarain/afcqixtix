@@ -12,9 +12,8 @@ class TestController extends Controller
 {
 	public function updateProfile(Request $request)
     {
-
-        /*print_r($_FILES);
-        return;*/
+        print_r($_FILES);
+        return;
         /*$validator = Validator::make($request->all(), [
             'id' => 'required'
         ]);*/
@@ -31,14 +30,14 @@ class TestController extends Controller
             return response()->json(['status'=>'Error', 'errorData'=>'Invalid User ID']);
         }
 
-        if($request->hasFile('image_tag'))
+        if($request->hasFile('image'))
         {
             if(!is_dir(public_path('profileImages')))
             {
                 mkdir(public_path('profileImages'), 0700, true);
             }
 
-            $file = $request->file('image_tag');
+            $file = $request->file('image');
 
             $fileName = str_random(8).'_'.$file->getClientOriginalName(); 
 

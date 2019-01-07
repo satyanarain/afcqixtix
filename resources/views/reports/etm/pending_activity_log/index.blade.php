@@ -101,18 +101,6 @@
 @include('partials.report_script')
 <script type="text/javascript">
 $(document).ready(function(){
-    $(document).on('change', '#depot_id', function(){
-        clearReportData();
-    });
-
-    $(document).on('change', '#from_date', function(){
-        clearReportData();
-    });
-
-    $(document).on('change', '#to_date', function(){
-        clearReportData();
-    });
-
     $(document).on('change', '#pending_activity', function(){
         clearReportData();
     });
@@ -281,11 +269,6 @@ function validateForm()
 
         return true;
     }
-
-function clearReportData()
-{
-    $('#reportDataBox').remove();
-}
 </script>
 @endpush
 

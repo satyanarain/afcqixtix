@@ -99,4 +99,21 @@
                 /*}
             });*/
         }
+
+        $(document).on('change', '#depot_id', function(){
+        clearReportData();
+        });
+
+        $(document).on('change', '#from_date', function(){
+            clearReportData();
+        });
+
+        $(document).on('change', '#to_date', function(){
+            clearReportData();
+        });
+
+        function clearReportData()
+        {
+            $('#reportDataBox').remove();
+        }
 </script>
