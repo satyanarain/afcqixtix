@@ -329,7 +329,7 @@ $array= array('etm', 'revenue', 'ppt')
                     </a>
                 </li>
                 <li @if($segments_var[2]=='not_sync') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
+                    <a href="{{route('reports.etm.not_sync.index')}}">
                         <i class="depot-icon"></i> ETM Not Sync
                     </a>
                 </li>

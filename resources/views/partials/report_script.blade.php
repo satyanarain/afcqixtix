@@ -139,6 +139,10 @@ $(document).ready(function(){
         $(document).on('change', '#route_id', function(){
             clearReportData();
         });
+
+        $(document).on('change', '#pending_activity', function(){
+            clearReportData();
+        });
 });
 function clearReportData()
         {

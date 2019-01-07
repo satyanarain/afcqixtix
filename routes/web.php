@@ -326,6 +326,12 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('passes_validated_details/getexcelreport', 'PassesValidatedDetailsController@getExcelReport')->name('passes_validated_details.getexcelreport');
             Route::get('passes_validated_details/displayData', 'PassesValidatedDetailsController@displayData')->name('passes_validated_details.displaydata');
 
+            /*not_sync*/        
+            Route::resource('not_sync', 'NotSyncController')->only('index'); 
+            Route::post('not_sync/getpdfreport', 'NotSyncController@getPdfReport')->name('not_sync.getpdfreport');
+            Route::get('not_sync/getexcelreport', 'NotSyncController@getExcelReport')->name('not_sync.getexcelreport');
+            Route::get('not_sync/displayData', 'NotSyncController@displayData')->name('not_sync.displaydata');
+
             /*issue_details*/
             Route::resource('issue_details', 'IssueDetailsController')->only('index'); 
             Route::post('issue_details/getpdfreport', 'IssueDetailsController@getPdfReport')->name('issue_details.getpdfreport');

@@ -12,6 +12,11 @@ class ETMLoginLog extends Model
 
     public function conductor()
     {
-    	return $this->hasOne(Crew::class, 'id', 'conductor_id');
+    	return $this->belongsTo(Crew::class, 'conductor_id', 'id');
+    }
+
+    public function etm()
+    {
+    	return $this->belongsTo(ETMDetail::class, 'etm_id', 'id');
     }
 }
