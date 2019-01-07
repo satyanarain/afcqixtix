@@ -6,12 +6,12 @@
     </div>
     <div class="col-md-3">
         {!! Form::label('from_date', Lang::get('From Date'), ['class' => 'control-label']) !!}    
-        {!! Form::text('from_date', null, ['class' => 'multiple_date','readonly' => 'readonly', 'placeholder'=>'DD-MM-YY']) !!}
+        {!! Form::text('from_date', date('d-m-Y'), ['class' => 'multiple_date','readonly' => 'readonly', 'placeholder'=>'DD-MM-YY']) !!}
     </div>
 
     <div class="col-md-3">
         {!! Form::label('to_date', Lang::get('To Date'), ['class' => 'control-label']) !!}    
-        {!! Form::text('to_date', null, ['class' => 'multiple_date','readonly' => 'readonly', 'placeholder'=>'DD-MM-YY']) !!}
+        {!! Form::text('to_date', date('d-m-Y'), ['class' => 'multiple_date','readonly' => 'readonly', 'placeholder'=>'DD-MM-YY']) !!}
     </div>
 
     <div class="col-md-3">

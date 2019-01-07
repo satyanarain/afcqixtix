@@ -131,6 +131,14 @@ $(document).ready(function(){
         $(document).on('change', '#etm_no', function(){
             clearReportData();
         });
+
+        $(document).on('change', '#denom_id', function(){
+            clearReportData();
+        });
+
+        $(document).on('change', '#route_id', function(){
+            clearReportData();
+        });
 });
 function clearReportData()
         {

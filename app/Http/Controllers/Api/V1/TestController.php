@@ -30,7 +30,7 @@ class TestController extends Controller
             return response()->json(['status'=>'Error', 'errorData'=>'Invalid User ID']);
         }
 
-        if($request->hasFile('image'))
+        /*if($request->hasFile('image'))
         {
             if(!is_dir(public_path('profileImages')))
             {
@@ -45,7 +45,25 @@ class TestController extends Controller
 
             $user->image = $fileName;
             $user->save();
+        }*/
+
+
+        $file = time(). "_" . basename($_FILES['image']['name']);
+        $tmp_name = $_FILES['image']['tmp_name'];
+        if(move_uploaded_file($tmp_name,"images/".$file)){
+         echo json_encode([
+           "Message" => "The file has been uploaded",
+           "Status" => "OK"
+           ]);
+        }else{
+         echo json_encode([
+           "Message" => "sorry",
+           "Status" => "Error"
+           ]);
         }
+
+        return;
+
 
         if($request->address)
         {
