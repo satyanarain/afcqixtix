@@ -418,8 +418,8 @@ $array= array('etm', 'revenue', 'ppt')
             </a>
             <ul @if(in_array($segments_var[0],$array)) class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
                 
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
+                <li @if($segments_var[2]=='depot_wise_collection') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.revenue.depot_wise_collection.index')}}">
                         <i class="depot-icon"></i> Depot wise Revenue Collection
                     </a>
                 </li>

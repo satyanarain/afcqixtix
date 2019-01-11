@@ -79,4 +79,24 @@ class Waybill extends Model
     {
         return $this->hasOne(AuditRemittance::class, 'waybill_number', 'abstract_no');
     }
+
+    public function auditInventory()
+    {
+        return $this->hasMany(AuditInventory::class, 'waybill_number', 'abstract_no');
+    }
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class, 'abstract_id', 'abstract_no');
+    }
+
+    public function trips()
+    {
+        return $this->hasMany(TripStart::class, 'abstract_no', 'abstract_no');
+    }
+
+    public function payouts()
+    {
+        return $this->hasMany(Payout::class, 'abstract_no', 'abstract_no');
+    }
 }

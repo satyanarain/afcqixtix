@@ -20,4 +20,9 @@ class TripStart extends Model
     {
     	return $this->hasOne(Stop::class, 'id', 'end_stop_id');
     }
+
+    public function route()
+    {
+        return $this->hasOne(Route::class, 'id', 'route_id');
+    }
 }

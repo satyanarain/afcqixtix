@@ -404,7 +404,11 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::group(['prefix'=>'revenue', 'namespace'=>'Revenue', 'as'=>'revenue.'], function(){
       
-            Route::resource('audit_statuses', 'AuditStatusController'); 
+            /*depot_wise_collection*/
+            Route::resource('depot_wise_collection', 'DepotWiseCollectionController')->only('index'); 
+            Route::post('depot_wise_collection/getpdfreport', 'DepotWiseCollectionController@getPdfReport')->name('depot_wise_collection.getpdfreport');
+            Route::get('depot_wise_collection/getexcelreport', 'DepotWiseCollectionController@getExcelReport')->name('depot_wise_collection.getexcelreport');
+            Route::get('depot_wise_collection/displayData', 'DepotWiseCollectionController@displayData')->name('depot_wise_collection.displaydata');
 
         });
     });
