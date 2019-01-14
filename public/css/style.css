@@ -33,9 +33,15 @@
 {
     border: none !important;
 }
-table td,
-table th {
-    min-width: 2em;
+
+#afcsReportTable > thead > tr{
+	min-width: 2em;
+    min-height: 2em;
+    border: 1px solid #000;
+}
+
+#afcsReportTable > thead > tr > th{
+	min-width: 2em;
     min-height: 2em;
     border: 1px solid #000;
 }

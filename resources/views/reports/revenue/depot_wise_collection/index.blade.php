@@ -84,13 +84,13 @@
                                     <td>{{$consolidatedData['distance']}}</td>
                                     <td>{{$consolidatedData['totalPaperTkts']}}</td>
                                     <td>{{$consolidatedData['totalPaperTktsSum']}}</td>
-                                    <td>{{$consolidatedData['duties']}}</td>
-                                    <td>{{$consolidatedData['duties']}}</td>
+                                    <td>{{$consolidatedData['totalPaperPass']}}</td>
+                                    <td>{{$consolidatedData['totalPaperPassSum']}}</td>
                                     <td>{{$consolidatedData['totalETMTkts']}}</td>
                                     <td>{{$consolidatedData['totalETMTotalPsnger']}}</td>
                                     <td>{{$consolidatedData['totalETMTktsSum']}}</td>
-                                    <td>{{$consolidatedData['duties']}}</td>
-                                    <td>{{$consolidatedData['duties']}}</td>
+                                    <td>{{$consolidatedData['totalETMPassCnt']}}</td>
+                                    <td>{{$consolidatedData['totalETMPassSum']}}</td>
                                     <td>{{$consolidatedData['payout']}}</td>
                                     <td>{{$consolidatedData['duties']}}</td>
                                     <td>{{$consolidatedData['duties']}}</td>

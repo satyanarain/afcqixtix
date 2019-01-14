@@ -13,6 +13,7 @@ use App\Models\Waybill;
 use App\Models\ETMLoginLog;
 use App\Traits\activityLog;
 use Illuminate\Http\Request;
+use App\Models\Denomination;
 use App\Traits\checkPermission;
 use App\Http\Controllers\Controller;
 
@@ -39,9 +40,15 @@ class DepotWiseCollectionController extends Controller
         $to_date = date('Y-m-d', strtotime($input['to_date']));
         $depotName = $this->findNameById('depots', 'name', $depot_id);
 
+        //return $paperPassMasterId = $this->findNameById('denomination_masters', 'id', 'Pass');
+        //$paperTicketMasterId = $this->findNameById('denomination_masters', 'id', 'Ticket');
+
+        $paperPassDenomsArray = Denomination::where('denomination_master_id', 2)->get(['id'])->pluck('id')->toArray();
+        $paperTicketDenomsArray = Denomination::where('denomination_master_id', 1)->get(['id'])->pluck('id')->toArray();
+
         $getQueryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date);
 
-        $data = $getQueryBuilder->paginate(5);
+        $data = $getQueryBuilder->get();  
 
         $consolidatedData = [];
 
@@ -53,6 +60,8 @@ class DepotWiseCollectionController extends Controller
         $totalETMTktsSum = 0;
         $totalPaperTkts = 0;
         $totalPaperTktsSum = 0;
+        $totalPaperPass = 0;
+        $totalPaperPassSum = 0;
         $payout = 0;
         $concession = 0;
 
@@ -61,13 +70,24 @@ class DepotWiseCollectionController extends Controller
         	//$value->numberOfDuties = $data->count();
         	$value->numberOfTrips = $value->trips->count();
         	$value->totalDistance = $value->trips->pluck('route')->sum('distance');
-        	$value->totalETMTkts = $value->tickets->count();
-        	$value->totalETMTotalPsnger = $value->tickets->count('adults');
-        	$value->totalETMTktsSum = $value->tickets->sum('total_amt');
+        	$totalETMTkts = 0;
+        	$totalETMTotalPsnger = $value->tickets->count('adults') + $value->tickets->count('childs');
+        	$totalETMTktsSum = 0;
+            $totalETMPassCnt = 0;
+            $totalETMPassSum = 0;
             $tickets = $value->tickets;
             $cnci = 0;
             foreach ($tickets as $key => $tkt) 
             {
+                if($tkt->ticket_type == 'Pass')
+                {
+                    $totalETMPassCnt++;
+                    $totalETMPassSum += (int)$tkt->total_amt;
+                }else{
+                    $totalETMTkts++;
+                    $totalETMTktsSum += (int)$tkt->total_amt;
+                }
+
                 if($tkt->concession->flat_fare == 'No')
                 {
                     $concesPercentage = (int)$tkt->concession->percentage;
@@ -81,38 +101,55 @@ class DepotWiseCollectionController extends Controller
             }
 
 
+            $totalPaperTkts = $value->auditInventory;
+            $TPT = 0;
+            $TPTS = 0;
+            $TPP = 0;
+            $TPPS = 0;
+            foreach ($totalPaperTkts as $key => $value) 
+            {
+                if(in_array($value->denom_id, $paperTicketDenomsArray))
+                {
+                    $TPT += $value->quantity;
+                    $TPTS += (int)$value->sold_ticket_value;
+                }else{
+                    $TPP += $value->quantity;
+                    $TPPS += $value->sold_ticket_value;
+                }
+            }
 
-        	$value->totalPaperTkts = $value->auditInventory->sum('quantity');
-        	$value->totalPaperTktsSum = $value->auditInventory->sum('sold_ticket_value');
-
-            $value->payout = $value->payouts->sum('amount');
+            //$value->payout = $value->payouts->sum('amount');
 
         	$trips += (int)$value->numberOfTrips;
         	$distance += (int)$value->totalDistance;
         	$totalETMTkts += $value->totalETMTkts;
         	$totalETMTotalPsnger += $value->totalETMTotalPsnger;
         	$totalETMTktsSum += $value->totalETMTktsSum;
-        	$totalPaperTkts += $value->totalPaperTkts;
-        	$totalPaperTktsSum += $value->totalPaperTktsSum;
+        	$totalPaperTkts += $TPT;
+        	$totalPaperTktsSum += $TPTS;
+            $totalPaperPass += $TPP;
+            $totalPaperPassSum += $TPPS;
             $payout += (int)$value->payout;
             $concession += $cnci;
         	$duties++; 
         }
 
         //payoutes
-
-
-
         $consolidatedData['duties'] = $duties;
         $consolidatedData['trips'] = $trips;
         $consolidatedData['distance'] = $distance;
         $consolidatedData['totalETMTkts'] = $totalETMTkts;
         $consolidatedData['totalETMTotalPsnger'] = $totalETMTotalPsnger;
         $consolidatedData['totalETMTktsSum'] = $totalETMTktsSum;
+        $consolidatedData['totalETMPassCnt'] = $totalETMPassCnt;
+        $consolidatedData['totalETMPassSum'] = $totalETMPassSum;
         $consolidatedData['totalPaperTkts'] = $totalPaperTkts;
         $consolidatedData['totalPaperTktsSum'] = $totalPaperTktsSum;
+        $consolidatedData['totalPaperPass'] = $totalPaperPass;
+        $consolidatedData['totalPaperPassSum'] = $totalPaperPassSum;
         $consolidatedData['payout'] = $payout;
-        $consolidatedData['concession'] = (int)$concession;
+        $consolidatedData['concession'] = $concession;
+        $consolidatedData['totalSum'] = $concession;
 
         //return $data;
        			
