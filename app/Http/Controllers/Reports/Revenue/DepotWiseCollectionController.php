@@ -8,8 +8,10 @@ use Validator;
 use PdfReport;
 use CSVReport;
 use ExcelReport;
+use App\Models\Crew;
 use App\Models\Ticket;
 use App\Models\Waybill;
+use App\Models\Inspection;
 use App\Models\ETMLoginLog;
 use App\Traits\activityLog;
 use Illuminate\Http\Request;
@@ -45,6 +47,13 @@ class DepotWiseCollectionController extends Controller
 
         $paperPassDenomsArray = Denomination::where('denomination_master_id', 2)->get(['id'])->pluck('id')->toArray();
         $paperTicketDenomsArray = Denomination::where('denomination_master_id', 1)->get(['id'])->pluck('id')->toArray();
+
+        $inspectorsOfDepot = Crew::where([['role', 'Inspector'], ['depot_id', $depot_id]])->get(['id'])->pluck('id')->toArray();
+
+        $penalty_amount = Inspection::whereDate('created_at', '>=', $from_date)
+                                    ->whereDate('created_at', '<=', $to_date)
+                                    ->whereIn('inspector_id', $inspectorsOfDepot)
+                                    ->sum('penalty_amount');
 
         $getQueryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date);
 
@@ -106,19 +115,19 @@ class DepotWiseCollectionController extends Controller
             $TPTS = 0;
             $TPP = 0;
             $TPPS = 0;
-            foreach ($totalPaperTkts as $key => $value) 
+            foreach ($totalPaperTkts as $key => $ppt) 
             {
-                if(in_array($value->denom_id, $paperTicketDenomsArray))
+                if(in_array($ppt->denom_id, $paperTicketDenomsArray))
                 {
-                    $TPT += $value->quantity;
-                    $TPTS += (int)$value->sold_ticket_value;
+                    $TPT += $ppt->quantity;
+                    $TPTS += (int)$ppt->sold_ticket_value;
                 }else{
-                    $TPP += $value->quantity;
-                    $TPPS += $value->sold_ticket_value;
+                    $TPP += $ppt->quantity;
+                    $TPPS += $ppt->sold_ticket_value;
                 }
             }
 
-            //$value->payout = $value->payouts->sum('amount');
+            $value->payout = $value->payouts->sum('amount');
 
         	$trips += (int)$value->numberOfTrips;
         	$distance += (int)$value->totalDistance;
@@ -150,6 +159,7 @@ class DepotWiseCollectionController extends Controller
         $consolidatedData['payout'] = $payout;
         $consolidatedData['concession'] = $concession;
         $consolidatedData['totalSum'] = $concession;
+        $consolidatedData['penalty_amount'] = $penalty_amount;
 
         //return $data;
        			

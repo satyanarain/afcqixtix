@@ -92,7 +92,7 @@
                                     <td>{{$consolidatedData['totalETMPassCnt']}}</td>
                                     <td>{{$consolidatedData['totalETMPassSum']}}</td>
                                     <td>{{$consolidatedData['payout']}}</td>
-                                    <td>{{$consolidatedData['duties']}}</td>
+                                    <td>{{$consolidatedData['penalty_amount']}}</td>
                                     <td>{{$consolidatedData['duties']}}</td>
                                     <td>{{$consolidatedData['duties']}}</td>
                                     <td>{{$consolidatedData['duties']}}</td>
