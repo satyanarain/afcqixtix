@@ -196,7 +196,7 @@ $(document).ready(function(){
                     var title = response.title;
                     var takenBy = response.takenBy;
                     var serverDate = response.serverDate;
-                    Export(metaData, title, reportData, takenBy, serverDate);                    
+                    Export(metaData, title, reportData, takenBy, serverDate, 'auto', 'lightHorizontalLines');                    
                 }                
             },
             error: function(error)

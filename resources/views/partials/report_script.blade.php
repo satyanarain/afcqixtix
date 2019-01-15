@@ -2,7 +2,7 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.39/vfs_fonts.js"></script>
 <script type="text/javascript">
-        function Export(metaData, reportName, data, takenBy, serverDate) {
+        function Export(metaData, reportName, data, takenBy, serverDate, widthType, layout) {
             /*html2canvas(document.getElementById('afcsReportTable'), {
                 onrendered: function (canvas) {*/
                     var docDefinition = {
@@ -55,10 +55,10 @@
                             style: 'tableStyle',
                             table:{
                                 headerRows: 1,
-                                widths: '*',
+                                widths: widthType,
                                 body: data
                             },
-                            layout: 'lightHorizontalLines'
+                            layout: layout
                         }],
                         styles: {
                             topHeader: {

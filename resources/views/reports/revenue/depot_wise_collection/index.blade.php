@@ -72,7 +72,7 @@
                                     <th>Cash (Rs)</th>
                                     <th>E-Purse (Rs)</th>
                                     <th>Tot Amt (Rs)</th>
-                                    <th>Cncs Amt (Rs)</th>
+                                    <th>Conc Amt (Rs)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -93,9 +93,9 @@
                                     <td>{{$consolidatedData['totalETMPassSum']}}</td>
                                     <td>{{$consolidatedData['payout']}}</td>
                                     <td>{{$consolidatedData['penalty_amount']}}</td>
-                                    <td>{{$consolidatedData['duties']}}</td>
-                                    <td>{{$consolidatedData['duties']}}</td>
-                                    <td>{{$consolidatedData['duties']}}</td>
+                                    <td>{{$consolidatedData['totalCash']}}</td>
+                                    <td>{{$consolidatedData['epurseAmt']}}</td>
+                                    <td>{{$consolidatedData['totalAmt']}}</td>
                                     <td>{{$consolidatedData['concession']}}</td>
                                 </tr>
                             @else
@@ -123,8 +123,19 @@
 $(document).ready(function(){
     $(document).on('click', '#exportAsPDF', function(){
         var depot_id = $('#depot_id').val();
-        var etm_no = $('#etm_no').val();
-        var date = $('#date').val();
+        var fromDate = $('#from_date').val();
+        if(!fromDate)
+        {
+            alert('Please enter from date.');
+            return false;
+        }
+
+        var toDate = $('#to_date').val();
+        if(!toDate)
+        {
+            alert('Please enter to date.');
+            return false;
+        }
 
         $.ajax({
             url: "{{route('reports.revenue.depot_wise_collection.getpdfreport')}}",
@@ -132,8 +143,8 @@ $(document).ready(function(){
             dataType: "JSON",
             data: {
                 depot_id: depot_id,
-                date: date,
-                etm_no: etm_no
+                from_date: fromDate,
+                to_date: toDate
             },
             success: function(response)
             {
@@ -146,41 +157,16 @@ $(document).ready(function(){
                     var reportData = [];
                     if(d)
                     {
-                        reportData.push([{'text':'Conductor Name', 'style': 'tableHeaderStyle'}, {'text':'Route', 'style': 'tableHeaderStyle'}, {'text':'Duty', 'style': 'tableHeaderStyle'}, {'text':'Login On', 'style': 'tableHeaderStyle'}, {'text':'Logout On', 'style': 'tableHeaderStyle'}, {'text':'Duty Hours', 'style': 'tableHeaderStyle'}, {'text':'Tkt + Pass', 'style': 'tableHeaderStyle'}, {'text':'Error Tkt Prntd.', 'style': 'tableHeaderStyle'}, {'text':'Battery Percentage On Login', 'style': 'tableHeaderStyle'}, {'text':'Battery Percentage On Logout', 'style': 'tableHeaderStyle'}]);
+                        reportData.push([{'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'PPT', 'style': 'tableHeaderStyle', colSpan: 4, 'alignment':'center'}, {}, {}, {}, {'text':'ETM', 'style': 'tableHeaderStyle', colSpan: 5, 'alignment':'center'}, {}, {}, {}, {}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}]);
+                        reportData.push([{'text':'Depot', 'style': 'tableHeaderStyle'}, {'text':'No. of Duties', 'style': 'tableHeaderStyle'}, {'text':'No. of Trips', 'style': 'tableHeaderStyle'}, {'text':'Dist. (Kms)', 'style': 'tableHeaderStyle'}, {'text':'Tkt Cnt', 'style': 'tableHeaderStyle'}, {'text':'Tkt Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Cnt', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Tkt Cnt', 'style': 'tableHeaderStyle'}, {'text':'Passenger Cnt', 'style': 'tableHeaderStyle'}, {'text':'Ticket Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Cnt', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Payout Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Fine Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Cash (Rs)', 'style': 'tableHeaderStyle'}, {'text':'EPurse (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Total Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Conc Amt (Rs)', 'style': 'tableHeaderStyle'}]);
                         
-                        
-                        var login_timestamp = "";
-                        var logout_timestamp = "";
-                        var battery_percentage_on_login = "";
-                        var battery_percentage_on_logout = "";
-
-                        if(d.etm_login_details)
-                        {
-                            if(d.etm_login_details.login_timestamp)
-                            {
-                                login_timestamp = d.etm_login_details.login_timestamp; 
-                            }else {
-                                login_timestamp = "";
-                            }
-
-                            if(d.etm_login_details.logout_timestamp)
-                            {
-                                logout_timestamp = d.etm_login_details.logout_timestamp; 
-                            }else {
-                                logout_timestamp = "";
-                            }
-
-                            battery_percentage_on_login = d.etm_login_details.battery_percentage;
-                            battery_percentage_on_logout = d.etm_login_details.battery_percentage;
-                        }
-                        
-                        reportData.push([{'text':''+d.conductor.crew_name}, {'text':d.route.route_name}, {'text':''+d.duty.duty_number}, {'text':''+login_timestamp}, {'text':''+logout_timestamp}, {'text':''+d.dutyHours}, {'text':''+d.totalTicket}, {'text':'0'}, {'text':''+battery_percentage_on_login}, {'text':''+battery_percentage_on_logout}]);
+                        reportData.push([{'text':response.depotName}, {'text':''+d.duties}, {'text':''+d.trips}, {'text':''+parseFloat(d.distance).toFixed(2)}, {'text':''+d.totalPaperTkts}, {'text':''+parseFloat(d.totalPaperTktsSum).toFixed(2)}, {'text':''+d.totalPaperPass}, {'text':''+parseFloat(d.totalPaperPassSum).toFixed(2)}, {'text':''+d.totalETMTkts}, {'text':''+d.totalETMTotalPsnger}, {'text':''+parseFloat(d.totalETMTktsSum).toFixed(2)}, {'text':''+d.totalETMPassCnt}, {'text':''+parseFloat(d.totalETMPassSum).toFixed(2)}, {'text':''+parseFloat(d.payout).toFixed(2)}, {'text':''+parseFloat(d.penalty_amount).toFixed(2)}, {'text':''+parseFloat(d.totalCash).toFixed(2)}, {'text':''+parseFloat(d.epurseAmt).toFixed(2)}, {'text':''+parseFloat(d.totalAmt).toFixed(2)}, {'text':''+parseFloat(d.concession).toFixed(2)}]);
 
                         var metaData = response.meta;
                         var title = response.title;
                         var takenBy = response.takenBy;
                         var serverDate = response.serverDate;
-                        Export(metaData, title, reportData, takenBy, serverDate);  
+                        Export(metaData, title, reportData, takenBy, serverDate, 'auto', '');  
                     }else{
                         alert('No record found');
                     }                  

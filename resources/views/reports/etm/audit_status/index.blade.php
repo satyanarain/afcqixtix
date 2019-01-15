@@ -148,7 +148,7 @@ $(document).ready(function(){
                             }
                             
                         })
-                        Export(metaData, title, reportData, takenBy, serverDate);
+                        Export(metaData, title, reportData, takenBy, serverDate, '*', 'lightHorizontalLines');
                     }else{
                         return alert('No records to download!');
                     }
