@@ -81,22 +81,22 @@
                                     <td>{{$depotName}}</td>
                                     <td>{{$consolidatedData['duties']}}</td>
                                     <td>{{$consolidatedData['trips']}}</td>
-                                    <td>{{$consolidatedData['distance']}}</td>
+                                    <td>{{number_format((float)$consolidatedData['distance'], 2, '.', '')}}</td>
                                     <td>{{$consolidatedData['totalPaperTkts']}}</td>
-                                    <td>{{$consolidatedData['totalPaperTktsSum']}}</td>
+                                    <td>{{number_format((float)$consolidatedData['totalPaperTktsSum'], 2, '.', '')}}</td>
                                     <td>{{$consolidatedData['totalPaperPass']}}</td>
-                                    <td>{{$consolidatedData['totalPaperPassSum']}}</td>
+                                    <td>{{number_format((float)$consolidatedData['totalPaperPassSum'], 2, '.', '')}}</td>
                                     <td>{{$consolidatedData['totalETMTkts']}}</td>
                                     <td>{{$consolidatedData['totalETMTotalPsnger']}}</td>
-                                    <td>{{$consolidatedData['totalETMTktsSum']}}</td>
+                                    <td>{{number_format((float)$consolidatedData['totalETMTktsSum'], 2, '.', '')}}</td>
                                     <td>{{$consolidatedData['totalETMPassCnt']}}</td>
-                                    <td>{{$consolidatedData['totalETMPassSum']}}</td>
-                                    <td>{{$consolidatedData['payout']}}</td>
-                                    <td>{{$consolidatedData['penalty_amount']}}</td>
-                                    <td>{{$consolidatedData['totalCash']}}</td>
-                                    <td>{{$consolidatedData['epurseAmt']}}</td>
-                                    <td>{{$consolidatedData['totalAmt']}}</td>
-                                    <td>{{$consolidatedData['concession']}}</td>
+                                    <td>{{number_format((float)$consolidatedData['totalETMPassSum'], 2, '.', '')}}</td>
+                                    <td>{{number_format((float)$consolidatedData['payout'], 2, '.', '')}}</td>
+                                    <td>{{number_format((float)$consolidatedData['penalty_amount'], 2, '.', '')}}</td>
+                                    <td>{{number_format((float)$consolidatedData['totalCash'], 2, '.', '')}}</td>
+                                    <td>{{number_format((float)$consolidatedData['epurseAmt'], 2, '.', '')}}</td>
+                                    <td>{{number_format((float)$consolidatedData['totalAmt'], 2, '.', '')}}</td>
+                                    <td>{{number_format((float)$consolidatedData['concession'], 2, '.', '')}}</td>
                                 </tr>
                             @else
                                 <tr>

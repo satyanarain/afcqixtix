@@ -37,11 +37,20 @@
 #afcsReportTable > thead > tr{
 	min-width: 2em;
     min-height: 2em;
-    border: 1px solid #000;
+    border: 1px solid #eee;
 }
 
 #afcsReportTable > thead > tr > th{
 	min-width: 2em;
     min-height: 2em;
-    border: 1px solid #000;
+    border: 1px solid #eee;
+}
+body > div.wrapper > aside > section > ul > li > ul > li > ul > li > a
+{
+	white-space: initial;
+}
+
+.color-cyan
+{
+	color: cyan;
 }
