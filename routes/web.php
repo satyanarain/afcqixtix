@@ -410,6 +410,12 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('depot_wise_collection/getexcelreport', 'DepotWiseCollectionController@getExcelReport')->name('depot_wise_collection.getexcelreport');
             Route::get('depot_wise_collection/displayData', 'DepotWiseCollectionController@displayData')->name('depot_wise_collection.displaydata');
 
+            /*route_wise_collection*/
+            Route::resource('route_wise_collection', 'RouteWiseCollectionController')->only('index'); 
+            Route::post('route_wise_collection/getpdfreport', 'RouteWiseCollectionController@getPdfReport')->name('route_wise_collection.getpdfreport');
+            Route::get('route_wise_collection/getexcelreport', 'RouteWiseCollectionController@getExcelReport')->name('route_wise_collection.getexcelreport');
+            Route::get('route_wise_collection/displayData', 'RouteWiseCollectionController@displayData')->name('route_wise_collection.displaydata');
+
         });
     });
 

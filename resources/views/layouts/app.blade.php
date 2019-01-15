@@ -413,8 +413,8 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="fa fa-circle-o color-cyan"></i> Depot wise Revenue Collection
                     </a>
                 </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
+                <li @if($segments_var[2]=='route_wise_collection') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.revenue.route_wise_collection.index')}}">
                         <i class="fa fa-circle-o color-cyan"></i> Route wise Revenue Collection
                     </a>
                 </li>

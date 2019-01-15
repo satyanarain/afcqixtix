@@ -37,13 +37,13 @@
 #afcsReportTable > thead > tr{
 	min-width: 2em;
     min-height: 2em;
-    border: 1px solid #eee;
+    border: 1px solid #ccc;
 }
 
 #afcsReportTable > thead > tr > th{
 	min-width: 2em;
     min-height: 2em;
-    border: 1px solid #eee;
+    border: 1px solid #ccc;
 }
 body > div.wrapper > aside > section > ul > li > ul > li > ul > li > a
 {
