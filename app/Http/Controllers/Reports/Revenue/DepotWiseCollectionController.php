@@ -85,9 +85,8 @@ class DepotWiseCollectionController extends Controller
         $depot_id = $input['depot_id'];
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
-        $pending_activity = $input['pending_activity'];
 
-        $data = $this->getQueryBuilder($depot_id, $from_date, $to_date, $pending_activity);
+        $data = $this->getQueryBuilder($depot_id, $from_date, $to_date);
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
     
@@ -101,26 +100,25 @@ class DepotWiseCollectionController extends Controller
         $meta = [ // For displaying filters description on header
             'Depot : ' => $depotName,
             'From : '=> date('d-m-Y', strtotime($from_date)),
-            'To : '=> date('d-m-Y', strtotime($to_date)),
-            'Pending Activity : '=>ucfirst($pending_activity)
+            'To : '=> date('d-m-Y', strtotime($to_date))
         ]; 
 
       
         $columns = [
-                        'Date'=> function($row){
-                            return date('d-m-Y', strtotime($row->date));
+                        'Depot'=> function($row){
+                            return $depotName;
                         },
-                        'ETM No.'=> function($row){
-                            return $row->etm->etm_no;
+                        'No. of Duties'=> function($row){
+                            return $row->count();
                         }, 
-                        'Conductor ID' => function($row){
-                            return $row->conductor->crew_id;
+                        'No. of Trips' => function($row){
+                            return $row->trips->count();
                         },
-                        'Route'=> function($row){
-                            return $row->route->route_name;
+                        'Dist. (Kms)'=> function($row){
+                            return $row->trips->pluck('route')->sum('distance');
                         },
-                        'Duty' => function($row){
-                            return $row->duty->duty_number;
+                        'PPT Tkt Cnt' => function($row){
+                            return $row->tickets->count();
                         }, 
                         'Shift' => function($row){
                             return $row->shift->shift;

@@ -137,6 +137,21 @@ $(document).ready(function(){
             return false;
         }
 
+        var splitFrom = fromDate.split('-');
+        var splitTo = toDate.split('-');
+
+        console.log(splitFrom)
+
+        //Create a date object from the arrays
+        fromDate = new Date(splitFrom[2], splitFrom[1]-1, splitFrom[0]);
+        toDate = new Date(splitTo[2], splitTo[1]-1, splitTo[0]);
+
+        if(fromDate > toDate)
+        {
+            alert('From Date must be smaller than or equal to To Date.');
+            return false;
+        }
+
         $.ajax({
             url: "{{route('reports.revenue.depot_wise_collection.getpdfreport')}}",
             type: "POST",
@@ -181,12 +196,23 @@ $(document).ready(function(){
 
     $(document).on('click', '#exportAsXLS', function(){
         var depot_id = $('#depot_id').val();
-        var date = $('#date').val();
-        var etm_no = $('#etm_no').val();
+        var fromDate = $('#from_date').val();
+        if(!fromDate)
+        {
+            alert('Please enter from date.');
+            return false;
+        }
+
+        var toDate = $('#to_date').val();
+        if(!toDate)
+        {
+            alert('Please enter to date.');
+            return false;
+        }
 
         var queryParams = "?depot_id="+depot_id
-                        + "&date="+date
-                        + "&etm_no="+etm_no;
+                        + "&from_date="+fromDate
+                        + "&to_date="+toDate;
 
         var url = "{{route('reports.revenue.depot_wise_collection.getexcelreport')}}"+queryParams;
 
