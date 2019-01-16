@@ -64,7 +64,13 @@ class RouteWiseCollectionController extends Controller
         $depot_id = $input['depot_id'];
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
+        $route_id = $input['route_id'];
         $depotName = $this->findNameById('depots', 'name', $depot_id);    
+
+        $data = $this->getCalculatedData($depot_id, $from_date, $to_date, $route_id);
+
+        $finalData = $data['finalData'];
+        $routes = $data['routes'];
     
         $title = 'Route-wise Revenue Collection Report'; // Report title
 
@@ -76,11 +82,9 @@ class RouteWiseCollectionController extends Controller
         $meta = [ // For displaying filters description on header
             'Depot : ' . $depotName,
             'From : '.date('d-m-Y', strtotime($from_date)).' To : '.date('d-m-Y', strtotime($to_date))
-        ];   
+        ];
 
-        $reportData = $this->getCalculatedData($depot_id, $from_date, $to_date);
-
-        return response()->json(['status'=>'Ok', 'title'=>$title, 'meta'=>$meta, 'data'=>$reportData, 'serverDate'=>date('d-m-Y H:i:s'), 'takenBy'=>Auth::user()->name, 'depotName'=>$depotName], 200);
+        return response()->json(['status'=>'Ok', 'title'=>$title, 'meta'=>$meta, 'data'=>$finalData, 'routes'=>$routes, 'serverDate'=>date('d-m-Y H:i:s'), 'takenBy'=>Auth::user()->name, 'depotName'=>$depotName], 200);
     }
 
     public function getExcelReport(Request $request)
@@ -267,6 +271,7 @@ class RouteWiseCollectionController extends Controller
 		            }
 
 		            $payout = $val->payouts->sum('amount');
+                    $distance = $val->trips->pluck('route')->sum('distance');
         			$finalData[$keyo][$keyi]['totalETMTkts'] = $totalETMTkts;
         			$finalData[$keyo][$keyi]['totalETMTktsSum'] = $totalETMTktsSum;
         			$finalData[$keyo][$keyi]['totalETMPassCnt'] = $totalETMPassCnt;
@@ -279,6 +284,11 @@ class RouteWiseCollectionController extends Controller
         			$finalData[$keyo][$keyi]['TPP'] = $TPP;
         			$finalData[$keyo][$keyi]['TPPS'] = $TPPS;
         			$finalData[$keyo][$keyi]['payout'] = $payout;
+
+                    $finalData[$keyo][$keyi]['totalCash'] = $TPTS + $TPPS + $totalETMTktsSum + $totalETMPassSum;
+                    $finalData[$keyo][$keyi]['totalAmt'] = $TPTS + $TPPS + $totalETMTktsSum + $totalETMPassSum + $EP;
+                    $finalData[$keyo][$keyi]['penalty_amount'] = $penalty_amount;
+                    $finalData[$keyo][$keyi]['distance'] = $distance;
         		}
         	}
         }

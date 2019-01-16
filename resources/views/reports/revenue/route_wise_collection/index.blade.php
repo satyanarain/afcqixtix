@@ -46,7 +46,8 @@
                                     <th></th>
                                     <th></th>
                                     <th colspan="4" style="text-align: center;">PPT</th>
-                                    <th colspan="5" style="text-align: center;">ETM</th>
+                                    <th colspan="4" style="text-align: center;">ETM</th>
+                                    <th></th>
                                     <th></th>
                                     <th></th>
                                     <th></th>
@@ -90,18 +91,18 @@
                                     <td>{{$rdata['TPT']}}</td>
                                     <td>{{number_format((float)$rdata['TPTS'], 2, '.', '')}}</td>
                                     <td>{{$rdata['TPP']}}</td>
-                                    <td>{{number_format((float)$rdata['TPP'], 2, '.', '')}}</td>
+                                    <td>{{number_format((float)$rdata['TPPS'], 2, '.', '')}}</td>
                                     <td>{{$rdata['totalETMTkts']}}</td>
                                     <td>{{number_format((float)$rdata['totalETMTktsSum'], 2, '.', '')}}</td>
                                     <td>{{$rdata['totalETMPassCnt']}}</td>
                                     <td>{{number_format((float)$rdata['totalETMPassSum'], 2, '.', '')}}</td>
                                     <td>{{number_format((float)$rdata['payout'], 2, '.', '')}}</td>
                                     <td>{{number_format((float)$rdata['penalty_amount'], 2, '.', '')}}</td>
+                                    <td>{{number_format((float)$rdata['distance'], 2, '.', '')}}</td>
                                     <td>{{number_format((float)$rdata['totalCash'], 2, '.', '')}}</td>
-                                    <td>{{number_format((float)$rdata['epurseAmt'], 2, '.', '')}}</td>
+                                    <td>{{number_format((float)$rdata['EP'], 2, '.', '')}}</td>
                                     <td>{{number_format((float)$rdata['totalAmt'], 2, '.', '')}}</td>
-                                    <td>{{number_format((float)$rdata['concession'], 2, '.', '')}}</td>
-                                    <td>{{number_format((float)$rdata['concession'], 2, '.', '')}}</td>
+                                    <td>{{number_format((float)$rdata['cnci'], 2, '.', '')}}</td>
                                 </tr>
                             @endforeach
                             @endforeach
@@ -125,6 +126,7 @@
 $(document).ready(function(){
     $(document).on('click', '#exportAsPDF', function(){
         var depot_id = $('#depot_id').val();
+        var route_id = $('#route_id').val();
         var fromDate = $('#from_date').val();
         if(!fromDate)
         {
@@ -145,33 +147,37 @@ $(document).ready(function(){
             dataType: "JSON",
             data: {
                 depot_id: depot_id,
+                route_id: route_id,
                 from_date: fromDate,
                 to_date: toDate
             },
             success: function(response)
             {
-                console.log(response);
                 if(response.status == 'Ok')
                 {
-                    var columns = response.columns
+                    var routes = response.routes;
                     var d = response.data;
-
+                    console.log(d[1])
                     var reportData = [];
-                    if(d)
-                    {
-                        reportData.push([{'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'PPT', 'style': 'tableHeaderStyle', colSpan: 4, 'alignment':'center'}, {}, {}, {}, {'text':'ETM', 'style': 'tableHeaderStyle', colSpan: 5, 'alignment':'center'}, {}, {}, {}, {}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}]);
-                        reportData.push([{'text':'Depot', 'style': 'tableHeaderStyle'}, {'text':'No. of Duties', 'style': 'tableHeaderStyle'}, {'text':'No. of Trips', 'style': 'tableHeaderStyle'}, {'text':'Dist. (Kms)', 'style': 'tableHeaderStyle'}, {'text':'Tkt Cnt', 'style': 'tableHeaderStyle'}, {'text':'Tkt Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Cnt', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Tkt Cnt', 'style': 'tableHeaderStyle'}, {'text':'Passenger Cnt', 'style': 'tableHeaderStyle'}, {'text':'Ticket Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Cnt', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Payout Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Fine Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Cash (Rs)', 'style': 'tableHeaderStyle'}, {'text':'EPurse (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Total Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Conc Amt (Rs)', 'style': 'tableHeaderStyle'}]);
-                        
-                        reportData.push([{'text':response.depotName}, {'text':''+d.duties}, {'text':''+d.trips}, {'text':''+parseFloat(d.distance).toFixed(2)}, {'text':''+d.totalPaperTkts}, {'text':''+parseFloat(d.totalPaperTktsSum).toFixed(2)}, {'text':''+d.totalPaperPass}, {'text':''+parseFloat(d.totalPaperPassSum).toFixed(2)}, {'text':''+d.totalETMTkts}, {'text':''+d.totalETMTotalPsnger}, {'text':''+parseFloat(d.totalETMTktsSum).toFixed(2)}, {'text':''+d.totalETMPassCnt}, {'text':''+parseFloat(d.totalETMPassSum).toFixed(2)}, {'text':''+parseFloat(d.payout).toFixed(2)}, {'text':''+parseFloat(d.penalty_amount).toFixed(2)}, {'text':''+parseFloat(d.totalCash).toFixed(2)}, {'text':''+parseFloat(d.epurseAmt).toFixed(2)}, {'text':''+parseFloat(d.totalAmt).toFixed(2)}, {'text':''+parseFloat(d.concession).toFixed(2)}]);
-
-                        var metaData = response.meta;
-                        var title = response.title;
-                        var takenBy = response.takenBy;
-                        var serverDate = response.serverDate;
-                        Export(metaData, title, reportData, takenBy, serverDate, 'auto', '');  
-                    }else{
-                        alert('No record found');
-                    }                  
+                    reportData.push([{'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'PPT', 'style': 'tableHeaderStyle', colSpan: 4, 'alignment':'center'}, {}, {}, {}, {'text':'ETM', 'style': 'tableHeaderStyle', colSpan: 4, 'alignment':'center'}, {}, {}, {}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}]);
+                    reportData.push([{'text':'Route', 'style': 'tableHeaderStyle'}, {'text':'Date', 'style': 'tableHeaderStyle'}, {'text':'Duty No.', 'style': 'tableHeaderStyle'}, {'text':'No. of Trips', 'style': 'tableHeaderStyle'}, {'text':'Crew ID', 'style': 'tableHeaderStyle'}, {'text':'Tkt Cnt', 'style': 'tableHeaderStyle'}, {'text':'Tkt Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Cnt', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Tkt Cnt', 'style': 'tableHeaderStyle'}, {'text':'Ticket Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Cnt', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Payout Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Fine Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Dist. (Kms)', 'style': 'tableHeaderStyle'}, {'text':'Cash (Rs)', 'style': 'tableHeaderStyle'}, {'text':'EPurse (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Total Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Conc Amt (Rs)', 'style': 'tableHeaderStyle'}]);
+                    $.each(routes, function(index, route){
+                        var routeData = d[route];
+                        console.log(route);
+                        if(routeData)
+                        {
+                            $.each(routeData, function(ind, d){
+                                reportData.push([{'text':d.route}, {'text':''+d.date}, {'text':''+d.duty}, {'text':''+d.trips}, {'text':''+d.crew_id}, {'text':''+d.TPT}, {'text':''+parseFloat(d.TPTS).toFixed(2)}, {'text':''+d.TPP}, {'text':''+parseFloat(d.TPPS).toFixed(2)}, {'text':''+d.totalETMTkts}, {'text':''+parseFloat(d.totalETMTktsSum).toFixed(2)}, {'text':''+d.totalETMPassCnt}, {'text':''+parseFloat(d.totalETMPassSum).toFixed(2)}, {'text':''+parseFloat(d.payout).toFixed(2)}, {'text':''+parseFloat(d.penalty_amount).toFixed(2)}, {'text':''+parseFloat(d.distance).toFixed(2)}, {'text':''+parseFloat(d.totalCash).toFixed(2)}, {'text':''+parseFloat(d.EP).toFixed(2)}, {'text':''+parseFloat(d.totalAmt).toFixed(2)}, {'text':''+parseFloat(d.cnci).toFixed(2)}]);
+                            })
+                        }
+                    })
+                
+                    var metaData = response.meta;
+                    var title = response.title;
+                    var takenBy = response.takenBy;
+                    var serverDate = response.serverDate;
+                    Export(metaData, title, reportData, takenBy, serverDate, 'auto', '');  
+                                    
                 }                
             },
             error: function(error)
