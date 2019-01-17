@@ -1,9 +1,9 @@
 @extends('layouts.master')
 @section('header')
-<h1>Passes Validated Details Report</h1>
+<h1>Passes Validated Report</h1>
 <ol class="breadcrumb">
             <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"></i>Passes Validated Details</a></li>
+            <li><a href="#"></i>Passes Validated</a></li>
             </ol>
 @stop
 @section('content')
@@ -12,7 +12,7 @@
         <div class="box box-default" style="min-height:0px;">
             <div class="box-header with-border">
                 <div class="col-md-12 col-sm-12 alert-danger cash-collection-error hide"></div>
-                <h3 class="box-title">Create Passes Validated Details</h3>
+                <h3 class="box-title">Select Parameters</h3>
                 <div class="box-tools pull-right">
                     <button class="slideout-menu-toggle btn btn-box-tool btn-box-tool-lg" data-toggle="tooltip" title="Help"><i class="fa fa-question"></i></button>
                 </div>
@@ -25,7 +25,7 @@
                 'class'=>'form-horizontal',
                 'autocomplete'=>'off',
                 'method'=> 'GET',
-                'onsubmit'=>'return validateForm();'
+                'onsubmit'=>'return validateForm("depot_id", "from_date", "to_date");'
                 ]) !!}
                 @include('reports.etm.passes_validated_details.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 
@@ -34,13 +34,16 @@
                 @if(isset($data))
                 <div class="row" style="margin-top: 50px;" id="reportDataBox">
                     <div class="col-md-12">
+                        @if(count($data) > 0)
                         <h4>
                             <button class="btn btn-primary pull-right" id="exportAsPDF">Export as PDF</button> 
                             <button class="btn btn-primary pull-right" style="margin-right: 10px;margin-bottom: 10px;" id="exportAsXLS">Export as XLS</button>
                         </h4>
+                        @endif
                         <table class="table" id="afcsReportTable">
                             <thead>
                                 <tr>
+                                    <th>S. No.</th>
                                     <th>From Stop</th>
                                     <th>To Stop</th>
                                     <th>Date and Time</th>
@@ -60,6 +63,7 @@
                             @if(count($data) > 0)
                             @foreach($data as $key=>$da)
                                 <tr>
+                                    <td>{{$key+1}}</td>
                                     <td>{{$da->fromStop->short_name}}</td>
                                     <td>{{$da->toStop->short_name}}</td>
                                     <td>{{date('d-m-Y H:i:s', strtotime($da->sold_at))}}</td>
@@ -77,17 +81,14 @@
                             @endforeach
                             @else
                                 <tr>
-                                    <td>No Record Found!</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td class="text-center" colspan="14"><strong>No Record Found! &#9785</strong></td>
                                 </tr>
                             @endif
                             </tbody>
                         </table>
-                        {{$data->appends(request()->input())->links()}}
+                        <div class="pull-right"> 
+                            {{$data->appends(request()->input())->links()}}
+                        </div>
                     </div>
                 </div>
                 @endif
@@ -107,6 +108,8 @@
 $(document).ready(function(){
     $(document).on('click', '#exportAsPDF', function(){
         var depot_id = $('#depot_id').val();
+        var service_id = $('#service_id').val();
+        var pass_id = $('#pass_id').val();
         var fromDate = $('#from_date').val();
         if(!fromDate)
         {
@@ -137,6 +140,8 @@ $(document).ready(function(){
             dataType: "JSON",
             data: {
                 depot_id: depot_id,
+                service_id: service_id,
+                pass_id:pass_id,
                 from_date: fromDate,
                 to_date: toDate
             },
@@ -151,9 +156,9 @@ $(document).ready(function(){
                     var reportData = [];
                     if(data.length > 0)
                     {
-                        reportData.push([{'text':'From Stop', 'style': 'tableHeaderStyle'}, {'text':'To Stop', 'style': 'tableHeaderStyle'}, {'text':'Date and Time', 'style': 'tableHeaderStyle'}, {'text':'Adult Count', 'style': 'tableHeaderStyle'}, {'text':'Adult Amt (Rs.)', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Child Count', 'style': 'tableHeaderStyle'}, {'text':'Child Amt (Rs.)', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Concession', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Pass', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Cash', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'E-Purse', 'style': 'tableHeaderStyle'}, {'text':'Total Amt (Rs.)', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Card Number', 'style': 'tableHeaderStyle'}]);
+                        reportData.push([{'text':'S. No.', 'style': 'tableHeaderStyle'}, {'text':'From Stop', 'style': 'tableHeaderStyle'}, {'text':'To Stop', 'style': 'tableHeaderStyle'}, {'text':'Date and Time', 'style': 'tableHeaderStyle'}, {'text':'Adult Count', 'style': 'tableHeaderStyle'}, {'text':'Adult Amt (Rs.)', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Child Count', 'style': 'tableHeaderStyle'}, {'text':'Child Amt (Rs.)', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Concession', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Pass', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Cash', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'E-Purse', 'style': 'tableHeaderStyle'}, {'text':'Total Amt (Rs.)', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Card Number', 'style': 'tableHeaderStyle'}]);
                         
-                        
+                        var i = 1;
                         data.map((d) => {
                             console.log(d);
                             var fromStop = '';
@@ -188,7 +193,8 @@ $(document).ready(function(){
                             }
                             totalAmt = d.childs_amt + d.adults_amt - concession;
 
-                            reportData.push([{'text':fromStop}, {'text':toStop}, {'text':d.sold_at}, {'text':''+d.adults}, {'text':''+d.adults_amt, 'alignment':'right'}, {'text':''+d.childs}, {'text':''+d.childs_amt, 'alignment':'right'}, {'text':''+concession, 'alignment':'right'}, {'text':'0.00', 'alignment':'right'}, {'text':'0.00', 'alignment':'right'}, {'text':'0.00', 'alignment':'right'}, {'text':''+totalAmt, 'alignment':'right'}, {'text':cardNumber}]);
+                            reportData.push([{'text':''+i}, {'text':fromStop}, {'text':toStop}, {'text':d.sold_at}, {'text':''+d.adults}, {'text':''+d.adults_amt, 'alignment':'right'}, {'text':''+d.childs}, {'text':''+d.childs_amt, 'alignment':'right'}, {'text':''+concession, 'alignment':'right'}, {'text':'0.00', 'alignment':'right'}, {'text':'0.00', 'alignment':'right'}, {'text':'0.00', 'alignment':'right'}, {'text':''+totalAmt, 'alignment':'right'}, {'text':cardNumber}]);
+                            i++;
                         });                            
                     }
 
@@ -208,6 +214,8 @@ $(document).ready(function(){
 
     $(document).on('click', '#exportAsXLS', function(){
         var depot_id = $('#depot_id').val();
+        var service_id = $('#service_id').val();
+        var pass_id = $('#pass_id').val();
         var fromDate = $('#from_date').val();
         if(!fromDate)
         {
@@ -234,6 +242,8 @@ $(document).ready(function(){
 
         var queryParams = "?depot_id="+depot_id
                         + "&from_date="+fromDate
+                        + "&service_id="+service_id
+                        + "&pass_id="+pass_id
                         + "&to_date="+toDate;
 
         var url = "{{route('reports.etm.passes_validated_details.getexcelreport')}}"+queryParams;
@@ -241,39 +251,6 @@ $(document).ready(function(){
         window.open(url,'_blank');
     });
 });
-function validateForm()
-    {
-        var fromDate = $('#from_date').val();
-        if(!fromDate)
-        {
-            alert('Please enter from date.');
-            return false;
-        }
-
-        var toDate = $('#to_date').val();
-        if(!toDate)
-        {
-            alert('Please enter to date.');
-            return false;
-        }
-
-        var splitFrom = fromDate.split('-');
-        var splitTo = toDate.split('-');
-
-        console.log(splitFrom)
-
-        //Create a date object from the arrays
-        fromDate = new Date(splitFrom[2], splitFrom[1]-1, splitFrom[0]);
-        toDate = new Date(splitTo[2], splitTo[1]-1, splitTo[0]);
-
-        if(fromDate > toDate)
-        {
-            alert('From Date must be smaller than or equal to To Date.');
-            return false;
-        }
-
-        return true;
-    }
 </script>
 @endpush
 

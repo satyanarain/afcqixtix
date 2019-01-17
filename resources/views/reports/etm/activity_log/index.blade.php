@@ -12,7 +12,7 @@
         <div class="box box-default" style="min-height:0px;">
             <div class="box-header with-border">
                 <div class="col-md-12 col-sm-12 alert-danger cash-collection-error hide"></div>
-                <h3 class="box-title">Create ETM Activity Log</h3>
+                <h3 class="box-title">Select Parameters</h3>
                 <div class="box-tools pull-right">
                     <button class="slideout-menu-toggle btn btn-box-tool btn-box-tool-lg" data-toggle="tooltip" title="Help"><i class="fa fa-question"></i></button>
                 </div>
@@ -25,7 +25,7 @@
                 'class'=>'form-horizontal',
                 'autocomplete'=>'off',
                 'method'=> 'GET',
-                'onsubmit'=>'return validateForm();'
+                'onsubmit'=>'return validateForm("depot_id", "from_date", "to_date", "etm_no");'
                 ]) !!}
                 @include('reports.etm.activity_log.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 
@@ -41,6 +41,7 @@
                         <table class="table" id="afcsReportTable">
                             <thead>
                                 <tr>
+                                    <th>S. No.</th>
                                     <th>Conductor Name</th>
                                     <th>Route</th>
                                     <th>Duty</th>
@@ -56,6 +57,7 @@
                             <tbody>
                             @if(count($data) > 0)
                                 <tr>
+                                    <td>{{'1'}}</td>
                                     <td>{{$data->conductor->crew_name}}</td>
                                     <td>{{$data->route->route_name}}</td>
                                     <td>{{$data->duty->duty_number}}</td>
@@ -69,12 +71,7 @@
                                 </tr>
                             @else
                                 <tr>
-                                    <td>No Record Found!</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td class="text-center" colspan="12"><strong>No Record Found! &#9785</strong></td>
                                 </tr>
                             @endif
                             </tbody>
@@ -82,7 +79,11 @@
                     </div>
                 </div>
                 @elseif(isset($flag) && $flag == 0)
-                <p class="alert alert-warning">No Activity Found!</p>
+                <table>
+                    <tr>
+                        <td class="text-center" colspan="12"><strong>No Record Found! &#9785</strong></td>
+                    </tr>
+                </table>                
                 @endif
             </div>
             <!-- /.box-body -->
@@ -168,20 +169,6 @@ $(document).ready(function(){
                 console.log(error);
             }
         })
-    });
-
-    $(document).on('click', '#exportAsXLS', function(){
-        var depot_id = $('#depot_id').val();
-        var date = $('#date').val();
-        var etm_no = $('#etm_no').val();
-
-        var queryParams = "?depot_id="+depot_id
-                        + "&date="+date
-                        + "&etm_no="+etm_no;
-
-        var url = "{{route('reports.etm.activity_log.getexcelreport')}}"+queryParams;
-
-        window.open(url,'_blank');
     });
 });
 </script>

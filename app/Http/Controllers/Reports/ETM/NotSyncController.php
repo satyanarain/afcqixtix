@@ -35,17 +35,18 @@ class NotSyncController extends Controller
     {       
         $input = $request->all();
         $depot_id = $input['depot_id'];
-        $till_date = date('Y-m-d', strtotime($input['date']));
+        $from_date = date('Y-m-d', strtotime($input['from_date']));
+        $to_date = date('Y-m-d', strtotime($input['to_date']));
         $etm_no = $input['etm_no'];
 
-        $getQueryBuilder = $this->getQueryBuilder($depot_id, $till_date, $etm_no);
+        $getQueryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $etm_no);
 
         $data = $getQueryBuilder->paginate(10);
 
-        $data->getCollection()->transform(function($value)use($till_date){
+        $data->getCollection()->transform(function($value)use($to_date){
         	$login_timestamp_seconds = strtotime($value->login_timestamp);
-        	$till_date_seconds = strtotime($till_date);
-        	$diff = $till_date_seconds - $login_timestamp_seconds;
+        	$to_date_seconds = strtotime($to_date);
+        	$diff = $to_date_seconds - $login_timestamp_seconds;
         	$value->no_of_days = round($diff/(60*60*24));
 
         	$latestTicket = Ticket::where('abstract_id', $value->abstract_no)
@@ -74,18 +75,19 @@ class NotSyncController extends Controller
     {
         $input = $request->all();
         $depot_id = $input['depot_id'];
-        $till_date = date('Y-m-d', strtotime($input['date']));
+        $from_date = date('Y-m-d', strtotime($input['from_date']));
+        $to_date = date('Y-m-d', strtotime($input['to_date']));
         $etm_no = $input['etm_no'];
 
-        $getQueryBuilder = $this->getQueryBuilder($depot_id, $till_date, $etm_no);
+        $getQueryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $etm_no);
 
         $data = $getQueryBuilder->get();
 
         foreach($data as $key=>$value)
         {
         	$login_timestamp_seconds = strtotime($value->login_timestamp);
-        	$till_date_seconds = strtotime($till_date);
-        	$diff = $till_date_seconds - $login_timestamp_seconds;
+        	$to_date_seconds = strtotime($to_date);
+        	$diff = $to_date_seconds - $login_timestamp_seconds;
         	$value->no_of_days = round($diff/(60*60*24));
 
         	$latestTicket = Ticket::where('abstract_id', $value->abstract_no)
@@ -114,7 +116,7 @@ class NotSyncController extends Controller
 
         $meta = [ // For displaying filters description on header
             'Depot : ' . $depotName,
-            'Till Date : '.date('d-m-Y', strtotime($till_date)),
+            'Till Date : '.date('d-m-Y', strtotime($to_date)),
             'ETM No. : '.$etmNo
         ];
 
@@ -125,10 +127,11 @@ class NotSyncController extends Controller
     {
         $input = $request->all();
         $depot_id = $input['depot_id'];
-        $till_date = date('Y-m-d', strtotime($input['date']));
+        $from_date = date('Y-m-d', strtotime($input['from_date']));
+        $to_date = date('Y-m-d', strtotime($input['to_date']));
         $etm_no = $input['etm_no'];
 
-        $getQueryBuilder = $this->getQueryBuilder($depot_id, $till_date, $etm_no);
+        $getQueryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $etm_no);
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
         $etmNo = $this->findNameById('etm_details', 'etm_no', $etm_no);
@@ -142,7 +145,7 @@ class NotSyncController extends Controller
 
         $meta = [ // For displaying filters description on header
             'Depot : ' => $depotName,
-            'Till Date : '=> date('d-m-Y', strtotime($till_date)),
+            'Till Date : '=> date('d-m-Y', strtotime($to_date)),
             'ETM No. : '=>$etmNo
         ]; 
 
@@ -172,10 +175,10 @@ class NotSyncController extends Controller
                         'Logout Timestamp' => function($row){
                             return date('d-m-Y h:i A', strtotime($row->logout_timestamp));
                         }, 
-                        'No. of Days' => function($row) use($till_date){
+                        'No. of Days' => function($row) use($to_date){
                             $login_timestamp_seconds = strtotime($row->login_timestamp);
-				        	$till_date_seconds = strtotime($till_date);
-				        	$diff = $till_date_seconds - $login_timestamp_seconds;
+				        	$to_date_seconds = strtotime($to_date);
+				        	$diff = $to_date_seconds - $login_timestamp_seconds;
 				        	$no_of_days = round($diff/(60*60*24));
 				        	return $no_of_days;
                         }];
@@ -188,23 +191,26 @@ class NotSyncController extends Controller
                     		])->download($title.'.xlsx');        
     }
 
-    public function getQueryBuilder($depot_id, $till_date, $etm_id)
+    public function getQueryBuilder($depot_id, $from_date, $to_date, $etm_no)
     {
-        $getQueryBuilder = ETMLoginLog::with(['conductor:id,crew_name,crew_id', 'etm:id,etm_no']);
+        $getQueryBuilder = ETMLoginLog::whereHas('wayBill', function($query) use ($depot_id){
+                                            if($depot_id)
+                                            {
+                                                $query->where('depot_id', $depot_id);
+                                            }
+                                        })
+                                        ->whereHas('etm', function($query) use ($etm_no){
+                                            if($etm_no)
+                                            {
+                                                $query->where('etm_no', $etm_no);
+                                            }
+                                        })
+                                        ->with(['conductor:id,crew_name,crew_id', 'etm:id,etm_no']);
 
-        /*if($depot_id)
+        if($from_date && $to_date)
         {
-            $getQueryBuilder = $getQueryBuilder->where('depot_id', $depot_id);
-        }*/
-
-        if($etm_id)
-        {
-            $getQueryBuilder = $getQueryBuilder->where('etm_id', $etm_id);
-        }
-
-        if($till_date)
-        {
-            $getQueryBuilder = $getQueryBuilder->whereDate('login_timestamp', '<=', $till_date);
+            $getQueryBuilder = $getQueryBuilder->whereDate('login_timestamp', '>=', $from_date)
+                                                ->whereDate('login_timestamp', '<=', $to_date);
         }
 
         return $getQueryBuilder;

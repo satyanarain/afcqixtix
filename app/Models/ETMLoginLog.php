@@ -19,4 +19,9 @@ class ETMLoginLog extends Model
     {
     	return $this->belongsTo(ETMDetail::class, 'etm_id', 'id');
     }
+
+    public function wayBill()
+    {
+        return $this->belongsTo(Waybill::class, 'abstract_no', 'abstract_no');
+    }
 }

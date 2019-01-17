@@ -24,4 +24,9 @@ class Ticket extends Model
     {
         return $this->belongsTo(Concession::class, 'concession_id', 'id');
     }
+
+    public function wayBill()
+    {
+        return $this->belongsTo(Waybill::class, 'abstract_id', 'abstract_no');
+    }
 }

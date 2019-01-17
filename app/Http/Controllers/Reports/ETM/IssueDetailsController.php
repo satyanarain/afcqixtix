@@ -39,26 +39,9 @@ class IssueDetailsController extends Controller
         $etm_no = $input['etm_no'];
         $shift_id = $input['shift_id'];
 
-        $data = Waybill::with(['route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'depotHead:id,name', 'conductor:id,crew_name', 'vehicle:id,vehicle_registration_number']);
-
-        if($etm_no)
-        {
-        	$data = $data->where('etm_no', $etm_no);
-        }
-
-        if($shift_id)
-        {
-        	$data = $data->where('shift_id', $shift_id);
-        }
-
-        if($from_date && $to_date)
-        {
-        	$data = $data->whereDate('created_at', '>=', $from_date)
-        				 ->whereDate('created_at', '<=', $to_date);
-        }
-                
-        $data = $data->orderBy('id', 'ASC')
-        			 ->paginate(10);
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $etm_no, $shift_id);
+        
+        $data = $queryBuilder->paginate(10);
 
         return view('reports.etm.issue_details.index', compact('data'));
     }
@@ -78,25 +61,7 @@ class IssueDetailsController extends Controller
         $etm_no = $input['etm_no'];
         $shift_id = $input['shift_id'];
 
-        $data = Waybill::with(['route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'depotHead:id,name', 'conductor:id,crew_name', 'vehicle:id,vehicle_registration_number', 'etm:id,etm_no']);
-
-        if($etm_no)
-        {
-        	$data = $data->where('etm_no', $etm_no);
-        }
-
-        if($shift_id)
-        {
-        	$data = $data->where('shift_id', $shift_id);
-        }
-
-        if($from_date && $to_date)
-        {
-        	$data = $data->whereDate('created_at', '>=', $from_date)
-        				 ->whereDate('created_at', '<=', $to_date);
-        }
-                
-        $data = $data->orderBy('id', 'ASC');
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $etm_no, $shift_id);
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
         $etmNo = $this->findNameById('etm_details', 'etm_no', $etm_no);
@@ -118,9 +83,7 @@ class IssueDetailsController extends Controller
             'Shift : '.$shift
         ];   
 
-        $reportData = $data->get();      
-
-        //return $reportData;
+        $reportData = $queryBuilder->get();    
 
         return response()->json(['status'=>'Ok', 'title'=>$title, 'meta'=>$meta, 'data'=>$reportData, 'serverDate'=>date('d-m-Y H:i:s'), 'takenBy'=>Auth::user()->name], 200);
     }
@@ -134,25 +97,7 @@ class IssueDetailsController extends Controller
         $etm_no = $input['etm_no'];
         $shift_id = $input['shift_id'];
 
-        $data = Waybill::with(['route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'depotHead:id,name', 'conductor:id,crew_name', 'vehicle:id,vehicle_registration_number', 'etm:id,etm_no']);
-
-        if($etm_no)
-        {
-        	$data = $data->where('etm_no', $etm_no);
-        }
-
-        if($shift_id)
-        {
-        	$data = $data->where('shift_id', $shift_id);
-        }
-
-        if($from_date && $to_date)
-        {
-        	$data = $data->whereDate('created_at', '>=', $from_date)
-        				 ->whereDate('created_at', '<=', $to_date);
-        }
-                
-        $data = $data->orderBy('id', 'ASC');
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $etm_no, $shift_id);
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
         $etmNo = $this->findNameById('etm_details', 'etm_no', $etm_no);
@@ -177,10 +122,10 @@ class IssueDetailsController extends Controller
 
       
         $columns = [
-                        'Abstract'=> function($row){
+                        'Abstract Number'=> function($row){
                             return $row->abstract_no;
                         },
-                        'Waybill'=> function($row){
+                        'Waybill Number'=> function($row){
                             return $row->waybill_no;
                         },
                         'Route'=> function($row){
@@ -195,7 +140,7 @@ class IssueDetailsController extends Controller
                         'Conductor' => function($row){
                             return $row->conductor->crew_name;
                         }, 
-                        'Vehicle' => function($row){
+                        'Vehicle Number' => function($row){
                             return $row->vehicle->vehicle_registration_number;
                         }, 
                         'ETM No.' => function($row){
@@ -211,7 +156,37 @@ class IssueDetailsController extends Controller
                             return date('d-m-Y H:i:s', strtotime($row->etm_issue_time));
                         }];
 
-        return ExcelReport::of($title, $meta, $data, $columns)
+        return ExcelReport::of($title, $meta, $queryBuilder, $columns)
         					->download($title.'.xlsx');        
+    }
+
+    public function getQueryBuilder($depot_id, $from_date, $to_date, $etm_no, $shift_id)
+    {
+        $queryBuilder = Waybill::whereHas('etm', function($query) use ($etm_no){
+            if($etm_no)
+            {
+                $query->where('etm_no', $etm_no);
+            }
+        })->with(['route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'depotHead:id,name', 'conductor:id,crew_name', 'vehicle:id,vehicle_registration_number', 'etm:id,etm_no']);
+
+        if($depot_id)
+        {
+            $queryBuilder = $queryBuilder->where('depot_id', $depot_id);
+        }
+
+        if($shift_id)
+        {
+            $queryBuilder = $queryBuilder->where('shift_id', $shift_id);
+        }
+
+        if($from_date && $to_date)
+        {
+            $queryBuilder = $queryBuilder->whereDate('created_at', '>=', $from_date)
+                                         ->whereDate('created_at', '<=', $to_date);
+        }
+                
+        $queryBuilder = $queryBuilder->orderBy('id', 'ASC');
+
+        return $queryBuilder;
     }
 }

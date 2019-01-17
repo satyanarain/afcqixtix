@@ -36,18 +36,12 @@ class PassesValidatedDetailsController extends Controller
         $depot_id = $input['depot_id'];
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
+        $service_id = $input['service_id'];//to be discussed
+        $pass_id = "";//to be discussed
     
-        $data = Ticket::with(['fromStop', 'toStop', 'concession:id,flat_fare_amount']);
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $service_id, $pass_id);
 
-        if($from_date && $to_date)
-        {
-        	$data = $data->whereDate('created_at', '>=', $from_date)
-        				 ->whereDate('created_at', '<=', $to_date);
-        }
-                
-        $data = $data->where('ticket_type', 'Pass')
-        			 ->orderBy('id', 'ASC')
-        			 ->paginate(10);
+        $data = $queryBuilder->paginate(10);
 
         return view('reports.etm.passes_validated_details.index', compact('data'));
     }
@@ -64,19 +58,14 @@ class PassesValidatedDetailsController extends Controller
         $depot_id = $input['depot_id'];
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
+        $service_id = $input['service_id'];//to be discussed
+        $pass_id = "";//to be discussed
     
-        $data = Ticket::with(['fromStop', 'toStop', 'concession:id,flat_fare_amount']);
-
-        if($from_date && $to_date)
-        {
-        	$data = $data->whereDate('created_at', '>=', $from_date)
-        				 ->whereDate('created_at', '<=', $to_date);
-        }
-                
-        $data = $data->where('ticket_type', 'Pass')
-        			->orderBy('id', 'ASC');
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $service_id, $pass_id);
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
+        $service = $this->findNameById('services', 'name', $service_id);
+        $serviceName = $service ? $service : 'All';
     
         $title = 'Passes Validated Details Report'; // Report title
 
@@ -87,12 +76,11 @@ class PassesValidatedDetailsController extends Controller
 
         $meta = [ // For displaying filters description on header
             'Depot : ' . $depotName,
-            'From : '.date('d-m-Y', strtotime($from_date)).' To : '.date('d-m-Y', strtotime($to_date))
+            'From : '.date('d-m-Y', strtotime($from_date)).' To : '.date('d-m-Y', strtotime($to_date)),
+            'Service : '.$serviceName
         ];   
 
-        $reportData = $data->get();      
-
-        //return $reportData;
+        $reportData = $queryBuilder->get();  
 
         return response()->json(['status'=>'Ok', 'title'=>$title, 'meta'=>$meta, 'data'=>$reportData, 'serverDate'=>date('d-m-Y H:i:s'), 'takenBy'=>Auth::user()->name], 200);
     }
@@ -103,25 +91,14 @@ class PassesValidatedDetailsController extends Controller
         $depot_id = $input['depot_id'];
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
+        $service_id = $input['service_id'];//to be discussed
+        $pass_id = "";//to be discussed
     
-        $data = Ticket::with(['fromStop', 'toStop', 'concession:id,flat_fare_amount']);
-
-        if($from_date && $to_date)
-        {
-        	$data = $data->whereDate('created_at', '>=', $from_date)
-        				 ->whereDate('created_at', '<=', $to_date);
-        }
-                
-        $data = $data->where('ticket_type', 'Pass')
-        			->orderBy('id', 'ASC');
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $service_id, $pass_id);
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
-        if($route_id)
-        {
-        	$routeName = $this->findNameById('route_master', 'route_name', $route_id);
-        }else{
-        	$routeName = 'All';
-        }
+        $service = $this->findNameById('services', 'name', $service_id);
+        $serviceName = $service ? $service : 'All';
     
         $title = 'Passes Validated Details Report'; // Report title
 
@@ -132,7 +109,7 @@ class PassesValidatedDetailsController extends Controller
 
         $meta = [ // For displaying filters description on header
             'Depot : ' => $depotName,
-            'Route : ' => $routeName,
+            'Service : ' => $serviceName,
             'From : '=> date('d-m-Y', strtotime($from_date)),
             'To : '=> date('d-m-Y', strtotime($to_date))
         ]; 
@@ -179,7 +156,33 @@ class PassesValidatedDetailsController extends Controller
                             return $row->card_number;
                         }];
 
-        return ExcelReport::of($title, $meta, $data, $columns)
+        return ExcelReport::of($title, $meta, $queryBuilder, $columns)
         					->download($title.'.xlsx');        
+    }
+
+    public function getQueryBuilder($depot_id, $from_date, $to_date, $service_id, $pass_id)
+    {
+        $queryBuilder = Ticket::whereHas('wayBill', function($query) use ($service_id){
+            if($service_id)
+            {
+                $query->where('service_id', $service_id);
+            }
+        })->with(['wayBill', 'fromStop', 'toStop', 'concession:id,flat_fare_amount']);
+
+        if($from_date && $to_date)
+        {
+            $queryBuilder = $queryBuilder->whereDate('created_at', '>=', $from_date)
+                                         ->whereDate('created_at', '<=', $to_date);
+        }
+
+        if($pass_id)
+        {
+            $queryBuilder->where('pass_id', $pass_id);
+        }
+                
+        $queryBuilder = $queryBuilder->where('ticket_type', 'Pass')
+                                     ->orderBy('id', 'ASC');
+
+        return $queryBuilder;
     }
 }

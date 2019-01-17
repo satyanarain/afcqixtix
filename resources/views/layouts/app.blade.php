@@ -335,12 +335,12 @@ $array= array('etm', 'revenue', 'ppt')
                 </li>
                 <li @if($segments_var[2]=='issue_details') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.etm.issue_details.index')}}">
-                        <i class="fa fa-circle-o text-green"></i> ETM Issue Details
+                        <i class="fa fa-circle-o text-green"></i> ETM Issue
                     </a>
                 </li>
                 <li @if($segments_var[2]=='activity_log') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.etm.activity_log.index')}}">
-                        <i class="fa fa-circle-o text-green"></i> ETM Activity Log Report
+                        <i class="fa fa-circle-o text-green"></i> ETM Activity Log
                     </a>
                 </li>
                 <li @if($segments_var[2]=='pending_activity_log') class="treeview active" @else class="treeview" @endif>

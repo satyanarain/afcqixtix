@@ -1,9 +1,9 @@
 @extends('layouts.master')
 @section('header')
-<h1>ETM Issue Details Report</h1>
+<h1>ETM Issue Report</h1>
 <ol class="breadcrumb">
             <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"></i>ETM Issue Details</a></li>
+            <li><a href="#"></i>ETM Issue</a></li>
             </ol>
 @stop
 @section('content')
@@ -12,7 +12,7 @@
         <div class="box box-default" style="min-height:0px;">
             <div class="box-header with-border">
                 <div class="col-md-12 col-sm-12 alert-danger cash-collection-error hide"></div>
-                <h3 class="box-title">Create ETM Issue Details</h3>
+                <h3 class="box-title">Select Parameters</h3>
                 <div class="box-tools pull-right">
                     <button class="slideout-menu-toggle btn btn-box-tool btn-box-tool-lg" data-toggle="tooltip" title="Help"><i class="fa fa-question"></i></button>
                 </div>
@@ -25,7 +25,7 @@
                 'class'=>'form-horizontal',
                 'autocomplete'=>'off',
                 'method'=> 'GET',
-                'onsubmit'=>'return validateForm();'
+                'onsubmit'=>'return validateForm("depot_id", "from_date", "to_date");'
                 ]) !!}
                 @include('reports.etm.issue_details.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 
@@ -34,20 +34,23 @@
                 @if(isset($data))
                 <div class="row" style="margin-top: 50px;" id="reportDataBox">
                     <div class="col-md-12">
+                        @if(count($data) > 0)
                         <h4>
                             <button class="btn btn-primary pull-right" id="exportAsPDF">Export as PDF</button> 
                             <button class="btn btn-primary pull-right" style="margin-right: 10px;margin-bottom: 10px;" id="exportAsXLS">Export as XLS</button>
                         </h4>
+                        @endif
                         <table class="table" id="afcsReportTable">
                             <thead>
                                 <tr>
-                                    <th>Abstract</th>
-                                    <th>Waybill</th>
+                                    <th>S. No.</th>
+                                    <th>Abstract Number</th>
+                                    <th>Waybill Number</th>
                                     <th>Route</th>
                                     <th>Duty</th>
                                     <th>Shift</th>
                                     <th>Conductor</th>
-                                    <th>Vehicle</th>
+                                    <th>Vehicle Number</th>
                                     <th>ETM No.</th>
                                     <th>Issued By</th>
                                     <th>Received By</th>
@@ -58,6 +61,7 @@
                             @if(count($data) > 0)
                             @foreach($data as $key=>$da)
                                 <tr>
+                                    <td>{{$key+1}}</td>
                                     <td>{{$da->abstract_no}}</td>
                                     <td>{{$da->waybill_no}}</td>
                                     <td>{{$da->route->route_name}}</td>
@@ -73,17 +77,14 @@
                             @endforeach
                             @else
                                 <tr>
-                                    <td>No Record Found!</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td class="text-center" colspan="12"><strong>No Record Found! &#9785</strong></td>
                                 </tr>
                             @endif
                             </tbody>
                         </table>
-                        {{$data->appends(request()->input())->links()}}
+                        <div class="pull-right">
+                            {{$data->appends(request()->input())->links()}}
+                        </div>
                     </div>
                 </div>
                 @endif
@@ -151,11 +152,12 @@ $(document).ready(function(){
                     var reportData = [];
                     if(data.length > 0)
                     {
-                        reportData.push([{'text':'Abstract', 'style': 'tableHeaderStyle'}, {'text':'Waybill', 'style': 'tableHeaderStyle'}, {'text':'Route', 'style': 'tableHeaderStyle'}, {'text':'Duty', 'style': 'tableHeaderStyle'}, {'text':'Shift', 'style': 'tableHeaderStyle'}, {'text':'Conductor', 'style': 'tableHeaderStyle'}, {'text':'Vehicle', 'style': 'tableHeaderStyle'}, {'text':'ETM No.', 'style': 'tableHeaderStyle'}, {'text':'Issued By', 'style': 'tableHeaderStyle'}, {'text':'Received By', 'style': 'tableHeaderStyle'}, {'text':'Issuance Timestamp', 'style': 'tableHeaderStyle'}]);
+                        reportData.push([{'text':'S. No.', 'style': 'tableHeaderStyle'}, {'text':'Abstract Number', 'style': 'tableHeaderStyle'}, {'text':'Waybill Number', 'style': 'tableHeaderStyle'}, {'text':'Route', 'style': 'tableHeaderStyle'}, {'text':'Duty', 'style': 'tableHeaderStyle'}, {'text':'Shift', 'style': 'tableHeaderStyle'}, {'text':'Conductor', 'style': 'tableHeaderStyle'}, {'text':'Vehicle Number', 'style': 'tableHeaderStyle'}, {'text':'ETM No.', 'style': 'tableHeaderStyle'}, {'text':'Issued By', 'style': 'tableHeaderStyle'}, {'text':'Received By', 'style': 'tableHeaderStyle'}, {'text':'Issuance Timestamp', 'style': 'tableHeaderStyle'}]);
                         
-                        
+                        var i = 1;
                         data.map((d) => {
-                            reportData.push([{'text':''+d.abstract_no}, {'text':d.waybill_no}, {'text':d.route.route_name}, {'text':''+d.duty.duty_number}, {'text':''+d.shift.shift}, {'text':''+d.conductor.crew_name}, {'text':''+d.vehicle.vehicle_registration_number}, {'text':''+d.etm.etm_no}, {'text':d.depot_head.name}, {'text':d.conductor.crew_name}, {'text':d.etm_issue_time}]);
+                            reportData.push([{'text':''+i}, {'text':''+d.abstract_no}, {'text':d.waybill_no}, {'text':d.route.route_name}, {'text':''+d.duty.duty_number}, {'text':''+d.shift.shift}, {'text':''+d.conductor.crew_name}, {'text':''+d.vehicle.vehicle_registration_number}, {'text':''+d.etm.etm_no}, {'text':d.depot_head.name}, {'text':d.conductor.crew_name}, {'text':d.etm_issue_time}]);
+                            i++;
                         });                            
                     }
 

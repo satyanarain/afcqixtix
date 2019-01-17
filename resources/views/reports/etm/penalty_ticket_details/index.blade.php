@@ -78,7 +78,9 @@
                             @endif
                             </tbody>
                         </table>
-                        {{$data->appends(request()->input())->links()}}
+                        <div class="pull-right"> 
+                            {{$data->appends(request()->input())->links()}}
+                        </div>
                     </div>
                 </div>
                 @endif

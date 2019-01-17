@@ -148,7 +148,7 @@ function clearReportData()
 {
     $('#reportDataBox').remove();
 }
-function validateForm(depot_id=null, from_date=null, to_date=null, denomination_id=null)
+function validateForm(depot_id=null, from_date=null, to_date=null, etm_no=null)
 {
     if(depot_id)
     {
@@ -198,12 +198,12 @@ function validateForm(depot_id=null, from_date=null, to_date=null, denomination_
         }
     }
 
-    if(denomination_id)
+    if(etm_no)
     {
-        var denominationId = $('#'+denomination_id).val();
-        if(!denominationId)
+        var etm_no = $('#'+etm_no).val();
+        if(!etm_no)
         {
-            alert('Please select denomination.');
+            alert('Please enter ETM number.');
             return false;
         }
     }

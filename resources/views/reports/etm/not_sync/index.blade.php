@@ -12,7 +12,7 @@
         <div class="box box-default" style="min-height:0px;">
             <div class="box-header with-border">
                 <div class="col-md-12 col-sm-12 alert-danger cash-collection-error hide"></div>
-                <h3 class="box-title">Create ETM Not Sync Report</h3>
+                <h3 class="box-title">Select Parameters</h3>
                 <div class="box-tools pull-right">
                     <button class="slideout-menu-toggle btn btn-box-tool btn-box-tool-lg" data-toggle="tooltip" title="Help"><i class="fa fa-question"></i></button>
                 </div>
@@ -25,7 +25,7 @@
                 'class'=>'form-horizontal',
                 'autocomplete'=>'off',
                 'method'=> 'GET',
-                'onsubmit'=>'return validateForm();'
+                'onsubmit'=>'return validateForm("depot_id", "from_date", "to_date");'
                 ]) !!}
                 @include('reports.etm.not_sync.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 
@@ -34,13 +34,16 @@
                 @if(isset($data) && isset($flag) && $flag == 1)
                 <div class="row" style="margin-top: 50px;" id="reportDataBox">
                     <div class="col-md-12">
+                        @if(count($data) > 0)
                         <h4>
                             <button class="btn btn-primary pull-right" id="exportAsPDF">Export as PDF</button> 
                             <button class="btn btn-primary pull-right" style="margin-right: 10px;margin-bottom: 10px;" id="exportAsXLS">Export as XLS</button>
                         </h4>
+                        @endif
                         <table class="table" id="afcsReportTable">
                             <thead>
                                 <tr>
+                                    <th>S. No.</th>
                                     <th>ETM No.</th>
                                     <th>Last Manual Sync On</th>
                                     <th>Login Crew Name (Crew ID)</th>
@@ -53,6 +56,7 @@
                             @if(count($data) > 0)
                             @foreach($data as $da)
                                 <tr>
+                                    <td>{{$key+1}}</td>
                                     <td>{{$da->etm->etm_no}}</td>
                                     <td>{{$da->last_manual_sync}}</td>
                                     <td>{{$da->conductor->crew_name.' ('.$da->conductor->crew_id.')'}}</td>
@@ -63,17 +67,14 @@
                             @endforeach
                             @else
                                 <tr>
-                                    <td>No Record Found!</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td class="text-center" colspan="7"><strong>No Record Found! &#9785</strong></td>
                                 </tr>
                             @endif
                             </tbody>
                         </table>
-                        {{$data->appends(request()->input())->links()}}
+                        <div class="pull-right"> 
+                            {{$data->appends(request()->input())->links()}}
+                        </div>
                     </div>
                 </div>
                 @elseif(isset($flag) && $flag == 0)
@@ -95,12 +96,8 @@
 $(document).ready(function(){
     $(document).on('click', '#exportAsPDF', function(){
         var depot_id = $('#depot_id').val();
-
-        var date = $('#date').val();
-        if(!date)
-        {
-            return alert('Please enter till date.');
-        }
+        var from_date = $('#from_date').val();
+        var to_date = $('#to_date').val();
         var etm_no = $('#etm_no').val();
 
         $.ajax({
@@ -109,7 +106,8 @@ $(document).ready(function(){
             dataType: "JSON",
             data: {
                 depot_id: depot_id,
-                date: date,
+                from_date: from_date,
+                to_date: to_date,
                 etm_no: etm_no
             },
             success: function(response)
@@ -123,11 +121,11 @@ $(document).ready(function(){
                     var reportData = [];
                     if(data.length > 0)
                     {
-                        reportData.push([{'text':'ETM No.', 'style': 'tableHeaderStyle'}, {'text':'Last Manual Sync On', 'style': 'tableHeaderStyle'}, {'text':'Login Crew Name (Crew ID)', 'style': 'tableHeaderStyle'}, {'text':'Login Timestamp', 'style': 'tableHeaderStyle'}, {'text':'Logout Timestamp', 'style': 'tableHeaderStyle'}, {'text':'No. of Days', 'style': 'tableHeaderStyle', 'alignment':'right'}]);
+                        reportData.push([{'text':'S. No.', 'style': 'tableHeaderStyle'}, {'text':'ETM No.', 'style': 'tableHeaderStyle'}, {'text':'Last Manual Sync On', 'style': 'tableHeaderStyle'}, {'text':'Login Crew Name (Crew ID)', 'style': 'tableHeaderStyle'}, {'text':'Login Timestamp', 'style': 'tableHeaderStyle'}, {'text':'Logout Timestamp', 'style': 'tableHeaderStyle'}, {'text':'No. of Days', 'style': 'tableHeaderStyle', 'alignment':'right'}]);
                         
-                        
+                        var i = 1;
                         data.map((d) => {
-                            reportData.push([{'text':''+d.etm.etm_no}, {'text':''+d.last_manual_sync}, {'text':''+d.conductor.crew_name+' ('+d.conductor.crew_id+')'}, {'text':d.login_timestamp}, {'text':''+d.logout_timestamp}, {'text':''+d.no_of_days, 'alignment':'right'}]);
+                            reportData.push([{'text':''+i}, {'text':''+d.etm.etm_no}, {'text':''+d.last_manual_sync}, {'text':''+d.conductor.crew_name+' ('+d.conductor.crew_id+')'}, {'text':d.login_timestamp}, {'text':''+d.logout_timestamp}, {'text':''+d.no_of_days, 'alignment':'right'}]);
                         });                            
                     }
 
@@ -146,17 +144,14 @@ $(document).ready(function(){
     });
 
     $(document).on('click', '#exportAsXLS', function(){
-        var depot_id = $('#depot_id').val();
-        var date = $('#date').val();
-        if(!date)
-        {
-            return alert('Please enter till date.');
-        }
-
+        var depot_id = $('#depot_id').val();        
+        var from_date = $('#from_date').val();
+        var to_date = $('#to_date').val();
         var etm_no = $('#etm_no').val();
 
         var queryParams = "?depot_id="+depot_id
-                        + "&date="+date
+                        + "&from_date="+from_date
+                        + "&to_date="+to_date
                         + "&etm_no="+etm_no;
 
         var url = "{{route('reports.etm.not_sync.getexcelreport')}}"+queryParams;
@@ -164,17 +159,6 @@ $(document).ready(function(){
         window.open(url,'_blank');
     });
 });
-function validateForm()
-    {
-        var date = $('#date').val();
-        if(!date)
-        {
-            alert('Please enter till date.');
-            return false;
-        }
-
-        return true;
-    }
 </script>
 @endpush
 
