@@ -283,7 +283,12 @@ class AuditStatusController extends Controller
 
     public function getQueryBuilder($depot_id, $from_date, $to_date, $shift_id, $status_type, $etm_no)
     {
-        $queryBuilder = Waybill::with(['etm:id,etm_no', 'route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'conductor:id,crew_name,crew_id', 'vehicle:id,vehicle_registration_number', 'etmLoginDetails:abstract_no,login_timestamp,logout_timestamp']);
+        $queryBuilder = Waybill::with(['etm'=>function($query){
+            if($etm_no)
+            {
+                $query->where('etm_no', $etm_no);
+            }
+        }, 'route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'conductor:id,crew_name,crew_id', 'vehicle:id,vehicle_registration_number', 'etmLoginDetails:abstract_no,login_timestamp,logout_timestamp']);
 
         if($depot_id)
         {
@@ -305,11 +310,6 @@ class AuditStatusController extends Controller
                 $queryBuilder = $queryBuilder->where('status', '!=', $status_type);
             }
             
-        }
-
-        if($etm_no)
-        {
-            $queryBuilder = $queryBuilder->where('etm_no', $etm_no);
         }
 
         if($shift_id)

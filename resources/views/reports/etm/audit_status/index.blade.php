@@ -187,7 +187,7 @@ $(document).ready(function(){
         window.open(url,'_blank');
     });
 
-    $(document).on('change', '#depot_id', function(){
+    /*$(document).on('change', '#depot_id', function(){
         var depot_id = $(this).val();
         var url = "{{route('reports.etm.audit_status.getetmsbydepotid', ':id')}}";
         url = url.replace(':id', depot_id);
@@ -213,7 +213,7 @@ $(document).ready(function(){
                 console.log(error);
             }
         })
-    })
+    })*/
 });
 </script>
 @endpush
