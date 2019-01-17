@@ -307,6 +307,7 @@ Route::group(['middleware' => ['auth']], function () {
             Route::post('audit_status/getpdfreport', 'AuditStatusController@getPdfReport')->name('audit_status.getpdfreport');
             Route::get('audit_status/getexcelreport', 'AuditStatusController@getExcelReport')->name('audit_status.getexcelreport');
             Route::get('audit_status/displayData', 'AuditStatusController@displayData')->name('audit_status.displaydata');
+            Route::get('audit_status/getetmsbydepotid/{id}', 'AuditStatusController@getETMsByDepotId')->name('audit_status.getetmsbydepotid');
 
             /*trip_cancellation*/
             Route::resource('trip_cancellation', 'TripCancellationController')->only('index'); 

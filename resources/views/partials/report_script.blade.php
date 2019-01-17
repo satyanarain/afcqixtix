@@ -145,7 +145,69 @@ $(document).ready(function(){
         });
 });
 function clearReportData()
+{
+    $('#reportDataBox').remove();
+}
+function validateForm(depot_id=null, from_date=null, to_date=null, denomination_id=null)
+{
+    if(depot_id)
+    {
+        var depotId = $('#'+depot_id).val();
+        if(!depotId)
         {
-            $('#reportDataBox').remove();
+            alert('Please select a depot.');
+            return false;
         }
+    }
+
+    if(from_date)
+    {     
+        var fromDate = $('#'+from_date).val();
+        if(!fromDate)
+        {
+            alert('Please enter from date.');
+            return false;
+        }
+    }
+
+    if(to_date)
+    {
+        var toDate = $('#'+to_date).val();
+        if(!toDate)
+        {
+            alert('Please enter to date.');
+            return false;
+        }
+    }
+    
+    if(from_date && to_date)
+    {
+        var splitFrom = fromDate.split('-');
+        var splitTo = toDate.split('-');
+
+        console.log(splitFrom)
+
+        //Create a date object from the arrays
+        fromDate = new Date(splitFrom[2], splitFrom[1]-1, splitFrom[0]);
+        toDate = new Date(splitTo[2], splitTo[1]-1, splitTo[0]);
+
+        if(fromDate > toDate)
+        {
+            alert('From Date must be smaller than or equal to To Date.');
+            return false;
+        }
+    }
+
+    if(denomination_id)
+    {
+        var denominationId = $('#'+denomination_id).val();
+        if(!denominationId)
+        {
+            alert('Please select denomination.');
+            return false;
+        }
+    }
+
+    return true;
+}
 </script>

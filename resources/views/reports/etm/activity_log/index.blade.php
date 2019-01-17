@@ -184,25 +184,6 @@ $(document).ready(function(){
         window.open(url,'_blank');
     });
 });
-function validateForm()
-{
-    var date = $('#date').val();
-    if(!date)
-    {
-        alert('Please enter date.');
-        return false;
-    }
-
-    var etm_no = $('#etm_no').val();
-
-    if(!etm_no)
-    {
-        alert('Please enter etm number.');
-        return false;
-    }
-
-    return true;
-}
 </script>
 @endpush
 

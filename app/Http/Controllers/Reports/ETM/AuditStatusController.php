@@ -12,6 +12,7 @@ use App\Models\Crew;
 use App\Models\Shift;
 use App\Models\Depot;
 use App\Models\Waybill;
+use App\Models\ETMDetail;
 use App\Traits\activityLog;
 use App\Models\CenterStock;
 use Illuminate\Http\Request;
@@ -23,7 +24,6 @@ class AuditStatusController extends Controller
 {
     use checkPermission;
     use activityLog;
-    protected $crewstock;
 
     /**
      * Index function created for create report form.
@@ -51,55 +51,15 @@ class AuditStatusController extends Controller
     {       
         $input = $request->all();
         $depot_id = $input['depot_id'];
-        $report_date = $input['report_date'];
+        $from_date = date('Y-m-d', strtotime($input['from_date']));
+        $to_date = date('Y-m-d', strtotime($input['to_date']));
         $status_type = $input['status_type'];
         $etm_no = $input['etm_no'];
-        $shift_id = $input['shift_id'];
-        $select_format = $input['select_format'];
-        $name =$this->findNameById('depots','name',$depot_id);
+        $shift_id = $input['shift_id'];  
     
-        $title = 'Audit Status Report'; // Report title
-
-        $meta = [ // For displaying filters description on header
-            'Date' => $report_date ,
-            'Status Type' => $status_type,
-            'Shift' => $status_type,
-            'Title' => $title
-        ];   
-    
-        $data = Waybill::with(['etm:id,etm_no', 'route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'conductor:id,crew_name,crew_id', 'vehicle:id,vehicle_registration_number', 'etmLoginDetails:abstract_no,login_timestamp,logout_timestamp']);
-        if($depot_id)
-        {
-            $data = $data->where('depot_id', $depot_id);
-        }
-
-        if($report_date)
-        {
-            $data = $data->whereDate('date', $report_date);
-        }
-
-        if($status_type)
-        {
-            $data = $data->where('status', $status_type);
-        }
-
-        if($etm_no)
-        {
-            $data = $data->where('etm_no', $etm_no);
-        }
-
-        if($shift_id)
-        {
-            $data = $data->where('shift_id', $shift_id);
-        }
-        
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $shift_id, $status_type, $etm_no);        
                 
-        $data = $data->orderBy('waybills.id')
-                ->paginate(15);
-                //->limit(5)
-                //->get(['status', 'abstract_no', 'etm_no', 'route_id', 'duty_id', 'shift_id', 'conductor_id', 'vehicle_id']);
-
-        //return response()->json($data);
+        $data = $queryBuilder->paginate(10);
 
         return view('reports.etm.audit_status.index', compact('data', 'meta'));
     }
@@ -114,108 +74,48 @@ class AuditStatusController extends Controller
     {
         $input = $request->all();
         $depot_id = $input['depot_id'];
-        $report_date = $input['report_date'] ? date('Y-m-d', strtotime($input['report_date'])) : '';
+        $from_date = date('Y-m-d', strtotime($input['from_date']));
+        $to_date = date('Y-m-d', strtotime($input['to_date']));
         $status_type = $input['status_type'];
         $etm_no = $input['etm_no'];
-        $shift_id = $input['shift_id'];
-        $select_format = $input['select_format'];
-        $name =$this->findNameById('depots','name',$depot_id);
+        $shift_id = $input['shift_id'];  
+
+        $depotName = $this->findNameById('depots', 'name', $depot_id);
+        $shiftName = $this->findNameById('shifts', 'shift', $shift_id);
+        $etmNumber = $this->findNameById('etm_details', 'etm_no', $etm_no);
     
         $title = 'ETM Audit Status Report'; // Report title
-
-        if($depot_id)
-        {
-            $depot = Depot::whereId($depot_id)->first();
-            if($depot)
-            {
-                $depotName = $depot->name;
-            }else{
-                $depotName = '';
-            }
-        }else{
-            $depotName = '';
-        }
-
-        if($status_type == 's')
-        {
-            $status = 'Submitted';
-        }elseif($status_type == 'c')
-        {
-            $status = 'Completed';
-        }else{
-            $status = 'Generated';
-        }
-
-        if($shift_id)
-        {
-            $shift = Shift::whereId($shift_id)->first();
-            if($shift)
-            {
-                $shiftName = $shift->shift;
-            }else{
-                $shiftName = "";
-            }
-        }else{
-            $shiftName = "";
-        }
-
-        if($etm_no)
-        {
-            $etm = ETMDetail::whereId($etm_no)->first();
-            if($etm)
-            {
-                $etmNumber = $etm->etm_no;
-            }else{
-                $etmNumber = '';
-            }
-        }else{
-            $etmNumber = '';
-        }
 
         /*
         *meta data shoul be an array as below
         *['Depot : Balewadi', 'ETM No. : 1222', 'ETC.']
         */
 
+        $shiftName = $shiftName ? $shiftName : 'All';
+        $etmNumber = $etmNumber ? $etmNumber : 'All';
+        if($status_type == 'c')
+        {
+            $status = 'Audited';
+        }else if($status_type == 'u'){
+            $status = 'Un-audited ';
+        }else {
+            $status = 'All';
+        }
+
         $meta = [ // For displaying filters description on header
             'Depot : ' . $depotName,
-            'Date : ' . $report_date,
+            'From : ' . date('d-m-Y', strtotime($from_date)),
+            'To : ' . date('d-m-Y', strtotime($to_date)),
             'Shift : ' . $shiftName,
             'Status Type : ' . $status,
             'ETM No. : ' . $etmNumber
         ];   
     
-        $data = Waybill::with(['etm:id,etm_no', 'route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'conductor:id,crew_name,crew_id', 'vehicle:id,vehicle_registration_number', 'etmLoginDetails:abstract_no,login_timestamp,logout_timestamp']);
-
-        if($depot_id)
-        {
-            $data = $data->where('depot_id', $depot_id);
-        }
-
-        if($report_date)
-        {
-            $data = $data->whereDate('date', $report_date);
-        }
-
-        if($status_type)
-        {
-            $data = $data->where('status', $status_type);
-        }
-
-        if($etm_no)
-        {
-            $data = $data->where('etm_no', $etm_no);
-        }
-
-        if($shift_id)
-        {
-            $data = $data->where('shift_id', $shift_id);
-        }
-        
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $shift_id, $status_type, $etm_no);        
                 
-        $data = $data->orderBy('waybills.id')
-                //->limit(5)
-                ->get(['status', 'abstract_no', 'etm_no', 'route_id', 'duty_id', 'shift_id', 'conductor_id', 'vehicle_id']);
+        $data = $queryBuilder->get();
+
+        //return $data;
 
         //data should be like below data
         /*
@@ -233,13 +133,11 @@ class AuditStatusController extends Controller
         {
             if($value->status == 'c')
             {
-                $audited = "Yes";
+                $audited = "Audited";
             }else{
-                $audited = "No";
+                $audited = "Un-audited";
             }
             $row = [(string)($key+1), (string)$value->etm->etm_no, (string)($value->etmLoginDetails->login_timestamp), (string)($value->route->route_name." / ".$value->duty->duty_number." / ".$value->shift->shift), (string)($value->etmLoginDetails->logout_timestamp), (string)($value->conductor->crew_name), (string)($value->vehicle->vehicle_registration_number), '', (string)($audited)];
-
-            //return $row;
 
             array_push($reportData, $row);
         }
@@ -382,4 +280,52 @@ class AuditStatusController extends Controller
         return ExcelReport::of($title, $meta, $data, $columns)
                     ->download($title.'.xlsx');
     }   
+
+    public function getQueryBuilder($depot_id, $from_date, $to_date, $shift_id, $status_type, $etm_no)
+    {
+        $queryBuilder = Waybill::with(['etm:id,etm_no', 'route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'conductor:id,crew_name,crew_id', 'vehicle:id,vehicle_registration_number', 'etmLoginDetails:abstract_no,login_timestamp,logout_timestamp']);
+
+        if($depot_id)
+        {
+            $queryBuilder = $queryBuilder->where('depot_id', $depot_id);
+        }
+
+        if($from_date && $to_date)
+        {
+            $queryBuilder = $queryBuilder->whereDate('date', '>=', $from_date)
+                                         ->whereDate('date', '<=', $to_date);
+        }
+
+        if($status_type)
+        {
+            if($status_type == 'c')
+            {
+                $queryBuilder = $queryBuilder->where('status', $status_type);
+            }else{
+                $queryBuilder = $queryBuilder->where('status', '!=', $status_type);
+            }
+            
+        }
+
+        if($etm_no)
+        {
+            $queryBuilder = $queryBuilder->where('etm_no', $etm_no);
+        }
+
+        if($shift_id)
+        {
+            $queryBuilder = $queryBuilder->where('shift_id', $shift_id);
+        }        
+                
+        $queryBuilder = $queryBuilder->orderBy('waybills.id');
+
+        return $queryBuilder;
+    }
+
+    public function getETMsByDepotId($id)
+    {
+        $etms = ETMDetail::where('depot_id', $id)->get(['id', 'etm_no']);
+
+        return response()->json($etms, 200);
+    }
 }

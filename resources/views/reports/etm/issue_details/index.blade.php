@@ -208,39 +208,6 @@ $(document).ready(function(){
         window.open(url,'_blank');
     });
 });
-function validateForm()
-    {
-        var fromDate = $('#from_date').val();
-        if(!fromDate)
-        {
-            alert('Please enter from date.');
-            return false;
-        }
-
-        var toDate = $('#to_date').val();
-        if(!toDate)
-        {
-            alert('Please enter to date.');
-            return false;
-        }
-
-        var splitFrom = fromDate.split('-');
-        var splitTo = toDate.split('-');
-
-        console.log(splitFrom)
-
-        //Create a date object from the arrays
-        fromDate = new Date(splitFrom[2], splitFrom[1]-1, splitFrom[0]);
-        toDate = new Date(splitTo[2], splitTo[1]-1, splitTo[0]);
-
-        if(fromDate > toDate)
-        {
-            alert('From Date must be smaller than or equal to To Date.');
-            return false;
-        }
-
-        return true;
-    }
 </script>
 @endpush
 
