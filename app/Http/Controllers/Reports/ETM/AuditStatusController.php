@@ -150,64 +150,33 @@ class AuditStatusController extends Controller
     public function getExcelReport(Request $request)
     {
         $input = $request->all();
-        //return $input;
         $depot_id = $input['depot_id'];
-        $report_date = $input['report_date'] ? date('Y-m-d', strtotime($input['report_date'])) : '';
+        $from_date = date('Y-m-d', strtotime($input['from_date']));
+        $to_date = date('Y-m-d', strtotime($input['to_date']));
         $status_type = $input['status_type'];
         $etm_no = $input['etm_no'];
-        $shift_id = $input['shift_id'];
-        $select_format = $input['select_format'];
-        $name =$this->findNameById('depots','name',$depot_id);
+        $shift_id = $input['shift_id'];  
+
+        $depotName = $this->findNameById('depots', 'name', $depot_id);
+        $shiftName = $this->findNameById('shifts', 'shift', $shift_id);
+        $etmNumber = $this->findNameById('etm_details', 'etm_no', $etm_no);
     
         $title = 'ETM Audit Status Report'; // Report title
 
-        if($depot_id)
-        {
-            $depot = Depot::whereId($depot_id)->first();
-            if($depot)
-            {
-                $depotName = $depot->name;
-            }else{
-                $depotName = '';
-            }
-        }else{
-            $depotName = '';
-        }
+        /*
+        *meta data shoul be an array as below
+        *['Depot : Balewadi', 'ETM No. : 1222', 'ETC.']
+        */
 
-        if($status_type == 's')
+        $shiftName = $shiftName ? $shiftName : 'All';
+        $etmNumber = $etmNumber ? $etmNumber : 'All';
+        if($status_type == 'c')
         {
-            $status = 'Submitted';
-        }elseif($status_type == 'c')
-        {
-            $status = 'Completed';
-        }else{
-            $status = 'Generated';
-        }
-
-        if($shift_id)
-        {
-            $shift = Shift::whereId($shift_id)->first();
-            if($shift)
-            {
-                $shiftName = $shift->shift;
-            }else{
-                $shiftName = "";
-            }
-        }else{
-            $shiftName = "";
-        }
-
-        if($etm_no)
-        {
-            $etm = ETMDetail::whereId($etm_no)->first();
-            if($etm)
-            {
-                $etmNumber = $etm->etm_no;
-            }else{
-                $etmNumber = '';
-            }
-        }else{
-            $etmNumber = '';
+            $status = 'Audited';
+        }else if($status_type == 'u'){
+            $status = 'Un-audited ';
+        }else {
+            $status = 'All';
         }
 
         /*
@@ -243,52 +212,15 @@ class AuditStatusController extends Controller
                             return $row->status == 'c' ? 'Yes' : 'No';
                         }];
     
-        $data = Waybill::with(['etm:id,etm_no', 'route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'conductor:id,crew_name,crew_id', 'vehicle:id,vehicle_registration_number', 'etmLoginDetails:abstract_no,login_timestamp,logout_timestamp']);
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $shift_id, $status_type, $etm_no);
 
-        if($depot_id)
-        {
-            $data = $data->where('depot_id', $depot_id);
-        }
-
-        if($report_date)
-        {
-            $data = $data->whereDate('date', $report_date);
-        }
-
-        if($status_type)
-        {
-            $data = $data->where('status', $status_type);
-        }
-
-        if($etm_no)
-        {
-            $data = $data->where('etm_no', $etm_no);
-        }
-
-        if($shift_id)
-        {
-            $data = $data->where('shift_id', $shift_id);
-        }
-        
-                
-        $data = $data->orderBy('waybills.id');
-                //->limit(5)
-                //->get(['status', 'abstract_no', 'etm_no', 'route_id', 'duty_id', 'shift_id', 'conductor_id', 'vehicle_id']);
-
-        $title = 'Registered User Report'; // Report title
-
-        return ExcelReport::of($title, $meta, $data, $columns)
+        return ExcelReport::of($title, $meta, $queryBuilder, $columns)
                     ->download($title.'.xlsx');
     }   
 
     public function getQueryBuilder($depot_id, $from_date, $to_date, $shift_id, $status_type, $etm_no)
     {
-        $queryBuilder = Waybill::with(['etm'=>function($query){
-            if($etm_no)
-            {
-                $query->where('etm_no', $etm_no);
-            }
-        }, 'route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'conductor:id,crew_name,crew_id', 'vehicle:id,vehicle_registration_number', 'etmLoginDetails:abstract_no,login_timestamp,logout_timestamp']);
+        $queryBuilder = Waybill::with(['etm:id,etm_no', 'route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'conductor:id,crew_name,crew_id', 'vehicle:id,vehicle_registration_number', 'etmLoginDetails:abstract_no,login_timestamp,logout_timestamp']);
 
         if($depot_id)
         {
@@ -315,7 +247,18 @@ class AuditStatusController extends Controller
         if($shift_id)
         {
             $queryBuilder = $queryBuilder->where('shift_id', $shift_id);
-        }        
+        }   
+
+        if($etm_no)
+        {
+            $etm = ETMDetail::where('etm_no', $etm_no)->first();
+            if($etm)
+            {
+                $queryBuilder = $queryBuilder->where('etm_no', $etm->id);
+            }else{
+                $queryBuilder = $queryBuilder->where('etm_no', $etm_no);
+            }
+        }     
                 
         $queryBuilder = $queryBuilder->orderBy('waybills.id');
 
