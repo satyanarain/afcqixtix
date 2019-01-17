@@ -41,22 +41,11 @@ class PenaltyTicketDetailsController extends Controller
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
         $route_id = $input['route_id'];
-        //$duty_id = $input['duty_id'];
-        //$shift_id = $input['shift_id'];
         $inspector_id = $input['inspector_id'];
     
-        $data = Inspection::with(['route:id,route_name', 'stop:id,stop', 'remark:id,remark_description', 'inspector:id,crew_name', 'conductor:id,crew_name']);
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $route_id, $inspector_id);
 
-        if($from_date && $to_date)
-        {
-        	$data = $data->whereDate('created_at', '>=', $from_date)
-        				 ->whereDate('created_at', '<=', $to_date);
-        }
-                
-        $data = $data->orderBy('id', 'ASC')
-        			 ->paginate(10);
-
-        //return response()->json($data);
+        $data = $queryBuilder->paginate(10);
 
         $inspectors = Crew::where('role', 'Inspector')->pluck('crew_name', 'id');
 
@@ -76,19 +65,9 @@ class PenaltyTicketDetailsController extends Controller
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
         $route_id = $input['route_id'];
-        //$duty_id = $input['duty_id'];
-        //$shift_id = $input['shift_id'];
         $inspector_id = $input['inspector_id'];
     
-        $data = Inspection::with(['route:id,route_name', 'stop:id,stop', 'remark:id,remark_description', 'inspector:id,crew_name', 'conductor:id,crew_name']);
-
-        if($from_date && $to_date)
-        {
-        	$data = $data->whereDate('created_at', '>=', $from_date)
-        				 ->whereDate('created_at', '<=', $to_date);
-        }
-                
-        $data = $data->orderBy('id', 'ASC');
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $route_id, $inspector_id);
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
     
@@ -104,9 +83,7 @@ class PenaltyTicketDetailsController extends Controller
             'From : '.date('d-m-Y', strtotime($from_date)).' To : '.date('d-m-Y', strtotime($to_date))
         ];   
 
-        $reportData = $data->get();      
-
-        //return $reportData;
+        $reportData = $queryBuilder->get();   
 
         return response()->json(['status'=>'Ok', 'title'=>$title, 'meta'=>$meta, 'data'=>$reportData, 'serverDate'=>date('d-m-Y H:i:s'), 'takenBy'=>Auth::user()->name], 200);
     }
@@ -118,21 +95,14 @@ class PenaltyTicketDetailsController extends Controller
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
         $route_id = $input['route_id'];
-        //$duty_id = $input['duty_id'];
-        //$shift_id = $input['shift_id'];
         $inspector_id = $input['inspector_id'];
     
-        $data = Inspection::with(['route:id,route_name', 'stop:id,stop', 'remark:id,remark_description', 'inspector:id,crew_name', 'conductor:id,crew_name']);
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $route_id, $inspector_id);
 
-        if($from_date && $to_date)
-        {
-        	$data = $data->whereDate('created_at', '>=', $from_date)
-        				 ->whereDate('created_at', '<=', $to_date);
-        }
-                
-        $data = $data->orderBy('id', 'ASC');
+        //return $queryBuilder->get();
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
+
         if($route_id)
         {
         	$routeName = $this->findNameById('route_master', 'route_name', $route_id);
@@ -172,7 +142,7 @@ class PenaltyTicketDetailsController extends Controller
                             return $row->penalty_amount;
                         }, 
                         'Passenger' => function($row){
-                            return $row->passenger->crew_name;
+                            return $row->name_of_passenger;
                         }, 
                         'Stop' => function($row){
                             return $row->stop->stop;
@@ -184,7 +154,35 @@ class PenaltyTicketDetailsController extends Controller
                             return $row->remark->remark_description;
                         }];
 
-        return ExcelReport::of($title, $meta, $data, $columns)
+        return ExcelReport::of($title, $meta, $queryBuilder, $columns)
         					->download($title.'.xlsx');        
+    }
+
+
+    public function getQueryBuilder($depot_id, $from_date, $to_date, $route_id, $inspector_id)
+    {
+        $queryBuilder = Inspection::whereHas('inspector', function($query) use ($depot_id){
+                                        $query->where('depot_id', $depot_id);
+                                    })->with(['route:id,route_name', 'stop:id,stop', 'remark:id,remark_description', 'inspector:id,crew_name', 'conductor:id,crew_name']);
+
+        if($from_date && $to_date)
+        {
+            $queryBuilder = $queryBuilder->whereDate('created_at', '>=', $from_date)
+                                         ->whereDate('created_at', '<=', $to_date);
+        }
+
+        if($route_id)
+        {
+            $queryBuilder = $queryBuilder->where('route_id', $route_id);
+        }
+
+        if($inspector_id)
+        {
+            $queryBuilder = $queryBuilder->where('inspector_id', $inspector_id);                
+        }
+
+        $queryBuilder = $queryBuilder->orderBy('id', 'ASC');
+
+        return $queryBuilder;
     }
 }

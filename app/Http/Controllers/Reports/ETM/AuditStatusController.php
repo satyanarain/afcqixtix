@@ -220,7 +220,13 @@ class AuditStatusController extends Controller
 
     public function getQueryBuilder($depot_id, $from_date, $to_date, $shift_id, $status_type, $etm_no)
     {
-        $queryBuilder = Waybill::with(['etm:id,etm_no', 'route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'conductor:id,crew_name,crew_id', 'vehicle:id,vehicle_registration_number', 'etmLoginDetails:abstract_no,login_timestamp,logout_timestamp']);
+        $queryBuilder = Waybill::whereHas('etm', function($query) use ($etm_no){
+                                        if($etm_no)
+                                        {
+                                            $query->where('etm_no', $etm_no);
+                                        }
+                                    })
+                                    ->with(['etm:id,etm_no', 'route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'conductor:id,crew_name,crew_id', 'vehicle:id,vehicle_registration_number', 'etmLoginDetails:abstract_no,login_timestamp,logout_timestamp']);
 
         if($depot_id)
         {
@@ -240,25 +246,13 @@ class AuditStatusController extends Controller
                 $queryBuilder = $queryBuilder->where('status', $status_type);
             }else{
                 $queryBuilder = $queryBuilder->where('status', '!=', $status_type);
-            }
-            
+            }            
         }
 
         if($shift_id)
         {
             $queryBuilder = $queryBuilder->where('shift_id', $shift_id);
-        }   
-
-        if($etm_no)
-        {
-            $etm = ETMDetail::where('etm_no', $etm_no)->first();
-            if($etm)
-            {
-                $queryBuilder = $queryBuilder->where('etm_no', $etm->id);
-            }else{
-                $queryBuilder = $queryBuilder->where('etm_no', $etm_no);
-            }
-        }     
+        }        
                 
         $queryBuilder = $queryBuilder->orderBy('waybills.id');
 

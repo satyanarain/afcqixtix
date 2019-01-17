@@ -315,7 +315,7 @@ $array= array('etm', 'revenue', 'ppt')
                 </li>
                 <li @if($segments_var[2]=='penalty_ticket_details') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.etm.penalty_ticket_details.index')}}">
-                        <i class="fa fa-circle-o text-green"></i> Penalty Ticket Details
+                        <i class="fa fa-circle-o text-green"></i> Penalty Ticket
                     </a>
                 </li>
                 <li @if($segments_var[2]=='sam_data') class="treeview active" @else class="treeview" @endif>

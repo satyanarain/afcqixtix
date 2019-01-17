@@ -1,9 +1,9 @@
 @extends('layouts.master')
 @section('header')
-<h1>Penalty Ticket Details Report</h1>
+<h1>Penalty Ticket Report</h1>
 <ol class="breadcrumb">
             <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"></i>Penalty Ticket Details</a></li>
+            <li><a href="#"></i>Penalty Ticket</a></li>
             </ol>
 @stop
 @section('content')
@@ -12,7 +12,7 @@
         <div class="box box-default" style="min-height:0px;">
             <div class="box-header with-border">
                 <div class="col-md-12 col-sm-12 alert-danger cash-collection-error hide"></div>
-                <h3 class="box-title">Create Penalty Ticket Details</h3>
+                <h3 class="box-title">Select Parameters</h3>
                 <div class="box-tools pull-right">
                     <button class="slideout-menu-toggle btn btn-box-tool btn-box-tool-lg" data-toggle="tooltip" title="Help"><i class="fa fa-question"></i></button>
                 </div>
@@ -25,7 +25,7 @@
                 'class'=>'form-horizontal',
                 'autocomplete'=>'off',
                 'method'=> 'GET',
-                'onsubmit'=>'return validateForm();'
+                'onsubmit'=>'return validateForm("depot_id", "from_date", "to_date");'
                 ]) !!}
                 @include('reports.etm.penalty_ticket_details.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 
@@ -34,10 +34,12 @@
                 @if(isset($data))
                 <div class="row" style="margin-top: 50px;" id="reportDataBox">
                     <div class="col-md-12">
+                        @if(count($data) > 0)
                         <h4>
                             <button class="btn btn-primary pull-right" id="exportAsPDF">Export as PDF</button> 
                             <button class="btn btn-primary pull-right" style="margin-right: 10px;margin-bottom: 10px;" id="exportAsXLS">Export as XLS</button>
                         </h4>
+                        @endif
                         <table class="table" id="afcsReportTable">
                             <thead>
                                 <tr>
@@ -71,12 +73,7 @@
                             @endforeach
                             @else
                                 <tr>
-                                    <td>No Record Found!</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td class="text-center" colspan="10"><strong>No Record Found! &#9785</strong></td>
                                 </tr>
                             @endif
                             </tbody>
@@ -149,9 +146,9 @@ $(document).ready(function(){
                     var reportData = [];
                     if(data.length > 0)
                     {
-                        reportData.push([{'text':'Inspection Date - Time', 'style': 'tableHeaderStyle'}, {'text':'Inspector', 'style': 'tableHeaderStyle'}, {'text':'Route', 'style': 'tableHeaderStyle'}, {'text':'Diretion', 'style': 'tableHeaderStyle'}, {'text':'Penalty Amount', 'style': 'tableHeaderStyle'}, {'text':'Passenger', 'style': 'tableHeaderStyle'}, {'text':'Stop', 'style': 'tableHeaderStyle'}, {'text':'Conductor', 'style': 'tableHeaderStyle'}, {'text':'Remark', 'style': 'tableHeaderStyle'}]);
+                        reportData.push([{'text':'S. No.', 'style': 'tableHeaderStyle'}, {'text':'Inspection Date - Time', 'style': 'tableHeaderStyle'}, {'text':'Inspector', 'style': 'tableHeaderStyle'}, {'text':'Route', 'style': 'tableHeaderStyle'}, {'text':'Diretion', 'style': 'tableHeaderStyle'}, {'text':'Penalty Amount', 'style': 'tableHeaderStyle'}, {'text':'Passenger', 'style': 'tableHeaderStyle'}, {'text':'Stop', 'style': 'tableHeaderStyle'}, {'text':'Conductor', 'style': 'tableHeaderStyle'}, {'text':'Remark', 'style': 'tableHeaderStyle'}]);
                         
-                        
+                        var i = 1;
                         data.map((d) => {
                             console.log(d);
                             var route = '';
@@ -182,7 +179,8 @@ $(document).ready(function(){
                             }else{
                                 inspector = "N/A";
                             }
-                            reportData.push([{'text':d.created_at}, {'text':inspector}, {'text':route}, {'text':d.direction}, {'text':''+d.penalty_amount, 'alignment':'right'}, {'text':d.name_of_passenger}, {'text':d.stop.stop}, {'text':conductor}, {'text':remark}]);
+                            reportData.push([{'text':''+i}, {'text':d.created_at}, {'text':inspector}, {'text':route}, {'text':d.direction}, {'text':''+d.penalty_amount, 'alignment':'right'}, {'text':d.name_of_passenger}, {'text':d.stop.stop}, {'text':conductor}, {'text':remark}]);
+                            i++;
                         });                            
                     }
 
@@ -204,6 +202,7 @@ $(document).ready(function(){
         var depot_id = $('#depot_id').val();
         var route_id = $('#route_id').val();
         var fromDate = $('#from_date').val();
+        var inspector_id = $('#inspector_id').val();
         if(!fromDate)
         {
             return alert('Please enter from date.');
@@ -238,39 +237,6 @@ $(document).ready(function(){
         window.open(url,'_blank');
     });
 });
-function validateForm()
-    {
-        var fromDate = $('#from_date').val();
-        if(!fromDate)
-        {
-            alert('Please enter from date.');
-            return false;
-        }
-
-        var toDate = $('#to_date').val();
-        if(!toDate)
-        {
-            alert('Please enter to date.');
-            return false;
-        }
-
-        var splitFrom = fromDate.split('-');
-        var splitTo = toDate.split('-');
-
-        console.log(splitFrom)
-
-        //Create a date object from the arrays
-        fromDate = new Date(splitFrom[2], splitFrom[1]-1, splitFrom[0]);
-        toDate = new Date(splitTo[2], splitTo[1]-1, splitTo[0]);
-
-        if(fromDate > toDate)
-        {
-            alert('From Date must be smaller than or equal to To Date.');
-            return false;
-        }
-
-        return true;
-    }
 </script>
 @endpush
 

@@ -44,28 +44,9 @@ class TripCancellationController extends Controller
         $to_date = date('Y-m-d', strtotime($input['to_date']));
         $route_id = $input['route_id'];
     
-        $data = TripCancellation::with(['wayBill'=>function($query) use ($depot_id, $route_id){
-	        	if($depot_id)
-		        {
-	        		$query->where('depot_id', $depot_id);
-	        	}
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $route_id);
 
-	        	if($route_id)
-		        {
-	        		$query->where('route_id', $route_id);
-	        	}
-        }, 'wayBill.route', 'wayBill.duty', 'wayBill.shift', 'wayBill.vehicle', 'wayBill.conductor', 'stop:id,stop', 'reason:id,reason_description']);
-
-        if($from_date && $to_date)
-        {
-        	$data = $data->whereDate('created_at', '>=', $from_date)
-        				 ->whereDate('created_at', '<=', $to_date);
-        }
-                
-        $data = $data->orderBy('id', 'ASC')
-        			 ->paginate(10);
-
-        //return response()->json($data);
+        $data = $queryBuilder->paginate(10);
 
         return view('reports.etm.trip_cancellation.index', compact('data'));
     }
@@ -84,25 +65,7 @@ class TripCancellationController extends Controller
         $to_date = date('Y-m-d', strtotime($input['to_date']));
         $route_id = $input['route_id'];
     
-        $data = TripCancellation::with(['wayBill'=>function($query) use ($depot_id, $route_id){
-	        	if($depot_id)
-		        {
-	        		$query->where('depot_id', $depot_id);
-	        	}
-
-	        	if($route_id)
-		        {
-	        		$query->where('route_id', $route_id);
-	        	}
-        }, 'wayBill.route', 'wayBill.duty', 'wayBill.shift', 'wayBill.vehicle', 'wayBill.conductor', 'stop:id,stop', 'reason:id,reason_description']);
-
-        if($from_date && $to_date)
-        {
-        	$data = $data->whereDate('created_at', '>=', $from_date)
-        				 ->whereDate('created_at', '<=', $to_date);
-        }
-                
-        $reportData = $data->orderBy('id', 'ASC');
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $route_id);
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
     
@@ -118,7 +81,7 @@ class TripCancellationController extends Controller
             'From : '.date('d-m-Y', strtotime($from_date)).' To : '.date('d-m-Y', strtotime($to_date))
         ];   
 
-        $reportData = $data->get();      
+        $reportData = $queryBuilder->get();      
 
         //return $reportData;
 
@@ -132,26 +95,8 @@ class TripCancellationController extends Controller
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
         $route_id = $input['route_id'];
-    
-        $data = TripCancellation::with(['wayBill'=>function($query) use ($depot_id, $route_id){
-	        	if($depot_id)
-		        {
-	        		$query->where('depot_id', $depot_id);
-	        	}
 
-	        	if($route_id)
-		        {
-	        		$query->where('route_id', $route_id);
-	        	}
-        }, 'wayBill.route', 'wayBill.duty', 'wayBill.shift', 'wayBill.vehicle', 'wayBill.conductor', 'stop:id,stop', 'reason:id,reason_description']);
-
-        if($from_date && $to_date)
-        {
-        	$data = $data->whereDate('created_at', '>=', $from_date)
-        				 ->whereDate('created_at', '<=', $to_date);
-        }
-                
-        $data = $data->orderBy('id', 'ASC');
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $route_id);
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
         if($route_id)
@@ -174,7 +119,6 @@ class TripCancellationController extends Controller
             'From : '=> date('d-m-Y', strtotime($from_date)),
             'To : '=> date('d-m-Y', strtotime($to_date))
         ]; 
-
       
         $columns = [
                         'Time'=> function($row){
@@ -195,6 +139,9 @@ class TripCancellationController extends Controller
                         'Conductor' => function($row){
                             return $row->wayBill->conductor->crew_name.' ('.$row->wayBill->conductor->crew_name.')';
                         }, 
+                        'Trip No.' => function($row){
+                            return $row->trip_no;
+                        }, 
                         'Stop' => function($row){
                             return $row->stop ? $row->stop->stop : 'N/A';
                         }, 
@@ -202,7 +149,31 @@ class TripCancellationController extends Controller
                             return $row->reason->reason_description;
                         }];
 
-        return ExcelReport::of($title, $meta, $data, $columns)
+        return ExcelReport::of($title, $meta, $queryBuilder, $columns)
         					->download($title.'.xlsx');        
+    }
+
+    public function getQueryBuilder($depot_id, $from_date, $to_date, $route_id)
+    {
+        $queryBuilder = TripCancellation::whereHas('wayBill', function($query) use ($depot_id, $route_id){
+                if($depot_id)
+                {
+                    $query->where('depot_id', $depot_id);
+                }
+                if($route_id)
+                {
+                    $query->where('route_id', $route_id);
+                }
+            })->with(['wayBill.route', 'wayBill.duty', 'wayBill.shift', 'wayBill.vehicle', 'wayBill.conductor', 'stop:id,stop', 'reason:id,reason_description']);
+
+        if($from_date && $to_date)
+        {
+            $queryBuilder = $queryBuilder->whereDate('created_at', '>=', $from_date)
+                                         ->whereDate('created_at', '<=', $to_date);
+        }
+                
+        $queryBuilder = $queryBuilder->orderBy('id', 'ASC');
+
+        return $queryBuilder;
     }
 }
