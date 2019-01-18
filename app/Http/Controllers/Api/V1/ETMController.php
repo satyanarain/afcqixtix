@@ -66,7 +66,7 @@ class ETMController extends Controller
                         ->leftJoin('shift_start', 'etm_login_log.abstract_no', '=', 'shift_start.abstract_no')
                         ->leftJoin('etm_details', 'etm_login_log.etm_id', '=', 'etm_details.id')
                         ->leftJoin('depots', 'etm_details.depot_id', '=', 'depots.id')
-                        ->leftJoin('routes', 'shift_start.route_id', '=', 'routes.id')
+                        ->leftJoin('route_master', 'shift_start.route_id', '=', 'route_master.id')
                         ->leftJoin('duties', 'shift_start.duty_id', '=', 'duties.id')
                         ->leftJoin('shifts', 'shift_start.shift_id', '=', 'shifts.id')
                         ->leftJoin('vehicles', 'shift_start.vehicle_id', '=', 'vehicles.id')

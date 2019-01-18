@@ -369,8 +369,7 @@ $array= array('etm', 'revenue', 'ppt')
                     <a href="{{route('reports.ppt.crew_stock.index')}}">
                         <i class="fa fa-circle-o text-yellow"></i> Crew Stock
                     </a>
-                </li>
-                
+                </li>                
                 <li @if($segments_var[2]=='denomination_wise_stock_ledger') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.ppt.denomination_wise_stock_ledger.index')}}">
                         <i class="fa fa-circle-o text-yellow"></i> Denom-wise Stock Ledger
@@ -565,7 +564,7 @@ $array= array('etm', 'revenue', 'ppt')
     </span>
   </a>
   <ul @if($segments_var[1]=='health_status') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
-    <li @if($segments_var[1]=='inventory') class="active" @endif><a href="{{url('etm/health_status')}}"><i class="fa fa-medkit"></i>Health Status</a>
+    <li @if($segments_var[1]=='health_status') class="active" @endif><a href="{{url('etm/health_status')}}"><i class="fa fa-medkit"></i>Health Status</a>
     </li>   
     <li @if($segments_var[0]=='tripsheet') class="active" @endif><a href="{{route('tripsheet')}}"><i class="fa fa-tripadvisor"></i>Trip Sheet</a>
     </li>                    
