@@ -31,13 +31,15 @@
 
                 {!! Form::close() !!}
 
-                @if(isset($data) && isset($flag) && $flag == 1)
+                @if(isset($data))
                 <div class="row" style="margin-top: 50px;" id="reportDataBox">
                     <div class="col-md-12">
+                        @if(count($data) > 0)
                         <h4>
                             <button class="btn btn-primary pull-right" id="exportAsPDF">Export as PDF</button> 
                             <button class="btn btn-primary pull-right" style="margin-right: 10px;margin-bottom: 10px;" id="exportAsXLS">Export as XLS</button>
                         </h4>
+                        @endif
                         <table class="table" id="afcsReportTable">
                             <thead>
                                 <tr>
@@ -56,19 +58,21 @@
                             </thead>
                             <tbody>
                             @if(count($data) > 0)
+                            @foreach($data as $key=>$da)
                                 <tr>
-                                    <td>{{'1'}}</td>
-                                    <td>{{$data->conductor->crew_name}}</td>
-                                    <td>{{$data->route->route_name}}</td>
-                                    <td>{{$data->duty->duty_number}}</td>
-                                    <td>{{date('d-m-Y H:i:s', strtotime($data->etmLoginDetails->login_timestamp))}}</td>
-                                    <td>{{$data->etmLoginDetails->logout_timestamp ? date('d-m-Y H:i:s', strtotime($data->etmLoginDetails->logout_timestamp)) : ''}}</td>
-                                    <td>{{$dutyHours}}</td>
-                                    <td>{{$totalTicket}}</td>
+                                    <td>{{$key+1}}</td>
+                                    <td>{{$da->conductor->crew_name}}</td>
+                                    <td>{{$da->wayBill->route->route_name}}</td>
+                                    <td>{{$da->wayBill->duty->duty_number}}</td>
+                                    <td>{{date('d-m-Y H:i:s', strtotime($da->login_timestamp))}}</td>
+                                    <td>{{$da->logout_timestamp ? date('d-m-Y H:i:s', strtotime($da->logout_timestamp)) : ''}}</td>
+                                    <td>{{$da->dutyHours}}</td>
+                                    <td>{{$da->totalTicket}}</td>
                                     <td>{{'0'}}</td>
-                                    <td>{{$data->etmLoginDetails->battery_percentage}}</td>
-                                    <td>{{$data->etmLoginDetails->battery_percentage}}</td>
+                                    <td>{{$da->battery_percentage}}</td>
+                                    <td>{{$da->battery_percentage}}</td>
                                 </tr>
+                            @endforeach
                             @else
                                 <tr>
                                     <td class="text-center" colspan="12"><strong>No Record Found! &#9785</strong></td>
@@ -76,14 +80,11 @@
                             @endif
                             </tbody>
                         </table>
+                        <div class="pull-right">
+                            {{$data->appends(request()->input())->links()}}
+                        </div>
                     </div>
-                </div>
-                @elseif(isset($flag) && $flag == 0)
-                <table>
-                    <tr>
-                        <td class="text-center" colspan="12"><strong>No Record Found! &#9785</strong></td>
-                    </tr>
-                </table>                
+                </div>               
                 @endif
             </div>
             <!-- /.box-body -->
@@ -102,7 +103,8 @@ $(document).ready(function(){
     $(document).on('click', '#exportAsPDF', function(){
         var depot_id = $('#depot_id').val();
         var etm_no = $('#etm_no').val();
-        var date = $('#date').val();
+        var from_date = $('#from_date').val();
+        var to_date = $('#to_date').val();
 
         $.ajax({
             url: "{{route('reports.etm.activity_log.getpdfreport')}}",
@@ -110,7 +112,8 @@ $(document).ready(function(){
             dataType: "JSON",
             data: {
                 depot_id: depot_id,
-                date: date,
+                from_date: from_date,
+                to_date: to_date,
                 etm_no: etm_no
             },
             success: function(response)
@@ -118,50 +121,42 @@ $(document).ready(function(){
                 console.log(response);
                 if(response.status == 'Ok')
                 {
-                    var columns = response.columns
-                    var d = response.data;
-
+                    var data = response.data;
                     var reportData = [];
-                    if(d)
-                    {
-                        reportData.push([{'text':'Conductor Name', 'style': 'tableHeaderStyle'}, {'text':'Route', 'style': 'tableHeaderStyle'}, {'text':'Duty', 'style': 'tableHeaderStyle'}, {'text':'Login On', 'style': 'tableHeaderStyle'}, {'text':'Logout On', 'style': 'tableHeaderStyle'}, {'text':'Duty Hours', 'style': 'tableHeaderStyle'}, {'text':'Tkt + Pass', 'style': 'tableHeaderStyle'}, {'text':'Error Tkt Prntd.', 'style': 'tableHeaderStyle'}, {'text':'Battery Percentage On Login', 'style': 'tableHeaderStyle'}, {'text':'Battery Percentage On Logout', 'style': 'tableHeaderStyle'}]);
+                    
+                    reportData.push([{'text':'S. No.', 'style': 'tableHeaderStyle'}, {'text':'Conductor Name', 'style': 'tableHeaderStyle'}, {'text':'Route', 'style': 'tableHeaderStyle'}, {'text':'Duty', 'style': 'tableHeaderStyle'}, {'text':'Login On', 'style': 'tableHeaderStyle'}, {'text':'Logout On', 'style': 'tableHeaderStyle'}, {'text':'Duty Hours', 'style': 'tableHeaderStyle'}, {'text':'Tkt + Pass', 'style': 'tableHeaderStyle'}, {'text':'Error Tkt Prntd.', 'style': 'tableHeaderStyle'}, {'text':'Battery Percentage On Login', 'style': 'tableHeaderStyle'}, {'text':'Battery Percentage On Logout', 'style': 'tableHeaderStyle'}]);
                         
-                        
+                    $.each(data, function(index, d){  
                         var login_timestamp = "";
                         var logout_timestamp = "";
                         var battery_percentage_on_login = "";
                         var battery_percentage_on_logout = "";
-
-                        if(d.etm_login_details)
-                        {
-                            if(d.etm_login_details.login_timestamp)
-                            {
-                                login_timestamp = d.etm_login_details.login_timestamp; 
-                            }else {
-                                login_timestamp = "";
-                            }
-
-                            if(d.etm_login_details.logout_timestamp)
-                            {
-                                logout_timestamp = d.etm_login_details.logout_timestamp; 
-                            }else {
-                                logout_timestamp = "";
-                            }
-
-                            battery_percentage_on_login = d.etm_login_details.battery_percentage;
-                            battery_percentage_on_logout = d.etm_login_details.battery_percentage;
-                        }
                         
-                        reportData.push([{'text':''+d.conductor.crew_name}, {'text':d.route.route_name}, {'text':''+d.duty.duty_number}, {'text':''+login_timestamp}, {'text':''+logout_timestamp}, {'text':''+d.dutyHours}, {'text':''+d.totalTicket}, {'text':'0'}, {'text':''+battery_percentage_on_login}, {'text':''+battery_percentage_on_logout}]);
+                        if(d.login_timestamp)
+                        {
+                            login_timestamp = d.login_timestamp; 
+                        }else {
+                            login_timestamp = "";
+                        }
 
-                        var metaData = response.meta;
-                        var title = response.title;
-                        var takenBy = response.takenBy;
-                        var serverDate = response.serverDate;
-                        Export(metaData, title, reportData, takenBy, serverDate, '*', 'lightHorizontalLines');  
-                    }else{
-                        alert('No record found');
-                    }                  
+                        if(d.logout_timestamp)
+                        {
+                            logout_timestamp = d.logout_timestamp; 
+                        }else {
+                            logout_timestamp = "";
+                        }
+
+                        battery_percentage_on_login = d.battery_percentage;
+                        battery_percentage_on_logout = d.battery_percentage;
+                        
+                        reportData.push([{'text':''+(index+1)}, {'text':''+d.conductor.crew_name}, {'text':d.way_bill.route.route_name}, {'text':''+d.way_bill.duty.duty_number}, {'text':''+login_timestamp}, {'text':''+logout_timestamp}, {'text':''+d.dutyHours}, {'text':''+d.totalTicket}, {'text':'0'}, {'text':''+battery_percentage_on_login}, {'text':''+battery_percentage_on_logout}]);
+                    });
+
+                    var metaData = response.meta;
+                    var title = response.title;
+                    var takenBy = response.takenBy;
+                    var serverDate = response.serverDate;
+                    Export(metaData, title, reportData, takenBy, serverDate, '*', 'lightHorizontalLines');                 
                 }                
             },
             error: function(error)
@@ -169,6 +164,22 @@ $(document).ready(function(){
                 console.log(error);
             }
         })
+    });
+
+    $(document).on('click', '#exportAsXLS', function(){
+        var depot_id = $('#depot_id').val();
+        var etm_no = $('#etm_no').val();
+        var from_date = $('#from_date').val();
+        var to_date = $('#to_date').val();
+
+        var queryParams = "?depot_id="+depot_id
+                        + "&from_date="+from_date
+                        + "&to_date="+to_date
+                        + "&etm_no="+etm_no;
+
+        var url = "{{route('reports.etm.activity_log.getexcelreport')}}"+queryParams;
+
+        window.open(url,'_blank');
     });
 });
 </script>

@@ -72,11 +72,11 @@ class PendingActivityLogController extends Controller
         *meta data shoul be an array as below
         *['Depot : Balewadi', 'ETM No. : 1222', 'ETC.']
         */
-
+        $pending_activity_text = $pending_activity ? ucfirst($pending_activity_text) : 'All';
         $meta = [ // For displaying filters description on header
             'Depot : ' . $depotName,
             'From : '.date('d-m-Y', strtotime($from_date)).' To : '.date('d-m-Y', strtotime($to_date)),
-            'Pending Activity : '.ucfirst($pending_activity)
+            'Pending Activity : '.$pending_activity_text
         ];   
 
         $reportData = $getQueryBuilder->get();   
@@ -102,12 +102,12 @@ class PendingActivityLogController extends Controller
         *meta data shoul be an array as below
         *['Depot : Balewadi', 'ETM No. : 1222', 'ETC.']
         */
-
+        $pending_activity_text = $pending_activity ? ucfirst($pending_activity_text) : 'All';
         $meta = [ // For displaying filters description on header
             'Depot : ' => $depotName,
             'From : '=> date('d-m-Y', strtotime($from_date)),
             'To : '=> date('d-m-Y', strtotime($to_date)),
-            'Pending Activity : '=>ucfirst($pending_activity)
+            'Pending Activity : '=> $pending_activity_text
         ]; 
 
       

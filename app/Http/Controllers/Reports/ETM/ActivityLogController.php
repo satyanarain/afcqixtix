@@ -35,44 +35,34 @@ class ActivityLogController extends Controller
     {       
         $input = $request->all();
         $depot_id = $input['depot_id'];
-        $date = date('Y-m-d', strtotime($input['date']));
+        $from_date = date('Y-m-d', strtotime($input['from_date']));
+        $to_date = date('Y-m-d', strtotime($input['to_date']));
         $etm_no = $input['etm_no'];
 
-        $log = ETMLoginLog::where('etm_id', $etm_no)
-        					->whereDate('login_timestamp', $date)
-        					->first();
-        $flag = 0;
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $etm_no);
 
-       	if($log)
-       	{
-       		$abstract_no = $log->abstract_no;
-       		if($abstract_no)
-       		{
-       			$data = Waybill::with(['route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'depotHead:id,name', 'conductor:id,crew_name', 'vehicle:id,vehicle_registration_number', 'etmLoginDetails'])
-       					->where('abstract_no', $abstract_no)
-       					->first();
-       			//return $data;
-       			if($data->etmLoginDetails->login_timestamp)
-       			{
-       				$logoutSeconds = strtotime($data->etmLoginDetails->logout_timestamp);
-       			}else {
-       				$logoutSeconds = strtotime("now");
-       			}
-       			$loginSeconds = strtotime($data->etmLoginDetails->login_timestamp);
+        $data = $queryBuilder->paginate(10);
 
-       			$totalTicket = Ticket::where('abstract_id', $abstract_no)->count();
-       			//return;
-       			$dutyHours = (int)(($logoutSeconds - $loginSeconds) / 3600);
-       			$flag = 1;
-       			return view('reports.etm.activity_log.index', compact('data', 'flag', 'dutyHours', 'totalTicket'));
-       		}else{
-       			$flag = 0;
-       			return view('reports.etm.activity_log.index', compact('data', 'flag'));
-       		}
-       	}else {
-       		$flag = 0;
-       		return view('reports.etm.activity_log.index', compact('data', 'flag'));
-       	}
+        $data->getCollection()->transform(function($value)use($to_date){
+            if($value->logout_timestamp)
+            {
+                $logoutSeconds = strtotime($value->logout_timestamp);
+            }else {
+                $logoutSeconds = strtotime("now");
+            }
+            $loginSeconds = strtotime($value->login_timestamp);
+
+            $dutyHours = (int)(($logoutSeconds - $loginSeconds) / 3600);  
+
+            $value->dutyHours = $dutyHours;
+            $value->totalTicket = $value->wayBill->tickets->count();
+
+            return $value;
+        });
+
+        //return $data;
+        
+       	return view('reports.etm.activity_log.index', compact('data'));
     }
 
     /**
@@ -85,34 +75,13 @@ class ActivityLogController extends Controller
     {
         $input = $request->all();
         $depot_id = $input['depot_id'];
-        $date = date('Y-m-d', strtotime($input['date']));
+        $from_date = date('Y-m-d', strtotime($input['from_date']));
+        $to_date = date('Y-m-d', strtotime($input['to_date']));
         $etm_no = $input['etm_no'];
 
-        $data = Waybill::with(['etm:id,etm_no', 'route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'depotHead:id,name', 'conductor:id,crew_name', 'vehicle:id,vehicle_registration_number', 'etmLoginDetails'=>function($query){
-            $query->whereDate('login_timestamp', $date);
-        }]);
-        
-        $data = $data->first();
-        if($data)
-        {
-            if($data->etmLoginDetails->login_timestamp)
-            {
-                $logoutSeconds = strtotime($data->etmLoginDetails->logout_timestamp);
-            }else {
-                $logoutSeconds = strtotime("now");
-            }
-            $loginSeconds = strtotime($data->etmLoginDetails->login_timestamp);
-
-            $totalTicket = Ticket::where('abstract_id', $abstract_no)->count();
-            //return;
-            $dutyHours = (int)(($logoutSeconds - $loginSeconds) / 3600);  
-
-            $data->dutyHours = $dutyHours;
-            $data->totalTicket = $totalTicket;
-        }            
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $etm_no);   
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
-        $etmNo = $this->findNameById('etm_details', 'etm_no', $etm_no);
 
         $title = 'ETM Activity Log Report'; // Report title
 
@@ -124,10 +93,26 @@ class ActivityLogController extends Controller
         $meta = [ // For displaying filters description on header
             'Depot : ' . $depotName,
             'From : '.date('d-m-Y', strtotime($from_date)).' To : '.date('d-m-Y', strtotime($to_date)),
-            'ETM No. : '.$etmNo
+            'ETM No. : '.$etm_no
         ];   
 
-        $reportData = $data;   
+        $reportData = $queryBuilder->get();  
+
+        foreach ($reportData as $key => $value) 
+        {
+            if($value->logout_timestamp)
+            {
+                $logoutSeconds = strtotime($value->logout_timestamp);
+            }else {
+                $logoutSeconds = strtotime("now");
+            }
+            $loginSeconds = strtotime($value->login_timestamp);
+
+            $dutyHours = (int)(($logoutSeconds - $loginSeconds) / 3600);  
+
+            $value->dutyHours = $dutyHours;
+            $value->totalTicket = $value->wayBill->tickets->count();
+        } 
 
         return response()->json(['status'=>'Ok', 'title'=>$title, 'meta'=>$meta, 'data'=>$reportData, 'serverDate'=>date('d-m-Y H:i:s'), 'takenBy'=>Auth::user()->name], 200);
     }
@@ -136,34 +121,13 @@ class ActivityLogController extends Controller
     {
         $input = $request->all();
         $depot_id = $input['depot_id'];
-        $date = date('Y-m-d', strtotime($input['date']));
+        $from_date = date('Y-m-d', strtotime($input['from_date']));
+        $to_date = date('Y-m-d', strtotime($input['to_date']));
         $etm_no = $input['etm_no'];
 
-        $queryBuilder = Waybill::with(['etm:id,etm_no', 'route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'depotHead:id,name', 'conductor:id,crew_name', 'vehicle:id,vehicle_registration_number', 'etmLoginDetails'=>function($query){
-            $query->whereDate('login_timestamp', $date);
-        }]);
-        
-        $data = $queryBuilder->first();
-        if($data)
-        {
-            if($data->etmLoginDetails->login_timestamp)
-            {
-                $logoutSeconds = strtotime($data->etmLoginDetails->logout_timestamp);
-            }else {
-                $logoutSeconds = strtotime("now");
-            }
-            $loginSeconds = strtotime($data->etmLoginDetails->login_timestamp);
-
-            $totalTicket = Ticket::where('abstract_id', $abstract_no)->count();
-            //return;
-            $dutyHours = (int)(($logoutSeconds - $loginSeconds) / 3600);  
-
-            $data->dutyHours = $dutyHours;
-            $data->totalTicket = $totalTicket;
-        }
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $etm_no);   
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
-        $etmNo = $this->findNameById('etm_details', 'etm_no', $etm_no);
     
         $title = 'ETM Activity Log Report'; // Report title
 
@@ -175,7 +139,7 @@ class ActivityLogController extends Controller
         $meta = [ // For displaying filters description on header
             'Depot : ' => $depotName,
             'Date : '=> date('d-m-Y', strtotime($date)),
-            'ETM No. : '=>$etmNo
+            'ETM No. : '=>$etm_no
         ]; 
 
       
@@ -184,34 +148,61 @@ class ActivityLogController extends Controller
                             return $row->conductor->crew_name;
                         },
                         'Route'=> function($row){
-                            return $row->route->route_name;
+                            return $row->wayBill->route->route_name;
                         },
                         'Duty' => function($row){
-                            return $row->duty->duty_number;
+                            return $row->wayBill->duty->duty_number;
                         }, 
                         'Login On' => function($row){
-                            return $row->etmLoginDetails->login_timestamp;
+                            return $row->login_timestamp ? date('d-m-Y H:i:s', strtotime($row->login_timestamp)) : "";
                         }, 
                         'Logout On' => function($row){
-                            return $row->etmLoginDetails->logout_timestamp;
+                            return $row->logout_timestamp ? date('d-m-Y H:i:s', strtotime($row->logout_timestamp)) : "";
                         }, 
                         'Duty Hours' => function($row){
-                            return $row->dutyHours;
+                            if($row->logout_timestamp)
+                            {
+                                $logoutSeconds = strtotime($row->logout_timestamp);
+                            }else {
+                                $logoutSeconds = strtotime("now");
+                            }
+                            $loginSeconds = strtotime($row->login_timestamp);
+
+                            $dutyHours = (int)(($logoutSeconds - $loginSeconds) / 3600);
+
+                            return $dutyHours;  
                         }, 
                         'Tkt + Pass' => function($row){
-                            return $row->totalTicket;
+                            return $row->wayBill->tickets->count();
                         }, 
                         'Error Tkt Prntd' => function($row){
                             return '';
                         }, 
                         'Battery Percentage On Login' => function($row){
-                            return $row->etmLoginDetails->battery_percentage;
+                            return $row->battery_percentage;
                         }, 
                         'Battery Percentage On Logout' => function($row){
-                            return $row->etmLoginDetails->battery_percentage;
+                            return $row->battery_percentage;
                         }];
 
         return ExcelReport::of($title, $meta, $queryBuilder, $columns)
         					->download($title.'.xlsx');        
+    }
+
+
+    public function getQueryBuilder($depot_id, $from_date, $to_date, $etm_no)
+    {
+        $queryBuilder = ETMLoginLog::whereHas('wayBill', function($query) use ($depot_id){
+                            $query->where('depot_id', $depot_id);
+                        })->whereHas('etm', function($query) use ($etm_no){
+                            $query->where('etm_no', $etm_no);
+                        })->with(['conductor:id,crew_name,crew_id', 'etm:id,etm_no', 'wayBill.tickets', 'wayBill.route', 'wayBill.duty']);
+        if($from_date && $to_date)
+        {
+            $queryBuilder = $queryBuilder->whereDate('login_timestamp', '>=', $from_date)
+                                         ->whereDate('login_timestamp', '<=', $to_date);
+        }
+
+        return $queryBuilder;
     }
 }

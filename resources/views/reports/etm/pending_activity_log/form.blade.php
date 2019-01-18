@@ -2,7 +2,7 @@
     <div class="col-md-3">
         @php $depots_value=displayList('depots','name')@endphp
         {!! Form::label('depot_id', Lang::get('Depot'), ['class' => 'control-label']) !!}
-        {!! Form::select('depot_id',$depots_value,isset($depot->depot_id) ? $depot->depot_id : selected,['class' => ' form-control','required' => 'required','placeholder'=>"Select Depot"]) !!}
+        {!! Form::select('depot_id',$depots_value,isset($depot->depot_id) ? $depot->depot_id : selected,['class' => ' form-control','placeholder'=>"Select Depot"]) !!}
     </div>
     <div class="col-md-3">
         {!! Form::label('from_date', Lang::get('From Date'), ['class' => 'control-label']) !!}    
