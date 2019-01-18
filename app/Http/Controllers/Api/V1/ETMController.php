@@ -74,7 +74,7 @@ class ETMController extends Controller
 
         //return $statusData;
                             
-        $statusData = $statusData->select('etm_login_log.gprs_level', 'etm_login_log.battery_percentage', 'etm_login_log.etm_id', 'etm_login_log.abstract_no', 'conductor.crew_name as conductor_name', 'conductor.crew_id as conductor_id', 'conductor.mobile', 'driver.crew_name as driver_name', 'driver.crew_id as driver_id', 'routes.route', 'duties.duty_number', 'shifts.shift', 'vehicles.vehicle_registration_number', 'etm_login_log.login_timestamp', 'etm_login_log.logout_timestamp', 'shift_start.route_id', 'shift_start.duty_id', 'shift_start.shift_id', 'shift_start.vehicle_id', 'conductor.id as conductorId', 'driver.id as driverId')
+        $statusData = $statusData->select('etm_login_log.gprs_level', 'etm_login_log.battery_percentage', 'etm_login_log.etm_id', 'etm_login_log.abstract_no', 'conductor.crew_name as conductor_name', 'conductor.crew_id as conductor_id', 'conductor.mobile', 'driver.crew_name as driver_name', 'driver.crew_id as driver_id', 'route_master.route_name', 'duties.duty_number', 'shifts.shift', 'vehicles.vehicle_registration_number', 'etm_login_log.login_timestamp', 'etm_login_log.logout_timestamp', 'shift_start.route_id', 'shift_start.duty_id', 'shift_start.shift_id', 'shift_start.vehicle_id', 'conductor.id as conductorId', 'driver.id as driverId')
             ->whereDate('etm_login_log.login_timestamp', DB::raw('CURDATE()'))
             ->get();
 
@@ -190,7 +190,7 @@ class ETMController extends Controller
             $value->conductor_driver = $value->conductor_name." (".$value->conductor_id.")"." / ". $value->driver_name." (".$value->driver_id.")";
             $value->login_logout = $value->login_timestamp." / ". $value->logout_timestamp;
             $value->mobile = $value->mobile;
-            $value->route_duty_shift = $value->route."-".$value->duty_number."-".$value->shift;
+            $value->route_duty_shift = $value->route_name."-".$value->duty_number."-".$value->shift;
             $value->bus = $value->vehicle_registration_number;
 
             foreach ($parameters as $key => $pvalue) 
@@ -286,7 +286,7 @@ class ETMController extends Controller
                         ->leftJoin('shift_start', 'etm_login_log.abstract_no', '=', 'shift_start.abstract_no')
                         ->leftJoin('etm_details', 'etm_login_log.etm_id', '=', 'etm_details.id')
                         ->leftJoin('depots', 'etm_details.depot_id', '=', 'depots.id')
-                        ->leftJoin('routes', 'shift_start.route_id', '=', 'routes.id')
+                        ->leftJoin('route_master', 'shift_start.route_id', '=', 'route_master.id')
                         ->leftJoin('duties', 'shift_start.duty_id', '=', 'duties.id')
                         ->leftJoin('shifts', 'shift_start.shift_id', '=', 'shifts.id')
                         ->leftJoin('vehicles', 'shift_start.vehicle_id', '=', 'vehicles.id')
@@ -308,7 +308,7 @@ class ETMController extends Controller
             $statusData = $statusData->where('etm_details.depot_id', $depotId);
         }
                             
-        $statusData = $statusData->select('etm_login_log.gprs_level', 'etm_login_log.battery_percentage', 'etm_login_log.etm_id', 'etm_login_log.abstract_no', 'conductor.crew_name as conductor_name', 'conductor.crew_id as conductor_id', 'conductor.mobile', 'driver.crew_name as driver_name', 'driver.crew_id as driver_id', 'routes.route', 'duties.duty_number', 'shifts.shift', 'vehicles.vehicle_registration_number', 'etm_login_log.login_timestamp', 'etm_login_log.logout_timestamp', 'shift_start.route_id', 'shift_start.duty_id', 'shift_start.shift_id', 'shift_start.vehicle_id', 'conductor.id as conductorId', 'driver.id as driverId')
+        $statusData = $statusData->select('etm_login_log.gprs_level', 'etm_login_log.battery_percentage', 'etm_login_log.etm_id', 'etm_login_log.abstract_no', 'conductor.crew_name as conductor_name', 'conductor.crew_id as conductor_id', 'conductor.mobile', 'driver.crew_name as driver_name', 'driver.crew_id as driver_id', 'route_master.route_name', 'duties.duty_number', 'shifts.shift', 'vehicles.vehicle_registration_number', 'etm_login_log.login_timestamp', 'etm_login_log.logout_timestamp', 'shift_start.route_id', 'shift_start.duty_id', 'shift_start.shift_id', 'shift_start.vehicle_id', 'conductor.id as conductorId', 'driver.id as driverId')
             ->whereDate('etm_login_log.login_timestamp', DB::raw('CURDATE()'))
             ->get();
 
@@ -433,7 +433,7 @@ class ETMController extends Controller
             $value->conductor_driver = $value->conductor_name." (".$value->conductor_id.")"." / ". $value->driver_name." (".$value->driver_id.")";
             $value->login_logout = $value->login_timestamp." / ". $value->logout_timestamp;
             $value->mobile = $value->mobile;
-            $value->route_duty_shift = $value->route."-".$value->duty_number."-".$value->shift;
+            $value->route_duty_shift = $value->route_name."-".$value->duty_number."-".$value->shift;
             $value->bus = $value->vehicle_registration_number;
 
             foreach ($parameters as $key => $pvalue) 
