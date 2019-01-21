@@ -1,9 +1,9 @@
 @extends('layouts.master')
 @section('header')
-<h1>Denomination Wise Stock Ledger Report</h1>
+<h1>Denomination-wise Stock Ledger Report</h1>
 <ol class="breadcrumb">
             <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"></i>Denomination Wise Stock Ledger</a></li>
+            <li><a href="#"></i>Denomination-wise Stock Ledger</a></li>
             </ol>
 @stop
 @section('content')
@@ -12,7 +12,7 @@
         <div class="box box-default" style="min-height:0px;">
             <div class="box-header with-border">
                 <div class="col-md-12 col-sm-12 alert-danger cash-collection-error hide"></div>
-                <h3 class="box-title">Create Denomination Wise Stock Ledger</h3>
+                <h3 class="box-title">Select Parameters</h3>
                 <div class="box-tools pull-right">
                     <button class="slideout-menu-toggle btn btn-box-tool btn-box-tool-lg" data-toggle="tooltip" title="Help"><i class="fa fa-question"></i></button>
                 </div>
@@ -25,7 +25,7 @@
                 'class'=>'form-horizontal',
                 'autocomplete'=>'off',
                 'method'=> 'GET',
-                'onsubmit'=>'return validateForm();'
+                'onsubmit'=>'return validateForm("depot_id", "from_date", "to_date");'
                 ]) !!}
                 @include('reports.ppt.denomination_wise_stock_ledger.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 
@@ -34,10 +34,12 @@
                 @if(isset($data))
                 <div class="row" style="margin-top: 50px;" id="reportDataBox">
                     <div class="col-md-12">
+                        @if(count($data) > 0)
                         <h4>
                             <button class="btn btn-primary pull-right" id="exportAsPDF">Export as PDF</button> 
                             <button class="btn btn-primary pull-right" style="margin-right: 10px;margin-bottom: 10px;" id="exportAsXLS">Export as XLS</button>
                         </h4>
+                        @endif
                         <table class="table" id="afcsReportTable">
                             <thead>
                                 <tr>
@@ -77,17 +79,14 @@
                             @endforeach
                             @else
                                 <tr>
-                                    <td>No Record Found!</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td class="text-center" colspan="13"><strong>No Record Found! &#9785</strong></td>
                                 </tr>
                             @endif
                             </tbody>
                         </table>
-                        {{$data->appends(request()->input())->links()}}
+                        <div class="pull-right">
+                            {{$data->appends(request()->input())->links()}}
+                        </div>
                     </div>
                 </div>
                 @endif
@@ -153,13 +152,15 @@ $(document).ready(function(){
                 {
                     var data = response.data;
                     var reportData = [];
-                    reportData.push([{'text':'Ticket Type', 'style': 'tableHeaderStyle'}, {'text':'Denomination', 'style': 'tableHeaderStyle'}, {'text':'Date', 'style': 'tableHeaderStyle'}, {'text':'Challan No. / Receipt No.', 'style': 'tableHeaderStyle'}, {'text':'Series', 'style': 'tableHeaderStyle'}, {'text':'Opening Ticket No.', 'style': 'tableHeaderStyle'}, {'text':'Closing Ticket No.', 'style': 'tableHeaderStyle'}, {'text':'Ticket Count', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Ticket Value', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Transaction Type', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Balance Count', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Balance Value', 'style': 'tableHeaderStyle', 'alignment':'right'}]);
+                    reportData.push([{'text':'S. No.', 'style': 'tableHeaderStyle'}, {'text':'Ticket Type', 'style': 'tableHeaderStyle'}, {'text':'Denomination', 'style': 'tableHeaderStyle'}, {'text':'Date', 'style': 'tableHeaderStyle'}, {'text':'Challan No. / Receipt No.', 'style': 'tableHeaderStyle'}, {'text':'Series', 'style': 'tableHeaderStyle'}, {'text':'Opening Ticket No.', 'style': 'tableHeaderStyle'}, {'text':'Closing Ticket No.', 'style': 'tableHeaderStyle'}, {'text':'Ticket Count', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Ticket Value', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Transaction Type', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Balance Count', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Balance Value', 'style': 'tableHeaderStyle', 'alignment':'right'}]);
                             
                     if(data.length > 0)
                     {
+                        var i = 1;
                         data.map((d) => {
                             console.log(d);                                    
-                            reportData.push([{'text':d.item.name}, {'text':d.denomination.description}, {'text':d.transaction_date}, {'text':d.challan_no}, {'text':d.series}, {'text':''+d.start_sequence}, {'text':''+d.end_sequence}, {'text':''+d.item_quantity, 'alignment':'right'}, {'text':''+d.item_quantity*d.denomination.price, 'alignment':'right'}, {'text':d.transaction_type}, {'text':''+d.balance_quantity, 'alignment':'right'}, {'text':''+d.balance_quantity*d.denomination.price, 'alignment':'right'}]);
+                            reportData.push([{'text':''+i}, {'text':d.item.name}, {'text':d.denomination.description}, {'text':d.transaction_date}, {'text':d.challan_no}, {'text':d.series}, {'text':''+d.start_sequence}, {'text':''+d.end_sequence}, {'text':''+d.item_quantity, 'alignment':'right'}, {'text':''+d.item_quantity*d.denomination.price, 'alignment':'right'}, {'text':d.transaction_type}, {'text':''+d.balance_quantity, 'alignment':'right'}, {'text':''+d.balance_quantity*d.denomination.price, 'alignment':'right'}]);
+                            i++;
                         });
                     }
                     console.log(reportData);
@@ -167,7 +168,7 @@ $(document).ready(function(){
                     var title = response.title;
                     var takenBy = response.takenBy;
                     var serverDate = response.serverDate;
-                    Export(metaData, title, reportData, takenBy, serverDate, '*', 'lightHorizontalLines');                    
+                    Export(metaData, title, reportData, takenBy, serverDate, 'auto', 'lightHorizontalLines');                    
                 }                
             },
             error: function(error)
@@ -216,39 +217,6 @@ $(document).ready(function(){
         window.open(url,'_blank');
     });
 });
-function validateForm()
-    {
-        var fromDate = $('#from_date').val();
-        if(!fromDate)
-        {
-            alert('Please enter from date.');
-            return false;
-        }
-
-        var toDate = $('#to_date').val();
-        if(!toDate)
-        {
-            alert('Please enter to date.');
-            return false;
-        }
-
-        var splitFrom = fromDate.split('-');
-        var splitTo = toDate.split('-');
-
-        console.log(splitFrom)
-
-        //Create a date object from the arrays
-        fromDate = new Date(splitFrom[2], splitFrom[1]-1, splitFrom[0]);
-        toDate = new Date(splitTo[2], splitTo[1]-1, splitTo[0]);
-
-        if(fromDate > toDate)
-        {
-            alert('From Date must be smaller than or equal to To Date.');
-            return false;
-        }
-
-        return true;
-    }
 </script>
 @endpush
 

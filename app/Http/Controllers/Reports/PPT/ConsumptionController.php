@@ -44,28 +44,9 @@ class ConsumptionController extends Controller
         $denom_id = $input['denomination_id'];
         $report_type = $input['report_type'];
     
-        $data = AuditInventory::with(['denomination:id,description,price']);
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $denom_id);
 
-        if($depot_id)
-        {
-            $data = $data->where('depot_id', $depot_id);
-        }
-
-        if($denom_id)
-        {
-            $data = $data->where('denom_id', $denom_id);
-        } 
-
-        if($from_date && $to_date)
-        {
-        	$data = $data->whereDate('created_at', '>=', $from_date)
-        				 ->whereDate('created_at', '<=', $to_date);
-        }
-                
-        $data = $data->orderBy('denom_id', 'ASC')
-        			 ->paginate(10);
-
-        //return response()->json($data);
+        $data = $queryBuilder->paginate(10);
 
         return view('reports.ppt.consumption.index', compact('data'));
     }
@@ -258,5 +239,30 @@ class ConsumptionController extends Controller
         }
 
         
+    }
+
+    public function getQueryBuilder($depot_id, $from_date, $to_date, $denom_id)
+    {
+        $queryBuilder = AuditInventory::with(['denomination:id,description,price']);
+
+        if($depot_id)
+        {
+            $queryBuilder = $queryBuilder->where('depot_id', $depot_id);
+        }
+
+        if($denom_id)
+        {
+            $queryBuilder = $queryBuilder->where('denom_id', $denom_id);
+        } 
+
+        if($from_date && $to_date)
+        {
+            $queryBuilder = $queryBuilder->whereDate('created_at', '>=', $from_date)
+                                         ->whereDate('created_at', '<=', $to_date);
+        }
+                
+        $queryBuilder = $queryBuilder->orderBy('denom_id', 'ASC');
+
+        return $queryBuilder;
     }
 }

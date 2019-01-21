@@ -43,30 +43,11 @@ class ReceiptFromMainOfficeController extends Controller
         $to_date = date('Y-m-d', strtotime($input['to_date']));
         $denom_id = $input['denomination_id'];
         $orderBy = $input['order_by'];
-    
-        $data = DepotStock::with(['item:id,name', 'depotHead:id,name', 'denomination:id,description,price']);
-
-        if($depot_id)
-        {
-            $data = $data->where('depot_id', $depot_id);
-        }
-
-        if($denom_id)
-        {
-            $data = $data->where('denom_id', $denom_id);
-        } 
-
-        if($from_date && $to_date)
-        {
-        	$data = $data->whereDate('created_at', '>=', $from_date)
-        				 ->whereDate('created_at', '<=', $to_date);
-        }
-                
-        $data = $data->where('items_id', 1)
-        			->orderBy($orderBy, 'asc')
+        
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $denom_id);
+        
+        $data = $queryBuilder->orderBy($orderBy, 'asc')
                     ->paginate(10);
-
-        //return response()->json($data);
 
         return view('reports.ppt.receipt_from_main_office.index', compact('data'));
     }
@@ -85,6 +66,8 @@ class ReceiptFromMainOfficeController extends Controller
         $to_date = date('Y-m-d', strtotime($input['to_date']));
         $denom_id = $input['denomination_id'];
         $orderBy = $input['order_by'];
+        
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $denom_id);
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
         $conductorName = $this->findNameById('crew', 'crew_name', $conductor_id) ? $this->findNameById('crew', 'crew_name', $conductor_id) : 'All';
@@ -102,27 +85,8 @@ class ReceiptFromMainOfficeController extends Controller
             'Denomination : ' . $denomination,
             'From : '.date('d-m-Y', strtotime($from_date)).' To : '.date('d-m-Y', strtotime($to_date))
         ];   
-    
-        $data = DepotStock::with(['item:id,name', 'depotHead:id,name', 'denomination:id,description,price']);
-
-        if($depot_id)
-        {
-            $data = $data->where('depot_id', $depot_id);
-        }
-
-        if($denom_id)
-        {
-            $data = $data->where('denom_id', $denom_id);
-        } 
-
-        if($from_date && $to_date)
-        {
-        	$data = $data->whereDate('created_at', '>=', $from_date)
-        				 ->whereDate('created_at', '<=', $to_date);
-        }
                 
-        $data = $data->where('items_id', 1)
-        			->orderBy($orderBy, 'asc');
+        $data = $queryBuilder->orderBy($orderBy, 'asc');
 
         $reportData = [];
 
@@ -170,6 +134,8 @@ class ReceiptFromMainOfficeController extends Controller
         $to_date = date('Y-m-d', strtotime($input['to_date']));
         $denom_id = $input['denomination_id'];
         $orderBy = $input['order_by'];
+        
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $denom_id);
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
         $conductorName = $this->findNameById('crew', 'crew_name', $conductor_id) ? $this->findNameById('crew', 'crew_name', $conductor_id) : 'All';
@@ -188,27 +154,8 @@ class ReceiptFromMainOfficeController extends Controller
             'From : '=> date('d-m-Y', strtotime($from_date)),
             'To : '=> date('d-m-Y', strtotime($to_date))
         ];   
-    
-        $data = DepotStock::with(['item:id,name', 'depotHead:id,name', 'denomination:id,description,price']);
-
-        if($depot_id)
-        {
-            $data = $data->where('depot_id', $depot_id);
-        }
-
-        if($denom_id)
-        {
-            $data = $data->where('denom_id', $denom_id);
-        } 
-
-        if($from_date && $to_date)
-        {
-        	$data = $data->whereDate('created_at', '>=', $from_date)
-        				 ->whereDate('created_at', '<=', $to_date);
-        }
                 
-        $data = $data->where('items_id', 1)
-        			->orderBy($orderBy, 'asc');
+        $data = $queryBuilder->orderBy($orderBy, 'asc');
 
         $columns = [
                         'Ticket Type'=> function($row){
@@ -253,5 +200,30 @@ class ReceiptFromMainOfficeController extends Controller
                         'Ticket Value' => 'point',
                     ])->groupBy($groupBy)
                     ->download($title.'.xlsx');
+    }
+
+    public function getQueryBuilder($depot_id, $from_date, $to_date, $denom_id)
+    {
+        $queryBuilder = DepotStock::with(['item:id,name', 'depotHead:id,name', 'denomination:id,description,price']);
+
+        if($depot_id)
+        {
+            $queryBuilder = $queryBuilder->where('depot_id', $depot_id);
+        }
+
+        if($denom_id)
+        {
+            $queryBuilder = $queryBuilder->where('denom_id', $denom_id);
+        } 
+
+        if($from_date && $to_date)
+        {
+            $queryBuilder = $queryBuilder->whereDate('created_at', '>=', $from_date)
+                                         ->whereDate('created_at', '<=', $to_date);
+        }
+                
+        $queryBuilder = $queryBuilder->where('items_id', 1);
+
+        return $queryBuilder;
     }
 }

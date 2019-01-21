@@ -39,28 +39,13 @@ class DepotStockController extends Controller
     {       
         $input = $request->all();
         $depot_id = $input['depot_id'];
+        $from_date = date('Y-m-d', strtotime($input['from_date']));
+        $to_date = date('Y-m-d', strtotime($input['to_date']));
         $denom_id = $input['denomination_id'];
         $series = $input['series'];
     
-        $data = DepotSummary::with(['depot:id,name', 'denomination:id,description,price']);
-
-        if($depot_id)
-        {
-            $data = $data->where('depot_id', $depot_id);
-        }
-
-        if($denom_id)
-        {
-            $data = $data->where('denom_id', $denom_id);
-        }
-
-        if($series)
-        {
-            $data = $data->where('series', $series);
-        }        
-                
-        $data = $data->where('items_id', 1)
-                    ->paginate(10);
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $denom_id, $series);
+        $data = $queryBuilder->paginate(10);
 
         return view('reports.ppt.depot_stock.index', compact('data'));
     }
@@ -75,8 +60,12 @@ class DepotStockController extends Controller
     {
         $input = $request->all();
         $depot_id = $input['depot_id'];
+        $from_date = date('Y-m-d', strtotime($input['from_date']));
+        $to_date = date('Y-m-d', strtotime($input['to_date']));
         $denom_id = $input['denomination_id'];
         $series = $input['series'];
+    
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $denom_id, $series);
 
         $depotName =$this->findNameById('depots', 'name', $depot_id);
         $denomination =$this->findNameById('denominations', 'description', $denom_id);
@@ -85,26 +74,8 @@ class DepotStockController extends Controller
     
         $title = 'Ticket Section Stock'; // Report title  
     
-        $data = DepotSummary::with(['depot:id,name', 'denomination:id,description,price']);
-
-        if($depot_id)
-        {
-            $data = $data->where('depot_id', $depot_id);
-        }
-
-        if($denom_id)
-        {
-            $data = $data->where('denom_id', $denom_id);
-        }
-
-        if($series)
-        {
-            $data = $data->where('series', $series);
-        }
         
-                
-        $data = $data->where('items_id', 1)
-                    ->get();
+        $data = $queryBuilder->get();
 
         /*
         *meta data shoul be an array as below
@@ -145,33 +116,19 @@ class DepotStockController extends Controller
     {
         $input = $request->all();
         $depot_id = $input['depot_id'];
+        $from_date = date('Y-m-d', strtotime($input['from_date']));
+        $to_date = date('Y-m-d', strtotime($input['to_date']));
         $denom_id = $input['denomination_id'];
         $series = $input['series'];
+    
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $denom_id, $series);
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
         $denomination = $this->findNameById('denominations', 'description', $denom_id);
 
         $denomination = $denomination ? $denomination : 'All';
     
-        $title = 'Ticket Section Stock'; // Report title   
-    
-        $data = DepotSummary::with(['depot:id,name', 'denomination:id,description,price']);
-
-        if($depot_id)
-        {
-            $data = $data->where('depot_id', $depot_id);
-        }
-
-        if($denom_id)
-        {
-            $data = $data->where('denom_id', $denom_id);
-        }
-
-        if($series)
-        {
-            $data = $data->where('series', $series);
-        }
-
+        $title = 'Ticket Section Stock'; // Report title  
         
         /*
         *meta data shoul be an array as below
@@ -183,9 +140,6 @@ class DepotStockController extends Controller
             'Denomination : ' => $denomination,
             'Series : ' => $series
         ];
-        
-                
-        $data = $data->where('items_id', 1);
 
         $columns = [
                         'Ticket Type'=> function($row){
@@ -215,7 +169,7 @@ class DepotStockController extends Controller
 
         $title = 'Registered User Report'; // Report title
 
-        return ExcelReport::of($title, $meta, $data, $columns)
+        return ExcelReport::of($title, $meta, $queryBuilder, $columns)
                     ->editColumns(['Ticket Count', 'Ticket Value'], [
                         'class' => 'right bold',
                     ])->showTotal([
@@ -223,5 +177,35 @@ class DepotStockController extends Controller
                         'Ticket Value' => 'point',
                     ])
                     ->download($title.'.xlsx');
+    }
+
+    public function getQueryBuilder($depot_id, $from_date, $to_date, $denom_id, $series)
+    {
+        $queryBuilder = DepotSummary::with(['depot:id,name', 'denomination:id,description,price']);
+
+        if($depot_id)
+        {
+            $queryBuilder = $queryBuilder->where('depot_id', $depot_id);
+        }
+
+        if($from_date && $to_date)
+        {
+            $queryBuilder = $queryBuilder->whereDate('created_at', '>=', $from_date)
+                                         ->whereDate('created_at', '<=', $to_date);
+        }
+
+        if($denom_id)
+        {
+            $queryBuilder = $queryBuilder->where('denom_id', $denom_id);
+        }
+
+        if($series)
+        {
+            $queryBuilder = $queryBuilder->where('series', $series);
+        }        
+                
+        $queryBuilder = $queryBuilder->where('items_id', 1);
+
+        return $queryBuilder;
     }
 }

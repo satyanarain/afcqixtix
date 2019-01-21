@@ -45,34 +45,9 @@ class IssuesToTicketCrewController extends Controller
         $denom_id = $input['denomination_id'];
         $orderBy = $input['order_by'];
     
-        $data = CrewStock::with(['depot:id,name', 'item:id,name', 'conductor:id,crew_name,crew_id', 'denomination:id,description,price', 'issuedBy:id,name']);
-
-        if($depot_id)
-        {
-            $data = $data->where('depot_id', $depot_id);
-        }
-
-        if($denom_id)
-        {
-            $data = $data->where('denom_id', $denom_id);
-        } 
-
-        if($from_date && $to_date)
-        {
-        	$data = $data->whereDate('created_at', '>=', $from_date)
-        				 ->whereDate('created_at', '<=', $to_date);
-        }
-
-        if($conductor_id)
-        {
-        	$data = $data->where('crew_id', $conductor_id);
-        }
-                
-        $data = $data->where('items_id', 1)
-        			->orderBy($orderBy, 'asc')
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $denom_id, $conductor_id);
+        $data = $queryBuilder->orderBy($orderBy, 'asc')
                     ->paginate(10);
-
-        //return response()->json($data);
 
         return view('reports.ppt.issues_to_crew.index', compact('data'));
     }
@@ -93,30 +68,7 @@ class IssuesToTicketCrewController extends Controller
         $denom_id = $input['denomination_id'];
         $orderBy = $input['order_by'];
     
-        $data = CrewStock::with(['depot:id,name', 'item:id,name', 'conductor:id,crew_name,crew_id', 'denomination:id,description,price', 'issuedBy:id,name']);
-
-        if($depot_id)
-        {
-            $data = $data->where('depot_id', $depot_id);
-        }
-
-        if($denom_id)
-        {
-            $data = $data->where('denom_id', $denom_id);
-        } 
-
-        if($from_date && $to_date)
-        {
-        	$data = $data->whereDate('created_at', '>=', $from_date)
-        				 ->whereDate('created_at', '<=', $to_date);
-        }
-
-        if($conductor_id)
-        {
-        	$data = $data->where('crew_id', $conductor_id);
-        }
-
-        $data = $data->where('items_id', 1);
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $denom_id, $conductor_id);
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
         $conductorName = $this->findNameById('crew', 'crew_name', $conductor_id) ? $this->findNameById('crew', 'crew_name', $conductor_id) : 'All';
@@ -147,7 +99,7 @@ class IssuesToTicketCrewController extends Controller
 	        {
 	            foreach ($denominations as $key => $value) 
 	            {
-	                $queryBuilder = clone $data;
+	                $queryBuilder = clone $queryBuilder;
 	                $reportData[$value->denomination->description] = $queryBuilder->where('denom_id', $value->denom_id)
 	                                                ->get();
 	            }
@@ -161,15 +113,12 @@ class IssuesToTicketCrewController extends Controller
 	        {
 	            foreach ($dates as $key => $value) 
 	            {
-	                $queryBuilder = clone $data;
+	                $queryBuilder = clone $queryBuilder;
 	                $reportData[date('m/d/Y', strtotime($value->created_at))] = $queryBuilder->whereDate('created_at', date('Y-m-d', strtotime($value->created_at)))
 	                                                ->get();
 	            }
 	        }
         }
-        
-
-        //return $reportData;
 
         return response()->json(['status'=>'Ok', 'title'=>$title, 'meta'=>$meta, 'data'=>$reportData, 'serverDate'=>date('d-m-Y H:i:s'), 'takenBy'=>Auth::user()->name], 200);
     }
@@ -184,30 +133,7 @@ class IssuesToTicketCrewController extends Controller
         $denom_id = $input['denomination_id'];
         $orderBy = $input['order_by'];
     
-        $data = CrewStock::with(['depot:id,name', 'item:id,name', 'conductor:id,crew_name,crew_id', 'denomination:id,description,price', 'issuedBy:id,name']);
-
-        if($depot_id)
-        {
-            $data = $data->where('depot_id', $depot_id);
-        }
-
-        if($denom_id)
-        {
-            $data = $data->where('denom_id', $denom_id);
-        } 
-
-        if($from_date && $to_date)
-        {
-        	$data = $data->whereDate('created_at', '>=', $from_date)
-        				 ->whereDate('created_at', '<=', $to_date);
-        }
-
-        if($conductor_id)
-        {
-        	$data = $data->where('crew_id', $conductor_id);
-        }
-
-        $data = $data->where('items_id', 1)
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $denom_id, $conductor_id)
         			 ->orderBy($orderBy, 'ASC');
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
@@ -267,7 +193,7 @@ class IssuesToTicketCrewController extends Controller
         	$groupBy = 'Denomination';
         }
 
-        return ExcelReport::of($title, $meta, $data, $columns)
+        return ExcelReport::of($title, $meta, $queryBuilder, $columns)
                     ->editColumns(['Ticket Count', 'Ticket Value'], [
                         'class' => 'right bold',
                     ])->showTotal([
@@ -275,5 +201,35 @@ class IssuesToTicketCrewController extends Controller
                         'Ticket Value' => 'point',
                     ])->groupBy($groupBy)
                     ->download($title.'.xlsx');
+    }
+
+    public function getQueryBuilder($depot_id, $from_date, $to_date, $denom_id, $conductor_id)
+    {
+        $queryBuilder = CrewStock::with(['depot:id,name', 'item:id,name', 'conductor:id,crew_name,crew_id', 'denomination:id,description,price', 'issuedBy:id,name']);
+
+        if($depot_id)
+        {
+            $queryBuilder = $queryBuilder->where('depot_id', $depot_id);
+        }
+
+        if($denom_id)
+        {
+            $queryBuilder = $queryBuilder->where('denom_id', $denom_id);
+        } 
+
+        if($from_date && $to_date)
+        {
+            $queryBuilder = $queryBuilder->whereDate('created_at', '>=', $from_date)
+                                         ->whereDate('created_at', '<=', $to_date);
+        }
+
+        if($conductor_id)
+        {
+            $queryBuilder = $queryBuilder->where('crew_id', $conductor_id);
+        }
+                
+        $queryBuilder = $queryBuilder->where('items_id', 1);
+
+        return $queryBuilder;
     }
 }

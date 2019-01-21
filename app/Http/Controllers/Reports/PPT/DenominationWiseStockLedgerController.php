@@ -44,30 +44,9 @@ class DenominationWiseStockLedgerController extends Controller
         $ledger = $input['ledger'];
         $conductor_id = $input['conductor_id'];
     
-        $data = DepotStockLedger::with(['denomination:id,description,price', 'item:id,name']);
-
-        if($depot_id)
-        {
-            $data = $data->where('depot_id', $depot_id);
-        }
-
-        if($denom_id)
-        {
-            $data = $data->where('denom_id', $denom_id);
-        } 
-
-        if($from_date && $to_date)
-        {
-        	$data = $data->whereDate('created_at', '>=', $from_date)
-        				 ->whereDate('created_at', '<=', $to_date);
-        }
-                
-        $data = $data->orderBy('denom_id', 'ASC')
-        			 ->orderBy('created_at', 'ASC')
-        			 ->select('depot_id', 'denom_id', 'challan_no', 'series', 'start_sequence', 'end_sequence', 'item_quantity', 'balance_quantity', 'transaction_type', 'item_id', 'transaction_date')
-        			 ->paginate(10);
-
-        //return response()->json($data);
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $denom_id, $ledger, $conductor_id);
+        
+        $data = $queryBuilder->paginate(10);
 
         return view('reports.ppt.denomination_wise_stock_ledger.index', compact('data'));
     }
@@ -88,27 +67,7 @@ class DenominationWiseStockLedgerController extends Controller
         $ledger = $input['ledger'];
         $conductor_id = $input['conductor_id'];
     
-        $data = DepotStockLedger::with(['denomination:id,description,price', 'item:id,name']);
-
-        if($depot_id)
-        {
-            $data = $data->where('depot_id', $depot_id);
-        }
-
-        if($denom_id)
-        {
-            $data = $data->where('denom_id', $denom_id);
-        } 
-
-        if($from_date && $to_date)
-        {
-        	$data = $data->whereDate('created_at', '>=', $from_date)
-        				 ->whereDate('created_at', '<=', $to_date);
-        }
-                
-        $data = $data->orderBy('denom_id', 'ASC')
-        			 ->orderBy('created_at', 'ASC')
-        			 ->select('depot_id', 'denom_id', 'challan_no', 'series', 'start_sequence', 'end_sequence', 'item_quantity', 'balance_quantity', 'transaction_type', 'item_id', 'transaction_date');
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $denom_id, $ledger, $conductor_id);
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
         $conductorName = $this->findNameById('crew', 'crew_name', $conductor_id) ? $this->findNameById('crew', 'crew_name', $conductor_id) : 'All';
@@ -127,11 +86,7 @@ class DenominationWiseStockLedgerController extends Controller
             'From : '.date('d-m-Y', strtotime($from_date)).' To : '.date('d-m-Y', strtotime($to_date))
         ];   
 
-        $reportData = $data->get();
-
-            
-
-        //return $reportData;
+        $reportData = $queryBuilder->get();
 
         return response()->json(['status'=>'Ok', 'title'=>$title, 'meta'=>$meta, 'data'=>$reportData, 'serverDate'=>date('d-m-Y H:i:s'), 'takenBy'=>Auth::user()->name], 200);
     }
@@ -146,27 +101,7 @@ class DenominationWiseStockLedgerController extends Controller
         $ledger = $input['ledger'];
         $conductor_id = $input['conductor_id'];
     
-        $data = DepotStockLedger::with(['denomination:id,description,price', 'item:id,name']);
-
-        if($depot_id)
-        {
-            $data = $data->where('depot_id', $depot_id);
-        }
-
-        if($denom_id)
-        {
-            $data = $data->where('denom_id', $denom_id);
-        } 
-
-        if($from_date && $to_date)
-        {
-        	$data = $data->whereDate('created_at', '>=', $from_date)
-        				 ->whereDate('created_at', '<=', $to_date);
-        }
-                
-        $data = $data->orderBy('denom_id', 'ASC')
-        			 ->orderBy('created_at', 'ASC')
-        			 ->select('depot_id', 'denom_id', 'challan_no', 'series', 'start_sequence', 'end_sequence', 'item_quantity', 'balance_quantity', 'transaction_type', 'item_id', 'transaction_date');
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $denom_id, $ledger, $conductor_id);
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
         $conductorName = $this->findNameById('crew', 'crew_name', $conductor_id) ? $this->findNameById('crew', 'crew_name', $conductor_id) : 'All';
@@ -224,10 +159,37 @@ class DenominationWiseStockLedgerController extends Controller
                             return $row->balance_quantity * $row->denomination->price;
                         }];
 
-        	return ExcelReport::of($title, $meta, $data, $columns)
+        	return ExcelReport::of($title, $meta, $queryBuilder, $columns)
                     ->editColumns(['Ticket Count', 'Ticket Value', 'Balance Count', 'Balance Value'], [
                         'class' => 'right bold',
                     ])
                     ->download($title.'.xlsx');
+    }
+
+    public function getQueryBuilder($depot_id, $from_date, $to_date, $denom_id, $ledger, $conductor_id)
+    {
+        $queryBuilder = DepotStockLedger::with(['denomination:id,description,price', 'item:id,name']);
+
+        if($depot_id)
+        {
+            $queryBuilder = $queryBuilder->where('depot_id', $depot_id);
+        }
+
+        if($denom_id)
+        {
+            $queryBuilder = $queryBuilder->where('denom_id', $denom_id);
+        } 
+
+        if($from_date && $to_date)
+        {
+            $queryBuilder = $queryBuilder->whereDate('created_at', '>=', $from_date)
+                                            ->whereDate('created_at', '<=', $to_date);
+        }
+                
+        $queryBuilder = $queryBuilder->orderBy('denom_id', 'ASC')
+                     ->orderBy('created_at', 'ASC')
+                     ->select('depot_id', 'denom_id', 'challan_no', 'series', 'start_sequence', 'end_sequence', 'item_quantity', 'balance_quantity', 'transaction_type', 'item_id', 'transaction_date');
+
+        return $queryBuilder;
     }
 }

@@ -12,7 +12,7 @@
         <div class="box box-default" style="min-height:0px;">
             <div class="box-header with-border">
                 <div class="col-md-12 col-sm-12 alert-danger cash-collection-error hide"></div>
-                <h3 class="box-title">Create Crew Stock</h3>
+                <h3 class="box-title">Select Parameters</h3>
                 <div class="box-tools pull-right">
                     <button class="slideout-menu-toggle btn btn-box-tool btn-box-tool-lg" data-toggle="tooltip" title="Help"><i class="fa fa-question"></i></button>
                 </div>
@@ -24,7 +24,8 @@
                 'enctype' => 'multipart/form-data',
                 'class'=>'form-horizontal',
                 'autocomplete'=>'off',
-                'method'=> 'GET'
+                'method'=> 'GET',
+                'onsubmit'=>'return validateForm("depot_id", "from_date", "to_date");'
                 ]) !!}
                 @include('reports.ppt.crew_stock.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 
@@ -33,10 +34,12 @@
                 @if(isset($data))
                 <div class="row" style="margin-top: 50px;" id="reportDataBox">
                     <div class="col-md-12">
+                        @if(count($data) > 0)
                         <h4>
                             <button class="btn btn-primary pull-right" id="exportAsPDF">Export as PDF</button> 
                             <button class="btn btn-primary pull-right" style="margin-right: 10px;margin-bottom: 10px;" id="exportAsXLS">Export as XLS</button>
                         </h4>
+                        @endif
                         <table class="table" id="afcsReportTable">
                             <thead>
                                 <tr>
@@ -70,20 +73,14 @@
                             @endforeach
                             @else
                                 <tr>
-                                    <td>No Record Found!</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>o</td>
-                                    <td></td>
+                                    <td class="text-center" colspan="10"><strong>No Record Found! &#9785</strong></td>
                                 </tr>
                             @endif
                             </tbody>
                         </table>
-                        {{$data->appends(request()->input())->links()}}
+                        <div class="pull-right">
+                            {{$data->appends(request()->input())->links()}}
+                        </div>
                     </div>
                 </div>
                 @endif
@@ -103,6 +100,8 @@
 $(document).ready(function(){
     $(document).on('click', '#exportAsPDF', function(){
         var depot_id = $('#depot_id').val();
+        var from_date = $('#from_date').val();
+        var to_date = $('#to_date').val();
         var conductor_id = $('#conductor_id').val();
         var denom_id = $('#denomination_id').val();
         var series = $('#series').val();
@@ -113,6 +112,8 @@ $(document).ready(function(){
             dataType: "JSON",
             data: {
                 depot_id: depot_id,
+                from_date: from_date,
+                to_date: to_date,
                 conductor_id: conductor_id,
                 denomination_id: denom_id,
                 series: series
@@ -122,37 +123,26 @@ $(document).ready(function(){
                 console.log(response);
                 if(response.status == 'Ok')
                 {
-                    var columns = response.columns
                     var data = response.data;
                     var totalTicketCount = 0;
                     var totalTicketValue = 0;
                     var reportData = [];
                     reportData.push([{'text':'S. No.', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Ticket Type', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Conductor Name (ID)', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Denomination', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Series', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Opening Ticket No.', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Closing Ticket No.', 'bold':true, 'style': 'tableHeaderStyle'}, {'text':'Ticket Count', 'bold':true, 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Ticket Value', 'bold':true, 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Remarks', 'bold':true, 'style': 'tableHeaderStyle'}]);
-                    $.each(data, function(index, conductor) {
-                        console.log(conductor)
-                        conductor.map((d) => {
+
+                    data.map((d) => {
                             console.log(d);
                             totalTicketCount += parseInt(d.qty);
                             totalTicketValue += parseInt(d.qty*d.denomination.price);
                             reportData.push([{'text':'1'}, {'text':'Ticket'}, {'text':d.conductor.crew_name+' ('+d.conductor.crew_id+')'}, {'text':d.denomination.description}, {'text':d.series}, {'text':d.start_sequence?d.start_sequence:""}, {'text':d.end_sequence?d.end_sequence:""}, {'text':''+d.qty, 'alignment':'right'}, {'text':''+d.qty*d.denomination.price, 'alignment':'right'}, {'text': ''}]);
-                        });
-                        reportData.push([{'text':'Grand Total', 'bold':true, 'style': 'tableHeaderStyle', 'colSpan':7, 'alignment': 'right'}, {}, {}, {}, {}, {}, {}, {'text':''+totalTicketCount+'', 'bold':true, 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':''+totalTicketValue+'', 'bold':true, 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'', 'bold':true, 'style': 'tableHeaderStyle'}]);
-                    })
-
-                    console.log(reportData);
-
+                    });
                     
+                    reportData.push([{'text':'Grand Total', 'bold':true, 'style': 'tableHeaderStyle', 'colSpan':7, 'alignment': 'right'}, {}, {}, {}, {}, {}, {}, {'text':''+totalTicketCount+'', 'bold':true, 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':''+totalTicketValue+'', 'bold':true, 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'', 'bold':true, 'style': 'tableHeaderStyle'}]);
+
                     var metaData = response.meta;
                     var title = response.title;
                     var takenBy = response.takenBy;
                     var serverDate = response.serverDate;
-                    /*if(data.length > 0)
-                    {*/
-                        Export(metaData, title, reportData, takenBy, serverDate, '*', 'lightHorizontalLines');
-                    /*}else{
-                        return alert('No records to download!');
-                    }*/
-                    
+                    Export(metaData, title, reportData, takenBy, serverDate, '*', 'lightHorizontalLines');                    
                 }                
             },
             error: function(error)
@@ -164,11 +154,17 @@ $(document).ready(function(){
 
     $(document).on('click', '#exportAsXLS', function(){
         var depot_id = $('#depot_id').val();
+        var from_date = $('#from_date').val();
+        var to_date = $('#to_date').val();
+        var conductor_id = $('#conductor_id').val();
         var denom_id = $('#denomination_id').val();
         var series = $('#series').val();
 
         var queryParams = "?depot_id="+depot_id
                         + "&denomination_id="+denom_id
+                        + "&from_date="+from_date
+                        + "&to_date="+to_date
+                        + "&conductor_id="+conductor_id
                         + "&series="+series;
 
         var url = "{{route('reports.ppt.crew_stock.getexcelreport')}}"+queryParams;
