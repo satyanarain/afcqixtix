@@ -192,8 +192,12 @@ $(document).ready(function(){
                                 concession = '0.00';
                             }
                             totalAmt = d.childs_amt + d.adults_amt - concession;
-
-                            reportData.push([{'text':''+i}, {'text':fromStop}, {'text':toStop}, {'text':d.sold_at}, {'text':''+d.adults}, {'text':''+d.adults_amt, 'alignment':'right'}, {'text':''+d.childs}, {'text':''+d.childs_amt, 'alignment':'right'}, {'text':''+concession, 'alignment':'right'}, {'text':'0.00', 'alignment':'right'}, {'text':'0.00', 'alignment':'right'}, {'text':'0.00', 'alignment':'right'}, {'text':''+totalAmt, 'alignment':'right'}, {'text':cardNumber}]);
+                            if(i%2 == 0)
+                            {
+                                reportData.push([{'text':''+i, style:'oddRowStyle'}, {'text':fromStop, style:'oddRowStyle'}, {'text':toStop, style:'oddRowStyle'}, {'text':d.sold_at, style:'oddRowStyle'}, {'text':''+d.adults, style:'oddRowStyle'}, {'text':''+d.adults_amt, 'alignment':'right', style:'oddRowStyle'}, {'text':''+d.childs, style:'oddRowStyle'}, {'text':''+d.childs_amt, 'alignment':'right', style:'oddRowStyle'}, {'text':''+concession, 'alignment':'right', style:'oddRowStyle'}, {'text':'0.00', 'alignment':'right', style:'oddRowStyle'}, {'text':'0.00', 'alignment':'right', style:'oddRowStyle'}, {'text':'0.00', 'alignment':'right', style:'oddRowStyle'}, {'text':''+totalAmt, 'alignment':'right', style:'oddRowStyle'}, {'text':cardNumber, style:'oddRowStyle'}]);
+                            }else{
+                                reportData.push([{'text':''+i}, {'text':fromStop}, {'text':toStop}, {'text':d.sold_at}, {'text':''+d.adults}, {'text':''+d.adults_amt, 'alignment':'right'}, {'text':''+d.childs}, {'text':''+d.childs_amt, 'alignment':'right'}, {'text':''+concession, 'alignment':'right'}, {'text':'0.00', 'alignment':'right'}, {'text':'0.00', 'alignment':'right'}, {'text':'0.00', 'alignment':'right'}, {'text':''+totalAmt, 'alignment':'right'}, {'text':cardNumber}]);
+                            }
                             i++;
                         });                            
                     }
@@ -202,7 +206,7 @@ $(document).ready(function(){
                     var title = response.title;
                     var takenBy = response.takenBy;
                     var serverDate = response.serverDate;
-                    Export(metaData, title, reportData, takenBy, serverDate, 'auto', 'lightHorizontalLines');                    
+                    Export(metaData, title, reportData, takenBy, serverDate, 'auto', 'noBorders');                    
                 }                
             },
             error: function(error)
