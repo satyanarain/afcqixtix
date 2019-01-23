@@ -95,6 +95,11 @@ class Waybill extends Model
         return $this->hasMany(TripStart::class, 'abstract_no', 'abstract_no');
     }
 
+    public function shifts()
+    {
+        return $this->hasMany(ShiftStart::class, 'abstract_no', 'abstract_no');
+    }
+
     public function payouts()
     {
         return $this->hasMany(Payout::class, 'abstract_no', 'abstract_no');

@@ -404,7 +404,12 @@ Route::group(['middleware' => ['auth']], function () {
         });
 
         Route::group(['prefix'=>'revenue', 'namespace'=>'Revenue', 'as'=>'revenue.'], function(){
-      
+            /*bus_wise_earning*/
+            Route::resource('bus_wise_earning', 'BusWiseEarningController')->only('index'); 
+            Route::post('bus_wise_earning/getpdfreport', 'BusWiseEarningController@getPdfReport')->name('bus_wise_earning.getpdfreport');
+            Route::get('bus_wise_earning/getexcelreport', 'BusWiseEarningController@getExcelReport')->name('bus_wise_earning.getexcelreport');
+            Route::get('bus_wise_earning/displayData', 'BusWiseEarningController@displayData')->name('bus_wise_earning.displaydata');
+
             /*depot_wise_collection*/
             Route::resource('depot_wise_collection', 'DepotWiseCollectionController')->only('index'); 
             Route::post('depot_wise_collection/getpdfreport', 'DepotWiseCollectionController@getPdfReport')->name('depot_wise_collection.getpdfreport');
@@ -418,17 +423,6 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('route_wise_collection/displayData', 'RouteWiseCollectionController@displayData')->name('route_wise_collection.displaydata');
 
         });
-    });
-
-       
-        
-        
-        
-//    Route::namespace('Admin')
-//    ->prefix('admin')
-//    ->group(function () {
-//        Route::resource('users', 'UsersController');
-//    });
-    
+    });    
     
 });

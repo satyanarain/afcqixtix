@@ -76,7 +76,8 @@ class PassesValidatedDetailsController extends Controller
 
         $meta = [ // For displaying filters description on header
             'Depot : ' . $depotName,
-            'From : '.date('d-m-Y', strtotime($from_date)).' To : '.date('d-m-Y', strtotime($to_date)),
+            'From : '.date('d-m-Y', strtotime($from_date)),
+            'To : '.date('d-m-Y', strtotime($to_date)),
             'Service : '.$serviceName
         ];   
 

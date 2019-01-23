@@ -152,11 +152,11 @@ $(document).ready(function(){
                 {
                     var columns = response.columns
                     var data = response.data;
-
+                    var widths = [22, 'auto', 'auto', 75, 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'];
                     var reportData = [];
                     if(data.length > 0)
                     {
-                        reportData.push([{'text':'S. No.', 'style': 'tableHeaderStyle'}, {'text':'From Stop', 'style': 'tableHeaderStyle'}, {'text':'To Stop', 'style': 'tableHeaderStyle'}, {'text':'Date and Time', 'style': 'tableHeaderStyle'}, {'text':'Adult Count', 'style': 'tableHeaderStyle'}, {'text':'Adult Amt (Rs.)', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Child Count', 'style': 'tableHeaderStyle'}, {'text':'Child Amt (Rs.)', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Concession', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Pass', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Cash', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'E-Purse', 'style': 'tableHeaderStyle'}, {'text':'Total Amt (Rs.)', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Card Number', 'style': 'tableHeaderStyle'}]);
+                        reportData.push([{'text':'S. No.', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'From Stop', 'style': 'tableHeaderStyle'}, {'text':'To Stop', 'style': 'tableHeaderStyle'}, {'text':'Date and Time', 'style': 'tableHeaderStyle'}, {'text':'Adult Count', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Adult Amt (Rs.)', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Child Count', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Child Amt (Rs.)', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Concession', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Pass', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Cash', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'E-Purse', 'style': 'tableHeaderStyle'}, {'text':'Total Amt (Rs.)', 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'Card Number', 'style': 'tableHeaderStyle'}]);
                         
                         var i = 1;
                         data.map((d) => {
@@ -194,9 +194,9 @@ $(document).ready(function(){
                             totalAmt = d.childs_amt + d.adults_amt - concession;
                             if(i%2 == 0)
                             {
-                                reportData.push([{'text':''+i, style:'oddRowStyle'}, {'text':fromStop, style:'oddRowStyle'}, {'text':toStop, style:'oddRowStyle'}, {'text':d.sold_at, style:'oddRowStyle'}, {'text':''+d.adults, style:'oddRowStyle'}, {'text':''+d.adults_amt, 'alignment':'right', style:'oddRowStyle'}, {'text':''+d.childs, style:'oddRowStyle'}, {'text':''+d.childs_amt, 'alignment':'right', style:'oddRowStyle'}, {'text':''+concession, 'alignment':'right', style:'oddRowStyle'}, {'text':'0.00', 'alignment':'right', style:'oddRowStyle'}, {'text':'0.00', 'alignment':'right', style:'oddRowStyle'}, {'text':'0.00', 'alignment':'right', style:'oddRowStyle'}, {'text':''+totalAmt, 'alignment':'right', style:'oddRowStyle'}, {'text':cardNumber, style:'oddRowStyle'}]);
+                                reportData.push([{'text':''+i, style:'oddRowStyle', alignment:'right'}, {'text':fromStop, style:'oddRowStyle'}, {'text':toStop, style:'oddRowStyle'}, {'text':d.sold_at, style:'oddRowStyle'}, {'text':''+d.adults, style:'oddRowStyle', 'alignment':'right'}, {'text':''+parseFloat(d.adults_amt).toFixed(2), 'alignment':'right', style:'oddRowStyle'}, {'text':''+d.childs, style:'oddRowStyle', 'alignment':'right'}, {'text':''+parseFloat(d.childs_amt).toFixed(2), 'alignment':'right', style:'oddRowStyle'}, {'text':''+concession, 'alignment':'right', style:'oddRowStyle'}, {'text':'0.00', 'alignment':'right', style:'oddRowStyle'}, {'text':'0.00', 'alignment':'right', style:'oddRowStyle'}, {'text':'0.00', 'alignment':'right', style:'oddRowStyle'}, {'text':''+parseFloat(totalAmt).toFixed(2), 'alignment':'right', style:'oddRowStyle'}, {'text':cardNumber, style:'oddRowStyle'}]);
                             }else{
-                                reportData.push([{'text':''+i}, {'text':fromStop}, {'text':toStop}, {'text':d.sold_at}, {'text':''+d.adults}, {'text':''+d.adults_amt, 'alignment':'right'}, {'text':''+d.childs}, {'text':''+d.childs_amt, 'alignment':'right'}, {'text':''+concession, 'alignment':'right'}, {'text':'0.00', 'alignment':'right'}, {'text':'0.00', 'alignment':'right'}, {'text':'0.00', 'alignment':'right'}, {'text':''+totalAmt, 'alignment':'right'}, {'text':cardNumber}]);
+                                reportData.push([{'text':''+i, alignment:'right'}, {'text':fromStop}, {'text':toStop}, {'text':d.sold_at}, {'text':''+d.adults, 'alignment':'right'}, {'text':''+parseFloat(d.adults_amt).toFixed(2), 'alignment':'right'}, {'text':''+d.childs, 'alignment':'right'}, {'text':''+parseFloat(d.childs_amt).toFixed(2), 'alignment':'right'}, {'text':''+concession, 'alignment':'right'}, {'text':'0.00', 'alignment':'right'}, {'text':'0.00', 'alignment':'right'}, {'text':'0.00', 'alignment':'right'}, {'text':''+parseFloat(totalAmt).toFixed(2), 'alignment':'right'}, {'text':cardNumber}]);
                             }
                             i++;
                         });                            
@@ -206,7 +206,7 @@ $(document).ready(function(){
                     var title = response.title;
                     var takenBy = response.takenBy;
                     var serverDate = response.serverDate;
-                    Export(metaData, title, reportData, takenBy, serverDate, 'auto', 'noBorders');                    
+                    Export(metaData, title, reportData, takenBy, serverDate, widths, 'noBorders');                    
                 }                
             },
             error: function(error)

@@ -46,7 +46,7 @@
                                         },
                                         {
                                             table: {
-                                                widths: [8, '*', 8, '*', 8, '*', 8, '*', 8, '*'],
+                                                widths: [3, '*', 3, '*', 3, '*', 3, '*', 3, '*'],
                                                 body: [modifiedMetaData]
                                             },
                                             layout: 'noBorders',
@@ -110,7 +110,7 @@
                                 fillColor: '#367fa9',
                                 color: '#fff',
                                 bold: true,
-                                alignment: 'center'
+                                alignment: 'left'
                             },
                             topLogoStyle: {
                                 fillColor:'#253135',
@@ -134,7 +134,8 @@
                             paramateresTextStyle: {
                                 fontSize: 10,
                                 alignment: 'left',
-                                bold: true
+                                bold: true,
+                                marginTop: -2
                             },
                             checkBoxIconStyle: {
                                 alignment: 'left'
@@ -188,6 +189,10 @@ $(document).ready(function(){
         });
 
         $(document).on('change', '#pending_activity', function(){
+            clearReportData();
+        });
+
+        $(document).on('keyup', '#bus_no', function(){
             clearReportData();
         });
 });
