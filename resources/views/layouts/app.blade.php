@@ -418,23 +418,13 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="fa fa-circle-o color-cyan"></i> Cash Collection
                     </a>
                 </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
-                        <i class="fa fa-circle-o color-cyan"></i> Comparative Statement for Last Year
-                    </a>
-                </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
-                        <i class="fa fa-circle-o color-cyan"></i> Concession Ticket Collection
-                    </a>
-                </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
+                <li @if($segments_var[2]=='conductor_ledger') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.revenue.conductor_ledger.index')}}">
                         <i class="fa fa-circle-o color-cyan"></i> Conductor Ledger
                     </a>
                 </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
+                <li @if($segments_var[2]=='conductor_wise_earning') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.revenue.conductor_wise_earning.index')}}">
                         <i class="fa fa-circle-o color-cyan"></i> Conductor-wise Earning
                     </a>
                 </li>
@@ -541,6 +531,16 @@ $array= array('etm', 'revenue', 'ppt')
                 <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
                         <i class="fa fa-circle-o color-cyan"></i> Trip-wise Collection
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="fa fa-circle-o color-cyan"></i> Comparative Statement for Last Year
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="fa fa-circle-o color-cyan"></i> Concession Ticket Collection
                     </a>
                 </li>
             </ul>
