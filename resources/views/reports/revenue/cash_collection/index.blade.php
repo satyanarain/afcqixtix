@@ -132,7 +132,7 @@ $(document).ready(function(){
                     var data = response.data;
                     console.log(data)
                     var reportData = [];
-                    var widths = [13, "*", "*", "*", "*", "*", "*", "*", "*", "*"];
+                    var widths = [22, "*", "*", "*", "*", "*", "*", "*", "*", "*"];
                     reportData.push([{'text':'S. No.', 'style': 'tableHeaderStyle'}, {'text':'Collected By', 'style': 'tableHeaderStyle'}, {'text':'Route - Duty - Shift', 'style': 'tableHeaderStyle'}, {'text':'Abstract No.', 'style': 'tableHeaderStyle'}, {'text':'Challan No.', 'style': 'tableHeaderStyle'}, {'text':'Conductor Name (ID)', 'style': 'tableHeaderStyle'}, {'text':'Amt. Payable (Rs)', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Adjustment Amt. (Rs)', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Amt. Collected (Rs)', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Collected On', 'style': 'tableHeaderStyle'}]);
                     var i = 1;
                     $.each(data, function(ind, d){  
