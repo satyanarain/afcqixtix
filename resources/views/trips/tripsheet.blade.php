@@ -15,76 +15,61 @@
         
            <table class="table">
                <tr>
-                   <td style="width: 20%;">Depot</td>
-                   <td>
-                       <select id="depot_id" class="form-control w-50-percent">
+                   <td style="width: 33.33%;">
+                        <label for="depot_id">Depot</label>
+                        <select id="depot_id" class="form-control w-50-percent">
                             <option value="">Select</option>
                             @foreach($depots as $depot)
                                 <option value="{{$depot->id}}">{{ucfirst($depot->name)}}</option>
                             @endforeach
-                       </select>
+                        </select>
                    </td>
-               </tr>
-               <tr>
-                   <td>From Date</td>
-                   <td>
+                   <td style="width: 33.33%;">
+                      <label for="from_date">From</label>
                       <div class="input-group date w-50-percent">
-                          <div class="input-group-addon">
-                              <i class="fa fa-calendar"></i>
-                          </div>
                           <input type="text" id="from_date" value="{{date('Y-m-d 00:00')}}" class="form-control w-100-percent">
                       </div>
                    </td>
-               </tr>
-               <tr>
-                   <td>To Date</td>
-                   <td>
+                   <td style="width: 33.33%;">
+                        <label for="to_date">To</label>
                         <div class="input-group date w-50-percent">
-                          <div class="input-group-addon">
-                              <i class="fa fa-calendar"></i>
-                          </div>
                           <input type="text" id="to_date" value="{{date('Y-m-d H:i')}}" class="form-control w-100-percent">
                         </div>
                    </td>
                </tr>
-               <tr>
-                   <td>Route</td>
+               <tr>                   
                    <td>
-                       <select id="route" class="form-control w-50-percent">
+                        <label for="route">Route</label>
+                        <select id="route" class="form-control w-50-percent">
                            <option value="">Select</option>
                            @foreach($routes as $route)
                                 <option value="{{$route->id}}">{{$route->route_name}}</option>
                             @endforeach
-                       </select>
+                        </select>
                    </td>
-               </tr>
-               <tr>
-                   <td>Duty</td>
                    <td>
-                       <select id="duty" class="form-control w-50-percent">
+                        <label for="duty">Duty</label>
+                        <select id="duty" class="form-control w-50-percent">
                            <option value="">Select</option>
-                       </select>
+                        </select>
                    </td>
-               </tr>
-               <tr>
-                   <td>Login *</td>
                    <td>
-                       <select id="logins" class="form-control w-50-percent">
+                        <label for="logins">Login*</label>
+                        <select id="logins" class="form-control w-50-percent">
                            <option value="">Select</option>
-                       </select>
+                        </select>
                    </td>
                </tr>
                <tr>
-                   <td>Trip</td>
                    <td>
-                       <select id="trip" class="form-control w-50-percent">
+                        <label for="trip">Trip</label>
+                        <select id="trip" class="form-control w-50-percent">
                            <option value="">Select</option>
-                       </select>
+                        </select>
                    </td>
-               </tr>
-               <tr>
-                   <td>Ticket Types</td>
+
                    <td>
+                        <label for="">&nbsp;</label>
                         <div class="form-group" style="display: inline-block;margin-right: 40px;">
                           <input type="checkbox" checked id="ticket_types_normal" name="ticket_types">
                           <label for="ticket_types_normal">Normal</label>
@@ -100,17 +85,14 @@
                           <label for="ticket_types_fine">Fine</label>
                         </div>
                    </td>
-               </tr>
-               <tr>
+
                    <td>
-                   </td>
-                   <td>
-                        <button class="btn btn-success" id="viewTripSheetDetails">View</button>
+                     <button class="btn btn-success" id="viewTripSheetDetails">View</button>
                    </td>
                </tr>
              </table>
             <div class="box-body">
-              <table class="table table-striped table-bordered">
+              <table class="table table-striped table-bordered" id="example1">
                 <thead>
                   <tr>
                     <th>Trip No.</th>

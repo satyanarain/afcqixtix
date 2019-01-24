@@ -3,6 +3,7 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.39/vfs_fonts.js"></script>
 <script type="text/javascript">
     var mainLogoBase64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAE4AAABZCAYAAACQeRI+AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MTdCQkU3MzcxRTBCMTFFOTkxREI4QzE1MjFGNjM5RUIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MTdCQkU3MzgxRTBCMTFFOTkxREI4QzE1MjFGNjM5RUIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDoxN0JCRTczNTFFMEIxMUU5OTFEQjhDMTUyMUY2MzlFQiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoxN0JCRTczNjFFMEIxMUU5OTFEQjhDMTUyMUY2MzlFQiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PrlpxMkAAAJfSURBVHja7Ny/axNhHMfxe+6SNJcYUkFQk0MDkkiri1YculjFtosdHETBUv8BR0GXUulU6O7uj1JKoaJbq7Y4OZlNkHSxcNGlQ2tMor3cnTmhIg6SexLlwXt/hiQEnrt7Xvk+T56HhBO+72skfMQvcAiGcNuHA00SDjzggAMOOAIccArAkc4LCDjggAMOOOCAA04JuHPTi88PDpyfCN5x95pKXL2RMDXfc7W0VRLPRtSDiwWP/SeHJlK5E0p+/Pbao3vayNRcDzrb0+g/quxbU+GRI5S8OJ0pDTjggAOOANejxCLST0HFMVQjOFTb+9nGl63383o8cTxMO8/Z28oUBu/q8b5kJOF8x2lmi2fuy7Rt1T/f/h/gpIaqMAzpL5Vu2jLHAQccAQ444IAjwAEHHHDAEeCAAw444AhwwAEHHAEOOOCAA44ABxxwwAHXUXzPbcmesJu2KkXqv2oiFjd3K2/vCCNuhUJzHftAYdCMLJyRMFPZ0tA8Q5UABxxwwBHggAPuD2kAJ7dHs5SFM/rU3QUZyfQVZbdcO5Xymp4wx4LXXo/udOO1HC11pBB0vNvjVJWFy1+6Mf63TlDdWLqav3h9RXqkus6rSM5xbbSn7SexWylLHkFokYTbT7Z0VlRfLkyyHJGpvss3F4ISqn14B5xMMoVTwl59OAucRKzxWzNB9dXtTeBkkraKwn7x5DFwMtU3OjkVVN/X7Y/AySR5KCc+vV5+89tKDrhOcvTCteGg+vyfvyKK08CFWfYaMbFdXq+bh489UPL6VL6dbcYq9tfszZ1Odmb/eovxXYABANX4y8lpeJPvAAAAAElFTkSuQmCC';
+    
     var subLogoBase64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAjCAYAAACD1LrRAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OEI1RjY4NDUxRDZBMTFFOUE4RDFFN0U4QTI5OEY1QTYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OEI1RjY4NDYxRDZBMTFFOUE4RDFFN0U4QTI5OEY1QTYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo4QjVGNjg0MzFENkExMUU5QThEMUU3RThBMjk4RjVBNiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo4QjVGNjg0NDFENkExMUU5QThEMUU3RThBMjk4RjVBNiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Po45Ew4AAAM+SURBVHja1FdNTxNBGH5md3a7uy0ttFAKxLbiVzRqQoxHo/HixYshHvTgyaN/wP/gP/BuvKmJidGoiZGoxEQI8WACBCQIgqVAbWG77HZ9Z1qJSKGN/SC+yXS2+87MM+8zz7wzy3zPWQHjFnw3j1Ya491wC+PQMkNL86vgULRo2aEZaLVpVmhpoYjnH5YJuK3mh0fGFm67rmO3FXjLZXEw9b6pq7sjvjexLuuLiTLzb77bsr55JIgH04XtZ2FPvm4gxBVcTVl4/W0TM3kXh0McSSp/9usPlmEUBnAVKNLzLuCfro9b1PgFDSQG6TVU9BiK7Cx8lxMBTKw4eJ9xcPdsBNmih4fTeRTId40m8IgmMzwYxIrt4VhE2wb925RqwKLzhd6dWrPpvfBtUrnUb6KDM0ytb2GSSpwmJ+zdUlFOth7b1epG2sKZqC4HFTOmlZHvNz1f+s7HA/L/nVNhjC7bsIjq4UETH5eL0idqYaJvtDKhqrvLJ6uqP+EUdeWBVWtDPsaq96tmnlfC05cjKBTye2+n350Z2ycnsL371TIFB2QHBsx3rpmPouM2J0fRWKqqQNd4bWC7uIXxL3O0TgyKwhoCFmMleiI4nk7UBjYCGoZOppoYsVof1YxkKsDbvsa2Q5loZkluE8Yao1poJdYZQmogVhtY5xyDyThYEyIqEdUar5NqIaigqbef6k3bwefJeUmzwhpXdTwWxtFUb21gQU2yLyYTX4O4Mi+bhl5fxJyAe7sj7ae6SKqenvtRl6qFanuiHeiPdzYOrCoKusLW9p7ez1zPg2XozYlYUN33jxH8P6dTZi2fKSHQrfq2VLPIsYLmrkiw4YNiX+DFmbErOSRHGfM587doG5SPs3On09CV1l27lRDf+NSpLl4PmgYs05SHRDsOCr64nIXnLj62dWc2PnAizbmPUslrPbDrulJj2WyG2Z6G1KGUpLrlqiajHxWGYbG11SxmZ6ekuDjnLQATqViRAt4xesAwsJ5bxdzcDBKxIDSKXCSKplBLOcJxhHg9mahoRVnlIk66JsotK4hcLodnr96i4ZOiykVf101wXQd9gJQqmaRExaNPixLdDOkzkrdqnQmHMH4JMACysSImPJb8UwAAAABJRU5ErkJggg==';
 
     var printIconBase64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MDBGNkZGMzAxRDZCMTFFOTg2ODNDMUQ1N0Q0MjhDMUQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MDBGNkZGMzExRDZCMTFFOTg2ODNDMUQ1N0Q0MjhDMUQiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDowMEY2RkYyRTFENkIxMUU5ODY4M0MxRDU3RDQyOEMxRCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDowMEY2RkYyRjFENkIxMUU5ODY4M0MxRDU3RDQyOEMxRCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqaksRgAAAQ3SURBVHjahJRdbFRVFIW/PXNnOtOB/tCWlkKxFYQYCwJCMVTggYRgIGI0xCJo5IkIVV+JPy9qDPKgQYgGE3+igQRN8AEKNRpUYkQ0EkMBK0IoWqgFCm2HmenMtHNcc2cUXpCT7Htv7tl7nXX2XnvbnCpIZKG+FB5tMrwAxDwCMypZ3zCOlRPC3F/qUYdWcpS/r6Y50Z/iwPkhdvfEGZsYhT+GHb1x7Y+B5QFHRmF8GB5uMJZNYe3cibw+PsrdeRC0xxiFFZR5hc8bKc7/cImXT15jT2/SMTgCw/IN1onZlRQ4Ob0y37Y/2Mi2kiCVyMnpVNKybNHEHmeYAsNhKqdV83h1CVVfXuDQUEbbJsA85atC377I3lnWzPMkFaMrkFPwvfOgtgEmTRYzeV8aLrAMmc/c5FY1kYXhtNXs6uZgVjHBCSXQ3myrN7byNkMCS+e5RrGntmF192HRKqx0OrbmNWz2EujcV2AaMf9QE7MZU2lJJ+zErwN0B5dPwbYutKNekIjLXy8hm9cK9yyFg28pSBE9Z1WpkABXYk2NcKRTSPIrMT+/ptdDNaz4K2HbAqsbbW1JGRU+kP1rynxvF0ydi7U+jS1YATV34T5cpwomsS0fFXI7WvRXDSxG+ZJJrAuoym156s64ucbk6ansuSwuNYRzonHkY6xlAy6vjQVt2Mpn4LLz3f1YYcwo5wmvPsYs/7R8XnJy6Nd7oAcy8+F4BwzpO6BKfPUz7utO/4pu8DRWratriwrFxISozEgxs8xttIQ0U+qfNaRn82IxeQSaWnAdOwWW8PVgZbW4sTSWrcYpx1ZRhzv8Ofy4oyApgQo2eROw32HL18Cmz/jfNRr/iUB0sp+WYO4Sv32/wL2qHMcUH7akdyPD5XElrtFPcMtj3Gm5N1o32NJn2wWYdl0dH9gLnV3Uj8MG4iSMK97FJCdnltHoCzY1fEdAe/HYt3jRGJmks5a160nfKLSmang1xSnvzCB7Z9azyvI/I2W3UNGPK73F3r1FApGKGrKqQLRcIKUxSQAL5HwX9fVeb/+fbs+KBtsZirlyd+qwNNemJKsXO97UyaIdoaDc/3KowmVDMGcxTFsEF45rKiTJ5Bje1+N2BzWSXCJr3YtnW5ud/EU668cO78BdPotVVipYqs3cYjlZ6jruOymg/wz2xRb9S/D+GZ480sdpm1cNF6WMXUtt5+pmt5nfddtwcUyN3CaRgULOTIMEzY1v+uy9l466TfnJ5VXrShHd7JNu1z67ylxTE+1+PqUtV36bwlA8sEY9kODd/efc5vw8LZMFp6sOmsjUxSCetkPxEc7WxnggFKbCgoURhSsCiZmFCoM2mebCsT6e6xlk63XVaEC3CWnfc8U8a6j6U7vrGrs1wffWj2d9TYRVFWFmRYPU+m2QoT+epKsvSce5QT4dzDCq/iUULHRtfv0jwABo9ppeNmmlygAAAABJRU5ErkJggg==';
@@ -14,17 +15,14 @@
         function Export(metaData, reportName, data, takenBy, serverDate, widthType, layout) {
                     modifiedMetaData = [];
                     $.each(metaData, function(index, md){
-                        modifiedMetaData.push({ image: checkBoxIcon, style:'checkBoxIconStyle', width:8});
-                        modifiedMetaData.push({'text':md, style:'paramateresTextStyle'});
+                        modifiedMetaData.push([{ image: checkBoxIcon, style:'checkBoxIconStyle', width:8},{'text':md}])
                     })
-
-                    console.log(modifiedMetaData);
             
                     var docDefinition = {
                         watermark: {text: 'QixTix | Automated Fare Collection System', color: '#367fa9', opacity: 0.05, bold: true, italics: false, fontSize: 8},
                         pageSize: 'A4',
                         pageOrientation: 'landscape',
-                        pageMargins: [ 0, 120, 0, 20 ],
+                        pageMargins: [ 0, 110, 0, 20 ],
                         header: {
                             columns: [
                                 {
@@ -37,20 +35,22 @@
                                             layout: 'noBorders'
                                         },
                                         {
-                                            table: {
-                                                widths: '*',
-                                                body: [[{'text':reportName, style:'middleHeader'}]]
-                                            },
-                                            layout: 'noBorders',
-                                            margin: [0, 10, 0, 0]
-                                        },
-                                        {
-                                            table: {
-                                                widths: [3, '*', 3, '*', 3, '*', 3, '*', 3, '*'],
-                                                body: [modifiedMetaData]
-                                            },
-                                            layout: 'noBorders',
-                                            margin: [20, 15, 20, 0]
+                                            columns: [
+                                                { image: subLogoBase64, style:'middleLogoStyle', width:25},
+                                                { text: reportName, style:'reportNameTextStyle' },
+                                                { stack: [
+                                                        {
+                                                            table: {
+                                                                widths: '*',
+                                                                body: modifiedMetaData
+                                                            },
+                                                            layout: 'noBorders'
+                                                        }
+                                                    ], style: 'paramateresTextStyle'
+                                                }
+                                            ],
+                                            margin: [0, 10, 30, 0],
+                                            width: 'auto'
                                         }
                                     ],
                                     width: '*'
@@ -94,7 +94,7 @@
                             middleHeader: {
                                 fontSize: 12,
                                 alignment: 'center',
-                                marginTop: 8,
+                                marginBottom: 10,
                                 bold: true, 
                                 color: '#000'
                             },
@@ -110,7 +110,7 @@
                                 fillColor: '#367fa9',
                                 color: '#fff',
                                 bold: true,
-                                alignment: 'left'
+                                alignment: 'center'
                             },
                             topLogoStyle: {
                                 fillColor:'#253135',
@@ -118,7 +118,7 @@
                             },
                             middleLogoStyle: {
                                 fillColor:'#fff',
-                                marginLeft: -80
+                                marginLeft: 20
                             },
                             footerIconStyle: {
                                 marginRight: 20
@@ -132,13 +132,12 @@
                                 marginTop: 10
                             },
                             paramateresTextStyle: {
-                                fontSize: 10,
+                                fontSize: 8,
                                 alignment: 'left',
-                                bold: true,
-                                marginTop: -2
+                                marginRight: 0
                             },
                             checkBoxIconStyle: {
-                                alignment: 'left'
+                                alignment: 'right'
                             },
                             oddRowStyle: {
                                 fillColor: '#ebf2f3'
@@ -189,10 +188,6 @@ $(document).ready(function(){
         });
 
         $(document).on('change', '#pending_activity', function(){
-            clearReportData();
-        });
-
-        $(document).on('keyup', '#bus_no', function(){
             clearReportData();
         });
 });
