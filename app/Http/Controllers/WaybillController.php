@@ -345,6 +345,7 @@ class WaybillController extends Controller
                         'etm_no' => $_POST['etm_no'],'vehicle_id' => $_POST['vehicle_id'],
                         'bag_no' => $_POST['bag_no'],'waybill_no' => $_POST['waybill_no'],'portable_ups_issued' => $_POST['portable_ups_issued'],
                         'portable_ups_received' => $_POST['portable_ups_received'],'remarks' => $_POST['remarks']]);
+        $audited_by = Auth::id();
         foreach($_POST['itemstock'] as $stock_id=>$quantity)
         {
             if($quantity)
@@ -356,9 +357,10 @@ class WaybillController extends Controller
                     ->first();
                 $updated_quantity = $quantity-$stock_item_detail->start_sequence;
                 $sold_ticket_value = $updated_quantity*$stock_item_detail->price;
+                
                 //echo '<pre>';print_r($stock_item_detail);die;
                 $query = DB::table('audit_inventory')
-                    ->insertGetId(['inv_crew_stock_id'=>$stock_item_detail->id,'waybill_number'=>$_POST['abstract_no'],
+                    ->insertGetId(['audited_by'=>$audited_by,'inv_crew_stock_id'=>$stock_item_detail->id,'waybill_number'=>$_POST['abstract_no'],
                     'depot_id'=>$stock_item_detail->depot_id,'crew_id'=>$stock_item_detail->crew_id,'denom_id'=>$stock_item_detail->denom_id,
                     'series'=>$stock_item_detail->series,'start_sequence'=>$quantity,
                     'end_sequence'=>$stock_item_detail->end_sequence,'sold_ticket_value'=>$sold_ticket_value,'quantity'=>$quantity]);
@@ -368,7 +370,7 @@ class WaybillController extends Controller
 
         //echo '<pre>';print_r($stock_item_detail);die;
         $query = DB::table('audit_remittance')
-                    ->insertGetId(['depot_id'=>$_POST['depot_id'],'waybill_number'=>$_POST['abstract_no'],
+                    ->insertGetId(['audited_by'=>$audited_by,'depot_id'=>$_POST['depot_id'],'waybill_number'=>$_POST['abstract_no'],
                     'total_cash'=>$_POST['total_cash_value'],'total_payout'=>$_POST['total_payout_value'],'batta'=>$_POST['batta'],
                     'driver_incentive'=>$_POST['driver_incentive'],'conductor_incentive'=>$_POST['conductor_incentive'],
                     'tea_allowance'=>$_POST['tea_allowance'],'remarks'=>$_POST['remarks'],'payable_amount'=>$_POST['payable_amount_value']]);
@@ -529,10 +531,11 @@ class WaybillController extends Controller
     public function storecash(Request $request){
         if(!$this->checkActionPermission('cash_collections','edit'))
             return redirect()->route('401');
+        $collected_by = Auth::id();
         //echo '<pre>';print_r($request->all());die;
         if ($request->input('cash_remitted')){
             $query = DB::table('cash_collection')
-                    ->insertGetId(['abstract_no'=>$request['abstract_no'],'amount_payable'=>$request['amount_payable'],'cash_remitted'=>$request['cash_remitted'],'cash_challan_no'=>$request['cash_challan_no']]);
+                    ->insertGetId(['collected_by'=>$collected_by,'abstract_no'=>$request['abstract_no'],'amount_payable'=>$request['amount_payable'],'cash_remitted'=>$request['cash_remitted'],'cash_challan_no'=>$request['cash_challan_no']]);
         
             $query = DB::table('waybills')
             ->where('abstract_no', '=', $request['abstract_no'])

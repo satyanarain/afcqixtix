@@ -500,3 +500,11 @@ ul.menu{ height: auto !important;}
 .version-icon:hover{background: url('../images/version-hover.png') no-repeat;cursor: pointer; }
 .dataTables_empty{text-align: center;}
 #button .col-md-1{padding-left: 0px;}
+.columnsNameContainer{
+    display: none; 
+    width: 150px;
+    position: absolute;
+    z-index: 1; 
+    margin-left: 86%;
+    margin-top: 30px;
+    background-color: #999;}
