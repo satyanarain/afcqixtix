@@ -218,6 +218,7 @@ class RouteController extends Controller {
     public function update($route_master_id,$id, UpdateRouteRequest $request) {
         if(!$this->checkActionPermission('routes','edit'))
             return redirect()->route('401');
+        //echo '<pre>';print_r($request->all());
       $sql = Route::where([['route', $request->route], ['direction', $request->direction], ['id', '!=', $id]])->first();
         if (count($sql) > 0) {
             return redirect()->back()->withErrors(['This route and direction has already been taken.']);

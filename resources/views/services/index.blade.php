@@ -60,10 +60,10 @@
                                 if(in_array('view',$permission1)){?>
                                 <a href="<?php echo route('bus_types.services.fares.index',[$bus_type_id,$value->id])?>" title="Manage {{$value->name}} Fare"><span class="fa fa-inr"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
                                 <?php }?>
-                                <?php $permission1 = getAllModulePermission('concession_fare_slabs');
-                                if(in_array('view',$permission1)){?>
-                                <a href="<?php echo route('bus_types.services.concession_fare_slabs.index',[$bus_type_id,$value->id])?>" title="Manage {{$value->name}} Concessions Fare Slab"><span class="fa fa-inr"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                <?php }?>
+                                <?php //$permission1 = getAllModulePermission('concession_fare_slabs');
+                                //if(in_array('view',$permission1)){?>
+<!--                                <a href="<?php echo route('bus_types.services.concession_fare_slabs.index',[$bus_type_id,$value->id])?>" title="Manage {{$value->name}} Concessions Fare Slab"><span class="fa fa-inr"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;-->
+                                <?php //}?>
                                 <?php $permission1 = getAllModulePermission('concessions');
                                 if(in_array('view',$permission1)){?>
                                 <a href="<?php echo route('bus_types.services.concessions.index',[$bus_type_id,$value->id])?>" title="Manage {{$value->name}} Concession"><span class="fa fa-inr"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
