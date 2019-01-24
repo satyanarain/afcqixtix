@@ -413,8 +413,8 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="fa fa-circle-o color-cyan"></i> Bus-wise Earning
                     </a>
                 </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
+                <li @if($segments_var[2]=='cash_collection') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.revenue.cash_collection.index')}}">
                         <i class="fa fa-circle-o color-cyan"></i> Cash Collection
                     </a>
                 </li>

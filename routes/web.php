@@ -410,6 +410,12 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('bus_wise_earning/getexcelreport', 'BusWiseEarningController@getExcelReport')->name('bus_wise_earning.getexcelreport');
             Route::get('bus_wise_earning/displayData', 'BusWiseEarningController@displayData')->name('bus_wise_earning.displaydata');
 
+            /*cash_collection*/
+            Route::resource('cash_collection', 'CashCollectionController')->only('index'); 
+            Route::post('cash_collection/getpdfreport', 'CashCollectionController@getPdfReport')->name('cash_collection.getpdfreport');
+            Route::get('cash_collection/getexcelreport', 'CashCollectionController@getExcelReport')->name('cash_collection.getexcelreport');
+            Route::get('cash_collection/displayData', 'CashCollectionController@displayData')->name('cash_collection.displaydata');
+
             /*depot_wise_collection*/
             Route::resource('depot_wise_collection', 'DepotWiseCollectionController')->only('index'); 
             Route::post('depot_wise_collection/getpdfreport', 'DepotWiseCollectionController@getPdfReport')->name('depot_wise_collection.getpdfreport');
