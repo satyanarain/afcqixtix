@@ -43,22 +43,24 @@
                     <div class="col-md-12">
                         @if(count($data) > 0)
                         <h4>
+                            <button class="btn btn-primary pull-right" style="margin-left: 10px;margin-bottom: 10px;" id="columnsNameShowHideButton">Column Visibility</button>
                             <button class="btn btn-primary pull-right" id="exportAsPDF">Export as PDF</button> 
                             <button class="btn btn-primary pull-right" style="margin-right: 10px;margin-bottom: 10px;" id="exportAsXLS">Export as XLS</button>
                         </h4>
+                        <div class="columnsNameContainer"></div>
                         @endif
                         <table class="table" id="afcsReportTable">
                             <thead>
                                 <tr>
-                                    <th>S. No.</th>
-                                    <th>ETM No.</th>
-                                    <th>Login Time</th>
-                                    <th>Route-Duty-Shift</th>
-                                    <th>Logout Time</th>
-                                    <th>Conductor</th>
-                                    <th>Vehicle No.</th>
-                                    <th>Handed Over To</th>
-                                    <th>Audited</th>
+                                    <th class="hide_column1">S. No.</th>
+                                    <th class="hide_column2">ETM No.</th>
+                                    <th class="hide_column3">Login Time</th>
+                                    <th class="hide_column4">Route-Duty-Shift</th>
+                                    <th class="hide_column5">Logout Time</th>
+                                    <th class="hide_column6">Conductor</th>
+                                    <th class="hide_column7">Vehicle No.</th>
+                                    <th class="hide_column8">Handed Over To</th>
+                                    <th class="hide_column9">Audited</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -110,6 +112,19 @@
 @include('partials.report_script')
 <script type="text/javascript">
 $(document).ready(function(){
+    var $chk = $("#columnsNameContainer input:checkbox"); 
+    var $tbl = $("#afcsReportTable");
+    var $tblhead = $("#afcsReportTable th");
+    var html_table_data = "";  
+    var counter = 1;
+    $('#afcsReportTable thead>tr').each(function (){
+        $('th', this).each(function(){
+            html_table_data += '<p class="btn btn-primary" style="margin:1px 0px;"><input checked="checked" class="checkbox_hide" type="checkbox" name="hide_column'+counter+'" id="hide_column'+counter+'" value="'+counter+'" /><label for="hide_column'+counter+'">'+$(this).text()+'</label></p>';  
+            counter++;
+    });  
+    });  
+    $('.columnsNameContainer').html(html_table_data);
+    
     $(document).on('click', '#exportAsPDF', function(){
         var depot_id = $('#depot_id').val();
         var from_date = $('#from_date').val();
@@ -214,6 +229,15 @@ $(document).ready(function(){
             }
         })
     })*/
+    $('#columnsNameShowHideButton').click(function () {
+        $('.columnsNameContainer').toggle();
+    });   
+    $(document).on('click', '.checkbox_hide' , function() {
+        var colToHide = $tblhead.filter("." + $(this).attr("name"));
+        var index = $(colToHide).index();
+        $tbl.find('tr :nth-child(' + (index + 1) + ')').toggle();
+    })    
+    
 });
 </script>
 @endpush
