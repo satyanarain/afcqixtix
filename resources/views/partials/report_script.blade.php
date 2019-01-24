@@ -149,7 +149,7 @@
         }
 $(document).ready(function(){
         $(document).on('change', '#depot_id', function(){
-        clearReportData();
+            clearReportData();
         });
 
         $(document).on('change', '#from_date', function(){
@@ -157,14 +157,6 @@ $(document).ready(function(){
         });
 
         $(document).on('change', '#to_date', function(){
-            clearReportData();
-        });
-
-        $(document).on('change', '#date', function(){
-            clearReportData();
-        });
-
-        $(document).on('change', '#report_date', function(){
             clearReportData();
         });
 
@@ -193,6 +185,10 @@ $(document).ready(function(){
         });
 
         $(document).on('keyup', '#bus_no', function(){
+            clearReportData();
+        });
+
+        $(document).on('keyup', '#conductor_id', function(){
             clearReportData();
         });
 });

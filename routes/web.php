@@ -416,6 +416,18 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('cash_collection/getexcelreport', 'CashCollectionController@getExcelReport')->name('cash_collection.getexcelreport');
             Route::get('cash_collection/displayData', 'CashCollectionController@displayData')->name('cash_collection.displaydata');
 
+            /*conductor_ledger*/
+            Route::resource('conductor_ledger', 'ConductorLedgerController')->only('index'); 
+            Route::post('conductor_ledger/getpdfreport', 'ConductorLedgerController@getPdfReport')->name('conductor_ledger.getpdfreport');
+            Route::get('conductor_ledger/getexcelreport', 'ConductorLedgerController@getExcelReport')->name('conductor_ledger.getexcelreport');
+            Route::get('conductor_ledger/displayData', 'ConductorLedgerController@displayData')->name('conductor_ledger.displaydata');
+
+            /*conductor_wise_earning*/
+            Route::resource('conductor_wise_earning', 'ConductorWiseEarningController')->only('index'); 
+            Route::post('conductor_wise_earning/getpdfreport', 'ConductorWiseEarningController@getPdfReport')->name('conductor_wise_earning.getpdfreport');
+            Route::get('conductor_wise_earning/getexcelreport', 'ConductorWiseEarningController@getExcelReport')->name('conductor_wise_earning.getexcelreport');
+            Route::get('conductor_wise_earning/displayData', 'ConductorWiseEarningController@displayData')->name('conductor_wise_earning.displaydata');
+
             /*depot_wise_collection*/
             Route::resource('depot_wise_collection', 'DepotWiseCollectionController')->only('index'); 
             Route::post('depot_wise_collection/getpdfreport', 'DepotWiseCollectionController@getPdfReport')->name('depot_wise_collection.getpdfreport');
