@@ -434,6 +434,12 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('depot_wise_collection/getexcelreport', 'DepotWiseCollectionController@getExcelReport')->name('depot_wise_collection.getexcelreport');
             Route::get('depot_wise_collection/displayData', 'DepotWiseCollectionController@displayData')->name('depot_wise_collection.displaydata');
 
+            /*etm_wise_txn_count*/
+            Route::resource('etm_wise_txn_count', 'ETMWiseTxnCountController')->only('index'); 
+            Route::post('etm_wise_txn_count/getpdfreport', 'ETMWiseTxnCountController@getPdfReport')->name('etm_wise_txn_count.getpdfreport');
+            Route::get('etm_wise_txn_count/getexcelreport', 'ETMWiseTxnCountController@getExcelReport')->name('etm_wise_txn_count.getexcelreport');
+            Route::get('etm_wise_txn_count/displayData', 'ETMWiseTxnCountController@displayData')->name('etm_wise_txn_count.displaydata');
+
             /*route_wise_collection*/
             Route::resource('route_wise_collection', 'RouteWiseCollectionController')->only('index'); 
             Route::post('route_wise_collection/getpdfreport', 'RouteWiseCollectionController@getPdfReport')->name('route_wise_collection.getpdfreport');

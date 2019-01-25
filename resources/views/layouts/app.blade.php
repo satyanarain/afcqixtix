@@ -463,8 +463,8 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="fa fa-circle-o color-cyan"></i> Depot-wise Collection
                     </a>
                 </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
+                <li @if($segments_var[2]=='etm_wise_txn_count') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.revenue.etm_wise_txn_count.index')}}">
                         <i class="fa fa-circle-o color-cyan"></i> ETM-wise Transaction Count 
                     </a>
                 </li>

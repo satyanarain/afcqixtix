@@ -58,6 +58,7 @@ class ConductorWiseEarningController extends Controller
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
         $conductor_id = $input['conductor_id'];
+        $conductorId = $conductor_id ? $conductor_id : 'All';
     
         $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $conductor_id);
         $depotName = $this->findNameById('depots', 'name', $depot_id);
@@ -73,7 +74,7 @@ class ConductorWiseEarningController extends Controller
             'Depot : ' . $depotName,
             'From : '.date('d-m-Y', strtotime($from_date)),
             'To : '.date('d-m-Y', strtotime($to_date)),
-            'Conductor ID. : '.$conductor_id
+            'Conductor ID. : '.$conductorId
         ];   
 
         $reportData = $queryBuilder->get();  
@@ -88,6 +89,7 @@ class ConductorWiseEarningController extends Controller
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
         $conductor_id = $input['conductor_id'];
+        $conductorId = $conductor_id ? $conductor_id : 'All';
     
         $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $conductor_id);
 
@@ -101,7 +103,7 @@ class ConductorWiseEarningController extends Controller
 
         $meta = [ // For displaying filters description on header
             'Depot : ' => $depotName,
-            'Conductor ID. : ' => $conductor_id,
+            'Conductor ID. : ' => $conductorId,
             'From : '=> date('d-m-Y', strtotime($from_date)),
             'To : '=> date('d-m-Y', strtotime($to_date))
         ]; 
