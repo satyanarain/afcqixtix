@@ -205,6 +205,7 @@ class TripCancellationReasonController extends Controller {
         if(!$this->checkActionPermission('trip_cancellation_reasons','create'))
             return redirect()->route('401');
         $version_id = $this->getCurrentVersion();
+        //echo '<pre>';        print_r($_POST);die;
         $trip_cancellation_reasonsRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id]);
         $getInsertedId = $this->trip_cancellation_reasons->create($trip_cancellation_reasonsRequest);
         return redirect()->route('trip_cancellation_reasons.index');
@@ -252,14 +253,14 @@ class TripCancellationReasonController extends Controller {
         if(!$this->checkActionPermission('trip_cancellation_reasons','edit'))
             return redirect()->route('401');
         $trip_cancellation_reason_category_master_id = $request->trip_cancellation_reason_category_master_id;
-     $sql=TripCancellationReason::where([['trip_cancellation_reason_category_master_id',$trip_cancellation_reason_category_master_id],['id','!=',$id]])->first();
-     if(count($sql)>0)
-     {
-       return redirect()->back()->withErrors(['This trip cancellation reason has already been taken.']);
-      } else {
+     //$sql=TripCancellationReason::where([['trip_cancellation_reason_category_master_id',$trip_cancellation_reason_category_master_id],['id','!=',$id]])->first();
+//     if(count($sql)>0)
+//     {
+//       return redirect()->back()->withErrors(['This trip cancellation reason has already been taken.']);
+//      } else {
         $request->request->add(['approval_status'=>'p','flag'=> 'u']);   
           $this->trip_cancellation_reasons->update($id, $request);
         return redirect()->route('trip_cancellation_reasons.index');
-    }
+    //}
     }
 }

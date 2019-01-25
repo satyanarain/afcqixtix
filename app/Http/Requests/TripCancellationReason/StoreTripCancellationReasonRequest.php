@@ -26,7 +26,8 @@ class StoreTripCancellationReasonRequest extends Request
     public function rules()
     {
         return [
-                    'trip_cancellation_reason_category_master_id' => 'required|unique:trip_cancellation_reasons,trip_cancellation_reason_category_master_id'
+                    'short_reason' => 'required',
+                    'trip_cancellation_reason_category_master_id' => 'required'
                   
              ];
         
@@ -34,7 +35,8 @@ class StoreTripCancellationReasonRequest extends Request
     public function messages()
     {
         return [
-             'trip_cancellation_reason_category_master_id.unique' => 'The trip cancellation reason has already been taken..',
+             'short_reason.required' => 'The trip cancellation reason is required.',
+            'trip_cancellation_reason_category_master_id.required' => 'The trip cancellation reason category is required.',
                   
                   
              ];

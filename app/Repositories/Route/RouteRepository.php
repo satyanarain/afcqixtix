@@ -45,7 +45,7 @@ $routes_id = Route::create(['approval_status'=>'p','flag'=>'a','route_number'=>$
 
 $stop_id = $requestData->stop_id;
 $stage_number = $requestData->stage_number;
-$distance = $requestData->distance;
+$distance = max($requestData->distance);
 $hot_key = $requestData->hot_key;
 
 
@@ -87,7 +87,7 @@ $routes = $routes->fill($input)->save();
 
 $stop_id = $requestData->stop_id;
 $stage_number = $requestData->stage_number;
-$distance = $requestData->distance;
+$distance = max($requestData->distance);
 $hot_key = $requestData->hot_key;
 
 $delete=DB::table('route_details')->where('route_id',$id)->get();
