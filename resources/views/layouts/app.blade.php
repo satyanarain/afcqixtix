@@ -473,8 +473,8 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="fa fa-circle-o color-cyan"></i> Pass Sold
                     </a>
                 </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
+                <li @if($segments_var[2]=='passenger_profiling_stop_wise') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.revenue.passenger_profiling_stop_wise.index')}}">
                         <i class="fa fa-circle-o color-cyan"></i> Passenger Profiling Bus Stop wise
                     </a>
                 </li>
@@ -483,8 +483,8 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="fa fa-circle-o color-cyan"></i> Passesnger Profiling Origin-Dest Stop wise
                     </a>
                 </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
+                <li @if($segments_var[2]=='passenger_profiling_route_wise') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.revenue.passenger_profiling_route_wise.index')}}">
                         <i class="fa fa-circle-o color-cyan"></i> Passenger Profiling Route wise
                     </a>
                 </li>

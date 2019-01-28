@@ -440,6 +440,18 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('etm_wise_txn_count/getexcelreport', 'ETMWiseTxnCountController@getExcelReport')->name('etm_wise_txn_count.getexcelreport');
             Route::get('etm_wise_txn_count/displayData', 'ETMWiseTxnCountController@displayData')->name('etm_wise_txn_count.displaydata');
 
+            /*passenger_profiling_stop_wise*/
+            Route::resource('passenger_profiling_stop_wise', 'PassengerProfilingStopWiseController')->only('index'); 
+            Route::post('passenger_profiling_stop_wise/getpdfreport', 'PassengerProfilingStopWiseController@getPdfReport')->name('passenger_profiling_stop_wise.getpdfreport');
+            Route::get('passenger_profiling_stop_wise/getexcelreport', 'PassengerProfilingStopWiseController@getExcelReport')->name('passenger_profiling_stop_wise.getexcelreport');
+            Route::get('passenger_profiling_stop_wise/displayData', 'PassengerProfilingStopWiseController@displayData')->name('passenger_profiling_stop_wise.displaydata');
+
+            /*passenger_profiling_stop_wise*/
+            Route::resource('passenger_profiling_route_wise', 'PassengerProfilingRouteWiseController')->only('index'); 
+            Route::post('passenger_profiling_route_wise/getpdfreport', 'PassengerProfilingRouteWiseController@getPdfReport')->name('passenger_profiling_route_wise.getpdfreport');
+            Route::get('passenger_profiling_route_wise/getexcelreport', 'PassengerProfilingRouteWiseController@getExcelReport')->name('passenger_profiling_route_wise.getexcelreport');
+            Route::get('passenger_profiling_route_wise/displayData', 'PassengerProfilingRouteWiseController@displayData')->name('passenger_profiling_route_wise.displaydata');
+
             /*route_wise_collection*/
             Route::resource('route_wise_collection', 'RouteWiseCollectionController')->only('index'); 
             Route::post('route_wise_collection/getpdfreport', 'RouteWiseCollectionController@getPdfReport')->name('route_wise_collection.getpdfreport');

@@ -40,6 +40,11 @@ class Waybill extends Model
         return $this->belongsTo(RouteMaster::class, 'route_id', 'id');
     }
 
+    public function routeNotMaster()
+    {
+        return $this->belongsTo(Route::class, 'route_id', 'id');
+    }
+
     public function duty()
     {
         return $this->belongsTo(Duty::class, 'duty_id', 'id');
