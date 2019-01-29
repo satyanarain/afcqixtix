@@ -1,9 +1,9 @@
 @extends('layouts.master')
 @section('header')
-<h1>Passenger Profiling Route-wise Report</h1>
+<h1>Passenger Profiling Origin Destination Stop-wise Report</h1>
 <ol class="breadcrumb">
             <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"></i>Passenger Profiling Route-wise</a></li>
+            <li><a href="#"></i>Passenger Profiling Origin Destination Stop-wise</a></li>
 </ol>
 @stop
 @section('content')
@@ -19,7 +19,7 @@
             </div><!-- /.box-header -->
             <div class="box-body">
                 {!! Form::open([
-                'route' => 'reports.revenue.passenger_profiling_route_wise.displaydata',
+                'route' => 'reports.revenue.passenger_profiling_origin_dest_stop_wise.displaydata',
                 'files'=>true,
                 'enctype' => 'multipart/form-data',
                 'class'=>'form-horizontal',
@@ -27,7 +27,7 @@
                 'method'=> 'GET',
                 'onsubmit'=>'return validateForm("", "from_date", "to_date", "", "time_slot", "direction");'
                 ]) !!}
-                @include('reports.revenue.passenger_profiling_route_wise.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
+                @include('reports.revenue.passenger_profiling_origin_dest_stop_wise.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 
                 {!! Form::close() !!}
                 @if(isset($stops))
@@ -43,7 +43,8 @@
                             <thead>
                                 <tr>
                                     <th>S. No.</th>
-                                    <th>Stop</th>
+                                    <th>Origin Stop</th>
+                                    <th>Destination Stop</th>
                                     @foreach($slots as $key=>$slot)
                                     <th class="text-right">{{substr($slot, 11, 5)}}</th>
                                     @endforeach
@@ -52,18 +53,25 @@
                             </thead>
                             <tbody>
                             @if(count($stops) > 0)
-                            @foreach($stops as $key=>$stop)
+                            @foreach($stops as $keyo=>$stop)
+                            @php $destinations = $stop->destinations;@endphp
+                            @foreach($destinations as $keyi=>$destination)
                                 <tr>
-                                    <td>{{$key+1}}</td>
+                                    <td>{{$keyo+1}}</td>
                                     <td>{{$stop->short_name}}</td>
+                                    <td>{{$destination->toStop->short_name}}</td>
                                     @php $totalCount = 0;@endphp
                                     @foreach($slots as $key=>$slot)
-                                    @php $count = $stop->$slot;@endphp
+                                    @php
+                                        $prop = $slot.$destination->toStop->short_name; 
+                                        $count = $stop->$prop;
+                                    @endphp
                                     <td class="text-right">{{$count}}</td>
                                     @php $totalCount += (int)$count; @endphp
                                     @endforeach
                                     <td class="text-right">{{$totalCount}}</td>
                                 </tr>
+                            @endforeach
                             @endforeach
                             @else
                                 <tr>
@@ -113,7 +121,7 @@ $(document).ready(function(){
         var route_id = $('#route_id').val();        
 
         $.ajax({
-            url: "{{route('reports.revenue.passenger_profiling_route_wise.getpdfreport')}}",
+            url: "{{route('reports.revenue.passenger_profiling_origin_dest_stop_wise.getpdfreport')}}",
             type: "POST",
             dataType: "JSON",
             data: {
@@ -132,9 +140,10 @@ $(document).ready(function(){
                     console.log(stops)
                     var reportData = [];
                     var headerColumns = [];
-                    var widths = [22, 100];
+                    var widths = [22, 100, 100];
                     headerColumns.push({'text':'S. No.', 'style': 'tableHeaderStyle'});
-                    headerColumns.push({'text':'Stop', 'style': 'tableHeaderStyle'});
+                    headerColumns.push({'text':'Origin Stop', 'style': 'tableHeaderStyle'});
+                    headerColumns.push({'text':'Destination Stop', 'style': 'tableHeaderStyle'});
                     slots.map(function(s){
                         headerColumns.push({'text':s.substr(10, 6), 'style': 'tableHeaderStyle', alignment:'right'});
                         widths.push("*");
@@ -142,34 +151,45 @@ $(document).ready(function(){
                     headerColumns.push({'text':'Total', 'style': 'tableHeaderStyle', alignment:'right'});
                     widths.push("*");
                     reportData.push(headerColumns);
-                    var i = 1;
+
                     $.each(stops, function(ind, stop){  
-                        var rowColumns = [];
-                        if(i%2 == 0)
+                        console.log("Stop"+stop);
+                        var destinations = stop.destinations;
+                        if(destinations)
                         {
-                            rowColumns.push({'text':''+i, style:'oddRowStyle'});
-                            rowColumns.push({'text':stop.short_name, style:'oddRowStyle'});
-                            var totalCount = 0;
-                            slots.map(function(s){
-                                rowColumns.push({'text':''+stop[s], style:'oddRowStyle', alignment:'right'});
-                                totalCount += parseInt(stop[s]);
-                            })
-                            rowColumns.push({'text':''+totalCount, style:'oddRowStyle', alignment:'right'});
+                            var i = 1;
+                            destinations.map(function(destination){
+                            
+                                var rowColumns = [];
+                                if(i%2 == 0)
+                                {
+                                    rowColumns.push({'text':''+i, style:'oddRowStyle'});
+                                    rowColumns.push({'text':stop.short_name, style:'oddRowStyle'});
+                                    rowColumns.push({'text':destination.to_stop.short_name, style:'oddRowStyle'});
+                                    var totalCount = 0;
+                                    slots.map(function(s){
+                                        rowColumns.push({'text':''+stop[s+destination.to_stop.short_name], style:'oddRowStyle', alignment:'right'});
+                                        totalCount += parseInt(stop[s+destination.to_stop.short_name]);
+                                    })
+                                    rowColumns.push({'text':''+totalCount, style:'oddRowStyle', alignment:'right'});
 
-                            reportData.push(rowColumns);
-                        }else{
-                            rowColumns.push({'text':''+i});
-                            rowColumns.push({'text':stop.short_name});
-                            var totalCount = 0;
-                            slots.map(function(s){
-                                rowColumns.push({'text':''+stop[s], alignment:'right'});
-                                totalCount += parseInt(stop[s]);
-                            })
-                            rowColumns.push({'text':''+totalCount, alignment:'right'});
+                                    reportData.push(rowColumns);
+                                }else{
+                                    rowColumns.push({'text':''+i});
+                                    rowColumns.push({'text':stop.short_name});
+                                    rowColumns.push({'text':destination.to_stop.short_name});
+                                    var totalCount = 0;
+                                    slots.map(function(s){
+                                        rowColumns.push({'text':''+stop[s+destination.to_stop.short_name], alignment:'right'});
+                                        totalCount += parseInt(stop[s+destination.to_stop.short_name]);
+                                    })
+                                    rowColumns.push({'text':''+totalCount, alignment:'right'});
 
-                            reportData.push(rowColumns);
+                                    reportData.push(rowColumns);
+                                }
+                                i++;
+                            })
                         }
-                        i++;
                     })
                 
                     var metaData = response.meta;
@@ -212,7 +232,7 @@ $(document).ready(function(){
                         + "&direction="+direction
                         + "&time_slot="+time_slot;
 
-        var url = "{{route('reports.revenue.passenger_profiling_route_wise.getexcelreport')}}"+queryParams;
+        var url = "{{route('reports.revenue.passenger_profiling_origin_dest_stop_wise.getexcelreport')}}"+queryParams;
 
         window.open(url,'_blank');
     });

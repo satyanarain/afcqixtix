@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 use App\Traits\checkPermission;
 use App\Http\Controllers\Controller;
 
-class PassengerProfilingRouteWiseController extends Controller
+class PassengerProfilingOriginDestStopWiseController extends Controller
 {
     use activityLog;
     use checkPermission;
@@ -30,7 +30,7 @@ class PassengerProfilingRouteWiseController extends Controller
      */
     public function index()
     {
-        return view('reports.revenue.passenger_profiling_route_wise.index');
+        return view('reports.revenue.passenger_profiling_origin_dest_stop_wise.index');
     }
 
     public function displayData(Request $request)
@@ -68,22 +68,42 @@ class PassengerProfilingRouteWiseController extends Controller
         	$slots[] = date('Y-m-d H:i:s', $i); 
         }
 
-        $stops->map(function($value, $key) use($slots, $incrementSeconds, $direction){
-        	foreach ($slots as $key => $slot) 
+        $stops->map(function($value, $key) use($slots, $incrementSeconds, $direction, $from_date, $to_date){
+        	$destinations = Ticket::whereHas('waybill', function($query) use($direction){
+								        	if($direction)
+									        {
+									            $query->whereHas('routeNotMaster', function($q) use ($direction){
+									            	$q->where('direction', $direction);
+									            });
+									        }
+								        })->where('stage_from', $value->id)
+        							  ->where('created_at', '>=', $from_date)
+        							  ->where('created_at', '<=', $to_date)
+        							  ->groupBy('stage_to')
+        							  ->havingRaw('SUM(adults+childs) > 0')
+        							  ->with('toStop:id,short_name')
+        							  ->get(['stage_to']);
+        	$value->destinations = $destinations;
+        	foreach ($destinations as $key => $destination) 
         	{
-        		$slotStart = date('Y-m-d H:i:s', strtotime($slot));
-        		$slotEnd = date('Y-m-d H:i:s', (strtotime($slot)+$incrementSeconds));
-        		$queryBuilder = $this->getQueryBuilder($slotStart, $slotEnd, $value->id, $direction);
-        		$count = $queryBuilder->first();
-        		$value->$slot = $count->passenger_count ? $count->passenger_count : 0;
-        	}
+	        	foreach ($slots as $key => $slot) 
+	        	{
+	        		$slotStart = date('Y-m-d H:i:s', strtotime($slot));
+	        		$slotEnd = date('Y-m-d H:i:s', (strtotime($slot)+$incrementSeconds));
+	        		$queryBuilder = $this->getQueryBuilder($slotStart, $slotEnd, $value->id, $direction, $destination->toStop->id);
+	        		$count = $queryBuilder->first();
+	        		$prop = $slot.$destination->toStop->short_name;
+	        		$value->$prop = $count->passenger_count ? $count->passenger_count : 0;
+	        		$value->destination = $destination->toStop->short_name;
+	        	}
+	        }
 
         	return $value;
         });
 
         //return $stops;
 
-        return view('reports.revenue.passenger_profiling_route_wise.index', compact('slots', 'stops'));
+        return view('reports.revenue.passenger_profiling_origin_dest_stop_wise.index', compact('slots', 'stops'));
     }
 
     /**
@@ -113,14 +133,12 @@ class PassengerProfilingRouteWiseController extends Controller
         	$stopsIds = [];
         }
 
-        $routeName = $this->findNameById('route_master', 'route_name', $route_id);
-
-        $routeName = $routeName ? $routeName : 'All';
-
         $data = [];
         $stops = [];
 
+        
         $stops = Stop::whereIn('id', $stopsIds)->get();
+        
 
         $incrementSeconds = (int)$time_slot*60;
 
@@ -128,8 +146,41 @@ class PassengerProfilingRouteWiseController extends Controller
         { 
         	$slots[] = date('Y-m-d H:i:s', $i); 
         }
+
+        $stops->map(function($value, $key) use($slots, $incrementSeconds, $direction, $from_date, $to_date){
+        	$destinations = Ticket::whereHas('waybill', function($query) use($direction){
+								        	if($direction)
+									        {
+									            $query->whereHas('routeNotMaster', function($q) use ($direction){
+									            	$q->where('direction', $direction);
+									            });
+									        }
+								        })->where('stage_from', $value->id)
+        							  ->where('created_at', '>=', $from_date)
+        							  ->where('created_at', '<=', $to_date)
+        							  ->groupBy('stage_to')
+        							  ->havingRaw('SUM(adults+childs) > 0')
+        							  ->with('toStop:id,short_name')
+        							  ->get(['stage_to']);
+        	$value->destinations = $destinations;
+        	foreach ($destinations as $key => $destination) 
+        	{
+	        	foreach ($slots as $key => $slot) 
+	        	{
+	        		$slotStart = date('Y-m-d H:i:s', strtotime($slot));
+	        		$slotEnd = date('Y-m-d H:i:s', (strtotime($slot)+$incrementSeconds));
+	        		$queryBuilder = $this->getQueryBuilder($slotStart, $slotEnd, $value->id, $direction, $destination->toStop->id);
+	        		$count = $queryBuilder->first();
+	        		$prop = $slot.$destination->toStop->short_name;
+	        		$value->$prop = $count->passenger_count ? $count->passenger_count : 0;
+	        		$value->destination = $destination->toStop->short_name;
+	        	}
+	        }
+
+        	return $value;
+        });
     
-        $title = 'Passenger Profiling Route-wise Report'; // Report title
+        $title = 'Passenger Profiling Origin Destination Stop-wise Report'; // Report title
 
         /*
         *meta data shoul be an array as below
@@ -141,20 +192,7 @@ class PassengerProfilingRouteWiseController extends Controller
             'From : '.date('d-m-Y H:i:s', strtotime($from_date)),
             'To : '.date('d-m-Y H:i:s', strtotime($to_date)),
             'Direction : '.$direction
-        ];   
-
-        $stops->map(function($value, $key) use($slots, $incrementSeconds, $direction){
-        	foreach ($slots as $key => $slot) 
-        	{
-        		$slotStart = date('Y-m-d H:i:s', strtotime($slot));
-        		$slotEnd = date('Y-m-d H:i:s', (strtotime($slot)+$incrementSeconds));
-        		$queryBuilder = $this->getQueryBuilder($slotStart, $slotEnd, $value->id, $direction);
-        		$count = $queryBuilder->first();
-        		$value->$slot = $count->passenger_count ? $count->passenger_count : 0;
-        	}
-
-        	return $value;
-        });  
+        ]; 
 
         return response()->json(['status'=>'Ok', 'title'=>$title, 'meta'=>$meta, 'stops'=>$stops, 'slots'=>$slots, 'serverDate'=>date('d-m-Y H:i:s'), 'takenBy'=>Auth::user()->name], 200);
     }
@@ -188,7 +226,7 @@ class PassengerProfilingRouteWiseController extends Controller
         { 
         	$slots[] = date('Y-m-d H:i:s', $i); 
         }
-        $title = 'Passenger Profiling Route-wise Report'; // Report title
+        $title = 'Passenger Profiling Origin Destination Stop-wise Report'; // Report title
 
         /*
         *meta data shoul be an array as below
@@ -229,16 +267,16 @@ class PassengerProfilingRouteWiseController extends Controller
         					->download($title.'.xlsx');        
     }
 
-    public function getQueryBuilder($from_date, $to_date, $route_id, $direction)
+    public function getQueryBuilder($from_date, $to_date, $stop_id, $direction, $destId)
     {
-        $queryBuilder = Ticket::whereHas('waybill', function($query) use($direction, $depot_id){
+        $queryBuilder = Ticket::whereHas('waybill', function($query) use($direction){
         	if($direction)
 	        {
 	            $query->whereHas('routeNotMaster', function($q) use ($direction){
 	            	$q->where('direction', $direction);
 	            });
 	        }
-        })->where('stage_from', $stop_id);
+        })->where([['stage_from', $stop_id], ['stage_to', $destId]]);
 
         if($from_date && $to_date)
         {

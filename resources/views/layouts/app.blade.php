@@ -10,7 +10,8 @@
   <link rel="icon" type="image/png" sizes="16x16" href="{{url('images/favicon-16x16.png')}}">
   <link rel="stylesheet" href="{{ asset(elixir('css/bootstrap.min.css')) }}">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css"> -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
   <link rel="stylesheet" href="{{ asset(elixir('css/skins/_all-skins.min.css')) }}">
@@ -116,7 +117,7 @@
     <li class="header">MAIN NAVIGATION</li>
     <li @if($segments_var[0]=='dashboard') class="treeview active" @else class="treeview" @endif>
      <a href="{{route('dashboard')}}">
-      <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+      <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
     </a>
   </li>
 
@@ -169,7 +170,7 @@
 @endif
 @if(menuPermission('trip_cancellation_reasons')==1)
 <li @if($segments_var[0]=='trip_cancellation_reasons') class="active" @endif><a href="{{route('trip_cancellation_reasons.index')}}">
-  <i class="fa fa-inr"></i> @lang('menu.trip_cancellation_reason.title') </a>
+  <i class="fas fa-rupee-sign"></i> @lang('menu.trip_cancellation_reason.title') </a>
 </li>
 @endif
 @if(menuPermission('inspector_remarks')==1)
@@ -179,7 +180,7 @@
 @endif
 @if(menuPermission('payout_reasons')==1)
 <li @if($segments_var[0]=='payout_reasons') class="active" @endif><a href="{{route('payout_reasons.index')}}">
-  <i class="fa fa-cc-mastercard"></i>Payout Options </a>
+  <i class="fab fa-cc-mastercard"></i>Payout Options </a>
 </li>
 @endif
 @if(menuPermission('denominations')==1)
@@ -300,52 +301,52 @@ $array= array('etm', 'revenue', 'ppt')
 
                 <li @if($segments_var[2]=='audit_status') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.etm.audit_status.index')}}">
-                        <i class="fa fa-circle-o text-green"></i> Audit Status
+                        <i class="far fa-dot-circle text-green"></i> Audit Status
                     </a>
                 </li>
                 <li @if($segments_var[2]=='activity_log') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.etm.activity_log.index')}}">
-                        <i class="fa fa-circle-o text-green"></i> ETM Activity Log
+                        <i class="far fa-dot-circle text-green"></i> ETM Activity Log
                     </a>
                 </li>
                 <li @if($segments_var[2]=='issue_details') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.etm.issue_details.index')}}">
-                        <i class="fa fa-circle-o text-green"></i> ETM Issue
+                        <i class="far fa-dot-circle text-green"></i> ETM Issue
                     </a>
                 </li>
                 <li @if($segments_var[2]=='not_sync') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.etm.not_sync.index')}}">
-                        <i class="fa fa-circle-o text-green"></i> ETM Not Sync
+                        <i class="far fa-dot-circle text-green"></i> ETM Not Sync
                     </a>
                 </li>
                 <li @if($segments_var[2]=='pending_activity_log') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.etm.pending_activity_log.index')}}">
-                        <i class="fa fa-circle-o text-green"></i> ETM Pending Activity Log
+                        <i class="far fa-dot-circle text-green"></i> ETM Pending Activity Log
                     </a>
                 </li>
                 <li @if($segments_var[2]=='passes_validated_details') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.etm.passes_validated_details.index')}}">
-                        <i class="fa fa-circle-o text-green"></i> Passes Validated
+                        <i class="far fa-dot-circle text-green"></i> Passes Validated
                     </a>
                 </li>
                 <li @if($segments_var[2]=='penalty_ticket_details') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.etm.penalty_ticket_details.index')}}">
-                        <i class="fa fa-circle-o text-green"></i> Penalty Ticket
+                        <i class="far fa-dot-circle text-green"></i> Penalty Ticket
                     </a>
                 </li>
                 <li @if($segments_var[2]=='trip_cancellation') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.etm.trip_cancellation.index')}}">
-                        <i class="fa fa-circle-o text-green"></i> Trip Cancellation
+                        <i class="far fa-dot-circle text-green"></i> Trip Cancellation
                     </a>
                 </li>
                 <li @if($segments_var[2]=='route_change') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
-                        <i class="fa fa-circle-o text-green"></i> Route Change
+                        <i class="far fa-dot-circle text-green"></i> Route Change
                     </a>
                 </li>
                 <li @if($segments_var[2]=='sam_data') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
-                        <i class="fa fa-circle-o text-green"></i> SAM Data
+                        <i class="far fa-dot-circle text-green"></i> SAM Data
                     </a>
                 </li>
             </ul>
@@ -354,7 +355,7 @@ $array= array('etm', 'revenue', 'ppt')
     @if(menuPermission('ppt_reports')==1)
         <li @if($segments_var[1]=='ppt') class="treeview active" @else class="treeview" @endif>
             <a href="#">
-              <i class="fa fa-ticket"></i> <span>PPT Reports</span>
+              <i class="fas fa-ticket-alt"></i> <span>PPT Reports</span>
               <span class="pull-right-container">
                   <i class="fa fa-angle-left pull-right"></i>
               </span>
@@ -362,37 +363,37 @@ $array= array('etm', 'revenue', 'ppt')
             <ul @if(in_array($segments_var[0],$array)) class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
                 <li @if($segments_var[2]=='consumption') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.ppt.consumption.index')}}">
-                        <i class="fa fa-circle-o text-yellow"></i> Consumption Of PPT
+                        <i class="far fa-dot-circle text-yellow"></i> Consumption Of PPT
                     </a>
                 </li>
                 <li @if($segments_var[2]=='crew_stock') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.ppt.crew_stock.index')}}">
-                        <i class="fa fa-circle-o text-yellow"></i> Crew Stock
+                        <i class="far fa-dot-circle text-yellow"></i> Crew Stock
                     </a>
                 </li>                
                 <li @if($segments_var[2]=='denomination_wise_stock_ledger') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.ppt.denomination_wise_stock_ledger.index')}}">
-                        <i class="fa fa-circle-o text-yellow"></i> Denom-wise Stock Ledger
+                        <i class="far fa-dot-circle text-yellow"></i> Denom-wise Stock Ledger
                     </a>
                 </li>
                 <li @if($segments_var[2]=='depot_stock') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.ppt.depot_stock.index')}}">
-                        <i class="fa fa-circle-o text-yellow"></i> Depot Stock
+                        <i class="far fa-dot-circle text-yellow"></i> Depot Stock
                     </a>
                 </li>
                 <li @if($segments_var[2]=='issues_to_crew') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.ppt.issues_to_crew.index')}}">
-                        <i class="fa fa-circle-o text-yellow"></i> Issues To Crew
+                        <i class="far fa-dot-circle text-yellow"></i> Issues To Crew
                     </a>
                 </li>
                 <li @if($segments_var[2]=='receipt_from_main_office') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.ppt.receipt_from_main_office.index')}}">
-                        <i class="fa fa-circle-o text-yellow"></i> Receipts From Main Office
+                        <i class="far fa-dot-circle text-yellow"></i> Receipts From Main Office
                     </a>
                 </li>
                 <li @if($segments_var[2]=='returned_by_conductor') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.ppt.returned_by_conductor.index')}}">
-                        <i class="fa fa-circle-o text-yellow"></i> Returned By Conductor
+                        <i class="far fa-dot-circle text-yellow"></i> Returned By Conductor
                     </a>
                 </li>
             </ul>
@@ -401,7 +402,7 @@ $array= array('etm', 'revenue', 'ppt')
     @if(menuPermission('revenue_reports')==1)
         <li @if($segments_var[1]=='revenue') class="treeview active" @else class="treeview" @endif>
             <a href="#">
-              <i class="fa fa-inr"></i> <span>Revenue Reports</span>
+              <i class="fas fa-rupee-sign"></i> <span>Revenue Reports</span>
               <span class="pull-right-container">
                   <i class="fa fa-angle-left pull-right"></i>
               </span>
@@ -410,137 +411,137 @@ $array= array('etm', 'revenue', 'ppt')
                 
                 <li @if($segments_var[2]=='bus_wise_earning') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.revenue.bus_wise_earning.index')}}">
-                        <i class="fa fa-circle-o color-cyan"></i> Bus-wise Earning
+                        <i class="far fa-dot-circle color-cyan"></i> Bus-wise Earning
                     </a>
                 </li>
                 <li @if($segments_var[2]=='cash_collection') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.revenue.cash_collection.index')}}">
-                        <i class="fa fa-circle-o color-cyan"></i> Cash Collection
+                        <i class="far fa-dot-circle color-cyan"></i> Cash Collection
                     </a>
                 </li>
                 <li @if($segments_var[2]=='conductor_ledger') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.revenue.conductor_ledger.index')}}">
-                        <i class="fa fa-circle-o color-cyan"></i> Conductor Ledger
+                        <i class="far fa-dot-circle color-cyan"></i> Conductor Ledger
                     </a>
                 </li>
                 <li @if($segments_var[2]=='conductor_wise_earning') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.revenue.conductor_wise_earning.index')}}">
-                        <i class="fa fa-circle-o color-cyan"></i> Conductor-wise Earning
+                        <i class="far fa-dot-circle color-cyan"></i> Conductor-wise Earning
                     </a>
                 </li>
                 <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
-                        <i class="fa fa-circle-o color-cyan"></i> Conductor-wise Income Compared To Target Income
+                        <i class="far fa-dot-circle color-cyan"></i> Conductor-wise Income Compared To Target Income
                     </a>
                 </li>
                 <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
-                        <i class="fa fa-circle-o color-cyan"></i> Crew-wise Collection
+                        <i class="far fa-dot-circle color-cyan"></i> Crew-wise Collection
                     </a>
                 </li>
                 <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
-                        <i class="fa fa-circle-o color-cyan"></i> Daily Collection Statement
+                        <i class="far fa-dot-circle color-cyan"></i> Daily Collection Statement
                     </a>
                 </li>
                 <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
-                        <i class="fa fa-circle-o color-cyan"></i> Date-wise BOT Share Details
+                        <i class="far fa-dot-circle color-cyan"></i> Date-wise BOT Share Details
                     </a>
                 </li>
                 <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
-                        <i class="fa fa-circle-o color-cyan"></i> Date-wise Denominations
+                        <i class="far fa-dot-circle color-cyan"></i> Date-wise Denominations
                     </a>
                 </li>
                 <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
-                        <i class="fa fa-circle-o color-cyan"></i> Date-wise Collection
+                        <i class="far fa-dot-circle color-cyan"></i> Date-wise Collection
                     </a>
                 </li>
                 <li @if($segments_var[2]=='depot_wise_collection') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.revenue.depot_wise_collection.index')}}">
-                        <i class="fa fa-circle-o color-cyan"></i> Depot-wise Collection
+                        <i class="far fa-dot-circle color-cyan"></i> Depot-wise Collection
                     </a>
                 </li>
                 <li @if($segments_var[2]=='etm_wise_txn_count') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.revenue.etm_wise_txn_count.index')}}">
-                        <i class="fa fa-circle-o color-cyan"></i> ETM-wise Transaction Count 
+                        <i class="far fa-dot-circle color-cyan"></i> ETM-wise Transaction Count 
                     </a>
                 </li>
                 <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
-                        <i class="fa fa-circle-o color-cyan"></i> Pass Sold
+                        <i class="far fa-dot-circle color-cyan"></i> Pass Sold
                     </a>
                 </li>
                 <li @if($segments_var[2]=='passenger_profiling_stop_wise') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.revenue.passenger_profiling_stop_wise.index')}}">
-                        <i class="fa fa-circle-o color-cyan"></i> Passenger Profiling Bus Stop wise
+                        <i class="far fa-dot-circle color-cyan"></i> Passenger Profiling Bus Stop wise
                     </a>
                 </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
-                        <i class="fa fa-circle-o color-cyan"></i> Passesnger Profiling Origin-Dest Stop wise
+                <li @if($segments_var[2]=='passenger_profiling_origin_dest_stop_wise') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.revenue.passenger_profiling_origin_dest_stop_wise.index')}}">
+                        <i class="far fa-dot-circle color-cyan"></i> Passesnger Profiling Origin-Dest Stop wise
                     </a>
                 </li>
                 <li @if($segments_var[2]=='passenger_profiling_route_wise') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.revenue.passenger_profiling_route_wise.index')}}">
-                        <i class="fa fa-circle-o color-cyan"></i> Passenger Profiling Route wise
+                        <i class="far fa-dot-circle color-cyan"></i> Passenger Profiling Route wise
                     </a>
                 </li>
                 <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
-                        <i class="fa fa-circle-o color-cyan"></i> Payout
+                        <i class="far fa-dot-circle color-cyan"></i> Payout
                     </a>
                 </li>
                 <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
-                        <i class="fa fa-circle-o color-cyan"></i> Print Error Details
+                        <i class="far fa-dot-circle color-cyan"></i> Print Error Details
                     </a>
                 </li>
                 <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
-                        <i class="fa fa-circle-o color-cyan"></i> Revenue EPKM
+                        <i class="far fa-dot-circle color-cyan"></i> Revenue EPKM
                     </a>
                 </li>
                 <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
-                        <i class="fa fa-circle-o color-cyan"></i> Route-wise Denominations
+                        <i class="far fa-dot-circle color-cyan"></i> Route-wise Denominations
                     </a>
                 </li>
                 <li @if($segments_var[2]=='route_wise_collection') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.revenue.route_wise_collection.index')}}">
-                        <i class="fa fa-circle-o color-cyan"></i> Route-wise Collection
+                        <i class="far fa-dot-circle color-cyan"></i> Route-wise Collection
                     </a>
                 </li>
                 <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
-                        <i class="fa fa-circle-o color-cyan"></i> Route-wise Summary
+                        <i class="far fa-dot-circle color-cyan"></i> Route-wise Summary
                     </a>
                 </li>
                 <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
-                        <i class="fa fa-circle-o color-cyan"></i> Schedule-wise EPKM
+                        <i class="far fa-dot-circle color-cyan"></i> Schedule-wise EPKM
                     </a>
                 </li>
                 <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
-                        <i class="fa fa-circle-o color-cyan"></i> Shift Details Earning
+                        <i class="far fa-dot-circle color-cyan"></i> Shift Details Earning
                     </a>
                 </li>
                 <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
-                        <i class="fa fa-circle-o color-cyan"></i> Trip-wise Collection
+                        <i class="far fa-dot-circle color-cyan"></i> Trip-wise Collection
                     </a>
                 </li>
                 <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
-                        <i class="fa fa-circle-o color-cyan"></i> Comparative Statement for Last Year
+                        <i class="far fa-dot-circle color-cyan"></i> Comparative Statement for Last Year
                     </a>
                 </li>
                 <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
-                        <i class="fa fa-circle-o color-cyan"></i> Concession Ticket Collection
+                        <i class="far fa-dot-circle color-cyan"></i> Concession Ticket Collection
                     </a>
                 </li>
             </ul>
@@ -561,7 +562,7 @@ $array= array('etm', 'revenue', 'ppt')
   <ul @if($segments_var[1]=='health_status') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
     <li @if($segments_var[1]=='health_status') class="active" @endif><a href="{{url('etm/health_status')}}"><i class="fa fa-medkit"></i>Health Status</a>
     </li>   
-    <li @if($segments_var[0]=='tripsheet') class="active" @endif><a href="{{route('tripsheet')}}"><i class="fa fa-tripadvisor"></i>Trip Sheet</a>
+    <li @if($segments_var[0]=='tripsheet') class="active" @endif><a href="{{route('tripsheet')}}"><i class="fab fa-tripadvisor"></i>Trip Sheet</a>
     </li>                    
   </ul>
 </li>
@@ -745,6 +746,18 @@ $array= array('etm', 'revenue', 'ppt')
         forceParse: 0,
         showMeridian: 1,
         startDate:new Date()
+      });
+ $('.form_datetime_backdate').datetimepicker({
+        //language:  'fr',
+        format: 'dd-mm-yyyy hh:ii',
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        forceParse: 0,
+        showMeridian: 1,
+        startDate:new Date("01-01-2019")
       });
  $('.form_date').datetimepicker({
         //language:  'fr',

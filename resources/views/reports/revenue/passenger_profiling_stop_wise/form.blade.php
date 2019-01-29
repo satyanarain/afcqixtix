@@ -1,7 +1,7 @@
 <div class="row">         
     <div class="col-md-3">
         {!! Form::label('from_date', Lang::get('From*'), ['class' => 'control-label','for'=>'from_date']) !!}
-        <div class="input-group date form_datetime col-md-10" data-date="2019-01-01" data-date-format="d-m-Y H:i:s" data-link-field="from_date">
+        <div class="input-group date form_datetime_backdate col-md-10" data-date="2019-01-01" data-date-format="d-m-Y H:i:s" data-link-field="from_date">
             {!! Form::text('from_date', date('d-m-Y H:i:s'), ['class' => 'form-control',''=>'']) !!}
             <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
             <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
@@ -11,7 +11,7 @@
          
     <div class="col-md-3">
         {!! Form::label('to_date', Lang::get('To*'), ['class' => 'control-label','for'=>'to_date']) !!}
-        <div class="input-group date form_datetime col-md-10" data-date="" data-date-format="d-m-Y H:i:s" data-link-field="to_date">
+        <div class="input-group date form_datetime_backdate col-md-10" data-date="" data-date-format="d-m-Y H:i:s" data-link-field="to_date">
             {!! Form::text('to_date', date('d-m-Y H:i:s', time()+28800), ['class' => 'form-control',''=>'']) !!}
             <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
             <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
