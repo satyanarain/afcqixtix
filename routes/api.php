@@ -20,7 +20,7 @@ Route::group(['namespace'=>'Api\V1', 'prefix'=>'v1'], function(){
 		Route::post('logout', 'AuthController@logout');
 		Route::post('shiftstart', 'ShiftStartController@store');
 		Route::post('tripstart', 'TripStartController@store');
-		Route::post('updatetripstart', 'TripStartController@update');
+		Route::post('tripend', 'TripStartController@update');
 		Route::post('tripcancellation', 'TripCancellationController@store');
 	    Route::post('sellticket', 'TicketController@store');
 	    Route::post('importtickets', 'TicketController@importTickets');

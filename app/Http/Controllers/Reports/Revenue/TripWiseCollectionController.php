@@ -236,7 +236,24 @@ class TripWiseCollectionController extends Controller
 
     public function getQueryBuilder($depot_id, $from_date, $to_date, $route_id, $duty_id)
     {
-        $queryBuilder = Waybill::with(['route:id,route_name', 'duty:id,duty_number', 'conductor:id,crew_name,crew_id', 'driver:id,crew_name,crew_id', 'etm:id,etm_no', 'vehicle:id,vehicle_registration_number', 'trips.fromStop:id,short_name', 'trips.toStop:id,short_name'])
+        $queryBuilder = Waybill::->withCount(['tickets as tickets_count'=>function($query){
+						        	$query->where('ticket_type', 'Ticket');
+						        }])->withCount(['tickets as pass_count'=>function($query){
+						        	$query->where('ticket_type', 'Pass')
+						        		  ->orWhere('ticket_type', 'ETMPass');
+						        }])->withCount(['tickets as epurse_count'=>function($query){
+						        	$query->where('ticket_type', 'EPurse');
+						        }])->withCount(['tickets as cash_passenger_count'=>function($query){
+						        	$query->select(DB::raw("(SUM(adults) + SUM(childs))"))
+						        		  ->where('ticket_type', 'Ticket');
+						        }])->withCount(['tickets as card_passenger_count'=>function($query){
+						        	$query->select(DB::raw("(SUM(adults) + SUM(childs))"))
+						        		  ->where('ticket_type', 'Pass')
+						        		  ->orWhere('ticket_type', 'ETMPass');
+						        }])->withCount(['tickets as epurse_passenger_count'=>function($query){
+						        	$query->select(DB::raw("(SUM(adults) + SUM(childs))"))
+						        		  ->where('ticket_type', 'EPurse');
+						        }])->with(['route:id,route_name', 'duty:id,duty_number', 'conductor:id,crew_name,crew_id', 'driver:id,crew_name,crew_id', 'etm:id,etm_no', 'vehicle:id,vehicle_registration_number', 'trips.fromStop:id,short_name', 'trips.toStop:id,short_name'])
         						->where('depot_id', $depot_id);
         
         if($route_id)
