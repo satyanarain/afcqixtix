@@ -10,8 +10,8 @@
   <link rel="icon" type="image/png" sizes="16x16" href="{{url('images/favicon-16x16.png')}}">
   <link rel="stylesheet" href="{{ asset(elixir('css/bootstrap.min.css')) }}">
   <!-- Font Awesome -->
-  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css"> -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
   <link rel="stylesheet" href="{{ asset(elixir('css/skins/_all-skins.min.css')) }}">
@@ -66,7 +66,7 @@
     <nav class="navbar navbar-static-top">
       <!-- Sidebar toggle button-->
       <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
-        <span class="sr-only">Toggle navigation</span>
+        <!-- <i class="fas fa-bars"></i> -->
       </a>
       <div style="width: 82%;float: left;text-align: center; color: #fff;font-size: 20px;padding-top: 10px;">Automated Fare Collection System</div>
       <div class="navbar-custom-menu">
@@ -87,18 +87,18 @@
              <ul class="menu" style="overflow: hidden;">
               <li>
                 <a href="{{ url('/users/'.Auth::user()->id) }}">
-                  <span class="glyphicon glyphicon-user text-green"></span>Profile
+                  <span class="glyphicon glyphicon-user text-green"></span> Profile
                 </a>
               </li>
 
               <li>
                 <a href="{{ url('/changepasswords/create/') }}">
-                  <i class="fa fa-exchange text-yellow"></i>Change Password
+                  <i class="fas fa-exchange-alt text-yellow"></i> Change Password
                 </a>
               </li>
               <li>
                 <a href="{{ url('/logout') }}">
-                  <i class="fa fa-sign-out text-warning"></i>Logout
+                  <i class="fas fa-sign-out-alt text-warning"></i> Logout
                 </a>
               </li>
             </ul>
@@ -529,8 +529,8 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="far fa-dot-circle color-cyan"></i> Shift Details Earning
                     </a>
                 </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
+                <li @if($segments_var[2]=='trip_wise_collection') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.revenue.trip_wise_collection.index')}}">
                         <i class="far fa-dot-circle color-cyan"></i> Trip-wise Collection
                     </a>
                 </li>

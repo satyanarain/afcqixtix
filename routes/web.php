@@ -464,6 +464,12 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('route_wise_collection/getexcelreport', 'RouteWiseCollectionController@getExcelReport')->name('route_wise_collection.getexcelreport');
             Route::get('route_wise_collection/displayData', 'RouteWiseCollectionController@displayData')->name('route_wise_collection.displaydata');
 
+            /*trip_wise_collection*/
+            Route::resource('trip_wise_collection', 'TripWiseCollectionController')->only('index'); 
+            Route::post('trip_wise_collection/getpdfreport', 'TripWiseCollectionController@getPdfReport')->name('trip_wise_collection.getpdfreport');
+            Route::get('trip_wise_collection/getexcelreport', 'TripWiseCollectionController@getExcelReport')->name('trip_wise_collection.getexcelreport');
+            Route::get('trip_wise_collection/displayData', 'TripWiseCollectionController@displayData')->name('trip_wise_collection.displaydata');
+
         });
     });    
     

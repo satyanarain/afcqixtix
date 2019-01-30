@@ -8,6 +8,7 @@ use Validator;
 use App\Models\Depot;
 use App\Models\Ticket;
 use App\Models\Waybill;
+use App\Models\Concession;
 use Illuminate\Http\Request;
 use App\Events\ETMDataUpdated;
 use App\Http\Controllers\Controller;
@@ -52,8 +53,19 @@ class TicketController extends Controller
 
         foreach ($jsonDecoded as $key => $value) 
         {
+            //return $value;
             try{
-                //return response()->json($value);
+                $concession = Concession::whereId($value['concession_id'])->first();
+                if($concession)
+                {
+                    if($concession->flat_fare == "Yes")
+                    {
+                        $concessionAmt = $concession->flat_fare_amount;
+                    }else{
+                        $concessionAmt = (int)$concession->percentage/(100-(int)$concession->percentage)*(int)$value['total_amt'];
+                    }
+                }
+                $value['concession_amt'] = $concessionAmt;
                 $ticket = Ticket::create($value);
                 $insertedData[] = ['id'=>$value['local_id'], 'status'=>1];
                 $abstract_no = $value['abstract_id'];

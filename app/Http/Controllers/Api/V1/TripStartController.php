@@ -14,6 +14,7 @@ class TripStartController extends Controller
     	$validator = Validator::make($request->all(), [
     		'service_id' => 'required',
     		'route_id' => 'required',
+            'route_master_id' => 'required',
     		'direction' => 'required',
     		'start_stop_id' => 'required',
     		'end_stop_id' => 'required',

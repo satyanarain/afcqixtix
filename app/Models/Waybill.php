@@ -60,6 +60,11 @@ class Waybill extends Model
         return $this->belongsTo(Crew::class, 'conductor_id', 'id');
     }
 
+    public function driver()
+    {
+        return $this->belongsTo(Crew::class, 'driver_id', 'id');
+    }
+
     public function vehicle()
     {
         return $this->belongsTo(Vehicle::class, 'vehicle_id', 'id');
