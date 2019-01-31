@@ -535,3 +535,26 @@ function getAllModulePermission($module='') {
 //    else
 //        return false;
 }
+
+function calculateConcession($tickets)
+  {
+      $consessionAmt = 0;
+      if(count($tickets) > 0)
+      {
+        foreach ($tickets as $key => $value) 
+        {
+          $concession = $value->concession;
+          if($concession)
+          {
+            if($concession->flat_fare == "Yes")
+            {
+                $consessionAmt += (int)$concession->flat_fare_amount;
+            }else{
+                $consessionAmt += (int)$concession->percentage/(100-(int)$concession->percentage)*(int)$value->total_amt;
+            }
+          }
+        }
+      }
+
+      return $consessionAmt;
+  }

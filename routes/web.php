@@ -434,11 +434,41 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('depot_wise_collection/getexcelreport', 'DepotWiseCollectionController@getExcelReport')->name('depot_wise_collection.getexcelreport');
             Route::get('depot_wise_collection/displayData', 'DepotWiseCollectionController@displayData')->name('depot_wise_collection.displaydata');
 
+            /*etm_wise_txn_count*/
+            Route::resource('etm_wise_txn_count', 'ETMWiseTxnCountController')->only('index'); 
+            Route::post('etm_wise_txn_count/getpdfreport', 'ETMWiseTxnCountController@getPdfReport')->name('etm_wise_txn_count.getpdfreport');
+            Route::get('etm_wise_txn_count/getexcelreport', 'ETMWiseTxnCountController@getExcelReport')->name('etm_wise_txn_count.getexcelreport');
+            Route::get('etm_wise_txn_count/displayData', 'ETMWiseTxnCountController@displayData')->name('etm_wise_txn_count.displaydata');
+
+            /*passenger_profiling_stop_wise*/
+            Route::resource('passenger_profiling_stop_wise', 'PassengerProfilingStopWiseController')->only('index'); 
+            Route::post('passenger_profiling_stop_wise/getpdfreport', 'PassengerProfilingStopWiseController@getPdfReport')->name('passenger_profiling_stop_wise.getpdfreport');
+            Route::get('passenger_profiling_stop_wise/getexcelreport', 'PassengerProfilingStopWiseController@getExcelReport')->name('passenger_profiling_stop_wise.getexcelreport');
+            Route::get('passenger_profiling_stop_wise/displayData', 'PassengerProfilingStopWiseController@displayData')->name('passenger_profiling_stop_wise.displaydata');
+
+            /*passenger_profiling_route_wise*/
+            Route::resource('passenger_profiling_route_wise', 'PassengerProfilingRouteWiseController')->only('index'); 
+            Route::post('passenger_profiling_route_wise/getpdfreport', 'PassengerProfilingRouteWiseController@getPdfReport')->name('passenger_profiling_route_wise.getpdfreport');
+            Route::get('passenger_profiling_route_wise/getexcelreport', 'PassengerProfilingRouteWiseController@getExcelReport')->name('passenger_profiling_route_wise.getexcelreport');
+            Route::get('passenger_profiling_route_wise/displayData', 'PassengerProfilingRouteWiseController@displayData')->name('passenger_profiling_route_wise.displaydata');
+
+            /*passenger_profiling_origin_dest_stop_wise*/
+            Route::resource('passenger_profiling_origin_dest_stop_wise', 'PassengerProfilingOriginDestStopWiseController')->only('index'); 
+            Route::post('passenger_profiling_origin_dest_stop_wise/getpdfreport', 'PassengerProfilingOriginDestStopWiseController@getPdfReport')->name('passenger_profiling_origin_dest_stop_wise.getpdfreport');
+            Route::get('passenger_profiling_origin_dest_stop_wise/getexcelreport', 'PassengerProfilingOriginDestStopWiseController@getExcelReport')->name('passenger_profiling_origin_dest_stop_wise.getexcelreport');
+            Route::get('passenger_profiling_origin_dest_stop_wise/displayData', 'PassengerProfilingOriginDestStopWiseController@displayData')->name('passenger_profiling_origin_dest_stop_wise.displaydata');
+
             /*route_wise_collection*/
             Route::resource('route_wise_collection', 'RouteWiseCollectionController')->only('index'); 
             Route::post('route_wise_collection/getpdfreport', 'RouteWiseCollectionController@getPdfReport')->name('route_wise_collection.getpdfreport');
             Route::get('route_wise_collection/getexcelreport', 'RouteWiseCollectionController@getExcelReport')->name('route_wise_collection.getexcelreport');
             Route::get('route_wise_collection/displayData', 'RouteWiseCollectionController@displayData')->name('route_wise_collection.displaydata');
+
+            /*trip_wise_collection*/
+            Route::resource('trip_wise_collection', 'TripWiseCollectionController')->only('index'); 
+            Route::post('trip_wise_collection/getpdfreport', 'TripWiseCollectionController@getPdfReport')->name('trip_wise_collection.getpdfreport');
+            Route::get('trip_wise_collection/getexcelreport', 'TripWiseCollectionController@getExcelReport')->name('trip_wise_collection.getexcelreport');
+            Route::get('trip_wise_collection/displayData', 'TripWiseCollectionController@displayData')->name('trip_wise_collection.displaydata');
 
         });
     });    

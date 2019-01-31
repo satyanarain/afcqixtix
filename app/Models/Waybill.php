@@ -40,6 +40,11 @@ class Waybill extends Model
         return $this->belongsTo(RouteMaster::class, 'route_id', 'id');
     }
 
+    public function routeNotMaster()
+    {
+        return $this->belongsTo(Route::class, 'route_id', 'id');
+    }
+
     public function duty()
     {
         return $this->belongsTo(Duty::class, 'duty_id', 'id');
@@ -53,6 +58,11 @@ class Waybill extends Model
     public function conductor()
     {
         return $this->belongsTo(Crew::class, 'conductor_id', 'id');
+    }
+
+    public function driver()
+    {
+        return $this->belongsTo(Crew::class, 'driver_id', 'id');
     }
 
     public function vehicle()

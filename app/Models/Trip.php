@@ -10,24 +10,19 @@ class Trip extends Model
      */
     protected $table = 'trips';
     protected $guarded = [ 'trip_no', 'start_time', 'path_route_id', 'deviated_route', 'deviated_path'];
-      public function user()
+
+    public function user()
     {
         return $this->belongsTo('App\Models\User');
     }
-      public function stop()
+    
+    public function stop()
     {
         return $this->belongsTo('App\Models\Stop');
     }
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    
+    public function tripDetail()
+    {
+        return $this->hasOne(TripDetail::class, 'trip_id', 'id');   
+    }   
 }

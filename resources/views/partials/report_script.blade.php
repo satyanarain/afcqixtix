@@ -184,6 +184,10 @@ $(document).ready(function(){
             clearReportData();
         });
 
+        $(document).on('change', '#direction', function(){
+            clearReportData();
+        });
+
         $(document).on('keyup', '#bus_no', function(){
             clearReportData();
         });
@@ -191,12 +195,16 @@ $(document).ready(function(){
         $(document).on('keyup', '#conductor_id', function(){
             clearReportData();
         });
+
+        $(document).on('keyup', '#time_slot', function(){
+            clearReportData();
+        });
 });
 function clearReportData()
 {
     $('#reportDataBox').remove();
 }
-function validateForm(depot_id=null, from_date=null, to_date=null, etm_no=null)
+function validateForm(depot_id=null, from_date=null, to_date=null, etm_no=null, time_slot=null, direction=null)
 {
     if(depot_id)
     {
@@ -256,6 +264,47 @@ function validateForm(depot_id=null, from_date=null, to_date=null, etm_no=null)
         }
     }
 
+    if(time_slot)
+    {
+        var time_slot = $('#'+time_slot).val();
+        if(!time_slot)
+        {
+            alert('Please enter time slot.');
+            return false;
+        }
+    }
+
+    if(direction)
+    {
+        var direction = $('#'+direction).val();
+        if(!direction)
+        {
+            alert('Please select direction.');
+            return false;
+        }
+    }
+
     return true;
+}
+
+function numvalidate(e) 
+{
+    var key;
+    var keychar;
+    if (window.event)
+        key = window.event.keyCode;
+    else if (e)
+        key = e.which;
+    else
+        return true;
+    keychar = String.fromCharCode(key);
+    keychar = keychar.toLowerCase();
+    // control keys
+    if ((key == null) || (key == 0) || (key == 8) || (key == 9)
+    || (key == 13) || (key == 27))
+        return true;
+    else if (!(("1234567890").indexOf(keychar) > -1)) {
+        return false;
+    }
 }
 </script>
