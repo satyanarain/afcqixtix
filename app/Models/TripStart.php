@@ -25,4 +25,9 @@ class TripStart extends Model
     {
         return $this->hasOne(Route::class, 'id', 'route_id');
     }
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class, 'abstract_id', 'abstract_no');
+    }
 }

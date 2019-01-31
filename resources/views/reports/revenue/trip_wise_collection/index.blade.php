@@ -30,10 +30,10 @@
                 @include('reports.revenue.trip_wise_collection.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 
                 {!! Form::close() !!}
-                @if(isset($stops))
+                @if(isset($data))
                 <div class="row" style="margin-top: 50px;" id="reportDataBox">
                     <div class="col-md-12">
-                        @if(count($stops) > 0)
+                        @if(count($data) > 0)
                         <h4>
                             <button class="btn btn-primary pull-right" id="exportAsPDF">Export as PDF</button> 
                             <button class="btn btn-primary pull-right" style="margin-right: 10px;margin-bottom: 10px;" id="exportAsXLS">Export as XLS</button>
@@ -43,45 +43,98 @@
                             <thead>
                                 <tr>
                                     <th>S. No.</th>
-                                    <th>Origin Stop</th>
-                                    <th>Destination Stop</th>
-                                    @foreach($slots as $key=>$slot)
-                                    <th class="text-right">{{substr($slot, 11, 5)}}</th>
-                                    @endforeach
-                                    <th class="text-right">Total</th>
+                                    <th>Trip No.</th>
+                                    <th>From Stop</th>
+                                    <th>To Stop</th>
+                                    <th>Schld. Time</th>
+                                    <th>Trip Start Time</th>
+                                    <th>Trip End Time</th>
+                                    <th class="text-right">Psngr Cnt</th>
+                                    <th class="text-right">Total Amt</th>
+                                    <th class="text-right">Tkt Cnt</th>
+                                    <th class="text-right">Tkt Amt</th>
+                                    <th class="text-right">Pass Cnt</th>
+                                    <th class="text-right">Pass Amt</th>
+                                    <th class="text-right">EPurse Cnt</th>
+                                    <th class="text-right">EPurse Amt</th>
+                                    <th class="text-right">Conc</th>
+                                    <th class="text-right">Kms</th>
                                 </tr>
                             </thead>
                             <tbody>
-                            @if(count($stops) > 0)
-                            @foreach($stops as $keyo=>$stop)
-                            @php $destinations = $stop->destinations;@endphp
-                            @foreach($destinations as $keyi=>$destination)
+                            @if(count($data) > 0)
+                            @foreach($data as $keyo=>$d)
+                            <tr>
+                                <td class="text-left" colspan="16"><strong>Route - {{$d->route->route_name}}, Duty - {{$d->duty->duty_number}}, Crew - {{$d->conductor->crew_name.' ('.$d->conductor->crew_id.')'}}, ETM - {{$d->etm->etm_no}}, Vehicle No. - {{$d->vehicle->vehicle_registration_number}}, Driver - {{$d->driver->crew_name.' ('.$d->driver->crew_id.')'}}</strong></td>
+                            </tr>
+                            @php $trips = $d->trips;@endphp
+                            @foreach($trips as $keyi=>$trip)
                                 <tr>
-                                    <td>{{$keyo+1}}</td>
-                                    <td>{{$stop->short_name}}</td>
-                                    <td>{{$destination->toStop->short_name}}</td>
-                                    @php $totalCount = 0;@endphp
-                                    @foreach($slots as $key=>$slot)
-                                    @php
-                                        $prop = $slot.$destination->toStop->short_name; 
-                                        $count = $stop->$prop;
-                                    @endphp
-                                    <td class="text-right">{{$count}}</td>
-                                    @php $totalCount += (int)$count; @endphp
-                                    @endforeach
-                                    <td class="text-right">{{$totalCount}}</td>
+                                    <td>{{$keyi+1}}</td>                                    
+                                    <td>{{$trip->trip_id}}</td>
+                                    <td>{{$trip->fromStop->short_name}}</td>
+                                    <td>{{$trip->toStop->short_name}}</td>
+                                    <td>{{$trip->schedule_time}}</td>
+                                    <td>{{date('d-m-Y H:i:s', strtotime($trip->start_timestamp))}}</td>
+                                    <td>{{date('d-m-Y H:i:s', strtotime($trip->end_timestamp))}}</td>   
+                                    @php 
+                                        $counts = $trip->counts;
+                                        $passengersCount = 0;
+                                        $totalAmount = 0;
+                                        $concessionAmount = 0;
+                                        $ticketCount = 0;
+                                        $ticketAmount = 0;
+                                        $passCount = 0;
+                                        $passAmount = 0;
+                                        $epurseCount = 0;
+                                        $epurseAmount = 0;
+                                        foreach($counts as $keyc=>$count)
+                                        {
+                                            $passengersCount += $count->passenger_count;
+                                            $totalAmount += $count->ticket_amount;
+                                            $concessionAmount += $count->concession_amount;
+                                            if($count->ticket_type == 'Ticket')
+                                            {
+                                                $ticketCount += $count->passenger_count;
+                                                $ticketAmount += $count->ticket_amount;
+                                            }
+                                            
+
+                                            if($count->ticket_type == 'Pass' || $count->ticket_type == 'ETMPass')
+                                            {
+                                                $passCount += $count->passenger_count;
+                                                $passAmount += $count->ticket_amount;
+                                            }
+
+                                            if($count->ticket_type == 'EPurse')
+                                            {
+                                                $epurseCount += $count->passenger_count;
+                                                $epurseAmount += $count->ticket_amount;
+                                            }
+                                        }
+                                    @endphp            
+                                    <td class="text-right">{{$passengersCount}}</td>
+                                    <td class="text-right">{{number_format((float)$totalAmount, 2, '.', '')}}</td>
+                                    <td class="text-right">{{$ticketCount}}</td>
+                                    <td class="text-right">{{number_format((float)$ticketAmount, 2, '.', '')}}</td>
+                                    <td class="text-right">{{$passCount}}</td>
+                                    <td class="text-right">{{number_format((float)$passAmount, 2, '.', '')}}</td>
+                                    <td class="text-right">{{$epurseCount}}</td>
+                                    <td class="text-right">{{number_format((float)$epurseAmount, 2, '.', '')}}</td>
+                                    <td class="text-right">{{number_format((float)$concessionAmount, 2, '.', '')}}</td>
+                                    <td class="text-right">{{number_format((float)$trip->distance, 2, '.', '')}}</td>
                                 </tr>
                             @endforeach
                             @endforeach
                             @else
                                 <tr>
-                                    <td class="text-center" colspan="10"><strong>No Record Found! &#9785</strong></td>
+                                    <td class="text-center" colspan="16"><strong>No Record Found! &#9785</strong></td>
                                 </tr>
                             @endif
                             </tbody>
                         </table>
                         <div class="pull-right"> 
-                            {{$stops->appends(request()->input())->links()}}
+                            {{$data->appends(request()->input())->links()}}
                         </div>
                         
                     </div>
@@ -102,6 +155,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
     $(document).on('click', '#exportAsPDF', function(){
+        var depot_id = $('#depot_id').val();
         var fromDate = $('#from_date').val();
         if(!fromDate)
         {
@@ -116,8 +170,7 @@ $(document).ready(function(){
             return false;
         }
 
-        var time_slot = $('#time_slot').val();
-        var direction = $('#direction').val();
+        var duty_id = $('#duty_id').val();
         var route_id = $('#route_id').val();        
 
         $.ajax({
@@ -128,64 +181,60 @@ $(document).ready(function(){
                 route_id: route_id,
                 from_date: fromDate,
                 to_date: toDate,
-                time_slot: time_slot,
-                direction: direction
+                depot_id: depot_id,
+                duty_id: duty_id
             },
             success: function(response)
             {
                 if(response.status == 'Ok')
                 {
-                    var stops = response.stops;
-                    var slots = response.slots;
-                    console.log(stops)
+                    var data = response.data;
+                    console.log(data)
                     var reportData = [];
-                    var headerColumns = [];
-                    var widths = [22, 100, 100];
-                    headerColumns.push({'text':'S. No.', 'style': 'tableHeaderStyle'});
-                    headerColumns.push({'text':'Origin Stop', 'style': 'tableHeaderStyle'});
-                    headerColumns.push({'text':'Destination Stop', 'style': 'tableHeaderStyle'});
-                    slots.map(function(s){
-                        headerColumns.push({'text':s.substr(10, 6), 'style': 'tableHeaderStyle', alignment:'right'});
-                        widths.push("*");
-                    })
-                    headerColumns.push({'text':'Total', 'style': 'tableHeaderStyle', alignment:'right'});
-                    widths.push("*");
-                    reportData.push(headerColumns);
+                    reportData.push([{'text':'S. No.', 'style': 'tableHeaderStyle'}, {'text':'Trip No.', 'style': 'tableHeaderStyle'}, {'text':'From Stop', 'style': 'tableHeaderStyle'}, {'text':'To Stop', 'style': 'tableHeaderStyle'}, {'text':'Schld Time', 'style': 'tableHeaderStyle'}, {'text':'Trip Start Time', 'style': 'tableHeaderStyle'}, {'text':'Trip End Time', 'style': 'tableHeaderStyle'}, {'text':'Psngr Cnt', 'style': 'tableHeaderStyle'}, {'text':'Total Amt', 'style': 'tableHeaderStyle'}, {'text':'Tkt Cnt', 'style': 'tableHeaderStyle'}, {'text':'Tkt Amt', 'style': 'tableHeaderStyle'}, {'text':'Pass Cnt', 'style': 'tableHeaderStyle'}, {'text':'Pass Amt', 'style': 'tableHeaderStyle'}, {'text':'EPurse Cnt', 'style': 'tableHeaderStyle'}, {'text':'EPurse Amt', 'style': 'tableHeaderStyle'}, {'text':'Conc', 'style': 'tableHeaderStyle'}, {'text':'Kms', 'style': 'tableHeaderStyle'}]);
 
-                    $.each(stops, function(ind, stop){  
-                        console.log("Stop"+stop);
-                        var destinations = stop.destinations;
-                        if(destinations)
+                    $.each(data, function(ind, waybill){  
+                        console.log(waybill);
+                        reportData.push([{'text':'Route - '+waybill.route.route_name+', Duty - '+waybill.duty.duty_number+', Crew - '+waybill.conductor.crew_name+' ('+waybill.conductor.crew_id+'), ETM - '+waybill.etm.etm_no+', Vehicle No. - '+waybill.vehicle.vehicle_registration_number+', Driver - '+waybill.driver.crew_name+' ('+waybill.driver.crew_id+')', alignment:'left', bold:true, colSpan:17}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}]);
+                        var trips = waybill.trips;
+                        if(trips)
                         {
                             var i = 1;
-                            destinations.map(function(destination){
-                            
-                                var rowColumns = [];
+                            trips.map(function(trip){
+                                var counts = trip.counts;
+                                var passengersCount = 0;
+                                var totalAmount = 0;
+                                var concessionAmount = 0;
+                                var ticketCount = 0;
+                                var ticketAmount = 0;
+                                var passCount = 0;
+                                var passAmount = 0;
+                                var epurseCount = 0;
+                                var epurseAmount = 0;
+                                counts.map(function(count){
+                                    passengersCount += parseInt(count.passenger_count);
+                                    totalAmount += parseFloat(count.ticket_amount);
+                                    concessionAmount += count.concession_amount ? parseFloat(count.concession_amount) : 0;
+                                    if(count.ticket_type == 'Pass' || count.ticket_type == 'ETMPass')
+                                    {
+                                        passCount += parseInt(count.passenger_count);
+                                        passAmount += parseFloat(count.ticket_amount);
+                                    }else if(count.ticket_type == 'Ticket'){
+                                        ticketCount += parseInt(count.passenger_count);
+                                        ticketAmount += parseFloat(count.ticket_amount);
+                                    }else if(count.ticket_type == 'EPurse')
+                                    {
+                                        epurseCount += parseInt(count.passenger_count);
+                                        epurseAmount += parseFloat(count.ticket_amount);
+                                    }else{
+
+                                    }
+                                })
                                 if(i%2 == 0)
                                 {
-                                    rowColumns.push({'text':''+i, style:'oddRowStyle'});
-                                    rowColumns.push({'text':stop.short_name, style:'oddRowStyle'});
-                                    rowColumns.push({'text':destination.to_stop.short_name, style:'oddRowStyle'});
-                                    var totalCount = 0;
-                                    slots.map(function(s){
-                                        rowColumns.push({'text':''+stop[s+destination.to_stop.short_name], style:'oddRowStyle', alignment:'right'});
-                                        totalCount += parseInt(stop[s+destination.to_stop.short_name]);
-                                    })
-                                    rowColumns.push({'text':''+totalCount, style:'oddRowStyle', alignment:'right'});
-
-                                    reportData.push(rowColumns);
+                                    reportData.push([{'text':''+i, style:'oddRowStyle'}, {'text':''+trip.trip_id, style:'oddRowStyle'}, {'text':''+trip.from_stop.short_name, style:'oddRowStyle'}, {'text':''+trip.to_stop.short_name, style:'oddRowStyle'}, {'text':''+trip.schedule_time, style:'oddRowStyle'}, {'text':''+trip.start_timestamp, style:'oddRowStyle'}, {'text':''+trip.end_timestamp, style:'oddRowStyle'}, {'text':''+passengersCount, style:'oddRowStyle', alignment:'right'}, {'text':''+parseFloat(totalAmount).toFixed(2), style:'oddRowStyle', alignment:'right'}, {'text':''+ticketCount, style:'oddRowStyle', alignment:'right'}, {'text':''+parseFloat(ticketAmount).toFixed(2), style:'oddRowStyle', alignment:'right'}, {'text':''+passCount, style:'oddRowStyle', alignment:'right'}, {'text':''+parseFloat(passAmount).toFixed(2), style:'oddRowStyle', alignment:'right'}, {'text':''+epurseCount, style:'oddRowStyle', alignment:'right'}, {'text':''+parseFloat(epurseAmount).toFixed(2), style:'oddRowStyle', alignment:'right'}, {'text':''+parseFloat(concessionAmount).toFixed(2), style:'oddRowStyle', alignment:'right'}, {'text':''+parseFloat(trip.distance).toFixed(2), alignment:'right', style:'oddRowStyle'}]);
                                 }else{
-                                    rowColumns.push({'text':''+i});
-                                    rowColumns.push({'text':stop.short_name});
-                                    rowColumns.push({'text':destination.to_stop.short_name});
-                                    var totalCount = 0;
-                                    slots.map(function(s){
-                                        rowColumns.push({'text':''+stop[s+destination.to_stop.short_name], alignment:'right'});
-                                        totalCount += parseInt(stop[s+destination.to_stop.short_name]);
-                                    })
-                                    rowColumns.push({'text':''+totalCount, alignment:'right'});
-
-                                    reportData.push(rowColumns);
+                                    reportData.push([{'text':''+i}, {'text':''+trip.trip_id}, {'text':''+trip.from_stop.short_name}, {'text':''+trip.to_stop.short_name}, {'text':''+trip.schedule_time}, {'text':''+trip.start_timestamp}, {'text':''+trip.end_timestamp}, {'text':''+passengersCount, alignment:'right'}, {'text':''+parseFloat(totalAmount).toFixed(2), alignment:'right'}, {'text':''+ticketCount, alignment:'right'}, {'text':''+parseFloat(ticketAmount).toFixed(2), alignment:'right'}, {'text':''+passCount, alignment:'right'}, {'text':''+parseFloat(passAmount).toFixed(2), alignment:'right'}, {'text':''+epurseCount, alignment:'right'}, {'text':''+parseFloat(epurseAmount).toFixed(2), alignment:'right'}, {'text':''+parseFloat(concessionAmount).toFixed(2), alignment:'right'}, {'text':''+parseFloat(trip.distance).toFixed(2), alignment:'right'}]);
                                 }
                                 i++;
                             })
@@ -196,7 +245,7 @@ $(document).ready(function(){
                     var title = response.title;
                     var takenBy = response.takenBy;
                     var serverDate = response.serverDate;
-                    Export(metaData, title, reportData, takenBy, serverDate, widths, 'noBorders');  
+                    Export(metaData, title, reportData, takenBy, serverDate, 'auto', 'noBorders');  
                                     
                 }                
             },
