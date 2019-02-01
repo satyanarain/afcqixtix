@@ -188,6 +188,14 @@ $(document).ready(function(){
             clearReportData();
         });
 
+        $(document).on('change', '#concession_id', function(){
+            clearReportData();
+        });
+
+        $(document).on('change', '#service_id', function(){
+            clearReportData();
+        });
+
         $(document).on('keyup', '#bus_no', function(){
             clearReportData();
         });
@@ -204,7 +212,7 @@ function clearReportData()
 {
     $('#reportDataBox').remove();
 }
-function validateForm(depot_id=null, from_date=null, to_date=null, etm_no=null, time_slot=null, direction=null)
+function validateForm(depot_id=null, from_date=null, to_date=null, etm_no=null, time_slot=null, direction=null, service_id=null)
 {
     if(depot_id)
     {
@@ -280,6 +288,16 @@ function validateForm(depot_id=null, from_date=null, to_date=null, etm_no=null, 
         if(!direction)
         {
             alert('Please select direction.');
+            return false;
+        }
+    }
+
+    if(service_id)
+    {
+        var service_id = $('#'+service_id).val();
+        if(!service_id)
+        {
+            alert('Please select a service.');
             return false;
         }
     }

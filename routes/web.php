@@ -416,6 +416,12 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('cash_collection/getexcelreport', 'CashCollectionController@getExcelReport')->name('cash_collection.getexcelreport');
             Route::get('cash_collection/displayData', 'CashCollectionController@displayData')->name('cash_collection.displaydata');
 
+            /*concession_collection*/
+            Route::resource('concession_collection', 'ConcessionCollectionController')->only('index'); 
+            Route::post('concession_collection/getpdfreport', 'ConcessionCollectionController@getPdfReport')->name('concession_collection.getpdfreport');
+            Route::get('concession_collection/getexcelreport', 'ConcessionCollectionController@getExcelReport')->name('concession_collection.getexcelreport');
+            Route::get('concession_collection/displayData', 'ConcessionCollectionController@displayData')->name('concession_collection.displaydata');
+
             /*conductor_ledger*/
             Route::resource('conductor_ledger', 'ConductorLedgerController')->only('index'); 
             Route::post('conductor_ledger/getpdfreport', 'ConductorLedgerController@getPdfReport')->name('conductor_ledger.getpdfreport');
