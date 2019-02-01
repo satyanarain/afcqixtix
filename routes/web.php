@@ -434,6 +434,18 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('conductor_wise_earning/getexcelreport', 'ConductorWiseEarningController@getExcelReport')->name('conductor_wise_earning.getexcelreport');
             Route::get('conductor_wise_earning/displayData', 'ConductorWiseEarningController@displayData')->name('conductor_wise_earning.displaydata');
 
+            /*crew_wise_collection*/
+            Route::resource('crew_wise_collection', 'CrewWiseCollectionController')->only('index'); 
+            Route::post('crew_wise_collection/getpdfreport', 'CrewWiseCollectionController@getPdfReport')->name('crew_wise_collection.getpdfreport');
+            Route::get('crew_wise_collection/getexcelreport', 'CrewWiseCollectionController@getExcelReport')->name('crew_wise_collection.getexcelreport');
+            Route::get('crew_wise_collection/displayData', 'CrewWiseCollectionController@displayData')->name('crew_wise_collection.displaydata');
+
+            /*daily_collection_statement*/
+            Route::resource('daily_collection_statement', 'DailyCollectionStatementController')->only('index'); 
+            Route::post('daily_collection_statement/getpdfreport', 'DailyCollectionStatementController@getPdfReport')->name('daily_collection_statement.getpdfreport');
+            Route::get('daily_collection_statement/getexcelreport', 'DailyCollectionStatementController@getExcelReport')->name('daily_collection_statement.getexcelreport');
+            Route::get('daily_collection_statement/displayData', 'DailyCollectionStatementController@displayData')->name('daily_collection_statement.displaydata');
+
             /*depot_wise_collection*/
             Route::resource('depot_wise_collection', 'DepotWiseCollectionController')->only('index'); 
             Route::post('depot_wise_collection/getpdfreport', 'DepotWiseCollectionController@getPdfReport')->name('depot_wise_collection.getpdfreport');

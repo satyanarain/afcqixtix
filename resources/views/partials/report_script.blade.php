@@ -192,6 +192,10 @@ $(document).ready(function(){
             clearReportData();
         });
 
+        $(document).on('change', '#date', function(){
+            clearReportData();
+        });
+
         $(document).on('change', '#service_id', function(){
             clearReportData();
         });
@@ -212,7 +216,7 @@ function clearReportData()
 {
     $('#reportDataBox').remove();
 }
-function validateForm(depot_id=null, from_date=null, to_date=null, etm_no=null, time_slot=null, direction=null, service_id=null)
+function validateForm(depot_id=null, from_date=null, to_date=null, etm_no=null, time_slot=null, direction=null, service_id=null, date=null)
 {
     if(depot_id)
     {
@@ -258,6 +262,16 @@ function validateForm(depot_id=null, from_date=null, to_date=null, etm_no=null, 
         if(fromDate > toDate)
         {
             alert('From Date must be smaller than or equal to To Date.');
+            return false;
+        }
+    }
+
+    if(date)
+    {
+        var toDate = $('#'+date).val();
+        if(!toDate)
+        {
+            alert('Please enter date.');
             return false;
         }
     }

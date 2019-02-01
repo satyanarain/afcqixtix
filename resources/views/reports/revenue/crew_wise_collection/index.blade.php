@@ -1,9 +1,9 @@
 @extends('layouts.master')
 @section('header')
-<h1>Depot-wise Revenue Collection Report</h1>
+<h1>Crew-wise Revenue Collection Report</h1>
 <ol class="breadcrumb">
             <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"></i>Depot-wise Revenue Collection</a></li>
+            <li><a href="#"></i>Crew-wise Revenue Collection</a></li>
             </ol>
 @stop
 @section('content')
@@ -12,14 +12,14 @@
         <div class="box box-default" style="min-height:0px;">
             <div class="box-header with-border">
                 <div class="col-md-12 col-sm-12 alert-danger cash-collection-error hide"></div>
-                <h3 class="box-title">Select Paramaters</h3>
+                <h3 class="box-title">Select Parameters</h3>
                 <div class="box-tools pull-right">
                     <button class="slideout-menu-toggle btn btn-box-tool btn-box-tool-lg" data-toggle="tooltip" title="Help"><i class="fa fa-question"></i></button>
                 </div>
             </div><!-- /.box-header -->
             <div class="box-body">
                 {!! Form::open([
-                'route' => 'reports.revenue.depot_wise_collection.displaydata',
+                'route' => 'reports.revenue.crew_wise_collection.displaydata',
                 'files'=>true,
                 'enctype' => 'multipart/form-data',
                 'class'=>'form-horizontal',
@@ -27,7 +27,7 @@
                 'method'=> 'GET',
                 'onsubmit'=>'return validateForm();'
                 ]) !!}
-                @include('reports.revenue.depot_wise_collection.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
+                @include('reports.revenue.crew_wise_collection.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 
                 {!! Form::close() !!}
 
@@ -123,6 +123,7 @@
 $(document).ready(function(){
     $(document).on('click', '#exportAsPDF', function(){
         var depot_id = $('#depot_id').val();
+        var conductor_id = $('#conductor_id').val();
         var fromDate = $('#from_date').val();
         if(!fromDate)
         {
@@ -153,13 +154,14 @@ $(document).ready(function(){
         }
 
         $.ajax({
-            url: "{{route('reports.revenue.depot_wise_collection.getpdfreport')}}",
+            url: "{{route('reports.revenue.crew_wise_collection.getpdfreport')}}",
             type: "POST",
             dataType: "JSON",
             data: {
                 depot_id: depot_id,
                 from_date: fromDate,
-                to_date: toDate
+                to_date: toDate,
+                conductor_id: conductor_id
             },
             success: function(response)
             {
@@ -196,6 +198,7 @@ $(document).ready(function(){
 
     $(document).on('click', '#exportAsXLS', function(){
         var depot_id = $('#depot_id').val();
+        var conductor_id = $('#conductor_id').val();
         var fromDate = $('#from_date').val();
         if(!fromDate)
         {
@@ -211,10 +214,11 @@ $(document).ready(function(){
         }
 
         var queryParams = "?depot_id="+depot_id
+                        + "&conductor_id="+conductor_id
                         + "&from_date="+fromDate
                         + "&to_date="+toDate;
 
-        var url = "{{route('reports.revenue.depot_wise_collection.getexcelreport')}}"+queryParams;
+        var url = "{{route('reports.revenue.crew_wise_collection.getexcelreport')}}"+queryParams;
 
         window.open(url,'_blank');
     });

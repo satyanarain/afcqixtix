@@ -441,13 +441,13 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="far fa-dot-circle color-cyan"></i> Conductor-wise Income Compared To Target Income
                     </a>
                 </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
+                <li @if($segments_var[2]=='crew_wise_collection') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.revenue.crew_wise_collection.index')}}">
                         <i class="far fa-dot-circle color-cyan"></i> Crew-wise Collection
                     </a>
                 </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
+                <li @if($segments_var[2]=='daily_collection_statement') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.revenue.daily_collection_statement.index')}}">
                         <i class="far fa-dot-circle color-cyan"></i> Daily Collection Statement
                     </a>
                 </li>

@@ -1,9 +1,9 @@
 @extends('layouts.master')
 @section('header')
-<h1>Depot-wise Revenue Collection Report</h1>
+<h1>Daily Collection Statement Report</h1>
 <ol class="breadcrumb">
             <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"></i>Depot-wise Revenue Collection</a></li>
+            <li><a href="#"></i>Daily Collection Statement</a></li>
             </ol>
 @stop
 @section('content')
@@ -12,31 +12,33 @@
         <div class="box box-default" style="min-height:0px;">
             <div class="box-header with-border">
                 <div class="col-md-12 col-sm-12 alert-danger cash-collection-error hide"></div>
-                <h3 class="box-title">Select Paramaters</h3>
+                <h3 class="box-title">Select Parameters</h3>
                 <div class="box-tools pull-right">
                     <button class="slideout-menu-toggle btn btn-box-tool btn-box-tool-lg" data-toggle="tooltip" title="Help"><i class="fa fa-question"></i></button>
                 </div>
             </div><!-- /.box-header -->
             <div class="box-body">
                 {!! Form::open([
-                'route' => 'reports.revenue.depot_wise_collection.displaydata',
+                'route' => 'reports.revenue.daily_collection_statement.displaydata',
                 'files'=>true,
                 'enctype' => 'multipart/form-data',
                 'class'=>'form-horizontal',
                 'autocomplete'=>'off',
                 'method'=> 'GET',
-                'onsubmit'=>'return validateForm();'
+                'onsubmit'=>'return validateForm("depot_id", "", "", "", "", "", "", "date");'
                 ]) !!}
-                @include('reports.revenue.depot_wise_collection.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
+                @include('reports.revenue.daily_collection_statement.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 
                 {!! Form::close() !!}
 
                 <div class="row" style="margin-top: 50px;" id="reportDataBox">
-                    <div class="col-md-12">
+                    <div class="col-md-12" style="overflow-y: auto;">
+                        @if(count($data) > 0)
                         <h4>
                             <button class="btn btn-primary pull-right" id="exportAsPDF">Export as PDF</button> 
                             <button class="btn btn-primary pull-right" style="margin-right: 10px;margin-bottom: 10px;" id="exportAsXLS">Export as XLS</button>
                         </h4>
+                        @endif
                         <table class="table table-bordered" id="afcsReportTable">
                             <thead>
                                 <tr>
@@ -44,8 +46,14 @@
                                     <th></th>
                                     <th></th>
                                     <th></th>
+                                    <th></th>
+                                    <th></th>
                                     <th colspan="4" style="text-align: center;">PPT</th>
-                                    <th colspan="5" style="text-align: center;">ETM</th>
+                                    <th colspan="7" style="text-align: center;">ETM</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
                                     <th></th>
                                     <th></th>
                                     <th></th>
@@ -54,55 +62,65 @@
                                     <th></th>
                                 </tr>
                                 <tr>
-                                    <th>Depot</th>
-                                    <th>No. of Duties</th>
-                                    <th>No. of Trips</th>
-                                    <th>Dist. (Kms)</th>
-                                    <th>Tkt Cnt</th>
-                                    <th>Tkt Amt (Rs)</th>
-                                    <th>Pass Sold Cnt</th>
-                                    <th>Pass Sold Amt (Rs)</th>
-                                    <th>Tkt Cnt</th>
-                                    <th>Passenger Cnt</th>
-                                    <th>Tkt Amt (Rs)</th>
-                                    <th>Pass Sold Cnt</th>
-                                    <th>Pass Sold Amt (Rs)</th>
-                                    <th>Payout Amt (Rs)</th>
-                                    <th>Fine Amt (Rs)</th>
-                                    <th>Cash (Rs)</th>
-                                    <th>E-Purse (Rs)</th>
-                                    <th>Tot Amt (Rs)</th>
-                                    <th>Conc Amt (Rs)</th>
+                                    <th>S. No.</th>
+                                    <th>Route/Duty/Shift</th>
+                                    <th>Abstract No.</th>
+                                    <th>Crew ID</th>
+                                    <th class="text-right">No. of Trips</th>
+                                    <th class="text-right">Kms</th>
+                                    <th class="text-right">Tkt Cnt</th>
+                                    <th class="text-right">Tkt Amt (Rs)</th>
+                                    <th class="text-right">Pass Sold Cnt</th>
+                                    <th class="text-right">Pass Sold Amt (Rs)</th>
+                                    <th class="text-right">Passenger Cnt</th>
+                                    <th class="text-right">Tkt Cnt</th>
+                                    <th class="text-right">Tkt Amt (Rs)</th>
+                                    <th class="text-right">Pass Sold Cnt</th>
+                                    <th class="text-right">Pass Sold Amt (Rs)</th>
+                                    <th class="text-right">EPurse Cnt</th>
+                                    <th class="text-right">EPurse Amt (Rs)</th>
+                                    <th class="text-right">Payout Amt (Rs)</th>
+                                    <th class="text-right">Fine Amt (Rs)</th>
+                                    <th class="text-right">Lugg Amt (Rs)</th>
+                                    <th class="text-right">Toll Amt (Rs)</th>
+                                    <th class="text-right">Batta/Tea Allowance (Rs)</th>
+                                    <th class="text-right">Incentives (Rs)</th>
+                                    <th class="text-right">Amt Payable/Adjustment Amt (Rs)</th>
+                                    <th class="text-right">Amt Remitted/After Adjustment Amt (Rs)</th>
+                                    <th class="text-right">Print Error Tkt</th>
+                                    <th class="text-right">Print Error Amt (Rs)</th>
                                 </tr>
                             </thead>
                             <tbody>
-                            @if(count($consolidatedData) > 0)
+                            @forelse($data as $key => $d)
                                 <tr>
-                                    <td>{{$depotName}}</td>
-                                    <td>{{$consolidatedData['duties']}}</td>
-                                    <td>{{$consolidatedData['trips']}}</td>
-                                    <td>{{number_format((float)$consolidatedData['distance'], 2, '.', '')}}</td>
-                                    <td>{{$consolidatedData['totalPaperTkts']}}</td>
-                                    <td>{{number_format((float)$consolidatedData['totalPaperTktsSum'], 2, '.', '')}}</td>
-                                    <td>{{$consolidatedData['totalPaperPass']}}</td>
-                                    <td>{{number_format((float)$consolidatedData['totalPaperPassSum'], 2, '.', '')}}</td>
-                                    <td>{{$consolidatedData['totalETMTkts']}}</td>
-                                    <td>{{$consolidatedData['totalETMTotalPsnger']}}</td>
-                                    <td>{{number_format((float)$consolidatedData['totalETMTktsSum'], 2, '.', '')}}</td>
-                                    <td>{{$consolidatedData['totalETMPassCnt']}}</td>
-                                    <td>{{number_format((float)$consolidatedData['totalETMPassSum'], 2, '.', '')}}</td>
-                                    <td>{{number_format((float)$consolidatedData['payout'], 2, '.', '')}}</td>
-                                    <td>{{number_format((float)$consolidatedData['penalty_amount'], 2, '.', '')}}</td>
-                                    <td>{{number_format((float)$consolidatedData['totalCash'], 2, '.', '')}}</td>
-                                    <td>{{number_format((float)$consolidatedData['epurseAmt'], 2, '.', '')}}</td>
-                                    <td>{{number_format((float)$consolidatedData['totalAmt'], 2, '.', '')}}</td>
-                                    <td>{{number_format((float)$consolidatedData['concession'], 2, '.', '')}}</td>
+                                    <td>{{$key+1}}</td>
+                                    <td>{{$d->route->route_name.'/'.$d->duty->duty_number.'/'.$d->shift->shift}}</td>
+                                    <td>{{$d->abstract_no}}</td>
+                                    <td>{{$d->conductor->crew_id}}</td>
+                                    <td class="text-right">{{$d->trips->count()}}</td>
+                                    <td class="text-right">{{$d->distance}}</td>
+                                    <td class="text-right">{{number_format((float)$data['totalPaperTktsSum'], 2, '.', '')}}</td>
+                                    <td class="text-right">{{$data['totalPaperPass']}}</td>
+                                    <td class="text-right">{{number_format((float)$data['totalPaperPassSum'], 2, '.', '')}}</td>
+                                    <td class="text-right">{{$data['totalETMTkts']}}</td>
+                                    <td class="text-right">{{$d->passenger_count}}</td>
+                                    <td class="text-right">{{$d->tickets_count}}</td>
+                                    <td class="text-right">{{number_format((float)$d->tickets_amount, 2, '.', '')}}</td>
+                                    <td class="text-right">{{$d->pass_count}}</td>
+                                    <td class="text-right">{{number_format((float)$d->pass_amount, 2, '.', '')}}</td>
+                                    <td class="text-right">{{$d->epurse_count}}</td>
+                                    <td class="text-right">{{number_format((float)$d->epurse_amount, 2, '.', '')}}</td>
+                                    <td class="text-right">{{$d->passenger_count}}</td>
+                                    <td class="text-right">{{$d->passenger_count}}</td>
+                                    <td class="text-right">{{number_format((float)$d->baggage_amount, 2, '.', '')}}</td>
+                                    <td class="text-right">{{number_format((float)$d->toll_amount, 2, '.', '')}}</td>
                                 </tr>
-                            @else
+                            @empty
                                 <tr>
-                                    <td colspan="18">No Record Found!</td>
+                                    <td colspan="27" class="text-center"><strong>No Record Found!</strong></td>
                                 </tr>
-                            @endif
+                            @endforelse
                             </tbody>
                         </table>
                     </div>
@@ -123,6 +141,7 @@
 $(document).ready(function(){
     $(document).on('click', '#exportAsPDF', function(){
         var depot_id = $('#depot_id').val();
+        var conductor_id = $('#conductor_id').val();
         var fromDate = $('#from_date').val();
         if(!fromDate)
         {
@@ -153,13 +172,14 @@ $(document).ready(function(){
         }
 
         $.ajax({
-            url: "{{route('reports.revenue.depot_wise_collection.getpdfreport')}}",
+            url: "{{route('reports.revenue.daily_collection_statement.getpdfreport')}}",
             type: "POST",
             dataType: "JSON",
             data: {
                 depot_id: depot_id,
                 from_date: fromDate,
-                to_date: toDate
+                to_date: toDate,
+                conductor_id: conductor_id
             },
             success: function(response)
             {
@@ -196,6 +216,7 @@ $(document).ready(function(){
 
     $(document).on('click', '#exportAsXLS', function(){
         var depot_id = $('#depot_id').val();
+        var conductor_id = $('#conductor_id').val();
         var fromDate = $('#from_date').val();
         if(!fromDate)
         {
@@ -211,47 +232,15 @@ $(document).ready(function(){
         }
 
         var queryParams = "?depot_id="+depot_id
+                        + "&conductor_id="+conductor_id
                         + "&from_date="+fromDate
                         + "&to_date="+toDate;
 
-        var url = "{{route('reports.revenue.depot_wise_collection.getexcelreport')}}"+queryParams;
+        var url = "{{route('reports.revenue.daily_collection_statement.getexcelreport')}}"+queryParams;
 
         window.open(url,'_blank');
     });
 });
-function validateForm()
-    {
-        var fromDate = $('#from_date').val();
-        if(!fromDate)
-        {
-            alert('Please enter from date.');
-            return false;
-        }
-
-        var toDate = $('#to_date').val();
-        if(!toDate)
-        {
-            alert('Please enter to date.');
-            return false;
-        }
-
-        var splitFrom = fromDate.split('-');
-        var splitTo = toDate.split('-');
-
-        console.log(splitFrom)
-
-        //Create a date object from the arrays
-        fromDate = new Date(splitFrom[2], splitFrom[1]-1, splitFrom[0]);
-        toDate = new Date(splitTo[2], splitTo[1]-1, splitTo[0]);
-
-        if(fromDate > toDate)
-        {
-            alert('From Date must be smaller than or equal to To Date.');
-            return false;
-        }
-
-        return true;
-    }
 </script>
 @endpush
 
