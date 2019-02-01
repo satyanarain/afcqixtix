@@ -73,12 +73,14 @@
         <ul class="nav navbar-nav">
 
           <li class="dropdown notifications-menu">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <div style="float: left;">
              @if(Auth::user()->image_path)
              {{Html::image('/images/photo/'.Auth::user()->image_path,'',array('class'=>"user-image img-circle",'style'=>"height:auto;width:20px;"))}}
              @else
              <img src="<?php echo \URL::to('') . '/img/user2-160x160.jpg' ?>" class="user-image">
              @endif
+              </div>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="float: left;">
              <span class="hidden-xs">{{{ isset(Auth::user()->salutation) ? Auth::user()->salutation : '' }}} {{{ isset(Auth::user()->name) ? Auth::user()->name : '' }}}!</span>
              <b class="caret"></b>
            </a>

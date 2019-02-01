@@ -3,7 +3,7 @@ namespace App\Models;
 //use Fenos\Notifynder\Notifable;
 use Fenos\Notifynder\Traits\NotifableLaravel53 as NotifableTrait;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
-//use Illuminate\Notifications\Notifiable;
+use Illuminate\Notifications\Notifiable;
 use Cache;
 use App\Models\Client;
 use App\Models\Associate;
@@ -13,7 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
 
-    use NotifableTrait, EntrustUserTrait;
+    use NotifableTrait, EntrustUserTrait,Notifiable;
 
     /**
      * The database table used by the model.
