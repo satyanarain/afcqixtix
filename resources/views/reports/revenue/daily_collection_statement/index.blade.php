@@ -99,10 +99,10 @@
                                     <td>{{$d->abstract_no}}</td>
                                     <td>{{$d->conductor->crew_id}}</td>
                                     <td class="text-right">{{$d->trips->count()}}</td>
-                                    <td class="text-right">{{$d->distance}}</td>
-                                    <td class="text-right">{{$d->ppt_count}}</td>
+                                    <td class="text-right">{{$d->trips->pluck('route.distance')->sum()}}</td>
+                                    <td class="text-right">{{$d->ppt_count?$d->ppt_count:0}}</td>
                                     <td class="text-right">{{number_format((float)$d->ppt_amount, 2, '.', '')}}</td>
-                                    <td class="text-right">{{$d->ppp_count}}</td>
+                                    <td class="text-right">{{$d->ppp_count?$d->ppp_count:0}}</td>
                                     <td class="text-right">{{number_format((float)$d->ppp_amount, 2, '.', '')}}</td>
                                     <td class="text-right">{{$d->passenger_count}}</td>
                                     <td class="text-right">{{$d->tickets_count}}</td>
