@@ -150,7 +150,7 @@ class DailyCollectionStatementController extends Controller
 
     public function getQueryBuilder($depot_id, $date, $shift_id)
     {
-        $queryBuilder = Waybill::with(['route:id,route_name', 'duty:id,duty_number', 'auditRemittance:waybill_number,created_date', 'cashCollection:abstract_no,submitted_at', 'tickets.concession', 'trips.route', 'auditInventory', 'payouts:abstract_no,amount'])
+        $queryBuilder = Waybill::with(['route:id,route_name', 'duty:id,duty_number', 'auditRemittance:waybill_number,created_date', 'cashCollection', 'tickets.concession', 'trips.route', 'auditInventory', 'payouts:abstract_no,amount'])
 	        ->withCount(['tickets as tickets_count'=>function($query){
 	        	$query->where('ticket_type', 'Ticket');
 	        }])->withCount(['tickets as pass_count'=>function($query){
@@ -174,6 +174,34 @@ class DailyCollectionStatementController extends Controller
 	        	$query->select(DB::raw("SUM(baggage_amt)"));
 	        }])->withCount(['tickets as toll_amount'=>function($query){
 	        	$query->select(DB::raw("SUM(toll_amt)"));
+	        }])->withCount(['auditRemittance as incentives'=>function($query){
+	        	$query->select(DB::raw("(SUM(conductor_incentive)+SUM(driver_incentive))"));
+	        }])->withCount(['auditRemittance as batta_tea_allowance'=>function($query){
+	        	$query->select(DB::raw("(SUM(batta)+SUM(tea_allowance))"));
+	        }])->withCount(['auditInventory as ppt_count'=>function($query){
+	        	$query->whereHas('denomination', function($q){
+	        		$q->whereHas('denominationMaster', function($p){
+	        			$p->where('id', 1);
+	        		});
+	        	})->select(DB::raw("SUM(quantity)"));
+	        }])->withCount(['auditInventory as ppt_amount'=>function($query){
+	        	$query->whereHas('denomination', function($q){
+	        		$q->whereHas('denominationMaster', function($p){
+	        			$p->where('id', 1);
+	        		});
+	        	})->select(DB::raw("SUM(sold_ticket_value)"));
+	        }])->withCount(['auditInventory as ppp_count'=>function($query){
+	        	$query->whereHas('denomination', function($q){
+	        		$q->whereHas('denominationMaster', function($p){
+	        			$p->where('id', 2);
+	        		});
+	        	})->select(DB::raw("SUM(quantity)"));
+	        }])->withCount(['auditInventory as ppp_amount'=>function($query){
+	        	$query->whereHas('denomination', function($q){
+	        		$q->whereHas('denominationMaster', function($p){
+	        			$p->where('id', 2);
+	        		});
+	        	})->select(DB::raw("SUM(sold_ticket_value)"));
 	        }]);	
 
         if($depot_id)

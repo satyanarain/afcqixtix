@@ -58,8 +58,8 @@
                                     <th></th>
                                     <th></th>
                                     <th></th>
-                                    <th></th>
-                                    <th></th>
+                                    <!-- <th></th>
+                                    <th></th> -->
                                 </tr>
                                 <tr>
                                     <th>S. No.</th>
@@ -87,8 +87,8 @@
                                     <th class="text-right">Incentives (Rs)</th>
                                     <th class="text-right">Amt Payable/Adjustment Amt (Rs)</th>
                                     <th class="text-right">Amt Remitted/After Adjustment Amt (Rs)</th>
-                                    <th class="text-right">Print Error Tkt</th>
-                                    <th class="text-right">Print Error Amt (Rs)</th>
+                                    <!-- <th class="text-right">Print Error Tkt</th>
+                                    <th class="text-right">Print Error Amt (Rs)</th> --><!-- To be commented for now -->
                                 </tr>
                             </thead>
                             <tbody>
@@ -100,10 +100,10 @@
                                     <td>{{$d->conductor->crew_id}}</td>
                                     <td class="text-right">{{$d->trips->count()}}</td>
                                     <td class="text-right">{{$d->distance}}</td>
-                                    <td class="text-right">{{number_format((float)$data['totalPaperTktsSum'], 2, '.', '')}}</td>
-                                    <td class="text-right">{{$data['totalPaperPass']}}</td>
-                                    <td class="text-right">{{number_format((float)$data['totalPaperPassSum'], 2, '.', '')}}</td>
-                                    <td class="text-right">{{$data['totalETMTkts']}}</td>
+                                    <td class="text-right">{{$d->ppt_count}}</td>
+                                    <td class="text-right">{{number_format((float)$d->ppt_amount, 2, '.', '')}}</td>
+                                    <td class="text-right">{{$d->ppp_count}}</td>
+                                    <td class="text-right">{{number_format((float)$d->ppp_amount, 2, '.', '')}}</td>
                                     <td class="text-right">{{$d->passenger_count}}</td>
                                     <td class="text-right">{{$d->tickets_count}}</td>
                                     <td class="text-right">{{number_format((float)$d->tickets_amount, 2, '.', '')}}</td>
@@ -115,6 +115,12 @@
                                     <td class="text-right">{{$d->passenger_count}}</td>
                                     <td class="text-right">{{number_format((float)$d->baggage_amount, 2, '.', '')}}</td>
                                     <td class="text-right">{{number_format((float)$d->toll_amount, 2, '.', '')}}</td>
+                                    <td class="text-right">{{number_format((float)$d->incentives, 2, '.', '')}}</td>
+                                    <td class="text-right">{{number_format((float)$d->batta_tea_allowance, 2, '.', '')}}</td>
+                                    <td class="text-right">{{number_format((float)$d->cashCollection->amount_payable, 2, '.', '')}}</td>
+                                    <td class="text-right">{{number_format((float)$d->cashCollection->cash_remitted, 2, '.', '')}}</td>
+                                    <!-- <td class="text-right">{{number_format((float)$d->incentives, 2, '.', '')}}</td>
+                                    <td class="text-right">{{number_format((float)$d->batta_tea_allowance, 2, '.', '')}}</td> -->
                                 </tr>
                             @empty
                                 <tr>
