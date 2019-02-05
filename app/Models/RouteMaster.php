@@ -10,17 +10,5 @@ class RouteMaster extends Model
      */
     protected $table = 'route_master';
     protected $guarded = [];
-      
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
     
 }

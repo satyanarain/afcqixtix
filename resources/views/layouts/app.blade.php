@@ -436,11 +436,6 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="far fa-dot-circle color-cyan"></i> Conductor-wise Earning
                     </a>
                 </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
-                        <i class="far fa-dot-circle color-cyan"></i> Conductor-wise Income Compared To Target Income
-                    </a>
-                </li>
                 <li @if($segments_var[2]=='crew_wise_collection') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.revenue.crew_wise_collection.index')}}">
                         <i class="far fa-dot-circle color-cyan"></i> Crew-wise Collection
@@ -451,18 +446,18 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="far fa-dot-circle color-cyan"></i> Daily Collection Statement
                     </a>
                 </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                <!-- <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
                         <i class="far fa-dot-circle color-cyan"></i> Date-wise BOT Share Details
                     </a>
-                </li>
+                </li> -->
                 <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
                         <i class="far fa-dot-circle color-cyan"></i> Date-wise Denominations
                     </a>
                 </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
+                <li @if($segments_var[2]=='date_wise_collection') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.revenue.date_wise_collection.index')}}">
                         <i class="far fa-dot-circle color-cyan"></i> Date-wise Collection
                     </a>
                 </li>
@@ -476,8 +471,8 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="far fa-dot-circle color-cyan"></i> ETM-wise Transaction Count 
                     </a>
                 </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
+                <li @if($segments_var[2]=='pass_sold') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.revenue.pass_sold.index')}}">
                         <i class="far fa-dot-circle color-cyan"></i> Pass Sold
                     </a>
                 </li>
@@ -506,8 +501,8 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="far fa-dot-circle color-cyan"></i> Print Error Details
                     </a>
                 </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
+                <li @if($segments_var[2]=='epkm') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.revenue.epkm.index')}}">
                         <i class="far fa-dot-circle color-cyan"></i> Revenue EPKM
                     </a>
                 </li>
@@ -544,6 +539,11 @@ $array= array('etm', 'revenue', 'ppt')
                 <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
                     <a href="#">
                         <i class="far fa-dot-circle color-cyan"></i> Comparative Statement for Last Year
+                    </a>
+                </li>
+                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
+                    <a href="#">
+                        <i class="far fa-dot-circle color-cyan"></i> Conductor-wise Income Compared To Target Income
                     </a>
                 </li>
             </ul>

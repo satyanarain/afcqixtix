@@ -16,6 +16,12 @@
     </div>
 
     <div class="col-md-3">
+        @php $routes = displayList('route_master','route_name');@endphp
+        {!! Form::label('route_id', Lang::get('Route*'), ['class' => 'control-label']) !!}    
+        {!! Form::select('route_id', $routes, null, ['class' => 'form-control', 'placeholder'=>'Select Route']) !!}
+    </div>
+
+    <div class="col-md-3">
         <label>&nbsp;</label>
         {{ Form::submit('Submit', array('class' => 'btn btn-success pull-left', 'style'=>'margin-top: 26px;')) }}
     </div>

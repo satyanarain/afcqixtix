@@ -1,9 +1,9 @@
 @extends('layouts.master')
 @section('header')
-<h1>Depot-wise Revenue Collection Report</h1>
+<h1>Pass Sold Report</h1>
 <ol class="breadcrumb">
             <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"></i>Depot-wise Revenue Collection</a></li>
+            <li><a href="#"></i>Pass Sold</a></li>
             </ol>
 @stop
 @section('content')
@@ -12,14 +12,14 @@
         <div class="box box-default" style="min-height:0px;">
             <div class="box-header with-border">
                 <div class="col-md-12 col-sm-12 alert-danger cash-collection-error hide"></div>
-                <h3 class="box-title">Select Paramaters</h3>
+                <h3 class="box-title">Select Parameters</h3>
                 <div class="box-tools pull-right">
                     <button class="slideout-menu-toggle btn btn-box-tool btn-box-tool-lg" data-toggle="tooltip" title="Help"><i class="fa fa-question"></i></button>
                 </div>
             </div><!-- /.box-header -->
             <div class="box-body">
                 {!! Form::open([
-                'route' => 'reports.revenue.depot_wise_collection.displaydata',
+                'route' => 'reports.revenue.pass_sold.displaydata',
                 'files'=>true,
                 'enctype' => 'multipart/form-data',
                 'class'=>'form-horizontal',
@@ -27,14 +27,14 @@
                 'method'=> 'GET',
                 'onsubmit'=>'return validateForm("depot_id", "from_date", "to_date");'
                 ]) !!}
-                @include('reports.revenue.depot_wise_collection.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
+                @include('reports.revenue.pass_sold.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 
                 {!! Form::close() !!}
 
-                @isset($consolidatedData)
+                @isset($data)
                 <div class="row" style="margin-top: 50px;" id="reportDataBox">
                     <div class="col-md-12">
-                        @if(count($consolidatedData) > 0)
+                        @if(count($data) > 0)
                         <h4>
                             <button class="btn btn-primary pull-right" id="exportAsPDF">Export as PDF</button> 
                             <button class="btn btn-primary pull-right" style="margin-right: 10px;margin-bottom: 10px;" id="exportAsXLS">Export as XLS</button>
@@ -43,71 +43,44 @@
                         <table class="table table-bordered" id="afcsReportTable">
                             <thead>
                                 <tr>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th colspan="4" style="text-align: center;">PPT</th>
-                                    <th colspan="5" style="text-align: center;">ETM</th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                </tr>
-                                <tr>
-                                    <th>Depot</th>
-                                    <th>No. of Duties</th>
-                                    <th>No. of Trips</th>
-                                    <th>Dist. (Kms)</th>
-                                    <th>Tkt Cnt</th>
-                                    <th>Tkt Amt (Rs)</th>
-                                    <th>Pass Sold Cnt</th>
-                                    <th>Pass Sold Amt (Rs)</th>
-                                    <th>Tkt Cnt</th>
-                                    <th>Passenger Cnt</th>
-                                    <th>Tkt Amt (Rs)</th>
-                                    <th>Pass Sold Cnt</th>
-                                    <th>Pass Sold Amt (Rs)</th>
-                                    <th>Payout Amt (Rs)</th>
-                                    <th>Fine Amt (Rs)</th>
+                                    <th>S. No.</th>
+                                    <th>Date</th>
+                                    <th>Stop</th>
+                                    <th>Service Type</th>
+                                    <th>Pass Type</th>
+                                    <th>Pass Count</th>
                                     <th>Cash (Rs)</th>
-                                    <th>E-Purse (Rs)</th>
-                                    <th>Tot Amt (Rs)</th>
-                                    <th>Conc Amt (Rs)</th>
+                                    <th>Credit (Rs)</th>
+                                    <th>EPurse (Rs)</th>
+                                    <th>Amount (Rs)</th>
                                 </tr>
                             </thead>
                             <tbody>
-                            @if(count($consolidatedData) > 0)
+                            @forelse($data as $key=>$d)
                                 <tr>
-                                    <td>{{$depotName}}</td>
-                                    <td>{{$consolidatedData['duties']}}</td>
-                                    <td>{{$consolidatedData['trips']}}</td>
-                                    <td>{{number_format((float)$consolidatedData['distance'], 2, '.', '')}}</td>
-                                    <td>{{$consolidatedData['totalPaperTkts']}}</td>
-                                    <td>{{number_format((float)$consolidatedData['totalPaperTktsSum'], 2, '.', '')}}</td>
-                                    <td>{{$consolidatedData['totalPaperPass']}}</td>
-                                    <td>{{number_format((float)$consolidatedData['totalPaperPassSum'], 2, '.', '')}}</td>
-                                    <td>{{$consolidatedData['totalETMTkts']}}</td>
-                                    <td>{{$consolidatedData['totalETMTotalPsnger']}}</td>
-                                    <td>{{number_format((float)$consolidatedData['totalETMTktsSum'], 2, '.', '')}}</td>
-                                    <td>{{$consolidatedData['totalETMPassCnt']}}</td>
-                                    <td>{{number_format((float)$consolidatedData['totalETMPassSum'], 2, '.', '')}}</td>
-                                    <td>{{number_format((float)$consolidatedData['payout'], 2, '.', '')}}</td>
-                                    <td>{{number_format((float)$consolidatedData['penalty_amount'], 2, '.', '')}}</td>
-                                    <td>{{number_format((float)$consolidatedData['totalCash'], 2, '.', '')}}</td>
-                                    <td>{{number_format((float)$consolidatedData['epurseAmt'], 2, '.', '')}}</td>
-                                    <td>{{number_format((float)$consolidatedData['totalAmt'], 2, '.', '')}}</td>
-                                    <td>{{number_format((float)$consolidatedData['concession'], 2, '.', '')}}</td>
+                                    <td>{{$key + 1}}</td>
+                                    <td>{{$data['duties']}}</td>
+                                    <td>{{$data['trips']}}</td>
+                                    <td>{{number_format((float)$data['totalETMPassSum'], 2, '.', '')}}</td>
+                                    <td>{{number_format((float)$data['payout'], 2, '.', '')}}</td>
+                                    <td>{{number_format((float)$data['penalty_amount'], 2, '.', '')}}</td>
+                                    <td>{{number_format((float)$data['totalCash'], 2, '.', '')}}</td>
+                                    <td>{{number_format((float)$data['epurseAmt'], 2, '.', '')}}</td>
+                                    <td>{{number_format((float)$data['totalAmt'], 2, '.', '')}}</td>
+                                    <td>{{number_format((float)$data['concession'], 2, '.', '')}}</td>
                                 </tr>
-                            @else
+                            @empty
                                 <tr>
-                                    <td colspan="18">No Record Found!</td>
+                                    <td colspan="10" class="text-center"><strong>No Record Found!</strong></td>
                                 </tr>
-                            @endif
+                            @endforelse
                             </tbody>
                         </table>
+                        @if(count($data) > 0)
+                            <div class="pull-right"> 
+                                {{$data->appends(request()->input())->links()}}
+                            </div>
+                        @endif
                     </div>
                 </div>
                 @endisset
@@ -127,6 +100,7 @@
 $(document).ready(function(){
     $(document).on('click', '#exportAsPDF', function(){
         var depot_id = $('#depot_id').val();
+        var conductor_id = $('#conductor_id').val();
         var fromDate = $('#from_date').val();
         if(!fromDate)
         {
@@ -157,13 +131,14 @@ $(document).ready(function(){
         }
 
         $.ajax({
-            url: "{{route('reports.revenue.depot_wise_collection.getpdfreport')}}",
+            url: "{{route('reports.revenue.pass_sold.getpdfreport')}}",
             type: "POST",
             dataType: "JSON",
             data: {
                 depot_id: depot_id,
                 from_date: fromDate,
-                to_date: toDate
+                to_date: toDate,
+                conductor_id: conductor_id
             },
             success: function(response)
             {
@@ -200,6 +175,7 @@ $(document).ready(function(){
 
     $(document).on('click', '#exportAsXLS', function(){
         var depot_id = $('#depot_id').val();
+        var conductor_id = $('#conductor_id').val();
         var fromDate = $('#from_date').val();
         if(!fromDate)
         {
@@ -215,15 +191,15 @@ $(document).ready(function(){
         }
 
         var queryParams = "?depot_id="+depot_id
+                        + "&conductor_id="+conductor_id
                         + "&from_date="+fromDate
                         + "&to_date="+toDate;
 
-        var url = "{{route('reports.revenue.depot_wise_collection.getexcelreport')}}"+queryParams;
+        var url = "{{route('reports.revenue.pass_sold.getexcelreport')}}"+queryParams;
 
         window.open(url,'_blank');
     });
 });
-
 </script>
 @endpush
 

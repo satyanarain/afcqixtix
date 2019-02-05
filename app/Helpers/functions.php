@@ -525,19 +525,16 @@ function checkPermission($module='',$action='') {
         else
             return false;
     }
-function getAllModulePermission($module='') {
+function getAllModulePermission($module='') 
+{
     $user_id = Auth::id();
     $sql = PermissionDetail::where('user_id', '=', $user_id)->first();
     $result = $sql[$module];  
     return $array_menu= explode(',', $result);
-//    if(in_array($action,$array_menu))
-//        return true;
-//    else
-//        return false;
 }
 
 function calculateConcession($tickets)
-  {
+{
       $consessionAmt = 0;
       if(count($tickets) > 0)
       {
@@ -557,4 +554,25 @@ function calculateConcession($tickets)
       }
 
       return $consessionAmt;
-  }
+}
+
+function calculateEPKM(int $maxDistance, int $maxFare, int $seatingCapacity)
+{
+    if($maxDistance)
+    {
+        return $maxFare / $maxDistance * $seatingCapacity;
+    }else{
+        return 0;
+    }
+    
+}
+
+function calculateLoadFactor(int $actualEPKM, int $targetEPKM)
+{
+    if($targetEPKM)
+    {
+        return $actualEPKM/$targetEPKM*100;
+    }else{
+        return 0;
+    }
+}

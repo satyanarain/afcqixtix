@@ -19,7 +19,7 @@ use App\Models\Denomination;
 use App\Traits\checkPermission;
 use App\Http\Controllers\Controller;
 
-class DailyCollectionStatementController extends Controller
+class DateWiseCollectionController extends Controller
 {
     use activityLog;
     use checkPermission;
@@ -31,20 +31,20 @@ class DailyCollectionStatementController extends Controller
      */
     public function index()
     {
-        return view('reports.revenue.daily_collection_statement.index');
+        return view('reports.revenue.date_wise_collection.index');
     }
 
     public function displayData(Request $request)
     {       
         $input = $request->all();
         $depot_id = $input['depot_id'];
-        $date = date('Y-m-d', strtotime($input['date']));
-        $shift_id = $input['shift_id'];
+        $from_date = date('Y-m-d', strtotime($input['from_date']));
+        $to_date = date('Y-m-d', strtotime($input['to_date']));
        	
-       	$queryBuilder = $this->getQueryBuilder($depot_id, $date, $shift_id);	
+       	$queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date);	
        	//return $queryBuilder->toSql();
-       	$data = $queryBuilder->paginate(10);
-       	return view('reports.revenue.daily_collection_statement.index', compact('data'));
+       	$data = $queryBuilder->paginate(5);
+       	return view('reports.revenue.date_wise_collection.index', compact('data'));
     }
 
     /**
@@ -57,8 +57,8 @@ class DailyCollectionStatementController extends Controller
     {
         $input = $request->all();
         $depot_id = $input['depot_id'];
-        $date = date('Y-m-d', strtotime($input['date']));
-        $shift_id = $input['shift_id'];
+        $from_date = date('Y-m-d', strtotime($input['from_date']));
+        $to_date = date('Y-m-d', strtotime($input['to_date']));
        	
        	$queryBuilder = $this->getQueryBuilder($depot_id, $date, $shift_id);	
   
@@ -76,8 +76,8 @@ class DailyCollectionStatementController extends Controller
 
         $meta = [ // For displaying filters description on header
             'Depot : ' . $depotName,
-            'Date : '.date('d-m-Y', strtotime($date)),
-            'Shift : '.$shiftName
+            'From Date : '.date('d-m-Y', strtotime($from_date)),
+            'To Date : '.date('d-m-Y', strtotime($to_date))
         ];   
 
         $reportData = $queryBuilder->get();
@@ -189,7 +189,7 @@ class DailyCollectionStatementController extends Controller
         					->download($title.'.xlsx');        
     }
 
-    public function getQueryBuilder($depot_id, $date, $shift_id)
+    public function getQueryBuilder($depot_id, $from_date, $to_date)
     {
         $queryBuilder = Waybill::with(['route:id,route_name', 'duty:id,duty_number', 'auditRemittance:waybill_number,created_date', 'cashCollection', 'tickets.concession', 'trips.route', 'auditInventory', 'payouts:abstract_no,amount', 'shift:id,shift', 'conductor:id,crew_id'])
 	        ->withCount(['tickets as tickets_count'=>function($query){
@@ -250,9 +250,10 @@ class DailyCollectionStatementController extends Controller
             $queryBuilder = $queryBuilder->where('depot_id', $depot_id);
         }
 
-        if($date)
+        if($from_date && $to_date)
         {
-            $queryBuilder = $queryBuilder->whereDate('created_at', $date);
+            $queryBuilder = $queryBuilder->whereDate('created_at', '>=', $from_date)
+            							 ->whereDate('created_at', '<=', $to_date);
         }
 
         if($shift_id)
@@ -260,6 +261,6 @@ class DailyCollectionStatementController extends Controller
         	$queryBuilder = $queryBuilder->whereDate('shift_id', $shift_id);
         }
 
-        return $queryBuilder;
+        return $queryBuilder->orderBy('created_at', 'DESC');
     }
 }

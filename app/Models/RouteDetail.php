@@ -10,24 +10,15 @@ class RouteDetail extends Model
      */
     protected $table = 'route_details';
     protected $guarded = ['is_this_by'];
-      public function user()
+      
+    public function user()
     {
         return $this->belongsTo('App\Models\User');
     }
-      public function stop()
+    
+    public function stop()
     {
         return $this->belongsTo('App\Models\Stop');
     }
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
     
 }

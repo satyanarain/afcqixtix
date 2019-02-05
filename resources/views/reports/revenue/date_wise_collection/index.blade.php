@@ -19,18 +19,18 @@
             </div><!-- /.box-header -->
             <div class="box-body">
                 {!! Form::open([
-                'route' => 'reports.revenue.daily_collection_statement.displaydata',
+                'route' => 'reports.revenue.date_wise_collection.displaydata',
                 'files'=>true,
                 'enctype' => 'multipart/form-data',
                 'class'=>'form-horizontal',
                 'autocomplete'=>'off',
                 'method'=> 'GET',
-                'onsubmit'=>'return validateForm("depot_id", "", "", "", "", "", "", "date");'
+                'onsubmit'=>'return validateForm("depot_id", "from_date", "from_date");'
                 ]) !!}
-                @include('reports.revenue.daily_collection_statement.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
+                @include('reports.revenue.date_wise_collection.form', ['submitButtonText' => Lang::get('user.headers.create_submit')])
 
                 {!! Form::close() !!}
-
+                @isset($data)
                 <div class="row" style="margin-top: 50px;" id="reportDataBox">
                     <div class="col-md-12" style="overflow-y: auto;">
                         @if(count($data) > 0)
@@ -46,7 +46,7 @@
                                     <th></th>
                                     <th></th>
                                     <th></th>
-                                    <th></th>
+                                    <!-- <th></th> -->
                                     <th></th>
                                     <th colspan="4" style="text-align: center;">PPT</th>
                                     <th colspan="7" style="text-align: center;">ETM</th>
@@ -57,17 +57,20 @@
                                     <th></th>
                                     <th></th>
                                     <th></th>
-                                    <th></th>
+                                    <!-- <th></th>
+                                    <th></th> -->
                                     <!-- <th></th>
                                     <th></th> -->
                                 </tr>
                                 <tr>
                                     <th>S. No.</th>
-                                    <th>Route/Duty/Shift</th>
+                                    <th>Date</th>
+                                    <!-- <th>Route/Duty/Shift</th>
                                     <th>Abstract No.</th>
-                                    <th>Crew ID</th>
+                                    <th>Crew ID</th> -->
                                     <th class="text-right">No. of Trips</th>
                                     <th class="text-right">Kms</th>
+                                    <th class="text-right">EPKM</th>
                                     <th class="text-right">Tkt Cnt</th>
                                     <th class="text-right">Tkt Amt (Rs)</th>
                                     <th class="text-right">Pass Sold Cnt</th>
@@ -83,10 +86,9 @@
                                     <!-- <th class="text-right">Fine Amt (Rs)</th> -->
                                     <th class="text-right">Lugg Amt (Rs)</th>
                                     <th class="text-right">Toll Amt (Rs)</th>
-                                    <th class="text-right">Batta/Tea Allowance (Rs)</th>
+                                    <th class="text-right">Bhatta/Tea Allowance (Rs)</th>
                                     <th class="text-right">Incentives (Rs)</th>
-                                    <th class="text-right">Amt Payable/Adjustment Amt (Rs)</th>
-                                    <th class="text-right">Amt Remitted/After Adjustment Amt (Rs)</th>
+                                    <th class="text-right">Total Amt (Rs)</th>
                                     <!-- <th class="text-right">Print Error Tkt</th>
                                     <th class="text-right">Print Error Amt (Rs)</th> --><!-- To be commented for now -->
                                 </tr>
@@ -95,11 +97,22 @@
                             @forelse($data as $key => $d)
                                 <tr>
                                     <td>{{$key+1}}</td>
-                                    <td>{{$d->route->route_name.'/'.$d->duty->duty_number.'/'.$d->shift->shift}}</td>
+                                    <td>{{date('d-m-Y', strtotime($d->created_at))}}</td>
+                                    <!-- <td>{{$d->route->route_name.'/'.$d->duty->duty_number.'/'.$d->shift->shift}}</td>
                                     <td>{{$d->abstract_no}}</td>
-                                    <td>{{$d->conductor->crew_id}}</td>
+                                    <td>{{$d->conductor->crew_id}}</td> -->
                                     <td class="text-right">{{$d->trips->count()}}</td>
-                                    <td class="text-right">{{$d->trips->pluck('route.distance')->sum()}}</td>
+                                    @php
+                                    $distance = $d->trips->pluck('route.distance')->sum();
+                                    @endphp
+                                    <td class="text-right">{{$distance}}</td>
+                                    @php 
+                                    $total = $d->ppt_amount + $d->ppp_amount + $d->tickets_amount + $d->pass_amount + $d->epurse_amount;
+
+                                    $epkm = $total/$distance;
+
+                                    @endphp
+                                    <td class="text-right">{{number_format((float)$epkm, 2, '.', '')}}</td>
                                     <td class="text-right">{{$d->ppt_count?$d->ppt_count:0}}</td>
                                     <td class="text-right">{{number_format((float)$d->ppt_amount, 2, '.', '')}}</td>
                                     <td class="text-right">{{$d->ppp_count?$d->ppp_count:0}}</td>
@@ -117,8 +130,7 @@
                                     <td class="text-right">{{number_format((float)$d->toll_amount, 2, '.', '')}}</td>
                                     <td class="text-right">{{number_format((float)$d->incentives, 2, '.', '')}}</td>
                                     <td class="text-right">{{number_format((float)$d->batta_tea_allowance, 2, '.', '')}}</td>
-                                    <td class="text-right">{{number_format((float)$d->cashCollection->amount_payable, 2, '.', '')}}</td>
-                                    <td class="text-right">{{number_format((float)$d->cashCollection->cash_remitted, 2, '.', '')}}</td>
+                                    <td class="text-right">{{number_format((float)$total, 2, '.', '')}}</td>
                                     <!-- <td class="text-right">{{number_format((float)$d->incentives, 2, '.', '')}}</td>
                                     <td class="text-right">{{number_format((float)$d->batta_tea_allowance, 2, '.', '')}}</td> -->
                                 </tr>
@@ -129,8 +141,14 @@
                             @endforelse
                             </tbody>
                         </table>
+                        @if(count($data)>0)
+                        <div class="pull-right"> 
+                            {{$data->appends(request()->input())->links()}}
+                        </div>
+                        @endif
                     </div>
                 </div>
+                @endisset
             </div>
             <!-- /.box-body -->
         </div>
@@ -147,17 +165,28 @@
 $(document).ready(function(){
     $(document).on('click', '#exportAsPDF', function(){
         var depot_id = $('#depot_id').val();
-        var shift_id = $('#shift_id').val();
-        var date = $('#date').val();
+        var fromDate = $('#from_date').val();
+        if(!fromDate)
+        {
+            alert('Please enter from date.');
+            return false;
+        }
+
+        var toDate = $('#to_date').val();
+        if(!toDate)
+        {
+            alert('Please enter to date.');
+            return false;
+        }
 
         $.ajax({
-            url: "{{route('reports.revenue.daily_collection_statement.getpdfreport')}}",
+            url: "{{route('reports.revenue.date_wise_collection.getpdfreport')}}",
             type: "POST",
             dataType: "JSON",
             data: {
                 depot_id: depot_id,
-                date: date,
-                shift_id: shift_id
+                from_date: fromDate,
+                to_date: toDate
             },
             success: function(response)
             {
@@ -170,8 +199,8 @@ $(document).ready(function(){
                     var reportData = [];
                     if(data)
                     {
-                        reportData.push([{'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'PPT', 'style': 'tableHeaderStyle', colSpan: 4, 'alignment':'center'}, {}, {}, {}, {'text':'ETM', 'style': 'tableHeaderStyle', colSpan: 7, 'alignment':'center'}, {}, {}, {}, {}, {}, {}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}]);
-                        reportData.push([{'text':'S. No.', 'style': 'tableHeaderStyle'}, {'text':'Route/Duty/Shift', 'style': 'tableHeaderStyle'}, {'text':'Abstract No.', 'style': 'tableHeaderStyle'}, {'text':'Crew ID', 'style': 'tableHeaderStyle'}, {'text':'No of Trips', 'style': 'tableHeaderStyle'}, {'text':'Kms', 'style': 'tableHeaderStyle'}, {'text':'Tkt Cnt', 'style': 'tableHeaderStyle'}, {'text':'Tkt Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Cnt', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Passenger Cnt', 'style': 'tableHeaderStyle'}, {'text':'Tkt Cnt', 'style': 'tableHeaderStyle'}, {'text':'Tkt Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Cnt', 'style': 'tableHeaderStyle'}, {'text':'Pass Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'EPurse Cnt', 'style': 'tableHeaderStyle'}, {'text':'EPurse Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Payout Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Lugg Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Toll Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Butta/Tea Allowance (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Incentives (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Amt Payable/Adjustment Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Amt Remitted/After Adjustment Amt (Rs)', 'style': 'tableHeaderStyle'}]);
+                        reportData.push([{'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'PPT', 'style': 'tableHeaderStyle', colSpan: 4, 'alignment':'center'}, {}, {}, {}, {'text':'ETM', 'style': 'tableHeaderStyle', colSpan: 7, 'alignment':'center'}, {}, {}, {}, {}, {}, {}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}]);
+                        reportData.push([{'text':'S. No.', 'style': 'tableHeaderStyle'}, {'text':'Date', 'style': 'tableHeaderStyle'}, {'text':'No of Trips', 'style': 'tableHeaderStyle'}, {'text':'Kms', 'style': 'tableHeaderStyle'}, {'text':'EPKM', 'style': 'tableHeaderStyle'}, {'text':'Tkt Cnt', 'style': 'tableHeaderStyle'}, {'text':'Tkt Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Cnt', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Passenger Cnt', 'style': 'tableHeaderStyle'}, {'text':'Tkt Cnt', 'style': 'tableHeaderStyle'}, {'text':'Tkt Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Cnt', 'style': 'tableHeaderStyle'}, {'text':'Pass Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'EPurse Cnt', 'style': 'tableHeaderStyle'}, {'text':'EPurse Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Payout Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Lugg Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Toll Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Butta/Tea Allowance (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Incentives (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Amt Payable/Adjustment Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Amt Remitted/After Adjustment Amt (Rs)', 'style': 'tableHeaderStyle'}]);
 
                         var i = 1;
                         data.map(function(d){  
@@ -188,13 +217,6 @@ $(document).ready(function(){
                             var payout = payouts.reduce(function(payoutT, payout){
                                 return payoutT + parseInt(payout.amount);
                             }, 0);
-                            var amount_payable = 0;
-                            var cash_remitted = 0;
-                            if(d.cash_collection)
-                            {
-                                amount_payable = d.cash_collection.amount_payable;
-                                cash_remitted = d.cash_collection.cash_remitted;
-                            }
                             var amount_payable = 0;
                             var cash_remitted = 0;
                             if(d.cash_collection)
@@ -290,10 +312,12 @@ $(document).ready(function(){
                             {
                                 toll_amount = d.toll_amount;
                             }
+
+                            var epkm = 0;
                             if(i%2 == 0){
-                                reportData.push([{'text':''+i, style:'oddRowStyle'}, {'text':''+d.route.route_name+'/'+d.duty.duty_number+'/'+d.shift.shift, style:'oddRowStyle'}, {'text':''+d.abstract_no, style:'oddRowStyle'}, {'text':''+d.conductor.crew_id, style:'oddRowStyle'}, {'text':''+tripsCount, alignment:'right', style:'oddRowStyle'}, {'text':''+parseFloat(distance).toFixed(2), alignment:'right', style:'oddRowStyle'}, {'text':''+ppt_count, alignment:'right', style:'oddRowStyle'}, {'text':''+parseFloat(ppt_amount).toFixed(2), alignment:'right', style:'oddRowStyle'}, {'text':''+ppp_count, alignment:'right', style:'oddRowStyle'}, {'text':''+parseFloat(ppp_amount).toFixed(2), alignment:'right', style:'oddRowStyle'}, {'text':''+d.passenger_count, alignment:'right', style:'oddRowStyle'}, {'text':''+tickets_count, alignment:'right', style:'oddRowStyle'}, {'text':''+parseFloat(tickets_amount).toFixed(2), alignment:'right', style:'oddRowStyle'}, {'text':''+pass_count, alignment:'right', style:'oddRowStyle'}, {'text':''+parseFloat(pass_amount).toFixed(2), alignment:'right', style:'oddRowStyle'}, {'text':''+epurse_count, alignment:'right', style:'oddRowStyle'}, {'text':''+parseFloat(epurse_amount).toFixed(2), alignment:'right', style:'oddRowStyle'}, {'text':''+parseFloat(payout).toFixed(2), alignment:'right', style:'oddRowStyle'}, {'text':''+parseFloat(baggage_amount).toFixed(2), alignment:'right', style:'oddRowStyle'}, {'text':''+parseFloat(toll_amount).toFixed(2), alignment:'right', style:'oddRowStyle'}, {'text':''+parseFloat(batta_tea_allowance).toFixed(2), alignment:'right', style:'oddRowStyle'}, {'text':''+parseFloat(incentives).toFixed(2), alignment:'right', style:'oddRowStyle'}, {'text':''+parseFloat(amount_payable).toFixed(2), alignment:'right', style:'oddRowStyle'}, {'text':''+parseFloat(cash_remitted).toFixed(2), alignment:'right', style:'oddRowStyle'}]);
+                                reportData.push([{'text':''+i, style:'oddRowStyle'}, {'text':''+d.date}, {'text':''+tripsCount, alignment:'right', style:'oddRowStyle'}, {'text':''+parseFloat(distance).toFixed(2), alignment:'right', style:'oddRowStyle'}, {'text':''+parseFloat(epkm).toFixed(2), alignment:'right', style:'oddRowStyle'}, {'text':''+ppt_count, alignment:'right', style:'oddRowStyle'}, {'text':''+parseFloat(ppt_amount).toFixed(2), alignment:'right', style:'oddRowStyle'}, {'text':''+ppp_count, alignment:'right', style:'oddRowStyle'}, {'text':''+parseFloat(ppp_amount).toFixed(2), alignment:'right', style:'oddRowStyle'}, {'text':''+passenger_count, alignment:'right', style:'oddRowStyle'}, {'text':''+tickets_count, alignment:'right', style:'oddRowStyle'}, {'text':''+parseFloat(tickets_amount).toFixed(2), alignment:'right', style:'oddRowStyle'}, {'text':''+pass_count, alignment:'right', style:'oddRowStyle'}, {'text':''+parseFloat(pass_amount).toFixed(2), alignment:'right', style:'oddRowStyle'}, {'text':''+epurse_count, alignment:'right', style:'oddRowStyle'}, {'text':''+parseFloat(epurse_amount).toFixed(2), alignment:'right', style:'oddRowStyle'}, {'text':''+parseFloat(payout).toFixed(2), alignment:'right', style:'oddRowStyle'}, {'text':''+parseFloat(baggage_amount).toFixed(2), alignment:'right', style:'oddRowStyle'}, {'text':''+parseFloat(toll_amount).toFixed(2), alignment:'right', style:'oddRowStyle'}, {'text':''+parseFloat(batta_tea_allowance).toFixed(2), alignment:'right', style:'oddRowStyle'}, {'text':''+parseFloat(incentives).toFixed(2), alignment:'right', style:'oddRowStyle'}, {'text':''+parseFloat(amount_payable).toFixed(2), alignment:'right', style:'oddRowStyle'}, {'text':''+parseFloat(cash_remitted).toFixed(2), alignment:'right', style:'oddRowStyle'}]);
                             }else{                
-                                reportData.push([{'text':''+i}, {'text':''+d.route.route_name+'/'+d.duty.duty_number+'/'+d.shift.shift}, {'text':''+d.abstract_no}, {'text':''+d.conductor.crew_id}, {'text':''+tripsCount, alignment:'right'}, {'text':''+parseFloat(distance).toFixed(2), alignment:'right'}, {'text':''+ppt_count, alignment:'right'}, {'text':''+parseFloat(ppt_amount).toFixed(2), alignment:'right'}, {'text':''+ppp_count, alignment:'right'}, {'text':''+parseFloat(ppp_amount).toFixed(2), alignment:'right'}, {'text':''+d.passenger_count, alignment:'right'}, {'text':''+tickets_count, alignment:'right'}, {'text':''+parseFloat(tickets_amount).toFixed(2), alignment:'right'}, {'text':''+pass_count, alignment:'right'}, {'text':''+parseFloat(pass_amount).toFixed(2), alignment:'right'}, {'text':''+epurse_count, alignment:'right'}, {'text':''+parseFloat(epurse_amount).toFixed(2), alignment:'right'}, {'text':''+parseFloat(payout).toFixed(2), alignment:'right'}, {'text':''+parseFloat(baggage_amount).toFixed(2), alignment:'right'}, {'text':''+parseFloat(toll_amount).toFixed(2), alignment:'right'}, {'text':''+parseFloat(d.batta_tea_allowance).toFixed(2), alignment:'right'}, {'text':''+parseFloat(d.incentives).toFixed(2), alignment:'right'}, {'text':''+parseFloat(amount_payable).toFixed(2), alignment:'right'}, {'text':''+parseFloat(cash_remitted).toFixed(2), alignment:'right'}]);
+                                reportData.push([{'text':''+i}, {'text':''+d.date}, {'text':''+tripsCount, alignment:'right'}, {'text':''+parseFloat(distance).toFixed(2), alignment:'right'}, {'text':''+parseFloat(epkm).toFixed(2), alignment:'right'}, {'text':''+ppt_count, alignment:'right'}, {'text':''+parseFloat(ppt_amount).toFixed(2), alignment:'right'}, {'text':''+ppp_count, alignment:'right'}, {'text':''+parseFloat(ppp_amount).toFixed(2), alignment:'right'}, {'text':''+passenger_count, alignment:'right'}, {'text':''+tickets_count, alignment:'right'}, {'text':''+parseFloat(tickets_amount).toFixed(2), alignment:'right'}, {'text':''+pass_count, alignment:'right'}, {'text':''+parseFloat(pass_amount).toFixed(2), alignment:'right'}, {'text':''+epurse_count, alignment:'right'}, {'text':''+parseFloat(epurse_amount).toFixed(2), alignment:'right'}, {'text':''+parseFloat(payout).toFixed(2), alignment:'right'}, {'text':''+parseFloat(baggage_amount).toFixed(2), alignment:'right'}, {'text':''+parseFloat(toll_amount).toFixed(2), alignment:'right'}, {'text':''+parseFloat(batta_tea_allowance).toFixed(2), alignment:'right'}, {'text':''+parseFloat(incentives).toFixed(2), alignment:'right'}, {'text':''+parseFloat(amount_payable).toFixed(2), alignment:'right'}, {'text':''+parseFloat(cash_remitted).toFixed(2), alignment:'right'}]);
                             }
                             i++;
                         })
@@ -331,7 +355,7 @@ $(document).ready(function(){
                         + "&shift_id="+shift_id
                         + "&date="+date;
 
-        var url = "{{route('reports.revenue.daily_collection_statement.getexcelreport')}}"+queryParams;
+        var url = "{{route('reports.revenue.date_wise_collection.getexcelreport')}}"+queryParams;
 
         window.open(url,'_blank');
     });

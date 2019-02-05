@@ -446,6 +446,12 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('daily_collection_statement/getexcelreport', 'DailyCollectionStatementController@getExcelReport')->name('daily_collection_statement.getexcelreport');
             Route::get('daily_collection_statement/displayData', 'DailyCollectionStatementController@displayData')->name('daily_collection_statement.displaydata');
 
+            /*date_wise_collection*/
+            Route::resource('date_wise_collection', 'DateWiseCollectionController')->only('index'); 
+            Route::post('date_wise_collection/getpdfreport', 'DateWiseCollectionController@getPdfReport')->name('date_wise_collection.getpdfreport');
+            Route::get('date_wise_collection/getexcelreport', 'DateWiseCollectionController@getExcelReport')->name('date_wise_collection.getexcelreport');
+            Route::get('date_wise_collection/displayData', 'DateWiseCollectionController@displayData')->name('date_wise_collection.displaydata');
+
             /*depot_wise_collection*/
             Route::resource('depot_wise_collection', 'DepotWiseCollectionController')->only('index'); 
             Route::post('depot_wise_collection/getpdfreport', 'DepotWiseCollectionController@getPdfReport')->name('depot_wise_collection.getpdfreport');
@@ -457,6 +463,12 @@ Route::group(['middleware' => ['auth']], function () {
             Route::post('etm_wise_txn_count/getpdfreport', 'ETMWiseTxnCountController@getPdfReport')->name('etm_wise_txn_count.getpdfreport');
             Route::get('etm_wise_txn_count/getexcelreport', 'ETMWiseTxnCountController@getExcelReport')->name('etm_wise_txn_count.getexcelreport');
             Route::get('etm_wise_txn_count/displayData', 'ETMWiseTxnCountController@displayData')->name('etm_wise_txn_count.displaydata');
+
+            /*pass_sold*/
+            Route::resource('pass_sold', 'PassSoldController')->only('index'); 
+            Route::post('pass_sold/getpdfreport', 'PassSoldController@getPdfReport')->name('pass_sold.getpdfreport');
+            Route::get('pass_sold/getexcelreport', 'PassSoldController@getExcelReport')->name('pass_sold.getexcelreport');
+            Route::get('pass_sold/displayData', 'PassSoldController@displayData')->name('pass_sold.displaydata');
 
             /*passenger_profiling_stop_wise*/
             Route::resource('passenger_profiling_stop_wise', 'PassengerProfilingStopWiseController')->only('index'); 
@@ -475,6 +487,12 @@ Route::group(['middleware' => ['auth']], function () {
             Route::post('passenger_profiling_origin_dest_stop_wise/getpdfreport', 'PassengerProfilingOriginDestStopWiseController@getPdfReport')->name('passenger_profiling_origin_dest_stop_wise.getpdfreport');
             Route::get('passenger_profiling_origin_dest_stop_wise/getexcelreport', 'PassengerProfilingOriginDestStopWiseController@getExcelReport')->name('passenger_profiling_origin_dest_stop_wise.getexcelreport');
             Route::get('passenger_profiling_origin_dest_stop_wise/displayData', 'PassengerProfilingOriginDestStopWiseController@displayData')->name('passenger_profiling_origin_dest_stop_wise.displaydata');
+
+            /*route_wise_collection*/
+            Route::resource('epkm', 'EPKMController')->only('index'); 
+            Route::post('epkm/getpdfreport', 'EPKMController@getPdfReport')->name('epkm.getpdfreport');
+            Route::get('epkm/getexcelreport', 'EPKMController@getExcelReport')->name('epkm.getexcelreport');
+            Route::get('epkm/displayData', 'EPKMController@displayData')->name('epkm.displaydata');
 
             /*route_wise_collection*/
             Route::resource('route_wise_collection', 'RouteWiseCollectionController')->only('index'); 

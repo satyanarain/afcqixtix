@@ -23,11 +23,21 @@ class TripStart extends Model
 
     public function route()
     {
-        return $this->hasOne(Route::class, 'id', 'route_id');
+        return $this->belongsTo(Route::class, 'route_id', 'id');
+    }
+
+    public function routeMaster()
+    {
+        return $this->belongsTo(RouteMaster::class, 'route_master_id', 'id');
     }
 
     public function tickets()
     {
         return $this->hasMany(Ticket::class, 'abstract_id', 'abstract_no');
+    }
+
+    public function waybill()
+    {
+        return $this->belongsTo(Waybill::class, 'abstract_no', 'abstract_no');
     }
 }

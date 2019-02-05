@@ -216,7 +216,7 @@ function clearReportData()
 {
     $('#reportDataBox').remove();
 }
-function validateForm(depot_id=null, from_date=null, to_date=null, etm_no=null, time_slot=null, direction=null, service_id=null, date=null)
+function validateForm(depot_id=null, from_date=null, to_date=null, etm_no=null, time_slot=null, direction=null, service_id=null, date=null, route_id=null)
 {
     if(depot_id)
     {
@@ -312,6 +312,16 @@ function validateForm(depot_id=null, from_date=null, to_date=null, etm_no=null, 
         if(!service_id)
         {
             alert('Please select a service.');
+            return false;
+        }
+    }
+
+    if(route_id)
+    {
+        var route_id = $('#'+route_id).val();
+        if(!route_id)
+        {
+            alert('Please select a route.');
             return false;
         }
     }
