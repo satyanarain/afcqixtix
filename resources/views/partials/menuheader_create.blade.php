@@ -69,6 +69,18 @@
                         </table> 
                         </div>
                     </div>
+                
+                    <div   class="formmain" onclick="showHide(this.id)" id="ACC6{{$permissions->id}}">
+                        <div class="plusminusbutton" id="plusminusbuttonACC6{{$permissions->id}}">+</div>&nbsp;&nbsp;Manage Roaster
+                    </div>
+                    <div class="row1"  id="formACC6{{$permissions->id}}" style="display:none;">
+                        <div class="row">  
+                            <table class="table table-responsive.view">
+                                 {{ menuCreate('roasters','create','edit','view',$permissions->id,$permissions->roasters)}}
+                        </table> 
+                        </div>
+                    </div>
+                
                     <div   class="formmain" onclick="showHide(this.id)" id="ACC4{{$permissions->id}}">
                         <div class="plusminusbutton" id="plusminusbuttonACC4{{$permissions->id}}">+</div>&nbsp;&nbsp;Manage Users
                     </div>
@@ -79,7 +91,6 @@
                         </table> 
                         </div>
                     </div>
-                    
                     
                     <div   class="formmain" onclick="showHide(this.id)" id="ACC5{{$permissions->id}}">
                         <div class="plusminusbutton" id="plusminusbuttonACC5{{$permissions->id}}">+</div>&nbsp;&nbsp;Miscellaneous

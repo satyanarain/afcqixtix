@@ -509,6 +509,10 @@ Route::group(['middleware' => ['auth']], function () {
         });
     });    
     
+    Route::get('roasters/filteredlist', 'RoasterController@filteredlist')->name('roasters.filteredlist');
+    Route::post('roasters/getfiltereddata', 'RoasterController@getfiltereddata')->name('roasters/getfiltereddata');
+    Route::get('roasters/addroasterform', 'RoasterController@addroasterform')->name('roasters.addroasterform');
+    Route::resource('roasters', 'RoasterController');
 });
 Auth::routes();
 

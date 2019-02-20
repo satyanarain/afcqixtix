@@ -250,6 +250,23 @@ $pem=menuDisplayByUser($result, 'centerstocks','view');
 </li>
 @endif   
 
+@php $pem=menuDisplayByUser($result, 'roasters','view'); @endphp
+@if($pem=='true')
+<li @if($segments_var[0]=='roasters') class="treeview active" @else class="treeview" @endif>
+  <a href="#">
+    <i class="fa fa-users"></i> <span>Manage Roaster</span>
+    <span class="pull-right-container">
+      <i class="fa fa-angle-left pull-right"></i>
+    </span>
+  </a>
+    <ul @if($segments_var[0]=='roasters') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
+        <li @if($segments_var[0]=='roasters' && !$segments_var[1]) class="active" @endif><a href="{{route('roasters.index')}}"><i class="fa fa-key"></i>View Roaster</a></li>
+        <li @if($segments_var[0]=='roasters' && $segments_var[1]=='cash_collection') class="active" @endif><a href="{{route('roasters.addroasterform')}}"><i class="fa fa-key"></i>Generate Roaster</a></li>
+        <!--<li @if($segments_var[1]=='auditlist') class="active" @endif><a href="{{route('waybills.auditlist')}}"><i class="fa fa-key"></i>Audit</a></li>-->
+    </ul>
+</li>
+@endif
+
 @php $pem=menuDisplayByUser($result, 'users','view'); @endphp
 @if($pem=='true')
 <li @if($segments_var[0]=='users') class="treeview active" @else class="treeview" @endif>

@@ -163,6 +163,7 @@ class PermissionsController extends Controller
             $input['waybills'] = implode(',', $request->waybills);
             $input['audits'] = implode(',', $request->audits);
             $input['cash_collections'] = implode(',', $request->cash_collections);
+            $input['roasters'] = implode(',', $request->roasters);
            $roles= Permission::create($input);
            Session::flash('flash_message', "Role Created Successfully."); //Snippet in Master.blade.php
          return redirect()->route('permissions.index');
@@ -214,6 +215,7 @@ class PermissionsController extends Controller
             $input['waybills'] = implode(',', $request->waybills);
             $input['audits'] = implode(',', $request->audits);
             $input['cash_collections'] = implode(',', $request->cash_collections);
+            $input['roasters'] = implode(',', $request->roasters);
             $permission->fill($input)->save();
            Session::flash('flash_message', "Role Updated Successfully."); 
         return redirect()->route('permissions.index');
