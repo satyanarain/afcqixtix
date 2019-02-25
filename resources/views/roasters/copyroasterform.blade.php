@@ -8,41 +8,40 @@
     <div class="col-xs-12">
       <div class="box">
             <div class="box-header">
-               <h3 class="box-title">Create New Roaster</h3>
+               <h3 class="box-title">Create New Roasters</h3>
             </div>
         <?php $permission_status = checkPermission('roasters','create');
             if($permission_status){?>
           {!! Form::open([
-                'route' => 'roasters.getfiltereddata',
+                'route' => 'roasters.generateCopy',
                 'class'=>'form-horizontal',
+                 'method' => 'post'
                 ]) !!}
           <div class="box-body">
             <div class="col-xs-12">
                 <div class="form-group ">
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                         @php $depots=displayList('depots','name');@endphp
                         {!! Form::label('depot_id', Lang::get('Depot*'), ['class' => 'control-label']) !!}
                         {!! Form::select('depot_id', $depots,null,
-                        ['id'=>'depot_id','data-column'=>0,'class' => 'search-input-select col-md-6 form-control', 'placeholder'=>'Select Depot','required'=>'required']) !!}
+                        ['id'=>'depot_id','data-column'=>0,'class' => 'search-input-select col-md-6 form-control', 'placeholder'=>'Select Depot','required' => 'required']) !!}
                     </div>
-                    <div class="col-md-4">
-                        {!! Form::label('from_date', Lang::get('From'), ['class' => 'control-label']) !!}
+                    <div class="col-md-2">
+                        {!! Form::label('from_date', Lang::get('From*'), ['class' => 'control-label']) !!}
                         {!! Form::text('from_date', date('d-m-Y'), ['class' => 'form-control multiple_date']) !!}
                     </div>
 
-                    <div class="col-md-4">
-                        {!! Form::label('to_date', Lang::get('To'), ['class' => 'control-label']) !!}
+                    <div class="col-md-2">
+                        {!! Form::label('to_date', Lang::get('To*'), ['class' => 'control-label']) !!}
                         {!! Form::text('to_date', date('d-m-Y'), ['class' => 'form-control multiple_date']) !!}
                     </div>
-                    <div class="col-sm-4">
-                        @php $shifts=displayList('shifts','shift');@endphp
-                        {!! Form::label('shift_id', Lang::get('Shift'), ['class' => 'control-label']) !!}
-                        {!! Form::select('shift_id', $shifts,null,
-                        ['id'=>'shift_id','data-column'=>0,'class' => 'search-input-select col-md-6 form-control', 'placeholder'=>'Select Shift']) !!}
+                    <div class="col-md-2">
+                        {!! Form::label('effect_from', Lang::get('With Effect From*'), ['class' => 'control-label']) !!}
+                        {!! Form::text('effect_from', date('d-m-Y'), ['class' => 'form-control multiple_date1']) !!}
                     </div>
-                    <div class="col-sm-4" style="margin-top: 28px;">
+                    <div class="col-sm-3" style="margin-top: 28px;">
                         {!! Form::label('', Lang::get(''), ['class' => 'control-label']) !!}
-                        {!! Form::submit('View Roaster');!!}
+                        {!! Form::submit('Copy Roaster');!!}
                     </div>
                     
                 </div>
@@ -50,9 +49,9 @@
           </div>
           {{ Form::close() }}
         <?php }?>
-          <div class="box-body"></div>
-            <!-- /.box-header -->
-            
+          
+                
+            </div>
             <!-- /.box-body -->
         </div>
         <!-- /.box -->

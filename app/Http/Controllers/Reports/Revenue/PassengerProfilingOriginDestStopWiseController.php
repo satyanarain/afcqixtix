@@ -42,7 +42,7 @@ class PassengerProfilingOriginDestStopWiseController extends Controller
         $route_id = $input['route_id'];
         $direction = $input['direction'];
 
-        $route = Route::where([['route_number', $route_id], ['direction', $direction]])->first();
+        $route = Route::where([['route_master_id', $route_id], ['direction', $direction]])->first();
 
         if($route)
         {
@@ -121,7 +121,7 @@ class PassengerProfilingOriginDestStopWiseController extends Controller
         $route_id = $input['route_id'];
         $direction = $input['direction'];
 
-        $route = Route::where([['route_number', $route_id], ['direction', $direction]])->first();
+        $route = Route::where([['route_master_id', $route_id], ['direction', $direction]])->first();
 
         if($route)
         {

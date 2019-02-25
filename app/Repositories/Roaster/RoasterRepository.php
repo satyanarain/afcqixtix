@@ -71,10 +71,10 @@ class RoasterRepository implements RoasterRepositoryContract {
 
     public function update($id, $requestData) {
        //$this->createLog('App\Models\Roaster','App\Models\RoasterLog',$id);
-       $crew_detail = Roaster::findorFail($id);
-       $input = $requestData->all();
-       $input['user_id'] = Auth::id();
-       $crew_detail->fill($input)->save();
+       $crew_detail = RoasterOnDuty::where('roaster_id',$id)->delete();
+       foreach($requestData['roaster'] as $crew){
+            RoasterOnDuty::create(array('roaster_id'=>$id,'crew_id'=>$crew));
+        }
        Session::flash('flash_message', "Roaster Updated Successfully.");
        return $crew_detail;
     }

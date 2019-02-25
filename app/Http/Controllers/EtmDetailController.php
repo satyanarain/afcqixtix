@@ -52,9 +52,9 @@ class ETMDetailController extends Controller
     {
         if(!$this->checkActionPermission('etm_details','view'))
             return redirect()->route('401');
-        $etm_details = DB::table('etm_details')->select('*','etm_details.id as id','depots.name as name','evm_status_masters.name as evm_status_master_id')
+        $etm_details = DB::table('etm_details')->select('*','etm_details.id as id','depots.name as name','etm_status_masters.name as evm_status_master_id')
             ->leftjoin('depots','depots.id','etm_details.depot_id')
-            ->leftjoin('evm_status_masters','evm_status_masters.id','etm_details.evm_status_master_id')
+            ->leftjoin('etm_status_masters','etm_status_masters.id','etm_details.evm_status_master_id')
              ->orderBy('etm_details.id','desc')->get();
         return view('etm_details.index',compact('etm_details'))->withETMDetails($depot);
    
@@ -98,9 +98,9 @@ class ETMDetailController extends Controller
     {
         if(!$this->checkActionPermission('etm_details','view'))
             return redirect()->route('401');
-        $etm_details = DB::table('etm_details')->select('*','etm_details.id as id','depots.name as name','evm_status_masters.name as evm_status_master_id')
+        $etm_details = DB::table('etm_details')->select('*','etm_details.id as id','depots.name as name','etm_status_masters.name as evm_status_master_id')
             ->leftjoin('depots','depots.id','etm_details.depot_id')
-            ->leftjoin('evm_status_masters','evm_status_masters.id','etm_details.evm_status_master_id')
+            ->leftjoin('etm_status_masters','etm_status_masters.id','etm_details.evm_status_master_id')
             ->where('etm_details.id',$id)
              ->orderBy('etm_details.id','desc')
           ->first();
@@ -159,10 +159,10 @@ class ETMDetailController extends Controller
       {
           if(!$this->checkActionPermission('etm_details','view'))
               return redirect()->route('401');
-          $value = DB::table('etm_details')->select('*','etm_details.id as id','depots.name as name','evm_status_masters.name as evm_status_master_id','etm_details.created_at as created_at','etm_details.updated_at as updated_at')
+          $value = DB::table('etm_details')->select('*','etm_details.id as id','depots.name as name','etm_status_masters.name as evm_status_master_id','etm_details.created_at as created_at','etm_details.updated_at as updated_at')
             ->leftjoin('depots','depots.id','etm_details.depot_id')
             ->leftjoin('users', 'users.id', '=', 'etm_details.user_id')
-            ->leftjoin('evm_status_masters','evm_status_masters.id','etm_details.evm_status_master_id')
+            ->leftjoin('etm_status_masters','etm_status_masters.id','etm_details.evm_status_master_id')
             ->where('etm_details.id',$id)
             ->orderBy('etm_details.id','desc')
             ->first();

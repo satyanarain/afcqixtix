@@ -42,8 +42,8 @@ class RouteController extends Controller {
                 ->select('*')
                 //->leftjoin('route_details', 'route_details.stop_id', '=', 'routes.id')
                 //->leftjoin('stops', 'route_details.stop_id', '=', 'stops.id')
-                ///->leftjoin('route_master', 'route_master.id', '=', 'routes.route_number')
-                ->where('routes.route_number',$request->route_id)  
+                ///->leftjoin('route_master', 'route_master.id', '=', 'routes.route_master_id')
+                ->where('routes.route_master_id',$request->route_id)  
                 ->get();
         //echo '<pre>';        print_r($routes);die;
         return view('routes.index',compact('routes','route_master_id'));
@@ -71,15 +71,15 @@ class RouteController extends Controller {
     public function store($route_master_id,StoreRouteRequest $routesRequest) {
         if(!$this->checkActionPermission('routes','create'))
             return redirect()->route('401');
-        $routesRequest->route;
-        
+        //$routesRequest->route;
+        //echo $route_master_id;die;
 //      $sql=  Route::where([['route',$routesRequest->route],['direction',$routesRequest->direction]]);
 //        if(count($sql)>0)
 //        {
 //            return redirect()->back()->withErrors(['This route and direction has already been taken.']);
 //        } else {
         $version_id = $this->getCurrentVersion();
-        $routesRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id,'route_number'=>$route_master_id]);
+        $routesRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id,'route_master_id'=>$route_master_id]);
          $getInsertedId = $this->routes->create($routesRequest);
         return redirect()->route('route_master.routes.index',$route_master_id);
        // }

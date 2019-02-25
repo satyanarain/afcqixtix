@@ -261,8 +261,8 @@ $pem=menuDisplayByUser($result, 'centerstocks','view');
   </a>
     <ul @if($segments_var[0]=='roasters') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
         <li @if($segments_var[0]=='roasters' && !$segments_var[1]) class="active" @endif><a href="{{route('roasters.index')}}"><i class="fa fa-key"></i>View Roaster</a></li>
-        <li @if($segments_var[0]=='roasters' && $segments_var[1]=='cash_collection') class="active" @endif><a href="{{route('roasters.addroasterform')}}"><i class="fa fa-key"></i>Generate Roaster</a></li>
-        <!--<li @if($segments_var[1]=='auditlist') class="active" @endif><a href="{{route('waybills.auditlist')}}"><i class="fa fa-key"></i>Audit</a></li>-->
+        <li @if($segments_var[0]=='roasters' && $segments_var[1]=='addroasterform') class="active" @endif><a href="{{route('roasters.addroasterform')}}"><i class="fa fa-key"></i>Generate Roaster</a></li>
+        <li @if($segments_var[1]=='roasters' && $segments_var[1]=='copyroasterform') class="active" @endif><a href="{{route('roasters.copyroasterform')}}"><i class="fa fa-key"></i>Copy Roaster</a></li>
     </ul>
 </li>
 @endif

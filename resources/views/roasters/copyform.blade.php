@@ -13,7 +13,7 @@
             </tr>
             </thead>
             <tbody>
-            <?php for ( $i = $startTime; $i <= $endTime; $i = $i + 86400 ) {?>
+            <?php $j=0;for ( $i = $effectFromTime; $j < $days; $j++ ) {?>
                 <tr>
                     <td><?=date( 'd-m-Y', $i )?></td>
                     @foreach($shifts as $shift)
@@ -21,7 +21,7 @@
                         <div class="roaster_crew_container">
                             @foreach($crews as $crew)
                                 <div class="custom-control custom-checkbox">
-                                    <input name="roaster[<?=$i?>][on-duty][<?=$shift->id?>][]" value="<?=$crew->id?>" type="checkbox" class="custom-control-input" id="<?=$i?><?=$shift->id?>-crew-<?=$crew->id?>">
+                                    <input <?php if(in_array($crew->id,$crew_on_duty)){echo 'checked="checked"';}?> name="roaster[<?=$i?>][on-duty][<?=$shift->id?>][]" value="<?=$crew->id?>" type="checkbox" class="custom-control-input" id="<?=$i?><?=$shift->id?>-crew-<?=$crew->id?>">
                                     <label class="custom-control-label" for="<?=$i?><?=$shift->id?>-crew-<?=$crew->id?>"><?=$crew->crew_name?>(<?=($crew->role=="Conductor")?'C':'D';?> - <?=$crew->crew_id;?>)</label>
                                 </div>
                             @endforeach
@@ -39,7 +39,7 @@
                         </div>
                     </td>
                 </tr>
-            <?php }?>
+            <?php $i = $i + 86400;}?>
             </tbody>
         </table>
         <div class="form-group">

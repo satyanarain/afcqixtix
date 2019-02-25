@@ -78,7 +78,7 @@ class EPKMController extends Controller
         					   ->get();
         	$value->tickets = $tickets;
 
-        	$route = Route::where([['route_number', $value->route_master_id], ['direction', $value->direction]])->first();
+        	$route = Route::where([['route_master_id', $value->route_master_id], ['direction', $value->direction]])->first();
         	if($route)
         	{
         		$stage = RouteDetail::where('route_id', $route->id)->max('stage_number');
