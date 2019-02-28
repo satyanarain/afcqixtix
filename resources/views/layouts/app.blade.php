@@ -516,13 +516,13 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="far fa-dot-circle color-cyan"></i> Route-wise Collection
                     </a>
                 </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
+                <li @if($segments_var[0]=='route_wise_summary') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.revenue.route_wise_summary.index')}}">
                         <i class="far fa-dot-circle color-cyan"></i> Route-wise Summary
                     </a>
                 </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
+                <li @if($segments_var[2]=='schedule_wise_epkm') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.revenue.schedule_wise_epkm.index')}}">
                         <i class="far fa-dot-circle color-cyan"></i> Schedule-wise EPKM
                     </a>
                 </li>

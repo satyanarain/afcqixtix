@@ -500,6 +500,18 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('route_wise_collection/getexcelreport', 'RouteWiseCollectionController@getExcelReport')->name('route_wise_collection.getexcelreport');
             Route::get('route_wise_collection/displayData', 'RouteWiseCollectionController@displayData')->name('route_wise_collection.displaydata');
 
+            /*route_wise_summary*/
+            Route::resource('route_wise_summary', 'RouteWiseSummaryController')->only('index'); 
+            Route::post('route_wise_summary/getpdfreport', 'RouteWiseSummaryController@getPdfReport')->name('route_wise_summary.getpdfreport');
+            Route::get('route_wise_summary/getexcelreport', 'RouteWiseSummaryController@getExcelReport')->name('route_wise_summary.getexcelreport');
+            Route::get('route_wise_summary/displayData', 'RouteWiseSummaryController@displayData')->name('route_wise_summary.displaydata');
+
+            /*schedule_wise_epkm*/
+            Route::resource('schedule_wise_epkm', 'ScheduleWiseEPKMController')->only('index'); 
+            Route::post('schedule_wise_epkm/getpdfreport', 'ScheduleWiseEPKMController@getPdfReport')->name('schedule_wise_epkm.getpdfreport');
+            Route::get('schedule_wise_epkm/getexcelreport', 'ScheduleWiseEPKMController@getExcelReport')->name('schedule_wise_epkm.getexcelreport');
+            Route::get('schedule_wise_epkm/displayData', 'ScheduleWiseEPKMController@displayData')->name('schedule_wise_epkm.displaydata');
+
             /*trip_wise_collection*/
             Route::resource('trip_wise_collection', 'TripWiseCollectionController')->only('index'); 
             Route::post('trip_wise_collection/getpdfreport', 'TripWiseCollectionController@getPdfReport')->name('trip_wise_collection.getpdfreport');
