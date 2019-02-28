@@ -134,9 +134,13 @@ class WaybillController extends Controller
             ->where('bus_type_id', '=',$waybills->bus_type_id)
             ->orderBy('name','asc')
             ->pluck('name', 'id');
+       $crew = DB::table('crew')
+            ->where('depot_id', '=',$waybills->depot_id)
+            ->orderBy('crew_name','asc')
+            ->pluck('crew_name', 'id');
             //->get(); 
-       //echo '<pre>';print_r($query);die;
-        return view('waybills.edit',compact('waybills','vehicles','duties','services'));
+       //echo '<pre>';print_r($crew);die;
+        return view('waybills.edit',compact('waybills','vehicles','duties','services','crew'));
     }
 
     /**
@@ -149,6 +153,7 @@ class WaybillController extends Controller
     {
         if(!$this->checkActionPermission('waybills','edit'))
             return redirect()->route('401');
+        //echo '<pre>';        print_r($request->all());die;
         $this->waybills->update($id, $request);
         return redirect()->route('waybills.index');
     }

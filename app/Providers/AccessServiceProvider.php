@@ -183,6 +183,12 @@ class AccessServiceProvider extends ServiceProvider
             \App\Repositories\Waybill\WaybillRepository::class
 
         );
+        
+        $this->app->bind(
+            \App\Repositories\Roaster\RoasterRepositoryContract::class,
+            \App\Repositories\Roaster\RoasterRepository::class
+
+        );
     }
 }
     

@@ -180,7 +180,7 @@ class VersionController extends Controller
             'etm_details','versions','trip_cancellation_reason_category_masters',
             'trip_start','concession_masters','concession_provider_masters','countries');
             #Delete Old Table
-            //$deleted_extra_arr = array('ETM_detail_logs','etm_details','abstractbills','bus_type_logs','concession_fare_slab_logs','concession_logs','concession_masters','concession_provider_masters','crew_detail_logs','denomination_logs','denomination_masters','departments','depot_logs','depots111','depots1111','dutie_logs','etm_hot_key_masters','evm_status_masters','fare_logs','fares_copy','inspector_remark_logs','migrations','pass_type_logs','password_resets','payout_reason_logs','permission_details','permission_modules','permissions','roles','route_logs','service_logs','settings','shift_logs','stop_logs','target_logs','trip_cancellation_reason_logs','trip_logs','users','vehicle_logs');
+            //$deleted_extra_arr = array('ETM_detail_logs','etm_details','abstractbills','bus_type_logs','concession_fare_slab_logs','concession_logs','concession_masters','concession_provider_masters','crew_detail_logs','denomination_logs','denomination_masters','departments','depot_logs','depots111','depots1111','dutie_logs','etm_hot_key_masters','etm_status_masters','fare_logs','fares_copy','inspector_remark_logs','migrations','pass_type_logs','password_resets','payout_reason_logs','permission_details','permission_modules','permissions','roles','route_logs','service_logs','settings','shift_logs','stop_logs','target_logs','trip_cancellation_reason_logs','trip_logs','users','vehicle_logs');
             foreach ($tbls as $table)
             {
                 //$result = $db->query('delete from '.$table);

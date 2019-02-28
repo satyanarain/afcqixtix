@@ -14,10 +14,10 @@
     </div>
 </div>
 <div class="form-group ">
-    {!! Form::label('evm_status_masters', Lang::get('Status'), ['class' => 'col-md-3 control-label']) !!}
+    {!! Form::label('etm_status_masters', Lang::get('Status'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 required">
-        @php $evm_status_masters=displayList('evm_status_masters','name');@endphp
-       <span id="depot_id"> {!! Form::select('evm_status_master_id',$evm_status_masters,isset($etm_details->depot_id) ? $etm_details->evm_status_master_id : selected,
+        @php $etm_status_masters=displayList('etm_status_masters','name');@endphp
+       <span id="depot_id"> {!! Form::select('evm_status_master_id',$etm_status_masters,isset($etm_details->depot_id) ? $etm_details->evm_status_master_id : selected,
         ['class' => 'col-md-6 form-control', 'placeholder'=>'Select status','required' => 'required']) !!}</span>
     </div>
 

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TripCancellation extends Model
 {
-    protected $table = 'trip_calcellation';
+    protected $table = 'trip_cancellation';
 
     protected $guarded = [];
 

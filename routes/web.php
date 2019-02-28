@@ -521,6 +521,13 @@ Route::group(['middleware' => ['auth']], function () {
         });
     });    
     
+    //Route::get('roasters/filteredlist', 'RoasterController@filteredlist')->name('roasters.filteredlist');
+    Route::post('roasters/getfiltereddata', 'RoasterController@getfiltereddata')->name('roasters.getfiltereddata');
+    Route::get('roasters/addroasterform', 'RoasterController@addroasterform')->name('roasters.addroasterform');
+    Route::get('roasters/copyroasterform', 'RoasterController@copyroasterform')->name('roasters.copyroasterform');
+    Route::post('roasters/generateCopy', 'RoasterController@generateCopy')->name('roasters.generateCopy');
+    Route::post('roasters/storecopy', 'RoasterController@storecopy')->name('roasters.storecopy');
+    Route::resource('roasters', 'RoasterController');
 });
 Auth::routes();
 

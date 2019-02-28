@@ -54,3 +54,7 @@ body > div.wrapper > aside > section > ul > li > ul > li > ul > li > a
 {
 	color: cyan;
 }
+.roaster_table,.roaster_table th,.roaster_table td{ border: 1px solid black;}
+.roaster_crew_container_td{}
+.roaster_crew_container{overflow: auto;height: 80px;padding-left: 5px;max-height: 80px;margin: 1px;}
+.roaster_crew_container label{font-weight: normal;}
