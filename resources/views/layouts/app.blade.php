@@ -52,10 +52,10 @@
        {{ HTML::image('images/bus_loader.gif', 'alt text', array('class' => 'css-class')) }}
      </div>    
    </div>
- </div>
+  </div>
 
  <?php $segments_var = Request::segments();?>  
- <div class="wrapper" >
+  <div class="wrapper" >
   <header class="main-header">   
     <!-- Logo -->
     <a href="/dashboard" class="logo" style="text-align: left;">
@@ -71,9 +71,8 @@
       <div style="width: 82%;float: left;text-align: center; color: #fff;font-size: 20px;padding-top: 10px;">Automated Fare Collection System</div>
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-
           <li class="dropdown notifications-menu">
-              <div style="float: left;">
+            <div style="float: left;">
              @if(Auth::user()->image_path)
              {{Html::image('/images/photo/'.Auth::user()->image_path,'',array('class'=>"user-image img-circle",'style'=>"height:auto;width:20px;"))}}
              @else
@@ -104,7 +103,6 @@
                 </a>
               </li>
             </ul>
-
           </li>
         </ul>
       </li>
@@ -122,9 +120,6 @@
       <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
     </a>
   </li>
-
-
-
   <li @if($segments_var[0]=='depots') class="treeview active" @else class="treeview" @endif>
     <a href="#">
       <i class="fa fa-bus"></i> <span>Manage Masters</span>
@@ -468,8 +463,8 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="far fa-dot-circle color-cyan"></i> Date-wise BOT Share Details
                     </a>
                 </li> -->
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
+                <li @if($segments_var[2]=='date_wise_denomination') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.revenue.date_wise_denomination.index')}}">
                         <i class="far fa-dot-circle color-cyan"></i> Date-wise Denominations
                     </a>
                 </li>
@@ -558,8 +553,8 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="far fa-dot-circle color-cyan"></i> Comparative Statement for Last Year
                     </a>
                 </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
+                <li @if($segments_var[2]=='conductor_wise_income_compared_with_target_income') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.revenue.conductor_wise_income_compared_with_target_income.index')}}">
                         <i class="far fa-dot-circle color-cyan"></i> Conductor-wise Income Compared To Target Income
                     </a>
                 </li>

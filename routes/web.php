@@ -434,6 +434,12 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('conductor_wise_earning/getexcelreport', 'ConductorWiseEarningController@getExcelReport')->name('conductor_wise_earning.getexcelreport');
             Route::get('conductor_wise_earning/displayData', 'ConductorWiseEarningController@displayData')->name('conductor_wise_earning.displaydata');
 
+            /*conductor_wise_income_compared_with_target_income*/
+            Route::resource('conductor_wise_income_compared_with_target_income', 'ConductorWiseIncomeComparedWithTargetIncomeController')->only('index'); 
+            Route::post('conductor_wise_income_compared_with_target_income/getpdfreport', 'ConductorWiseIncomeComparedWithTargetIncomeController@getPdfReport')->name('conductor_wise_income_compared_with_target_income.getpdfreport');
+            Route::get('conductor_wise_income_compared_with_target_income/getexcelreport', 'ConductorWiseIncomeComparedWithTargetIncomeController@getExcelReport')->name('conductor_wise_income_compared_with_target_income.getexcelreport');
+            Route::get('conductor_wise_income_compared_with_target_income/displayData', 'ConductorWiseIncomeComparedWithTargetIncomeController@displayData')->name('conductor_wise_income_compared_with_target_income.displaydata');
+
             /*crew_wise_collection*/
             Route::resource('crew_wise_collection', 'CrewWiseCollectionController')->only('index'); 
             Route::post('crew_wise_collection/getpdfreport', 'CrewWiseCollectionController@getPdfReport')->name('crew_wise_collection.getpdfreport');
@@ -451,6 +457,12 @@ Route::group(['middleware' => ['auth']], function () {
             Route::post('date_wise_collection/getpdfreport', 'DateWiseCollectionController@getPdfReport')->name('date_wise_collection.getpdfreport');
             Route::get('date_wise_collection/getexcelreport', 'DateWiseCollectionController@getExcelReport')->name('date_wise_collection.getexcelreport');
             Route::get('date_wise_collection/displayData', 'DateWiseCollectionController@displayData')->name('date_wise_collection.displaydata');
+
+            /*date_wise_denomination*/
+            Route::resource('date_wise_denomination', 'DateWiseDenominationController')->only('index'); 
+            Route::post('date_wise_denomination/getpdfreport', 'DateWiseDenominationController@getPdfReport')->name('date_wise_denomination.getpdfreport');
+            Route::get('date_wise_denomination/getexcelreport', 'DateWiseDenominationController@getExcelReport')->name('date_wise_denomination.getexcelreport');
+            Route::get('date_wise_denomination/displayData', 'DateWiseDenominationController@displayData')->name('date_wise_denomination.displaydata');
 
             /*depot_wise_collection*/
             Route::resource('depot_wise_collection', 'DepotWiseCollectionController')->only('index'); 
