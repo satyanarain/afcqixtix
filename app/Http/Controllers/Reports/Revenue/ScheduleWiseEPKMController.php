@@ -8,11 +8,12 @@ use Validator;
 use PdfReport;
 use CSVReport;
 use ExcelReport;
-use App\Models\Fare;
+use App\Models\Duty;
 use App\Models\Trip;
 use App\Models\Route;
 use App\Models\Ticket;
 use App\Models\Target;
+use App\Models\Waybill;
 use App\Models\TripStart;
 use App\Models\TripDetail;
 use App\Traits\activityLog;
@@ -44,71 +45,21 @@ class ScheduleWiseEPKMController extends Controller
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
         $route_id = $input['route_id'];
-    
-        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $route_id);
+        $data = [];
 
-        $data = $queryBuilder->paginate(10);
+        $routeName = $this->findNameById('route_master', 'route_name', $route_id);
 
-        $data->getCollection()->transform(function($value){
-        	$trip = Trip::where([['route_id', $value->route_master_id], ['duty_id', $value->waybill->duty->id], ['shift_id', $value->waybill->shift->id]])->first();
-        	if($trip)
-        	{
-        		$tripDetails = TripDetail::where([['trip_id', $trip->id], ['trip_no', $value->trip_id]])->first();
-        		if($tripDetails)
-        		{
-        			$value->schedule_time = $tripDetails->start_time;
-        		}
-        	}else{
-        		$value->schedule_time = 'N/A';
-        	}
+        $duties = Duty::where('route_id', $route_id)->get(['id', 'duty_number', 'start_time']);
 
-        	$target = Target::where([['route_id', $value->route_master_id], ['duty_id', $value->waybill->duty->id], ['shift_id', $value->waybill->shift->id], ['trip', $value->trip_id]])->first();
+        if($duties)
+        {
+            foreach ($duties as $key => $duty) 
+            {
+                $data[$route_id][$duty->duty_number] = $this->getData($routeName, $depot_id, $from_date, $to_date, $route_id, $duty->id);
+            }
+        }
 
-        	if($target)
-        	{
-        		$value->target_epkm = $target->epkm;
-        		$value->target_income = $target->income;
-        	}else{
-        		$value->target_epkm = 0;
-        		$value->target_income = 0;
-        	}
-
-        	$tickets = Ticket::where([['abstract_id', $value->abstract_no], ['trip_id', $value->trip_id]])
-        					   ->select(DB::raw("(SUM(childs)+SUM(adults)) as passenger_count, SUM(total_amt) as actual_income, COUNT(*) as tickets_count"))
-        					   ->get();
-        	$value->tickets = $tickets;
-
-        	$route = Route::where([['route_number', $value->route_master_id], ['direction', $value->direction]])->first();
-        	if($route)
-        	{
-        		$stage = RouteDetail::where('route_id', $route->id)->max('stage_number');
-
-        		if($stage)
-        		{
-        			$fare = Fare::where([['service_id', $value->service_id], ['stage', $stage]])->first();
-        			if($fare)
-        			{
-        				$value->actual_epkm = calculateEPKM($fare->adult_ticket_amount, $value->route->distance, $value->waybill->vehicle->seating_capacity);
-        			}else{
-        				$value->actual_epkm = 0;
-        			} 
-        		}else{
-        			$value->actual_epkm = 0;
-        		}
-
-        		$value->routeDetails = $routeDetails;
-        	}else{
-        		$value->actual_epkm = 0;
-        	}
-
-        	$value->load_factor = calculateLoadFactor($value->actual_epkm, $value->target_epkm);
-
-        	return $value;
-        });
-
-        //return $data;
-
-        return view('reports.revenue.schedule_wise_epkm.index', compact('data'));
+        return view('reports.revenue.schedule_wise_epkm.index', compact('data', 'route_id', 'duties'));
     }
 
     /**
@@ -123,9 +74,11 @@ class ScheduleWiseEPKMController extends Controller
         $depot_id = $input['depot_id'];
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
-        $etm_no = $input['etm_no'];
-    
-        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $etm_no);
+        $route_id = $input['route_id'];
+        $data = [];
+
+        $routeName = $this->findNameById('route_master', 'route_name', $route_id);
+        $duties = Duty::where('route_id', $route_id)->get(['id', 'duty_number', 'start_time']);
         $depotName = $this->findNameById('depots', 'name', $depot_id);
     
         $title = 'Schedule-wise EPKM Report'; // Report title
@@ -139,12 +92,18 @@ class ScheduleWiseEPKMController extends Controller
             'Depot : ' . $depotName,
             'From : '.date('d-m-Y', strtotime($from_date)),
             'To : '.date('d-m-Y', strtotime($to_date)),
-            'ETM Number : '.$etm_no
+            'Route : '.$routeName
         ];   
 
-        $reportData = $queryBuilder->get();  
+        if($duties)
+        {
+            foreach ($duties as $key => $duty) 
+            {
+                $data[$route_id][$duty->duty_number] = $this->getData($routeName, $depot_id, $from_date, $to_date, $route_id, $duty->id);
+            }
+        }  
 
-        return response()->json(['status'=>'Ok', 'title'=>$title, 'meta'=>$meta, 'data'=>$reportData, 'serverDate'=>date('d-m-Y H:i:s'), 'takenBy'=>Auth::user()->name], 200);
+        return response()->json(['status'=>'Ok', 'title'=>$title, 'meta'=>$meta, 'data'=>$data, 'serverDate'=>date('d-m-Y H:i:s'), 'takenBy'=>Auth::user()->name, 'route_id'=>$route_id, 'duties'=>$duties], 200);
     }
 
     public function getExcelReport(Request $request)
@@ -213,25 +172,93 @@ class ScheduleWiseEPKMController extends Controller
 		                    ])->download($title.'.xlsx');        
     }
 
-    public function getQueryBuilder($depot_id, $from_date, $to_date, $route_id)
+    public function getWaybillDetail($waybill_no)
     {
-        $queryBuilder = TripStart::whereHas('waybill', function($query) use($depot_id, $route_id){
-        		if($depot_id)
-		        {
-		        	$query->where('depot_id', $depot_id);
-		        }
-        		if($route_id)
-		        {
-		        	$query->where('route_id', $route_id);
-		        }
-        	})->with(['waybill:abstract_no,route_id,duty_id,shift_id,vehicle_id', 'fromStop:id,short_name', 'toStop:id,short_name', 'waybill.vehicle:id,seating_capacity', 'route']);
+        $queryBuilder = Waybill::with(['tickets', 'shifts', 'routeNotMaster', 'trips.route'])
+                                ->withCount(['tickets as passenger_count'=>function($query){
+                                    $query->select(DB::raw("(SUM(adults) + SUM(childs))"));
+                                }])->withCount(['tickets as tickets_count'])
+                                ->withCount(['tickets as total_amt'=>function($q){
+                                    $q->select(DB::raw("SUM(total_amt)"));
+                                }])
+                                ->where('abstract_no', $waybill_no);
+
+        return $queryBuilder->first();
+    }
+
+    public function getWaybills($depot_id, $from_date, $to_date, $route_id)
+    {
+        $queryBuilder = Waybill::with('route');
 
         if($from_date && $to_date)
-		{
-		    $queryBuilder->whereDate('start_timestamp', '>=', $from_date)
-		                 ->whereDate('start_timestamp', '<=', $to_date);
-		}
+        {
+            $queryBuilder->whereDate('created_at', '>=', $from_date)
+                         ->whereDate('created_at', '<=', $to_date);
+        }
 
-        return $queryBuilder;
+        if($depot_id)
+        {
+            $queryBuilder->where('depot_id', $depot_id);
+        }
+
+        if($route_id)
+        {
+            $queryBuilder->where('route_id', $route_id);
+        }
+
+        return $queryBuilder->get(['abstract_no']);
+    }
+
+    public function getData($routeName, $depot_id, $from_date, $to_date, $route_id, $duty_id)
+    {
+        $data = [];
+        $ticketsCount = 0;
+        $tripsCount = 0;
+        $passengersCount = 0;
+        $totalAmount = 0;
+        $distance = 0;
+
+        $waybills = $this->getWaybills($depot_id, $from_date, $to_date, $route_id);
+
+        if($waybills)
+        {
+            foreach ($waybills as $key => $waybill) 
+            {
+                $waybillDetail = $this->getWaybillDetail($waybill->abstract_no);
+                if($waybillDetail)
+                {
+                    $ticketsCount += $waybillDetail->tickets->count();
+                    $tripsCount += $waybillDetail->trips->count();
+                    $distance += $waybillDetail->trips->pluck('route')->sum('distance');
+                    $passengersCount += $waybillDetail->passenger_count;
+                    $totalAmount += $waybillDetail->total_amt;
+                }
+            }
+        }
+
+        $scheduledTrips = Trip::where([['route_id', $route_id],['duty_id', $duty_id]])->count();
+
+        $target = Target::where([['route_id', $route_id], ['duty_id', $duty_id]])->first();
+
+        if($target)
+        {
+            $targetEPKM = $target->epkm;
+        }else{
+            $targetEPKM = 0;
+        }
+
+        if($distance != 0)
+        {
+            $actualEPKM = $totalAmount/$distance;
+        }else{
+            $actualEPKM = 0;
+        }
+
+        $variance = $actualEPKM - $targetEPKM;
+         
+
+        $data = array(0=>array('ticketsCount'=>$ticketsCount, 'tripsCount'=>$tripsCount, 'passengersCount'=>$passengersCount, 'totalAmount'=>$totalAmount, 'distance'=>$distance, 'route'=>$routeName, 'scheduledTrips'=>$scheduledTrips, 'targetEPKM'=>$targetEPKM, 'actualEPKM'=>$actualEPKM, 'variance'=>$variance));
+
+        return $data;
     }
 }
