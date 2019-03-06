@@ -11,7 +11,7 @@
 
     var checkBoxIcon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QkEwMDJBRjUxRDcyMTFFOTk1RTJFQUU5NkMxMURDQTciIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QkEwMDJBRjYxRDcyMTFFOTk1RTJFQUU5NkMxMURDQTciPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpCQTAwMkFGMzFENzIxMUU5OTVFMkVBRTk2QzExRENBNyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpCQTAwMkFGNDFENzIxMUU5OTVFMkVBRTk2QzExRENBNyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PjYTHtUAAASASURBVHjaRFRbiFZlFN3fPt93zn+bcS6OqQ1jCiNM6EMYlA/S5SHLgpKMMKMpCGTKRPDJ6klMCHopMamHMAOjfNCCyl5iBCOGtIfIClGwSEP9mxn/+znnu7T2+bF+OP/tfGfttddae6ufmi+RIiYXehTIk/eOSDlyPn3cht52CmqTD+kEETtW/FvE5dlIJUdMVP01d23yIaNEj1BmG2SiGmm6/VICa8hS9wHc/NT7dIUnVxRjZXDAR7lP12WuvS5SZpfzA9+RimZYRRcDhTWOsrFY6TkAKhxmQlXq2usHe/nCvgAgzeXrMZePKYrOgn1dkTIlHlluffcZ6ztPd+zNh8t6bLeJBnd18munM3trMuGhxwAIFkpTzy683slu7FMqojha8qHmyk4TJWjdknMp6nLRErP5zFt3X4lL2xI99HbPzv9gXWdSocNuXv9EB/BL3fzmdv73W5GKKTHDu1nFhwogXCE4ktZZPuXyGZX0yByr8lw7vTLrQn6/glSiO/TdqxnsUrt4IIQcYKMf1cz4IVSlwB6loA7ewRmHYxToFkw1lwjdnAPYBtFYuqyalQ8xDczq3DU3QpN7NVfbsV6yJ/NtSMCASCgPnYJV2SyD0mjJ3hStK6306jnre1PQt0jGYDKxMRDfVCGs5Mw3t/tgxYTjIdimdQ2A5CBiCvPFIDFOiuAyqV340fp0SjQrwEqrNqGPkUbv0iVP3bUMTdZL2zoqfyvxiKMByn1rVy+f/1zM6oOBSfDDuWv87n1+t+rnDMyXPgG9z/by+k6RJvfdtTAlTMlNBPoiQGHQwt7U3npHHolD7biOKs+BedzOrp6HSatVEbNAFXPHk8zxV9Y30Y3+QxqBBMs1bg8UrQVn5a/ct9dT8DChRLnrbsehhY67tgY6r76tWS0e36o5+TL1iwg9Swnfnw78Usr8LL9x8C5kETlLXjS69r7ERQ6jwCvW9R4VDQPmqGJWPJVEQ6ckSpGqoEQVZNSonLW+dY0V6fPyMAAfYSQg+Bw6Dr1q9OC7YlY/Fl66pGq8cktJj37hAQwt8Z8r2se5DaIhgn+ZkfwTki3otAPRYYSWJOBlPboH03JQlobMeTUZfxD3v5GWERnAiFmxGLEZJk5pFfcMV+a4HA2dMVy7nLnmGFrej7Rj86RSFVpNvAFGhxHal0vR0jOyWcSEFMGX2MiFHB/wRVcDH2hVbqtf2jMI7D/Tt9IrRwtmZtlWT9kpcbMULSt0k3lxGDmZCAfQUJiWUOYaR7EUpvG9VY3vhGlc59S30Hv1Y2TqGEYJA37jJNi9Jhso8/NoqUnt7C/ZRDApLsZOggOwE1hz04Uc8fizhgfrklvuz6sH5dp0ogdPynccfA/LE7nLdmPRTqJVxEFrSHFP5lr7U9dYBOA2Zi1GvQBtv3aQSKZenW8+XzgJYYuJyF1nJnetwwLSnxKpykXKim1DuWxPsNV/xnp4C1bYhRD6K0TI8X8bW5gGyVZ8pGzGhmDGmwj399jIWejnFCBRHU6eLpmRHUjDKshywRfM/n/9K8AAT+VpNg6XlN8AAAAASUVORK5CYII=';
 
-        function Export(metaData, reportName, data, takenBy, serverDate, widthType, layout) {
+        function Export(metaData, reportName, data, takenBy, serverDate, widthType, layout, headerRows=1) {
                     modifiedMetaData = [];
                     $.each(metaData, function(index, md){
                         modifiedMetaData.push({ image: checkBoxIcon, style:'checkBoxIconStyle', width:8});
@@ -74,7 +74,7 @@
                         {
                             style: 'tableStyle',
                             table:{
-                                headerRows: 1,
+                                headerRows: headerRows,
                                 widths: widthType,
                                 body: data
                             },

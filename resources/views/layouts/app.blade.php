@@ -448,6 +448,16 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="far fa-dot-circle color-cyan"></i> Conductor-wise Earning
                     </a>
                 </li>
+                <li @if($segments_var[2]=='comparative_statement_for_last_year') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.revenue.comparative_statement_for_last_year.index')}}">
+                        <i class="far fa-dot-circle color-cyan"></i> Comparative Statement for Last Year
+                    </a>
+                </li>
+                <li @if($segments_var[2]=='conductor_wise_income_compared_with_target_income') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.revenue.conductor_wise_income_compared_with_target_income.index')}}">
+                        <i class="far fa-dot-circle color-cyan"></i> Conductor-wise Income Compared To Target Income
+                    </a>
+                </li>
                 <li @if($segments_var[2]=='crew_wise_collection') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.revenue.crew_wise_collection.index')}}">
                         <i class="far fa-dot-circle color-cyan"></i> Crew-wise Collection
@@ -546,16 +556,6 @@ $array= array('etm', 'revenue', 'ppt')
                 <li @if($segments_var[2]=='trip_wise_collection') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.revenue.trip_wise_collection.index')}}">
                         <i class="far fa-dot-circle color-cyan"></i> Trip-wise Collection
-                    </a>
-                </li>
-                <li @if($segments_var[0]=='audit_statuses') class="treeview active" @else class="treeview" @endif>
-                    <a href="#">
-                        <i class="far fa-dot-circle color-cyan"></i> Comparative Statement for Last Year
-                    </a>
-                </li>
-                <li @if($segments_var[2]=='conductor_wise_income_compared_with_target_income') class="treeview active" @else class="treeview" @endif>
-                    <a href="{{route('reports.revenue.conductor_wise_income_compared_with_target_income.index')}}">
-                        <i class="far fa-dot-circle color-cyan"></i> Conductor-wise Income Compared To Target Income
                     </a>
                 </li>
             </ul>

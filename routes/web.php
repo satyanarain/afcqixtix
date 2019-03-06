@@ -434,6 +434,12 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('conductor_wise_earning/getexcelreport', 'ConductorWiseEarningController@getExcelReport')->name('conductor_wise_earning.getexcelreport');
             Route::get('conductor_wise_earning/displayData', 'ConductorWiseEarningController@displayData')->name('conductor_wise_earning.displaydata');
 
+            /*comparative_statement_for_last_year*/
+            Route::resource('comparative_statement_for_last_year', 'ComparativeStatementForLastYearController')->only('index'); 
+            Route::post('comparative_statement_for_last_year/getpdfreport', 'ComparativeStatementForLastYearController@getPdfReport')->name('comparative_statement_for_last_year.getpdfreport');
+            Route::get('comparative_statement_for_last_year/getexcelreport', 'ComparativeStatementForLastYearController@getExcelReport')->name('comparative_statement_for_last_year.getexcelreport');
+            Route::get('comparative_statement_for_last_year/displayData', 'ComparativeStatementForLastYearController@displayData')->name('comparative_statement_for_last_year.displaydata');
+
             /*conductor_wise_income_compared_with_target_income*/
             Route::resource('conductor_wise_income_compared_with_target_income', 'ConductorWiseIncomeComparedWithTargetIncomeController')->only('index'); 
             Route::post('conductor_wise_income_compared_with_target_income/getpdfreport', 'ConductorWiseIncomeComparedWithTargetIncomeController@getPdfReport')->name('conductor_wise_income_compared_with_target_income.getpdfreport');
