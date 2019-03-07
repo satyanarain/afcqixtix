@@ -3,27 +3,12 @@
 namespace App\Http\Controllers\Reports\Revenue;
 
 use DB;
-use Auth;
-use Carbon;
+use URL;
 use DateTime;
-use Validator;
-use PdfReport;
-use CSVReport;
 use DatePeriod;
-use ExcelReport;
 use DateInterval;
-use App\Models\Crew;
-use App\Models\Duty;
-use App\Models\Trip;
-use App\Models\Route;
-use App\Models\Ticket;
-use App\Models\Target;
 use App\Models\Waybill;
-use App\Models\TripStart;
-use App\Models\TripDetail;
 use App\Traits\activityLog;
-use App\Models\CenterStock;
-use App\Models\RouteDetail;
 use Illuminate\Http\Request;
 use App\Traits\checkPermission;
 use App\Http\Controllers\Controller;
@@ -44,7 +29,8 @@ class ComparativeStatementForLastYearController extends Controller
     }
 
     public function displayData(Request $request)
-    {       
+    {     
+        //return $this->excelReportHeaderString();  
         $input = $request->all();
         $depot_id = $input['depot_id'];
         $from_date = date('Y-m-d', strtotime($input['from_date']));
@@ -93,11 +79,8 @@ class ComparativeStatementForLastYearController extends Controller
         $depot_id = $input['depot_id'];
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
-        $etm_no = $input['etm_no'];
-    
-        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $etm_no);
-
         $depotName = $this->findNameById('depots', 'name', $depot_id);
+    
         $title = 'Comparative Statement for Last Year Report'; // Report title
 
         /*
@@ -106,51 +89,30 @@ class ComparativeStatementForLastYearController extends Controller
         */
 
         $meta = [ // For displaying filters description on header
-            'Depot : ' => $depotName,
-            'ETM Number : ' => $etm_no,
-            'From : '=> date('d-m-Y', strtotime($from_date)),
-            'To : '=> date('d-m-Y', strtotime($to_date))
-        ]; 
-      
-        $columns = [
-                        'Date'=> function($row){
-                            return date('d-m-Y', strtotime($row->created_at));
-                        },
-                        'ETM Number'=> function($row){
-                            return $row->etm->etm_no;
-                        },
-                        'Route'=> function($row){
-                            return $row->route->route_name;
-                        },
-                        'Duty' => function($row){
-                            return $row->duty->duty_number;
-                        }, 
-                        'Ticket Count' => function($row){
-                            return $row->tickets_count;
-                        }, 
-                        'Pass Count' => function($row){
-                            return $row->pass_count;
-                        }, 
-                        'EPurse Count' => function($row){
-                            return $row->epurse_count;
-                        }, 
-                        'Passenger (Cash)' => function($row){
-                            return $row->cash_passenger_count ? $row->cash_passenger_count : '0';
-                        }, 
-                        'Passenger (Pass)' => function($row){
-                            return $row->card_passenger_count ? $row->card_passenger_count : '0';
-                        }, 
-                        'Passenger (EPurse)' => function($row){
-                            return $row->epurse_passenger_count ? $row->epurse_passenger_count : '0';
-                        }, 
-                        'Concession' => function($row){
-                            return calculateConcession($row->tickets);
-                        }];
+            'Depot : ' . $depotName,
+            'From : '.date('d-m-Y', strtotime($from_date)),
+            'To : '.date('d-m-Y', strtotime($to_date))
+        ];   
 
-        return ExcelReport::of($title, $meta, $queryBuilder, $columns)
-        					->editColumns(['Ticket Count', 'Pass Count', 'EPurse Count', 'Passenger (Cash)', 'Passenger (Pass)', 'Passenger (EPurse)', 'Concession'], [
-		                        'class' => 'right',
-		                    ])->download($title.'.xlsx');        
+        $data = $this->getData($depot_id, $from_date, $to_date);   
+
+        $string = $this->stringGenerator($data);
+
+        $fileName = public_path().'/abcd/test.xlsx';
+
+        file_put_contents($fileName, $string);
+
+        $file = $fileName;
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename='.basename($file));
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($file));
+        readfile($file);
+        exit();
     }
 
     public function getWaybillDetail($waybill_no)
@@ -302,5 +264,46 @@ class ComparativeStatementForLastYearController extends Controller
 	    }        
 
         return $data;
+    }
+
+
+    public function stringGenerator($data)
+    {
+        $string = "<table class='table'>";
+        $string .= "<thead>";
+        $string .= "<tr>";
+        $string .= "<th></th><th></th><th colspan='4'>KMS</th><th colspan='4'>Income</th><th colspan='4'>EPKM</th>";
+        $string .= "</tr>";
+        $string .= "<tr>";
+        $string .= "<th>S. No.</th><th>Date</th><th class='text-right'>L. Year</th><th>Actual</th><th>Variance</th><th>Percentage</th><th>L. Year</th><th>Actual</th><th>Variance</th><th>Percentage</th><th>L. Year</th><th>Actual</th><th>Variance</th><th>Percentage</th>";
+        $string .= "</tr>";
+        $string .= "</thead>";
+        $string .= "<tbody>";
+
+        foreach ($data as $key => $d) 
+        {
+            $string .= "<tr>";
+            $string .= "<td>".($key+1)."</td><td>".$d['date']."</td><td>".$d['lastYear']['distance']."</td><td>".$d['currentYear']['distance']."</td><td>".$d['kms']['variance']."</td><td>".$d['kms']['percentage']."</td><td>".$d['lastYear']['totalAmount']."</td><td>".$d['currentYear']['totalAmount']."</td><td>".$d['income']['variance']."</td><td>".$d['income']['percentage']."</td><td>".$d['lastYear']['epkm']."</td><td>".$d['currentYear']['epkm']."</td><td>".$d['epkm']['variance']."</td><td>".$d['epkm']['percentage']."</td>";
+            $string .= "</tr>";
+        }    
+
+        $string .= "</tbody>"; 
+        $string .= "</table>";
+
+        $headerString = $this->excelReportHeaderString();
+
+        return $headerString.$string;
+    }
+
+    public function excelReportHeaderString()
+    {
+        $logo = URL::to('images/logo.png');
+        $string = "<table class='table'>";
+        $string .= "<tr>";
+        $string .= "<th colspan='4'><img src='".$logo."' alt='Logo'></th><th colspan='8'>QixTix | Automated Fare Collection System</td>";
+        $string .= "</tr>";
+        $string .= "</table>";
+
+        return $string;
     }
 }
