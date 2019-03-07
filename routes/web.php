@@ -545,6 +545,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('roasters/copyroasterform', 'RoasterController@copyroasterform')->name('roasters.copyroasterform');
     Route::post('roasters/generateCopy', 'RoasterController@generateCopy')->name('roasters.generateCopy');
     Route::post('roasters/storecopy', 'RoasterController@storecopy')->name('roasters.storecopy');
+    Route::get('roasters/importroasterform', 'RoasterController@importroasterform')->name('roasters.importroasterform');
+    Route::post('roasters/generateroastertemplate', 'RoasterController@generateRoasterTemplate')->name('roasters.generateRoasterTemplate');
     Route::resource('roasters', 'RoasterController');
 });
 Auth::routes();

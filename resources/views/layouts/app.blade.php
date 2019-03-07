@@ -258,6 +258,7 @@ $pem=menuDisplayByUser($result, 'centerstocks','view');
         <li @if($segments_var[0]=='roasters' && !$segments_var[1]) class="active" @endif><a href="{{route('roasters.index')}}"><i class="fa fa-key"></i>View Roaster</a></li>
         <li @if($segments_var[0]=='roasters' && $segments_var[1]=='addroasterform') class="active" @endif><a href="{{route('roasters.addroasterform')}}"><i class="fa fa-key"></i>Generate Roaster</a></li>
         <li @if($segments_var[1]=='roasters' && $segments_var[1]=='copyroasterform') class="active" @endif><a href="{{route('roasters.copyroasterform')}}"><i class="fa fa-key"></i>Copy Roaster</a></li>
+        <li @if($segments_var[1]=='roasters' && $segments_var[1]=='importroasterform') class="active" @endif><a href="{{route('roasters.importroasterform')}}"><i class="fa fa-key"></i>Import Roaster</a></li>
     </ul>
 </li>
 @endif

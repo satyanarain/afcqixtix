@@ -27,12 +27,12 @@
                     </div>
                     <div class="col-md-4">
                         {!! Form::label('from_date', Lang::get('From'), ['class' => 'control-label']) !!}
-                        {!! Form::text('from_date', date('d-m-Y'), ['class' => 'form-control multiple_date']) !!}
+                        {!! Form::text('from_date', null, ['class' => 'form-control multiple_date']) !!}
                     </div>
 
                     <div class="col-md-4">
                         {!! Form::label('to_date', Lang::get('To'), ['class' => 'control-label']) !!}
-                        {!! Form::text('to_date', date('d-m-Y'), ['class' => 'form-control multiple_date']) !!}
+                        {!! Form::text('to_date', null, ['class' => 'form-control multiple_date']) !!}
                     </div>
                     <div class="col-sm-4">
                         @php $shifts=displayList('shifts','shift');@endphp
