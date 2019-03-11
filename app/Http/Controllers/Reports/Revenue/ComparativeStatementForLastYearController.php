@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers\Reports\Revenue;
 
+
+require_once app_path().'/Http/Controllers/PHPExcelClass/PHPExcel.php';
+
 use DB;
 use URL;
+use Auth;
 use DateTime;
 use DatePeriod;
 use DateInterval;
@@ -11,12 +15,14 @@ use App\Models\Waybill;
 use App\Traits\activityLog;
 use Illuminate\Http\Request;
 use App\Traits\checkPermission;
+use App\Traits\GenerateExcelTrait;
 use App\Http\Controllers\Controller;
 
 class ComparativeStatementForLastYearController extends Controller
 {
     use activityLog;
     use checkPermission;
+    use GenerateExcelTrait;
 
     /**
      * Display a listing of the resource.
@@ -94,25 +100,25 @@ class ComparativeStatementForLastYearController extends Controller
             'To : '.date('d-m-Y', strtotime($to_date))
         ];   
 
-        $data = $this->getData($depot_id, $from_date, $to_date);   
+        $data = $this->getData($depot_id, $from_date, $to_date);  
 
-        $string = $this->stringGenerator($data);
+        $reportColumns = ['S. No', 'Date', 'L. Year', 'Actual', 'Variance', 'Percentage', 'L. Year', 'Actual', 'Variance', 'Percentage', 'L. Year', 'Actual', 'Variance', 'Percentage'];
 
-        $fileName = public_path().'/abcd/test.xlsx';
+        $reportData = [];
+        array_push($reportData, $reportColumns);
 
-        file_put_contents($fileName, $string);
+        foreach ($data as $key => $d) 
+        {
+            array_push($reportData, [(string)($key+1), (string)$d['date'], (string)$d['lastYear']['distance'], (string)$d['currentYear']['distance'], (string)$d['kms']['variance'], (string)$d['kms']['percentage'], (string)$d['lastYear']['totalAmount'], (string)$d['currentYear']['totalAmount'], (string)$d['income']['variance'], (string)$d['income']['percentage'], (string)$d['lastYear']['epkm'], (string)$d['currentYear']['epkm'], (string)$d['epkm']['variance'], (string)$d['epkm']['percentage']]);
+        } 
 
-        $file = $fileName;
-        header('Content-Description: File Transfer');
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment; filename='.basename($file));
-        header('Content-Transfer-Encoding: binary');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate');
-        header('Pragma: public');
-        header('Content-Length: ' . filesize($file));
-        readfile($file);
-        exit();
+        //return $reportData;
+
+        $fileName = public_path().'/abcd/'.$title.'.xlsx';        
+
+        $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "Yes");
+
+        $this->downloadExcelFile($fileName);
     }
 
     public function getWaybillDetail($waybill_no)
@@ -264,46 +270,5 @@ class ComparativeStatementForLastYearController extends Controller
 	    }        
 
         return $data;
-    }
-
-
-    public function stringGenerator($data)
-    {
-        $string = "<table class='table'>";
-        $string .= "<thead>";
-        $string .= "<tr>";
-        $string .= "<th></th><th></th><th colspan='4'>KMS</th><th colspan='4'>Income</th><th colspan='4'>EPKM</th>";
-        $string .= "</tr>";
-        $string .= "<tr>";
-        $string .= "<th>S. No.</th><th>Date</th><th class='text-right'>L. Year</th><th>Actual</th><th>Variance</th><th>Percentage</th><th>L. Year</th><th>Actual</th><th>Variance</th><th>Percentage</th><th>L. Year</th><th>Actual</th><th>Variance</th><th>Percentage</th>";
-        $string .= "</tr>";
-        $string .= "</thead>";
-        $string .= "<tbody>";
-
-        foreach ($data as $key => $d) 
-        {
-            $string .= "<tr>";
-            $string .= "<td>".($key+1)."</td><td>".$d['date']."</td><td>".$d['lastYear']['distance']."</td><td>".$d['currentYear']['distance']."</td><td>".$d['kms']['variance']."</td><td>".$d['kms']['percentage']."</td><td>".$d['lastYear']['totalAmount']."</td><td>".$d['currentYear']['totalAmount']."</td><td>".$d['income']['variance']."</td><td>".$d['income']['percentage']."</td><td>".$d['lastYear']['epkm']."</td><td>".$d['currentYear']['epkm']."</td><td>".$d['epkm']['variance']."</td><td>".$d['epkm']['percentage']."</td>";
-            $string .= "</tr>";
-        }    
-
-        $string .= "</tbody>"; 
-        $string .= "</table>";
-
-        $headerString = $this->excelReportHeaderString();
-
-        return $headerString.$string;
-    }
-
-    public function excelReportHeaderString()
-    {
-        $logo = URL::to('images/logo.png');
-        $string = "<table class='table'>";
-        $string .= "<tr>";
-        $string .= "<th colspan='4'><img src='".$logo."' alt='Logo'></th><th colspan='8'>QixTix | Automated Fare Collection System</td>";
-        $string .= "</tr>";
-        $string .= "</table>";
-
-        return $string;
     }
 }
