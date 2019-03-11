@@ -1,6 +1,8 @@
 <?php
 namespace App\Traits;
 
+require_once app_path().'/Http/Controllers/PHPExcelClass/PHPExcel.php';
+
 use DB;
 use Auth;
 use PHPExcel_IOFactory;

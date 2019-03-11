@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers\Reports\Revenue;
 
-
-require_once app_path().'/Http/Controllers/PHPExcelClass/PHPExcel.php';
-
 use DB;
 use URL;
 use Auth;
