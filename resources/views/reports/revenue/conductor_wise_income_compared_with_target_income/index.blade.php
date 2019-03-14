@@ -153,7 +153,6 @@ $(document).ready(function(){
 
     $(document).on('click', '#exportAsXLS', function(){
         var depot_id = $('#depot_id').val();
-        var etm_no = $('#etm_no').val();
         var fromDate = $('#from_date').val();
         if(!fromDate)
         {
@@ -170,8 +169,7 @@ $(document).ready(function(){
 
         var queryParams = "?depot_id="+depot_id
                         + "&from_date="+fromDate
-                        + "&to_date="+toDate
-                        + "&etm_no="+etm_no;
+                        + "&to_date="+toDate;
 
         var url = "{{route('reports.revenue.conductor_wise_income_compared_with_target_income.getexcelreport')}}"+queryParams;
 
