@@ -26,13 +26,13 @@ class StoreShiftRequest extends Request
     {
         
             return [
-                    'shift' => 'required',
-                   'abbreviation' => 'required',
+                   'shift' => 'required|unique:shifts,shift',
+                   'abbreviation' => 'required|unique:shifts,abbreviation',
                    'start_time' => 'required',
                    'end_time' => 'required',
                    'order_number' => 'required',
                    'system_id' => 'required'
-              ];
+                ];
         
     }
 }

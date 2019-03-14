@@ -79,6 +79,20 @@ class FaresController extends Controller {
         $faresRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id]);
         $faresRequest->request->add(['service_id'=> $service_id]);
         //echo '<pre>';print_r($faresRequest->all());die;
+        $bus_type_id = $bus_type_id;
+        $service_id = $service_id;
+        foreach($faresRequest->stage as $key=>$stage)
+        {
+            $fare_check = DB::table('fares')->select('id')
+                    ->where('service_id','=',$service_id)
+                    ->where('stage','=',$stage)
+                    ->first();
+            if($fare_check){
+                Session::flash('message', 'One or more stage fare already exist for selected service.'); 
+                Session::flash('alert-class', 'alert-danger'); 
+                return view('fares.create',compact('bus_type_id','service_id'));
+            }
+        }
         foreach($faresRequest->stage as $key=>$stage)
         {
             $data = array();

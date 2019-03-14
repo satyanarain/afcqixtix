@@ -32,7 +32,8 @@ class StorePassTypeRequest extends Request
                    'concession_provider_master_id' => 'required',
                    'short_description' => 'required',
                    'info_message' => 'required',
-                   'validity_message' => 'required'
+                   'validity_message' => 'required',
+                   'pass_type_master_id' => 'required|unique:pass_types,pass_type_master_id'
   
              ];
         

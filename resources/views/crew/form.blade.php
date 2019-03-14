@@ -44,13 +44,13 @@
 </div> 
 @if($crew_details->id=='')
 <div class="form-group ">
-     {!! Form::label('password', Lang::get('Password'), ['class' => 'col-md-3 control-label']) !!}
+     {!! Form::label('password', Lang::get('ETM Password'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12 required">
            <input name="password" value="" id="password" class="form-control" type="password">
     </div>
 </div> 
 <div class="form-group ">
-     {!! Form::label('confirm_password', Lang::get('Confirm Password'), ['class' => 'col-md-3 control-label']) !!}
+     {!! Form::label('confirm_password', Lang::get('ETM Confirm Password'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12 required">
         <input name="confirm_password" value="" id="confirm_password" class="form-control" type="password">
     </div>

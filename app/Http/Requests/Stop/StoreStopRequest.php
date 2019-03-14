@@ -27,7 +27,7 @@ class StoreStopRequest extends Request
             return [
                   'stop' => 'required|unique:stops,stop',
                    'stop_id' => 'required|unique:stops,stop_id',
-                   'abbreviation' => 'required',
+                   'abbreviation' => 'required|unique:stops,abbreviation',
                    'short_name' => 'required'
              ];
         
