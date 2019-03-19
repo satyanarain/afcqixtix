@@ -70,11 +70,14 @@ class TargetController extends Controller {
     public function store($route_master_id,$duty_id,StoreTargetRequest $targetsRequest) {
      if(!$this->checkActionPermission('targets','create'))
             return redirect()->route('401');
-      $sql=Target::where([['route_id',$targetsRequest->route_master_id],['duty_id',$targetsRequest->duty_id],['shift_id',$targetsRequest->shift_id]])->first();
+//     echo $route_master_id;
+//     echo $duty_id;
+//     echo '<pre>';print_r($targetsRequest->all());die;
+      $sql=Target::where([['trip',$targetsRequest->trip],['route_id',$route_master_id],['duty_id',$duty_id],['shift_id',$targetsRequest->shift_id]])->first();
     
      if(count($sql)>0)
      {
-     return view('targets.create')->withErrors(['This route,duty number and shift has already been taken.']);
+        return view('targets.create')->withErrors(['This route,duty number, shift  and Trip has already been taken.']);
       } else {
             $version_id = $this->getCurrentVersion();
             $targetsRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id]);
@@ -113,7 +116,18 @@ class TargetController extends Controller {
         if(!$this->checkActionPermission('targets','edit'))
             return redirect()->route('401');
         $targets = Target::findOrFail($id);
-        return view('targets.edit',compact('targets','route_master_id','duty_id'));
+        $trips_res = DB::table('trip_details')
+                    ->select('*')
+                    ->where('trip_id', '=',$targets->id)
+                    ->get();
+        
+        foreach($trips_res as $row){
+            $trips[$row->trip_no] = $row->trip_no;
+        }
+//        echo '<pre>';
+//        print_r($targets);
+//        print_r($trips);die;    
+        return view('targets.edit',compact('targets','route_master_id','duty_id','trips'));
     }
 
     /**
@@ -160,5 +174,38 @@ class TargetController extends Controller {
  <?php
     }
     }
+    }
+    
+    
+    public function getTripList(Request $request)
+    {
+        try
+        {
+            $query = DB::table('trips')
+                    ->select('trips.id as trip_id')
+                    ->where('route_id', '=',$request->route_master_id)
+                    ->where('duty_id', '=',$request->duty_id)
+                    ->where('shift_id', '=',$request->shift_id)
+                    ->first();
+            $trip_id = $query->trip_id;
+            if(count($query) < 1)
+            {
+                $result = array('code'=>404, "description"=>"No Records Found");
+                return response()->json($result, 404);
+            }
+            else
+            {
+                $query1 = DB::table('trip_details')
+                    ->select('*')
+                    ->where('trip_id', '=',$trip_id)
+                    ->get();
+              $result = array('data'=>$query1,'code'=>200);
+              return response()->json($result, 200);
+            }        
+        }
+        catch(Exception $e)
+        {
+          return response()->json(['error' => 'Something is wrong'], 500);
+        }
     }
 }

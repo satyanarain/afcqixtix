@@ -37,8 +37,11 @@ public function create($requestData) {
 $input = $requestData->all();
 $user_id = Auth::id();
 $input['user_id'] = $user_id;
-
-$trips_id = Trip::create(['approval_status'=>'p','version_id'=>$requestData->version_id,'flag'=>'a','user_id'=>$user_id,'route_id'=>$requestData->route_id,'duty_id'=>$requestData->duty_id,'shift_id'=>$requestData->shift_id,'trip_no'=>$requestData->trip_no])->id;
+$trip_exist = Trip::where([['route_id',$requestData->route_id],['duty_id',$requestData->duty_id],['shift_id',$requestData->shift_id]])->first();
+if($trip_exist)
+    $trips_id = $trip_exist->id;
+else
+    $trips_id = Trip::create(['approval_status'=>'p','version_id'=>$requestData->version_id,'flag'=>'a','user_id'=>$user_id,'route_id'=>$requestData->route_id,'duty_id'=>$requestData->duty_id,'shift_id'=>$requestData->shift_id,'trip_no'=>$requestData->trip_no])->id;
 $trip_no = $requestData->trip_no;
 $start_time = $requestData->start_time;
 $path_route_id = $requestData->path_route_id;

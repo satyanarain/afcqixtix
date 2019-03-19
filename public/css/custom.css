@@ -509,3 +509,10 @@ ul.menu{ height: auto !important;}
     margin-top: 30px;
     background-color: #999;}
 .user-image{width: 50px; float: left;}
+.password_container{display: none;}
+.btn-afcs{background-color: #2C3B41;color:#fff;}
+.btn-afcs:hover {
+  color: #fff;
+  background-color: #2C3B41;
+  border-color: #367FA9;
+}

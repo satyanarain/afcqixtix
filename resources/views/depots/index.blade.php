@@ -13,7 +13,7 @@
                <?php $permission_status = checkPermission('depots','create');
                      $checkVersionOpen = checkVersionOpen();
                     if($permission_status && $checkVersionOpen)
-                        createButton('create','Add');
+                        createButton('create','Add Depot');
                     elseif($permission_status)
                         createDisableButton('create','Add');
                 ?>

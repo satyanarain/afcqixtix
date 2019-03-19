@@ -43,16 +43,16 @@
     </div>
 </div> 
 @if($crew_details->id=='')
-<div class="form-group ">
+<div class="form-group password_container">
      {!! Form::label('password', Lang::get('ETM Password'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12 required">
-           <input name="password" value="" id="password" class="form-control" type="password">
+           <input name="password" value="" id="password" class="form-control" type="text">
     </div>
 </div> 
-<div class="form-group ">
+<div class="form-group password_container">
      {!! Form::label('confirm_password', Lang::get('ETM Confirm Password'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12 required">
-        <input name="confirm_password" value="" id="confirm_password" class="form-control" type="password">
+        <input name="confirm_password" value="" id="confirm_password" class="form-control" type="text">
     </div>
 </div> 
 @endif
@@ -133,7 +133,7 @@
     </div>
 </div> 
 <div class="form-group ">
-     {!! Form::label('date_of_birth', Lang::get('Download From'), ['class' => 'col-md-3 control-label','for'=>'date_of_birth']) !!}
+     {!! Form::label('date_of_birth', Lang::get('Date of Birth'), ['class' => 'col-md-3 control-label','for'=>'date_of_birth']) !!}
     <div class="col-md-9 col-sm-12">
         <div class="input-group date form_date col-md-10" data-date="" data-date-format="dd MM yyyy p" data-link-field="date_of_birtha">
         {!! Form::text('date_of_birth', $date_of_birth, ['class' => 'form-control','readonly'=>'readonly']) !!}
@@ -211,7 +211,7 @@
         </div>
     </div>
 </div>  
-
+@push('scripts')
 <script>
  $('#image_path').change(function () {
   var ext = $('#image_path').val().split('.').pop().toLowerCase();
@@ -223,6 +223,12 @@
 }
 
 });
+$("#role").change(function(){
+    if($(this).val()=="Driver")
+        $(".password_container").hide();
+    else
+        $(".password_container").show();
+})
  var loadFile = function(event) {
        $("#output").show();
     var output = document.getElementById('output');
@@ -251,3 +257,4 @@
      }
  }  
 </script>
+@endpush

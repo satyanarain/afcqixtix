@@ -31,21 +31,24 @@ class StoreETMDetailRequest extends Request
       
         return [
             'depot_id' => 'required',
-            'etm_no' => 'required',
+            'etm_no' => 'required|unique:etm_details,etm_no',
              'evm_status_master_id' => 'required',
-             'sim_no' => 'required',
-             'imei_no' => 'required',
-             'serial_no' => 'required',
+             'sim_no' => 'required|unique:etm_details,sim_no',
+             'imei_no' => 'required|unique:etm_details,imei_no',
+             'serial_no' => 'required|unique:etm_details,serial_no',
              'make' => 'required'           
-           
-              ];
+            ];
         
     }
     public function messages()
     {
         return [
            //  'crew_id.unique' => 'ETM ID already exists',
-            'evm_status_master_id.required' => 'Please select status' 
+            'evm_status_master_id.required' => 'Please select status',
+            'serial_no.unique' => 'Serial Number already exists.',
+            'imei_no.unique' => 'IMEI Number already exists.',
+            'sim_no.unique' => 'Sim Number already exists.',
+            'etm_no.unique' => 'ETM Number already exists.'
               ];
         
     }

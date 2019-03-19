@@ -26,8 +26,9 @@ class StoreTripCancellationReasonRequest extends Request
     public function rules()
     {
         return [
-                    'short_reason' => 'required',
-                    'trip_cancellation_reason_category_master_id' => 'required'
+                    'short_reason' => 'required|unique:trip_cancellation_reasons',
+                    'trip_cancellation_reason_category_master_id' => 'required',
+                    
                   
              ];
         

@@ -170,6 +170,7 @@ Route::group(['middleware' => ['auth']], function () {
     //Route::post('targets/store', 'TargetController@store');
     //Route::get('targets/getduties/{id}', 'TargetController@getDuty');
     //Route::get('routes/{route_id}/targets', 'TargetController@index');
+    Route::post('targets/gettriplist', 'TargetController@getTripList');
     Route::resource('route_master.duties.targets', 'TargetController');
     
     

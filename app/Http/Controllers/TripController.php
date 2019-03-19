@@ -79,6 +79,38 @@ class TripController extends Controller
     public function store($route_master_id,$duty_id,StoreTripRequest $tripsRequest) {
         if(!$this->checkActionPermission('trips','create'))
             return redirect()->route('401');
+        //echo '<pre>';print_r($tripsRequest->all());die;
+        $duty_id = $duty_id;
+        $route_master_id = $route_master_id;
+        $error_flg = false;
+        $trip_exist = DB::table('trips')->select('id')
+                ->where('route_id','=',$route_master_id)
+                ->where('duty_id','=',$duty_id)
+                ->where('shift_id','=',$tripsRequest['shift_id'])
+                ->first();
+        if($trip_exist){
+            return view('trips.create',compact('route_master_id','duty_id'))->withErrors(['This route,duty number, shift  has already been taken.']);
+        }
+        foreach($tripsRequest['trip_no'] as $trip_no ) 
+        {
+            $trips = DB::table('trip_details')->select('*','trips.id as id')
+                ->leftjoin('duties', 'duties.id', '=', 'trips.duty_id')
+                ->leftjoin('shifts', 'shifts.id', '=', 'trips.shift_id')
+                ->where('trips.route_id','=',$route_master_id)
+                ->where('trips.duty_id','=',$duty_id)
+                ->get();
+            $sql=Trip::where([['trip',$trip_no],['route_id',$route_master_id],['duty_id',$duty_id],['shift_id',$targetsRequest->shift_id]])->first();
+            if(count($sql)>0)
+            {
+                $error_flg = true;
+                break;
+            }
+        }
+        if($error_flg)
+        {
+           return view('trip.create')->withErrors(['This route,duty number, shift  and Trip has already been taken.']);
+        }
+        
         $tripsRequest->route;
         $version_id = $this->getCurrentVersion();
         $tripsRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id]);

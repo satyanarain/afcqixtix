@@ -27,8 +27,8 @@ class StoreCrewRequest extends Request
         return [
             //'depot_id' => 'required',
             'crew_name' => 'required',
-             'password' => 'required',
-             'confirm_password' => 'required_with:password|same:password',
+             //'password' => 'required',
+             //'confirm_password' => 'required_with:password|same:password',
              'crew_id' => 'required|unique:crew,crew_id',
              'licence_no' => 'required|unique:crew,licence_no'
            
@@ -40,7 +40,7 @@ class StoreCrewRequest extends Request
         return [
             'crew_id.unique' => 'Crew ID already exists',
             'confirm_password.required' => 'The confirm password field is required.',
-            'licence_no.unique' => 'Licence Number akready exists.'
+            'licence_no.unique' => 'Licence Number already exists.'
               ];
         
     }
