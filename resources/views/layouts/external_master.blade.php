@@ -563,7 +563,7 @@ $.widget.bridge('uibutton', $.ui.button);
               changeYear: true
           });
       }); 
-  $('#map1').append('<div style="" id="map"><div class="loading_bar"></div></div>');
+$('#map1').append('<div style="" id="map"><div class="loading_bar"></div></div>');
 $(window).on('load', function(){
   setTimeout(removeLoader, 200); //wait for page load PLUS two seconds.
 });

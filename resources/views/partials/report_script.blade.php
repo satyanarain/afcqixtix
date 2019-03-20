@@ -142,6 +142,10 @@
                             },
                             oddRowStyle: {
                                 fillColor: '#ebf2f3'
+                            },
+                            subHeaderStyle: {
+                                fillColor: '#253135',
+                                color: '#ffffff'
                             }
                         }
                     };

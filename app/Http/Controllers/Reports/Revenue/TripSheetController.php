@@ -148,37 +148,6 @@ class TripSheetController extends Controller
         $this->downloadExcelFile($fileName);
     }
 
-    public function getWaybillDetail($waybill_no)
-    {
-        $queryBuilder = Waybill::with(['tickets', 'shifts', 'routeNotMaster', 'trips.route'])
-                                ->withCount(['tickets as passenger_count'=>function($query){
-                                    $query->select(DB::raw("(SUM(adults) + SUM(childs))"));
-                                }])->withCount(['tickets as tickets_count'])
-                                ->withCount(['tickets as total_amt'=>function($q){
-                                    $q->select(DB::raw("SUM(total_amt)"));
-                                }])
-                                ->where('abstract_no', $waybill_no);
-
-        return $queryBuilder->first();
-    }
-
-    public function getWaybills($depot_id, $date)
-    {
-        $queryBuilder = Waybill::with('route');
-
-        if($date)
-        {
-            $queryBuilder->whereDate('created_at', date('Y-m-d', strtotime($date)));
-        }
-
-        if($depot_id)
-        {
-            $queryBuilder->where('depot_id', $depot_id);
-        }
-
-        return $queryBuilder->get(['abstract_no']);
-    }
-
     public function getData($depot_id, $from_date, $to_date, $route_id, $duty_id)
     {
         $begin = new DateTime(date('Y-m-d', strtotime($from_date)));

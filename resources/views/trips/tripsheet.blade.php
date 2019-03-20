@@ -354,6 +354,7 @@ $(document).ready(function(){
 
 
     $(document).on('click', '#exportAsPDF', function(){
+        $('#map1').show();
         var depot_id = $('#depot_id').val();
         var fromDate = $('#from_date').val();
         if(!fromDate)
@@ -401,7 +402,7 @@ $(document).ready(function(){
                     var data = response.data;
                     console.log(data)
                     var reportData = [];
-                    var widths = ['*', "*", 35, 20, 40, 20, 40, "*", 40, 40, 50, "*", "*", "*", "*"];
+                    var widths = ['*', 100, 35, 20, 40, 20, 40, "*", 40, 40, 50, "*", "*", "*", "*"];
                     reportData.push([{'text':'Ticket No.', 'style': 'tableHeaderStyle'}, {'text':'End Stop', 'style': 'tableHeaderStyle'}, {'text':'Time', 'style': 'tableHeaderStyle'}, {'text':'Adults Count', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Adult Amt (Rs)', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Child Count', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Child Amt (Rs)', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Concession (Rs)', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Pass', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Cash', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'E-Purse', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Total Amt (Rs)', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Pass Type', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Card Number', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'E-Purse Balance', 'style': 'tableHeaderStyle', alignment:'right'}]);
                     $.each(data, function(ind, d){ 
                         var trips = d.trips;
@@ -410,10 +411,10 @@ $(document).ready(function(){
                         {
                           $.each(trips, function(trindex, trip){
                             var tickets = trip.tickets;
-                            if(tickets)
+                            if(tickets.length)
                             {
-                              reportData.push([{'text':'Trip No. : '+trip.trip_id, style:'oddRowStyle'}, {'text':''+trip.start_timestamp, style:'oddRowStyle', colSpan:2}, {}, {'text':'Route : ', style:'oddRowStyle', alignment:'right'}, {'text':'Path : '+trip.direction, style:'oddRowStyle', alignment:'right'}, {'text':trip.from_stop.stop+' To '+trip.to_stop.stop, style:'oddRowStyle', colSpan:2}, {}, {'text':'', style:'oddRowStyle', alignment:'right'}, {'text':'', style:'oddRowStyle', alignment:'right'}, {'text':'', style:'oddRowStyle', alignment:'right'}, {'text':'', style:'oddRowStyle', alignment:'right'}, {'text':'', style:'oddRowStyle', alignment:'right'}, {'text':'', style:'oddRowStyle', alignment:'right'}, {'text':'', style:'oddRowStyle', alignment:'right'}, {'text':'', style:'oddRowStyle', alignment:'right'}]);
-                              reportData.push([{'text':'Stage : '+trip.from_stop.stop, style:'oddRowStyle', colSpan:2}, {}, {'text':'', style:'oddRowStyle'}, {'text':'', style:'oddRowStyle', alignment:'right'}, {'text':'', style:'oddRowStyle', alignment:'right'}, {'text':'', style:'oddRowStyle', alignment:'right'}, {'text':'', style:'oddRowStyle', alignment:'right'}, {'text':'', style:'oddRowStyle', alignment:'right'}, {'text':'', style:'oddRowStyle', alignment:'right'}, {'text':'', style:'oddRowStyle', alignment:'right'}, {'text':'', style:'oddRowStyle', alignment:'right'}, {'text':'', style:'oddRowStyle', alignment:'right'}, {'text':'', style:'oddRowStyle', alignment:'right'}, {'text':'', style:'oddRowStyle', alignment:'right'}, {'text':'', style:'oddRowStyle', alignment:'right'}]);
+                              reportData.push([{'text':'Trip No. : '+trip.trip_id, style:'subHeaderStyle'}, {'text':''+trip.start_timestamp, style:'subHeaderStyle', colSpan:2}, {}, {'text':'Route : ', style:'subHeaderStyle', alignment:'right'}, {'text':'Path : '+trip.direction, style:'subHeaderStyle', alignment:'right'}, {'text':trip.from_stop.stop+' To '+trip.to_stop.stop, style:'subHeaderStyle', colSpan:2}, {}, {'text':'', style:'subHeaderStyle', alignment:'right'}, {'text':'', style:'subHeaderStyle', alignment:'right'}, {'text':'', style:'subHeaderStyle', alignment:'right'}, {'text':'', style:'subHeaderStyle', alignment:'right'}, {'text':'', style:'subHeaderStyle', alignment:'right'}, {'text':'', style:'subHeaderStyle', alignment:'right'}, {'text':'', style:'subHeaderStyle', alignment:'right'}, {'text':'', style:'subHeaderStyle', alignment:'right'}]);
+                              reportData.push([{'text':'Stage : '+trip.from_stop.stop, style:'subHeaderStyle', colSpan:2}, {}, {'text':'', style:'subHeaderStyle'}, {'text':'', style:'subHeaderStyle', alignment:'right'}, {'text':'', style:'subHeaderStyle', alignment:'right'}, {'text':'', style:'subHeaderStyle', alignment:'right'}, {'text':'', style:'subHeaderStyle', alignment:'right'}, {'text':'', style:'subHeaderStyle', alignment:'right'}, {'text':'', style:'subHeaderStyle', alignment:'right'}, {'text':'', style:'subHeaderStyle', alignment:'right'}, {'text':'', style:'subHeaderStyle', alignment:'right'}, {'text':'', style:'subHeaderStyle', alignment:'right'}, {'text':'', style:'subHeaderStyle', alignment:'right'}, {'text':'', style:'subHeaderStyle', alignment:'right'}, {'text':'', style:'subHeaderStyle', alignment:'right'}]);
                             }
                             if(tickets)
                             {
@@ -441,11 +442,14 @@ $(document).ready(function(){
                     var title = response.title;
                     var takenBy = response.takenBy;
                     var serverDate = response.serverDate;
+
+                    $('#map1').hide();
                     Export(metaData, title, reportData, takenBy, serverDate, widths, 'noBorders', 1);                                      
                 }                
             },
             error: function(error)
             {
+                $('#map1').hide();
                 console.log(error);
             }
         })
