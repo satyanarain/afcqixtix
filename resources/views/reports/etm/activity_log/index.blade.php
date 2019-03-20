@@ -100,6 +100,15 @@
 @include('partials.report_script')
 <script type="text/javascript">
 $(document).ready(function(){
+
+    var depot_id = $('#depot_id').val();
+    if(depot_id)
+    {
+        var etm_no = "{{isset($_GET['etm_no']) ? $_GET['etm_no'] : ''}}";
+        getETMsByDepotId(depot_id, 'etm_no', "All", etm_no);
+    }
+    
+    
     $(document).on('click', '#exportAsPDF', function(){
         var depot_id = $('#depot_id').val();
         var etm_no = $('#etm_no').val();
@@ -180,6 +189,14 @@ $(document).ready(function(){
         var url = "{{route('reports.etm.activity_log.getexcelreport')}}"+queryParams;
 
         window.open(url,'_blank');
+    });
+
+    $(document).on('change', '#depot_id', function(){
+        var depot_id = $(this).val();
+        if(depot_id)
+        {
+            getETMsByDepotId(depot_id, 'etm_no', "Single");
+        }
     });
 });
 </script>

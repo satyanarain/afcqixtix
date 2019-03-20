@@ -112,6 +112,13 @@
 @include('partials.report_script')
 <script type="text/javascript">
 $(document).ready(function(){
+    var depot_id = $('#depot_id').val();
+    if(depot_id)
+    {
+        var etm_no = "{{isset($_GET['etm_no']) ? $_GET['etm_no'] : ''}}";
+        getETMsByDepotId(depot_id, 'etm_no', "All", etm_no);
+    }
+
     var $chk = $("#columnsNameContainer input:checkbox"); 
     var $tbl = $("#afcsReportTable");
     var $tblhead = $("#afcsReportTable th");
@@ -121,7 +128,7 @@ $(document).ready(function(){
         $('th', this).each(function(){
             html_table_data += '<p class="btn btn-primary" style="margin:1px 0px;"><input checked="checked" class="checkbox_hide" type="checkbox" name="hide_column'+counter+'" id="hide_column'+counter+'" value="'+counter+'" /><label for="hide_column'+counter+'">'+$(this).text()+'</label></p>';  
             counter++;
-    });  
+        });  
     });  
     $('.columnsNameContainer').html(html_table_data);
     
@@ -202,36 +209,18 @@ $(document).ready(function(){
         window.open(url,'_blank');
     });
 
-    /*$(document).on('change', '#depot_id', function(){
+    $(document).on('change', '#depot_id', function(){
         var depot_id = $(this).val();
-        var url = "{{route('reports.etm.audit_status.getetmsbydepotid', ':id')}}";
-        url = url.replace(':id', depot_id);
+        if(depot_id)
+        {
+            getETMsByDepotId(depot_id, 'etm_no', "All");
+        }
+    });
 
-        $.ajax({
-            url: url,
-            type: "GET",
-            dataType: "JSON",
-            success: function(response)
-            {   
-                var etms = response;
-                var etmStr = '<option value="">All</option>';
-                if(etms.length > 0)
-                {
-                    $.each(etms, function(index, etm){
-                        etmStr += '<option value="'+etm.id+'">'+etm.etm_no+'</option>';
-                    })
-                }
-                $('#etm_no').html(etmStr);
-            },
-            error: function(error)
-            {
-                console.log(error);
-            }
-        })
-    })*/
     $('#columnsNameShowHideButton').click(function () {
         $('.columnsNameContainer').toggle();
-    });   
+    });
+
     $(document).on('click', '.checkbox_hide' , function() {
         var colToHide = $tblhead.filter("." + $(this).attr("name"));
         var index = $(colToHide).index();

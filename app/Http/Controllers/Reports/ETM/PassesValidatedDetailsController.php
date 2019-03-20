@@ -5,20 +5,19 @@ namespace App\Http\Controllers\Reports\ETM;
 use DB;
 use Auth;
 use Validator;
-use PdfReport;
-use CSVReport;
-use ExcelReport;
 use App\Models\Ticket;
 use App\Traits\activityLog;
 use App\Models\CenterStock;
 use Illuminate\Http\Request;
 use App\Traits\checkPermission;
+use App\Traits\GenerateExcelTrait;
 use App\Http\Controllers\Controller;
 
 class PassesValidatedDetailsController extends Controller
 {
     use activityLog;
     use checkPermission;
+    use GenerateExcelTrait;
 
     /**
      * Display a listing of the resource.
@@ -96,6 +95,7 @@ class PassesValidatedDetailsController extends Controller
         $pass_id = "";//to be discussed
     
         $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $service_id, $pass_id);
+        $data = $queryBuilder->get();
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
         $service = $this->findNameById('services', 'name', $service_id);
@@ -109,56 +109,28 @@ class PassesValidatedDetailsController extends Controller
         */
 
         $meta = [ // For displaying filters description on header
-            'Depot : ' => $depotName,
-            'Service : ' => $serviceName,
-            'From : '=> date('d-m-Y', strtotime($from_date)),
-            'To : '=> date('d-m-Y', strtotime($to_date))
+            'Depot : ' . $depotName,
+            'Service : ' . $serviceName,
+            'From : '. date('d-m-Y', strtotime($from_date)),
+            'To : '. date('d-m-Y', strtotime($to_date))
         ]; 
 
       
-        $columns = [
-                        'From Stop'=> function($row){
-                            return $row->fromStop->short_name;
-                        },
-                        'To Stop'=> function($row){
-                            return $row->toStop->short_name;
-                        },
-                        'Date and Time'=> function($row){
-                            return date('d-m-Y H:i:s', strtotime($row->sold_at));
-                        },
-                        'Adult Count' => function($row){
-                            return $row->adults;
-                        }, 
-                        'Adult Amount (Rs.)' => function($row){
-                            return $row->adults_amt;
-                        }, 
-                        'Child Count' => function($row){
-                            return $row->childs;
-                        }, 
-                        'Child Amount (Rs.)' => function($row){
-                            return $row->childs_amt;
-                        }, 
-                        'Concession' => function($row){
-                            return $row->concession->flat_fare_amount;
-                        }, 
-                        'Pass' => function($row){
-                            return '0.00';
-                        }, 
-                        'Cash' => function($row){
-                            return '0.00';
-                        }, 
-                        'E-Purse' => function($row){
-                            return '0.00';
-                        }, 
-                        'Total Amount (Rs.)' => function($row){
-                            return $row->adults_amt  + $row->childs_amt -$row->concession->flat_fare_amount;
-                        }, 
-                        'Card Number' => function($row){
-                            return $row->card_number;
-                        }];
+        $reportColumns = ['S. No', 'From Stop', 'To Stop', 'Date and Time', 'Adult Count', 'Adult Amt (Rs.)', 'Child Count', 'Child Amt (Rs.)', 'Concession (Rs.)', 'Pass', 'Cash', 'E-Purse', 'Total Amt. (Rs.)', 'Card Number'];
 
-        return ExcelReport::of($title, $meta, $queryBuilder, $columns)
-        					->download($title.'.xlsx');        
+        $reportData = [];
+        array_push($reportData, $reportColumns);
+
+        foreach ($data as $key => $d) 
+        {
+            array_push($reportData, [(string)($key+1), (string)$d->fromStop->short_name, (string)$d->toStop->short_name, (string)date('d-m-Y H:i:s', strtotime($da->sold_at)), (string)$da->adults, (string)$da->adults_amt, (string)$da->childs, (string)$da->childs_amt, (string)$da->concession->flat_fare_amount, (string)'0.00', (string)'0.00', (string)'0.00', (string)$da->adults_amt+$da->childs_amt-$da->concession->flat_fare_amount, (string)$da->card_number]);
+        } 
+
+        $fileName = public_path().'/abcd/'.$title.'.xlsx';        
+
+        $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "No");
+
+        $this->downloadExcelFile($fileName);        
     }
 
     public function getQueryBuilder($depot_id, $from_date, $to_date, $service_id, $pass_id)

@@ -10,6 +10,12 @@ class Ticket extends Model
 
     protected $guarded = [];
 
+    //accessor
+    public function getSoldAtAttribute($value)
+    {
+        return date('H:i:s', strtotime($value));
+    }
+
     public function fromStop()
     {
     	return $this->hasOne(Stop::class, 'id', 'stage_from');

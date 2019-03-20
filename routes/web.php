@@ -301,6 +301,8 @@ Route::group(['middleware' => ['auth']], function () {
     
     Route::group(['prefix'=>'reports', 'namespace'=>'Reports', 'as'=>'reports.'], function(){
 
+        Route::get('getconductorsbydepotid/{depotId}', 'ReportsController@getConductorsByDepotId')->name('getconductorsbydepotid');
+
         Route::group(['prefix'=>'etm', 'namespace'=>'ETM', 'as'=>'etm.'], function(){
             /*audit_status*/
             Route::resource('audit_status', 'AuditStatusController')->only('index'); 
@@ -529,6 +531,12 @@ Route::group(['middleware' => ['auth']], function () {
             Route::post('schedule_wise_epkm/getpdfreport', 'ScheduleWiseEPKMController@getPdfReport')->name('schedule_wise_epkm.getpdfreport');
             Route::get('schedule_wise_epkm/getexcelreport', 'ScheduleWiseEPKMController@getExcelReport')->name('schedule_wise_epkm.getexcelreport');
             Route::get('schedule_wise_epkm/displayData', 'ScheduleWiseEPKMController@displayData')->name('schedule_wise_epkm.displaydata');
+
+            /*trip_sheet*/
+            Route::resource('trip_sheet', 'TripSheetController')->only('index'); 
+            Route::post('trip_sheet/getpdfreport', 'TripSheetController@getPdfReport')->name('trip_sheet.getpdfreport');
+            Route::get('trip_sheet/getexcelreport', 'TripSheetController@getExcelReport')->name('trip_sheet.getexcelreport');
+            Route::get('trip_sheet/displayData', 'TripSheetController@displayData')->name('trip_sheet.displaydata');
 
             /*trip_wise_collection*/
             Route::resource('trip_wise_collection', 'TripWiseCollectionController')->only('index'); 
