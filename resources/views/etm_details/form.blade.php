@@ -17,7 +17,7 @@
     {!! Form::label('etm_status_masters', Lang::get('Status'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 required">
         @php $etm_status_masters=displayList('etm_status_masters','name');@endphp
-       <span id="depot_id"> {!! Form::select('evm_status_master_id',$etm_status_masters,isset($etm_details->depot_id) ? $etm_details->evm_status_master_id : selected,
+       <span id="depot_id"> {!! Form::select('etm_status_master_id',$etm_status_masters,isset($etm_details->depot_id) ? $etm_details->etm_status_master_id : selected,
         ['class' => 'col-md-6 form-control', 'placeholder'=>'Select status','required' => 'required']) !!}</span>
     </div>
 

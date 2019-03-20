@@ -1,7 +1,10 @@
 @extends('layouts.master')
 @section('header')
 <h1>Manage ETM</h1>
-{{BreadCrumb()}}
+<ol class="breadcrumb">
+    <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li class="active">ETM Details</li>
+</ol>
 @stop
 @section('content')
 <div class="row">
@@ -17,41 +20,37 @@
                         createDisableButton('create','Add ETM');
                 ?>
             </div>
+            <div class="box-body">
+            <div class="col-xs-12">
+                <div class="form-group ">
+                    <div class="col-sm-3 no-padding">
+                        @php $depots=displayList('depots','name');@endphp
+                        {!! Form::select('depot_id', $depots,null,
+                        ['id'=>'depot_id','data-column'=>0,'class' => 'search-input-select col-md-6 form-control', 'placeholder'=>'Select Depot','required' => 'required']) !!}
+                    </div>
+                    <div class="col-sm-3">
+                        {!! Form::select('etm_status', array('1'=>'In Use','2'=>'Not in Use'),null,
+                        ['id'=>'etm_status','data-column'=>1,'class' => 'search-input-select col-md-6 form-control', 'placeholder'=>'Select Status','required' => 'required']) !!}
+                    </div>
+                    
+                    
+                </div>
+            </div>
+          </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="example1" class="table table-bordered table-striped">
+                <table style="width: 100%;" id="etm-grid" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th class="display_none"></th>
+                            <th class=""></th>
                             <th>@lang('Depot Name')</th>
                             <th>@lang('ETM No.')</th>
                             <th>@lang('Status')</th>
                             <th>@lang('SIM No.')</th>
-                              {{  actionHeading('Action', $newaction='') }}
+                            {{  actionHeading('Action', $newaction='') }}
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach($etm_details as $value)
-                        <tr class="nor_f">
-                            <th class="display_none"></th>
-                            <td>{{$value->name}}</td>
-                            <td>{{$value->etm_no}}</td>
-                            <td>{{$value->evm_status_master_id}}</td>
-                            <td>{{$value->sim_no}}</td>
-                            <td>
-                                <?php $permission = getAllModulePermission('etm_details');
-                                if(in_array('edit',$permission) && $checkVersionOpen){
-                                    echo '<a  href="'.route("etm_details.edit",$value->id).'" class="" title="Edit" ><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
-                                }elseif(in_array('edit',$permission)){?>
-                                    <a class="disabled"><span class="glyphicon glyphicon-pencil "></span></a>&nbsp;&nbsp;&nbsp;&nbsp;   
-                                <?php }
-                                if(in_array('view',$permission))
-                                    echo '<a style="cursor: pointer;" title="View" data-toggle="modal" data-target="#'.$value->id.'"  onclick="viewDetails('.$value->id.',\'view_detail\')"><span class="glyphicon glyphicon-search"></span></a>';
-                                ?>
-                            </td>
-                         </tr>
-                        @endforeach
-                        </tbody>
+                        
                     </table>
             </div>
             <!-- /.box-body -->
@@ -67,6 +66,78 @@
 @endsection
 
 @push('scripts')
+    <script type="text/javascript" language="javascript" >
+$(document).ready(function() {
+    var token = window.Laravel.csrfToken;
+    //alert(token);
+    //var dat = $("#filter-waybill").serialize();
+    //alert(dat);
+    var dataTable = $('#etm-grid').DataTable( {
+                buttons: [
+            'pageLength',
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'pdfHtml5',
+                exportOptions: {
+                     columns: ':visible'
+                }
+            },
+                  {
+            extend: 'colvis',
+            columns: ':gt(0)'
+        }
+
+        ],
+       // "pageLength": 1000,
+         "order": [[ 0, "desc" ]],
+         "aoColumnDefs": [
+        {
+        'bSortable' : false,
+        'aTargets' : [ 'action', 'text-holder' ]
+    } ] ,
+        oLanguage: {
+        //sProcessing: "<img  src='../dist/img/gvtc_loader.gif' style='z-index:9999 !important; position: absolute;'>"
+        },
+        processing : true, 
+        "scrollX": true,
+        "destroy":true,
+        "serverSide": true,
+        //"lengthMenu": [[50, 100, 500, 1000, -1], [50, 100, 500, 1000, "All"]],
+        dom: 'lBfrtip',        
+        "ajax":{
+               // url :"/data.php", // json datasource
+               url :"{{ route('etm_details.getfiltereddata') }}", // json datasource
+               //route('distribution/getdata'),
+                //url :"passes/searchdata", // json datasource
+                type: "POST",  // method  , by default get
+                data:{'_token':token},
+                error: function(){  // error handling
+                        $(".employee-grid-error").html("");
+                        $("#etm-grid").append('<tbody class="employee-grid-error"><tr><th colspan="6">No data found in the server</th></tr></tbody>');
+                        $("#employee-grid_processing").css("display","none");
+
+                }
+        }
+} ).clear();
+
+
+    $('.search-input-text').on( 'keyup click', function () {   // for text boxes
+        var i =$(this).attr('data-column');  // getting column index
+        var v =$(this).val();  // getting search input value
+        dataTable.columns(i).search(v).draw();
+    } );
+    $('.search-input-select').on( 'change', function () {   // for select box
+        var i =$(this).attr('data-column');
+        var v =$(this).val();
+        dataTable.columns(i).search(v).draw();
+    } );
+} );
+</script>
 <script>
 function statusUpdate(id)
 {

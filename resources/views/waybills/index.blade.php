@@ -174,9 +174,9 @@ $(document).ready(function() {
 
 
     $('.search-input-text').on( 'keyup click', function () {   // for text boxes
-    var i =$(this).attr('data-column');  // getting column index
-    var v =$(this).val();  // getting search input value
-    dataTable.columns(i).search(v).draw();
+        var i =$(this).attr('data-column');  // getting column index
+        var v =$(this).val();  // getting search input value
+        dataTable.columns(i).search(v).draw();
     } );
     $('.search-input-select').on( 'change', function () {   // for select box
         var i =$(this).attr('data-column');

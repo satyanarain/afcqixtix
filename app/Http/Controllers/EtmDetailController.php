@@ -52,9 +52,9 @@ class ETMDetailController extends Controller
     {
         if(!$this->checkActionPermission('etm_details','view'))
             return redirect()->route('401');
-        $etm_details = DB::table('etm_details')->select('*','etm_details.id as id','depots.name as name','etm_status_masters.name as evm_status_master_id')
+        $etm_details = DB::table('etm_details')->select('*','etm_details.id as id','depots.name as name','etm_status_masters.name as etm_status_master_id')
             ->leftjoin('depots','depots.id','etm_details.depot_id')
-            ->leftjoin('etm_status_masters','etm_status_masters.id','etm_details.evm_status_master_id')
+            ->leftjoin('etm_status_masters','etm_status_masters.id','etm_details.etm_status_master_id')
              ->orderBy('etm_details.id','desc')->get();
         return view('etm_details.index',compact('etm_details'))->withETMDetails($depot);
    
@@ -98,9 +98,9 @@ class ETMDetailController extends Controller
     {
         if(!$this->checkActionPermission('etm_details','view'))
             return redirect()->route('401');
-        $etm_details = DB::table('etm_details')->select('*','etm_details.id as id','depots.name as name','etm_status_masters.name as evm_status_master_id')
+        $etm_details = DB::table('etm_details')->select('*','etm_details.id as id','depots.name as name','etm_status_masters.name as etm_status_master_id')
             ->leftjoin('depots','depots.id','etm_details.depot_id')
-            ->leftjoin('etm_status_masters','etm_status_masters.id','etm_details.evm_status_master_id')
+            ->leftjoin('etm_status_masters','etm_status_masters.id','etm_details.etm_status_master_id')
             ->where('etm_details.id',$id)
              ->orderBy('etm_details.id','desc')
           ->first();
@@ -159,10 +159,10 @@ class ETMDetailController extends Controller
       {
           if(!$this->checkActionPermission('etm_details','view'))
               return redirect()->route('401');
-          $value = DB::table('etm_details')->select('*','etm_details.id as id','depots.name as name','etm_status_masters.name as evm_status_master_id','etm_details.created_at as created_at','etm_details.updated_at as updated_at')
+          $value = DB::table('etm_details')->select('*','etm_details.id as id','depots.name as name','etm_status_masters.name as etm_status_master_id','etm_details.created_at as created_at','etm_details.updated_at as updated_at')
             ->leftjoin('depots','depots.id','etm_details.depot_id')
             ->leftjoin('users', 'users.id', '=', 'etm_details.user_id')
-            ->leftjoin('etm_status_masters','etm_status_masters.id','etm_details.evm_status_master_id')
+            ->leftjoin('etm_status_masters','etm_status_masters.id','etm_details.etm_status_master_id')
             ->where('etm_details.id',$id)
             ->orderBy('etm_details.id','desc')
             ->first();
@@ -186,7 +186,7 @@ class ETMDetailController extends Controller
                     </tr>
                     <tr>
                         <td><b>Status</b></td>
-                        <td class="table_normal"><?php echo $value->evm_status_master_id; ?></td>
+                        <td class="table_normal"><?php echo $value->etm_status_master_id; ?></td>
                     </tr>
                     <tr>
                         <td><b>SIM No.</b></td>
@@ -324,5 +324,79 @@ class ETMDetailController extends Controller
         $parameter = DB::table('etm_health_status_params')->where('color_id', $status)->first();
 
         return response()->json(['status'=>'Ok', 'data'=>$parameter]);
+    }
+    
+    /**
+     * Display the filtered resource.
+     *
+     * @created by kunal  
+     * @date 20-03-2019
+     */
+    public function getfiltereddata(Request $requestData) {
+        if(!$this->checkActionPermission('etm_details','view'))
+            return redirect()->route('401');
+        $requestData= $_REQUEST;
+        $columns = array( 
+                0 =>'etm_details.id',
+                1=>'depots.name',
+                2=>'etm_details.etm_no',
+                3=>'etm_details.etm_status_master_id',
+                4=>'etm_details.sim_no',
+        );
+        
+        $sql = "SELECT etm_details.*,etm_details.id as id,depots.name as depot_name,etm_status_masters.name as etm_status";
+        $sql.=" FROM etm_details "
+                . "LEFT JOIN depots on depots.id=etm_details.depot_id "
+                . "LEFT JOIN etm_status_masters on etm_status_masters.id=etm_details.etm_status_master_id "
+                ;
+        
+        //echo '<pre>';print_r($requestData);die;
+        if(!empty($requestData['columns'][0]['search']['value']) || !empty($requestData['columns'][1]['search']['value'])){
+            $sql.=" where ";    
+        }
+        if( !empty($requestData['columns'][0]['search']['value']) ) {
+                $sql.="etm_details.depot_id = '".$requestData['columns'][0]['search']['value']."' and ";    
+        }
+        if( !empty($requestData['columns'][1]['search']['value']) ) {
+                $sql.="etm_details.etm_status_master_id= '".$requestData['columns'][1]['search']['value']."' and ";    
+        }
+        if(!empty($requestData['columns'][0]['search']['value']) || !empty($requestData['columns'][1]['search']['value'])){
+            $sql = substr($sql, 0, -4);
+        }
+        //$sql .= " order by roasters.id desc";
+        $etm_details=DB::select(DB::raw($sql) ); 
+        $totalFiltered = count($query); // when there is a search parameter then we have to modify total number filtered rows as per search result. 
+        $totalData = count($query);
+        $sql.=" ORDER BY ". $columns[$requestData['order'][0]['column']]."   ".$requestData['order'][0]['dir']."  LIMIT ".$requestData['start']." ,".$requestData['length']."   ";
+        $query = DB::select( DB::raw($sql) ); 
+        $data = array();
+        foreach($query as $val){
+                $id = $val->id;
+                $nestedData=array(); 
+                $nestedData[] = $val->id;
+                $nestedData[] = $val->depot_name;
+                $nestedData[] = $val->etm_no;
+                $nestedData[] = $val->etm_status;
+                $nestedData[] = $val->sim_no;
+                $action = '';
+                if($this->checkActionPermission('etm_details','edit'))
+                {
+                    $action = '<a  href="'.route("etm_details.edit",$val->id).'" class="" title="Edit" ><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
+                }
+                if($this->checkActionPermission('etm_details','view'))
+                {
+                    $action.= '<a style="cursor: pointer;" title="View" data-toggle="modal" data-target="#'.$val->id.'"  onclick="viewDetails('.$val->id.',\'view_detail\')"><span class="glyphicon glyphicon-search"></span></a>';
+                }   
+                $nestedData[] = $action;
+                $nestedData[] = ' ';
+                $data[] = $nestedData;
+        }
+        $json_data = array(
+                            "draw"            => intval( $requestData['draw'] ),   // for every request/draw by clientside , they send a number as a parameter, when they recieve a response/data they first check the draw number, so we are sending same number in draw. 
+                            "recordsTotal"    => intval( $totalData ),  // total number of records
+                            "recordsFiltered" => intval( $totalFiltered ), // total number of records after searching, if there is no searching then totalFiltered = totalData
+                            "data"            => $data   // total data array
+                            );
+        echo $datajson = json_encode($json_data);  // send data as json format
     }
 }
