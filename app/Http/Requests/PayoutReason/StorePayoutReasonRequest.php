@@ -29,7 +29,8 @@ class StorePayoutReasonRequest extends Request
         return [
                    //'payout_reason' => 'required|unique:payout_reasons',
                     'short_reason' => 'required|unique:payout_reasons',
-                    'reason_description' => 'required'
+                    'reason_description' => 'required',
+                    'order_number' => 'required|unique:payout_reasons'
                   
             
                   

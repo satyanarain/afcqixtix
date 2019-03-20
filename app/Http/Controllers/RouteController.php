@@ -73,16 +73,16 @@ class RouteController extends Controller {
             return redirect()->route('401');
         //$routesRequest->route;
         //echo $route_master_id;die;
-//      $sql=  Route::where([['route',$routesRequest->route],['direction',$routesRequest->direction]]);
-//        if(count($sql)>0)
-//        {
-//            return redirect()->back()->withErrors(['This route and direction has already been taken.']);
-//        } else {
+        $sql=  Route::where([['route_master_id',$route_master_id],['route',$routesRequest->route],['source',$routesRequest->source],['destination',$routesRequest->destination],['direction',$routesRequest->direction]]);
+        if(count($sql)>0)
+        {
+            return redirect()->back()->withErrors(['This route and direction has already been taken.']);
+        } else {
         $version_id = $this->getCurrentVersion();
         $routesRequest->request->add(['approval_status'=>'p','flag'=> 'a','version_id'=>$version_id,'route_master_id'=>$route_master_id]);
          $getInsertedId = $this->routes->create($routesRequest);
         return redirect()->route('route_master.routes.index',$route_master_id);
-       // }
+        }
     }
 
     /**

@@ -234,3 +234,35 @@ function fillDropdown(ele,table,column,dropdown)
          $("#"+ele).append('<option value="">No Record Found</option>');
      })
 }
+
+function fillTripDropdown(route_master_id,duty_id)
+{
+     var shift_id = $('#shift_id').val();
+     jQuery.ajax({
+         url: "/targets/gettriplist",
+         type: "POST",
+         data: {
+             "route_master_id"    : route_master_id,
+             "duty_id"   : duty_id,
+             "shift_id"       : shift_id,
+         },
+         headers: {
+             "x-access-token": window.Laravel.csrfToken
+         },
+         contentType: "application/x-www-form-urlencoded",
+         cache: false
+     })
+     .done(function(data, textStatus, jqXHR) {
+         $("#trip_id").empty();
+         $("#trip_id").append('<option value="">Select Trip</option>');
+         jQuery.each(data.data, function( i, val ) {
+            $("#trip_id").append(
+                '<option value="'+val.trip_no+'">'+val.trip_no+'</option>'
+            )
+        });
+     })
+     .fail(function(jqXHR, textStatus, errorThrown) {
+         $("#trip_id").empty();
+         $("#trip_id").append('<option value="">No Record Found</option>');
+     })
+}

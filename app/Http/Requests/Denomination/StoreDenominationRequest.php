@@ -27,7 +27,7 @@ class StoreDenominationRequest extends Request
     {
         return [
                     'denomination_master_id' => 'required|unique:denominations,denomination_master_id',
-                    'description' => 'required',
+                    'description' => 'required|unique:denominations,description',
                     'price' => 'required'
                   
              ];

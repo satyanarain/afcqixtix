@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('header')
-<h1>{{headingBold()}}</h1>
+<h1>Manage ETM</h1>
 {{BreadCrumb()}}
 @stop
 @section('content')
@@ -8,13 +8,13 @@
     <div class="col-xs-12">
       <div class="box">
             <div class="box-header">
-               <h3 class="box-title">{{headingMain()}}</h3>
+               <h3 class="box-title">List of All ETM</h3>
                <?php $permission_status = checkPermission('etm_details','create');
                $checkVersionOpen = checkVersionOpen();
                     if($permission_status && $checkVersionOpen)
-                        createButton('create','Add');
+                        createButton('create','Add ETM');
                     elseif($permission_status)
-                        createDisableButton('create','Add');
+                        createDisableButton('create','Add ETM');
                 ?>
             </div>
             <!-- /.box-header -->

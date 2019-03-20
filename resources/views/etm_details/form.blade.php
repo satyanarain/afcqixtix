@@ -1,5 +1,5 @@
 <div class="form-group ">
-    {!! Form::label('depot_id', Lang::get('Depot'), ['class' => 'col-md-3 control-label']) !!}
+    {!! Form::label('depot_id', Lang::get('Select Depot'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 required">
         @php $depots=displayList('depots','name');@endphp
        <span id="depot_id"> {!! Form::select('depot_id', $depots,isset($etm_details->depot_id) ? $etm_details->depot_id : selected,

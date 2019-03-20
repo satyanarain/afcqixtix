@@ -29,7 +29,8 @@ class StoreInspectorRemarkRequest extends Request
         return [
                     //'inspector_remark' => 'required|unique:inspector_remarks,inspector_remark',
                     'short_remark' => 'required|unique:inspector_remark,short_remark',
-                    'remark_description' => 'required'
+                    'remark_description' => 'required',
+                    'order_number' => 'required|unique:inspector_remark'
             
                   
              ];

@@ -135,7 +135,7 @@
 
       @if(menuPermission('depots')==1)
       <li @if($segments_var[0]=='depots') class="active" @endif><a href="{{route('depots.index')}}">
-        <i class="depot-icon"></i> @lang('menu.depots.title')
+        <i class="fa depot-icon"></i> @lang('menu.depots.title')
       </a>
     </li>
     @endif
@@ -155,7 +155,7 @@
 @endif
 @if(menuPermission('stops')==1)
 <li @if($segments_var[0]=='stops') class="active" @endif><a href="{{route('stops.index')}}">
-  <i class="stop-icon"></i> @lang('menu.stops.title') 
+  <i class="fa stop-icon"></i> @lang('menu.stops.title') 
 </a>
 </li>
 @endif
@@ -167,7 +167,7 @@
 @endif
 @if(menuPermission('trip_cancellation_reasons')==1)
 <li @if($segments_var[0]=='trip_cancellation_reasons') class="active" @endif><a href="{{route('trip_cancellation_reasons.index')}}">
-  <i class="fas fa-rupee-sign"></i> @lang('menu.trip_cancellation_reason.title') </a>
+  <i class="fa fas fa-rupee-sign"></i> @lang('menu.trip_cancellation_reason.title') </a>
 </li>
 @endif
 @if(menuPermission('inspector_remarks')==1)
@@ -177,17 +177,18 @@
 @endif
 @if(menuPermission('payout_reasons')==1)
 <li @if($segments_var[0]=='payout_reasons') class="active" @endif><a href="{{route('payout_reasons.index')}}">
-  <i class="fab fa-cc-mastercard"></i>Payout Options </a>
+  <i class="fa fab fa-cc-mastercard"></i>Payout Options </a>
 </li>
 @endif
 @if(menuPermission('denominations')==1)
 <li @if($segments_var[0]=='denominations') class="active" @endif><a href="{{route('denominations.index')}}">
-  <i class="denominations-icon"></i> @lang('menu.denominations.title') </a>
+  <i class="fa denominations-icon"></i> @lang('menu.denominations.title') </a>
 </li>
 @endif
 @php $pem=menuDisplayByUser($result, 'etm_details','view'); @endphp
 @if($pem=='true')
-<li @if($segments_var[0]=='etm_details') class="active" @endif><a href="{{route('etm_details.index')}}"><i class="fa fa-calculator"></i>ETM Details</a>
+<li @if($segments_var[0]=='etm_details') class="active" @endif><a href="{{route('etm_details.index')}}">
+    <i class="fa fa-calculator"></i>ETM Details</a>
 </li>
 @endif
 </ul>
@@ -582,7 +583,7 @@ $array= array('etm', 'revenue', 'ppt')
   <ul @if($segments_var[1]=='health_status') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
     <li @if($segments_var[1]=='health_status') class="active" @endif><a href="{{url('etm/health_status')}}"><i class="fa fa-medkit"></i>Health Status</a>
     </li>   
-    <li @if($segments_var[0]=='tripsheet') class="active" @endif><a href="{{route('tripsheet')}}"><i class="fab fa-tripadvisor"></i>Trip Sheet</a>
+    <li @if($segments_var[0]=='tripsheet') class="active" @endif><a href="{{route('tripsheet')}}"><i class="fa fab fa-tripadvisor"></i>Trip Sheet</a>
     </li>                    
   </ul>
 </li>
@@ -634,7 +635,6 @@ $array= array('etm', 'revenue', 'ppt')
     @yield('content')
     <div class="modal fade" id="common_details" role="dialog">
       <div class="modal-dialog">
->>>>>>> ed82988103c3dff4600205a7096cf42d5a4cdce4
         <!-- Modal content-->
         <div class="modal-content">
           <div class="modal-header-view" >
