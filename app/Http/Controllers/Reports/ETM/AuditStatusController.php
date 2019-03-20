@@ -4,26 +4,19 @@ namespace App\Http\Controllers\Reports\ETM;
 
 use DB;
 use Auth;
-use Validator;
-use PdfReport;
-use CSVReport;
-use ExcelReport;
-use App\Models\Crew;
-use App\Models\Shift;
-use App\Models\Depot;
 use App\Models\Waybill;
 use App\Models\ETMDetail;
 use App\Traits\activityLog;
-use App\Models\CenterStock;
 use Illuminate\Http\Request;
 use App\Traits\checkPermission;
-use App\Models\ReturnCrewStock;
+use App\Traits\GenerateExcelTrait;
 use App\Http\Controllers\Controller;
 
 class AuditStatusController extends Controller
 {
-    use checkPermission;
     use activityLog;
+    use checkPermission;
+    use GenerateExcelTrait;
 
     /**
      * Index function created for create report form.
@@ -83,6 +76,9 @@ class AuditStatusController extends Controller
         $depotName = $this->findNameById('depots', 'name', $depot_id);
         $shiftName = $this->findNameById('shifts', 'shift', $shift_id);
         $etmNumber = $this->findNameById('etm_details', 'etm_no', $etm_no);
+
+        $shiftName = $shiftName ? $shiftName : "";
+        $etmNumber = $etmNumber ? $etmNumber : "";
     
         $title = 'ETM Audit Status Report'; // Report title
 
@@ -185,37 +181,42 @@ class AuditStatusController extends Controller
         */
 
         $meta = [ // For displaying filters description on header
-            'Depot : ' => $depotName,
-            'Date : ' => $report_date,
-            'Shift : ' => $shiftName,
-            'Status Type : ' => $status,
-            'ETM No. : ' => $etmNumber
-        ];   
-
-        $columns = [
-                        'ETM No.'=> function($row){
-                            return $row->etm->etm_no;
-                        }, 
-                        'Login Time' => function($row){
-                            return $row->etmLoginDetails->login_timestamp;
-                        }, 'Route - Duty - Shift' => function($row){
-                            return $row->route->route_name.' - '.$row->duty->duty_number.' - '.$row->shift->shift;
-                        }, 'Logout Time' => function($row){
-                            return $row->etmLoginDetails->logout_timestamp;
-                        }, 'Conductor' => function($row){
-                            return $row->conductor->crew_name.' ('.$row->conductor->crew_id.')';
-                        }, 'Vehicle No.' => function($row){
-                            return $row->vehicle->vehicle_registration_number;
-                        }, 'Handed Over To' => function($row){
-                            return '';
-                        }, 'Audited' => function($row){
-                            return $row->status == 'c' ? 'Yes' : 'No';
-                        }];
+            'Depot : ' . $depotName,
+            'From : ' . date('d-m-Y', strtotime($from_date)),
+            'To : ' . date('d-m-Y', strtotime($to_date)),
+            'Shift : ' . $shiftName,
+            'Status Type : ' . $status,
+            'ETM No. : ' . $etmNumber
+        ];    
     
         $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $shift_id, $status_type, $etm_no);
 
-        return ExcelReport::of($title, $meta, $queryBuilder, $columns)
-                    ->download($title.'.xlsx');
+        $data = $queryBuilder->get();
+      
+        $reportColumns = ['S. No', 'ETM No.', 'Login Time', 'Route-Duty-Shift', 'Logout Time', 'Conductor', 'Vehicle No.', 'Handed Over To', 'Audited'];
+
+        $reportData = [];
+        array_push($reportData, $reportColumns);
+
+        foreach ($data as $key => $d) 
+        {
+            $route_duty_shift = $d->route->route_name.'-'.$d->duty->duty_number.'-'.$d->shift->shift;
+            $login_timestamp = $d->etmLoginDetails->login_timestamp ? date('d-m-Y H:i:s', strtotime($d->etmLoginDetails->login_timestamp)):"";
+            $logout_timestamp = $d->etmLoginDetails->logout_timestamp ? date('d-m-Y H:i:s', strtotime($d->etmLoginDetails->logout_timestamp)):"";
+            $conductor = $d->conductor->crew_name.'('.$d->conductor->crew_id.')';
+            if($da->status == 'c')
+                $status = 'Audited';
+            else
+                $status = 'Un-audited';
+
+            array_push($reportData, [(string)($key+1), (string)$d->etm->etm_no, (string)$login_timestamp, (string)$route_duty_shift, (string)$logout_timestamp, (string)$conductor, (string)$d->vehicle->vehicle_registration_number, (string)"", (string)$status]);
+        } 
+
+        $fileName = public_path().'/abcd/'.$title.'.xlsx';        
+
+        $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "No");
+
+        $this->downloadExcelFile($fileName);
     }   
 
     public function getQueryBuilder($depot_id, $from_date, $to_date, $shift_id, $status_type, $etm_no)

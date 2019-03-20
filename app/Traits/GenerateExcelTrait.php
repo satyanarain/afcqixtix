@@ -1,8 +1,6 @@
 <?php
 namespace App\Traits;
 
-require_once app_path().'/Http/Controllers/PHPExcelClass/PHPExcel.php';
-
 use DB;
 use Auth;
 use PHPExcel_IOFactory;
@@ -41,6 +39,7 @@ trait GenerateExcelTrait
         ];
 
         $reportColumnsCount = count($reportColumns);
+        $reportRowsCount = count($reportData);
         $reportColumnsCountChr = $this->getLetterCorrespondingToANumber($reportColumnsCount);
         $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
         $drawing->setName('Logo');
@@ -116,7 +115,7 @@ trait GenerateExcelTrait
         $sheet->fromArray($reportData, null, 'A7');
 
         //Set Footer
-        $footerStartFrom = $reportColumnsCount + 8;
+        $footerStartFrom = $reportRowsCount + 8;
         $footerColumnSeperatorCount = $reportColumnsCount/2; 
         $sheet->mergeCells('A'.$footerStartFrom.':'.$this->getLetterCorrespondingToANumber($footerColumnSeperatorCount).$footerStartFrom);
         $sheet->setCellValue('A'.$footerStartFrom, "Print taken by : ".Auth::user()->name);

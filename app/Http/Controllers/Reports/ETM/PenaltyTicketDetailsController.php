@@ -4,24 +4,18 @@ namespace App\Http\Controllers\Reports\ETM;
 
 use DB;
 use Auth;
-use Validator;
-use PdfReport;
-use CSVReport;
-use ExcelReport;
-use App\Models\Crew;
-use App\Models\Depot;
-use App\Models\Waybill;
 use App\Models\Inspection;
 use App\Traits\activityLog;
-use App\Models\CenterStock;
 use Illuminate\Http\Request;
 use App\Traits\checkPermission;
+use App\Traits\GenerateExcelTrait;
 use App\Http\Controllers\Controller;
 
 class PenaltyTicketDetailsController extends Controller
 {
     use activityLog;
     use checkPermission;
+    use GenerateExcelTrait;
 
     /**
      * Display a listing of the resource.
@@ -98,6 +92,7 @@ class PenaltyTicketDetailsController extends Controller
         $inspector_id = $input['inspector_id'];
     
         $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $route_id, $inspector_id);
+        $data = $queryBuilder->get();
 
         //return $queryBuilder->get();
 
@@ -118,44 +113,27 @@ class PenaltyTicketDetailsController extends Controller
         */
 
         $meta = [ // For displaying filters description on header
-            'Depot : ' => $depotName,
-            'Route : ' => $routeName,
-            'From : '=> date('d-m-Y', strtotime($from_date)),
-            'To : '=> date('d-m-Y', strtotime($to_date))
-        ]; 
+            'Depot : ' . $depotName,
+            'Route : ' . $routeName,
+            'From : ' . date('d-m-Y', strtotime($from_date)),
+            'To : ' . date('d-m-Y', strtotime($to_date))
+        ];
 
-      
-        $columns = [
-                        'Inspection Date - Time'=> function($row){
-                            return date('d-m-Y H:i:s', strtotime($row->cancellation_timestamp));
-                        },
-                        'Inspector'=> function($row){
-                            return $row->inspector->crew_name;
-                        },
-                        'Route'=> function($row){
-                            return $row->route->route_name;
-                        },
-                        'Direction' => function($row){
-                            return $row->direction;
-                        }, 
-                        'Panalty Amount' => function($row){
-                            return $row->penalty_amount;
-                        }, 
-                        'Passenger' => function($row){
-                            return $row->name_of_passenger;
-                        }, 
-                        'Stop' => function($row){
-                            return $row->stop->stop;
-                        }, 
-                        'Conductor' => function($row){
-                            return $row->conductor->crew_name;
-                        }, 
-                        'Remark' => function($row){
-                            return $row->remark->remark_description;
-                        }];
+        $reportColumns = ['S. No', 'Inspection Date - Time', 'Inspector', 'Route', 'Direction', 'Panalty Amount', 'Passenger', 'Stop', 'Conductor', 'Remark'];
 
-        return ExcelReport::of($title, $meta, $queryBuilder, $columns)
-        					->download($title.'.xlsx');        
+        $reportData = [];
+        array_push($reportData, $reportColumns);
+
+        foreach ($data as $key => $d) 
+        {
+            array_push($reportData, [(string)($key+1), (string)date('d-m-Y H:i:s', strtotime($d->cancellation_timestamp)), (string)$d->inspector->crew_name, (string)$d->route->route_name, (string)$d->direction, (string)$d->penalty_amount, (string)$d->name_of_passenger, (string)$d->stop->stop, (string)$d->conductor->crew_name, (string)$d->remark->remark_description]);
+        } 
+
+        $fileName = public_path().'/abcd/'.$title.'.xlsx';        
+
+        $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "No");
+
+        $this->downloadExcelFile($fileName);        
     }
 
 

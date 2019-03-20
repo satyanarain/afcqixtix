@@ -5,27 +5,20 @@ namespace App\Http\Controllers\Reports\Revenue;
 use DB;
 use Auth;
 use Validator;
-use PdfReport;
-use CSVReport;
-use ExcelReport;
-use App\Models\Fare;
-use App\Models\Trip;
-use App\Models\Route;
-use App\Models\Ticket;
-use App\Models\Target;
 use App\Models\Waybill;
-use App\Models\TripDetail;
 use App\Traits\activityLog;
 use App\Models\CenterStock;
 use App\Models\RouteDetail;
 use Illuminate\Http\Request;
 use App\Traits\checkPermission;
+use App\Traits\GenerateExcelTrait;
 use App\Http\Controllers\Controller;
 
 class RouteWiseSummaryController extends Controller
 {
     use activityLog;
     use checkPermission;
+    use GenerateExcelTrait;
 
     /**
      * Display a listing of the resource.
@@ -94,11 +87,11 @@ class RouteWiseSummaryController extends Controller
         $depot_id = $input['depot_id'];
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
-        $etm_no = $input['etm_no'];
-    
-        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $etm_no);
+        $route_id = $input['route_id'];
 
+        $routeName = $this->findNameById('route_master', 'route_name', $route_id);
         $depotName = $this->findNameById('depots', 'name', $depot_id);
+
         $title = 'Route Wise Summary Report'; // Report title
 
         /*
@@ -107,51 +100,29 @@ class RouteWiseSummaryController extends Controller
         */
 
         $meta = [ // For displaying filters description on header
-            'Depot : ' => $depotName,
-            'ETM Number : ' => $etm_no,
-            'From : '=> date('d-m-Y', strtotime($from_date)),
-            'To : '=> date('d-m-Y', strtotime($to_date))
+            'Depot : '. $depotName,
+            'From : '. date('d-m-Y', strtotime($from_date)),
+            'To : '. date('d-m-Y', strtotime($to_date)),
+            'Route Name : ' . $routeName
         ]; 
-      
-        $columns = [
-                        'Date'=> function($row){
-                            return date('d-m-Y', strtotime($row->created_at));
-                        },
-                        'ETM Number'=> function($row){
-                            return $row->etm->etm_no;
-                        },
-                        'Route'=> function($row){
-                            return $row->route->route_name;
-                        },
-                        'Duty' => function($row){
-                            return $row->duty->duty_number;
-                        }, 
-                        'Ticket Count' => function($row){
-                            return $row->tickets_count;
-                        }, 
-                        'Pass Count' => function($row){
-                            return $row->pass_count;
-                        }, 
-                        'EPurse Count' => function($row){
-                            return $row->epurse_count;
-                        }, 
-                        'Passenger (Cash)' => function($row){
-                            return $row->cash_passenger_count ? $row->cash_passenger_count : '0';
-                        }, 
-                        'Passenger (Pass)' => function($row){
-                            return $row->card_passenger_count ? $row->card_passenger_count : '0';
-                        }, 
-                        'Passenger (EPurse)' => function($row){
-                            return $row->epurse_passenger_count ? $row->epurse_passenger_count : '0';
-                        }, 
-                        'Concession' => function($row){
-                            return calculateConcession($row->tickets);
-                        }];
 
-        return ExcelReport::of($title, $meta, $queryBuilder, $columns)
-        					->editColumns(['Ticket Count', 'Pass Count', 'EPurse Count', 'Passenger (Cash)', 'Passenger (Pass)', 'Passenger (EPurse)', 'Concession'], [
-		                        'class' => 'right',
-		                    ])->download($title.'.xlsx');        
+        $data = $this->getData($routeName, $depot_id, $from_date, $to_date, $route_id);
+      
+        $reportColumns = ['S. No', 'Route', 'Distance', 'Sch. Trips ', 'Oper. Trips', 'Sch. KMS', 'Oper. KMS', 'Income (Rs)', 'EPKM ETM', 'PPT Tkts/Pass', 'ETM Pasngr'];
+
+        $reportData = [];
+        array_push($reportData, $reportColumns);
+
+        foreach ($data as $key => $d) 
+        {
+            array_push($reportData, [(string)($key+1), (string)$d['route'], (string)$d['distance'], (string)$d['tripsCount'], (string)$d['tripsCount'], (string)$d['distance'], (string)$d['distance'], (string)$d['totalAmount'], (string)$d['epkm'], (string)$d['ticketsCount'], (string)$d['passengersCount']]);
+        } 
+
+        $fileName = public_path().'/abcd/'.$title.'.xlsx';        
+
+        $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "No");
+
+        $this->downloadExcelFile($fileName);        
     }
 
     public function getWaybillDetail($waybill_no)
@@ -218,7 +189,14 @@ class RouteWiseSummaryController extends Controller
         	}
         }
 
-        $data = array(0=>array('ticketsCount'=>$ticketsCount, 'tripsCount'=>$tripsCount, 'passengersCount'=>$passengersCount, 'totalAmount'=>$totalAmount, 'distance'=>$distance, 'route'=>$routeName));
+        if($distance)
+        {
+            $epkm = $totalAmount/$distance;
+        }else{
+            $epkm = 0;
+        }        
+
+        $data = array(0=>array('ticketsCount'=>$ticketsCount, 'tripsCount'=>$tripsCount, 'passengersCount'=>$passengersCount, 'totalAmount'=>$totalAmount, 'distance'=>$distance, 'route'=>$routeName, 'epkm'=>$epkm));
 
         return $data;
     }

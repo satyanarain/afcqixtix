@@ -46,7 +46,7 @@
                                         },
                                         {
                                             table: {
-                                                widths: [3, '*', 3, '*', 3, '*', 3, '*', 3, '*'],
+                                                widths: [3, '*', 3, '*', 3, '*', 3, '*', 3, '*', 3, '*'],
                                                 body: [modifiedMetaData]
                                             },
                                             layout: 'noBorders',
@@ -142,6 +142,10 @@
                             },
                             oddRowStyle: {
                                 fillColor: '#ebf2f3'
+                            },
+                            subHeaderStyle: {
+                                fillColor: '#253135',
+                                color: '#ffffff'
                             }
                         }
                     };
@@ -348,5 +352,70 @@ function numvalidate(e)
     else if (!(("1234567890").indexOf(keychar) > -1)) {
         return false;
     }
+}
+
+
+function getETMsByDepotId(depotId, idToAppend, type="All", selected)
+{
+    var url = "{{route('reports.etm.audit_status.getetmsbydepotid', ':depotId')}}";
+    url = url.replace(":depotId", depotId); 
+    console.log(url);
+    $.ajax({
+        url:url,
+        type:"GET",
+        dataType: "JSON",
+        success: function(response)
+        {
+            if(type=="All")
+                var str = "<option value=''>All</option>";
+            else
+                var str = "<option value=''>Select ETM Number</option>";
+
+            $.each(response, function(index, etm){
+                if(etm.etm_no == selected)
+                    str += "<option value='"+etm.etm_no+"' selected>"+etm.etm_no+"</option>";
+                else
+                    str += "<option value='"+etm.etm_no+"'>"+etm.etm_no+"</option>";
+            });
+
+            $('#'+idToAppend).html(str);
+        },
+        error: function(error)
+        {
+            console.log(error);
+        }
+    });
+}
+
+function getConductorsByDepotId(depotId, idToAppend, type="All", selected)
+{
+    var url = "{{route('reports.getconductorsbydepotid', ':placeholder')}}";
+    url = url.replace(":placeholder", depotId); 
+    console.log(url);
+    $.ajax({
+        url:url,
+        type:"GET",
+        dataType: "JSON",
+        success: function(response)
+        {
+            if(type=="All")
+                var str = "<option value=''>All</option>";
+            else
+                var str = "<option value=''>Select Conductor</option>";
+
+            $.each(response, function(index, conductor){
+                if(conductor.crew_id == selected)
+                    str += "<option value='"+conductor.crew_id+"' selected>"+conductor.crew_name+"</option>";
+                else
+                    str += "<option value='"+conductor.crew_id+"'>"+conductor.crew_name+"</option>";
+            });
+
+            $('#'+idToAppend).html(str);
+        },
+        error: function(error)
+        {
+            console.log(error);
+        }
+    });
 }
 </script>

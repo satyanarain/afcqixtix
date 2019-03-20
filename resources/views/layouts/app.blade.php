@@ -555,6 +555,11 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="far fa-dot-circle color-cyan"></i> Shift Details Earning
                     </a>
                 </li>
+                <li @if($segments_var[2]=='trip_sheet') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.revenue.trip_sheet.index')}}">
+                        <i class="far fa-dot-circle color-cyan"></i> Trip Sheet
+                    </a>
+                </li>
                 <li @if($segments_var[2]=='trip_wise_collection') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.revenue.trip_wise_collection.index')}}">
                         <i class="far fa-dot-circle color-cyan"></i> Trip-wise Collection
