@@ -30,7 +30,7 @@
         </select>
       </td>
       <td>
-        {!! Form::text('series[]', null, ['class' => 'col-md-6 form-control','required' => 'required']) !!}
+        {!! Form::text('series[]', null, ['class' => 'col-md-6 form-control series','required' => 'required']) !!}
       </td>
       <td>
         {!! Form::text('start_sequence[]', null, ['class' => 'col-md-6 form-control start_sequence','required' => 'required', 'onkeypress'=>'return numvalidate(event)']) !!}
@@ -63,12 +63,6 @@
       {!! Form::text('challan_no', null, ['class' => 'col-md-6 form-control','required' => 'required']) !!}
     </div>
   </div>
-  <div class="form-group" >
-    {!! Form::label('remark', Lang::get('Remark'), ['class' => 'col-md-3 control-label']) !!}
-    <div class="col-md-7 col-sm-12 required">
-      {!! Form::text('remark', null, ['class' => 'col-md-6 form-control','required' => 'required']) !!}
-    </div>
-  </div>
   <div class="form-group">
     {!! Form::label('date_received', Lang::get('Date Received'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12 required">
@@ -83,10 +77,16 @@
   </div>  
   <div class="form-group" >
     {!! Form::label('fileupload', Lang::get('Upload File (if any)'), ['class' => 'col-md-3 control-label']) !!}
-    <div class="col-md-7 col-sm-12 required">
+    <div class="col-md-7 col-sm-12">
       {!! Form::file('fileupload', ['class' => 'col-md-6 form-control', 'accept'=>"image/*,.pdf"]) !!}
     </div>
   </div>  
+  <div class="form-group" >
+    {!! Form::label('remark', Lang::get('Remark'), ['class' => 'col-md-3 control-label']) !!}
+    <div class="col-md-7 col-sm-12 required">
+      {!! Form::textarea('remark', null, ['class' => 'col-md-6 form-control','required' => 'required','rows' => 4]) !!}
+    </div>
+  </div>
 </div>    
 
 
@@ -194,7 +194,7 @@ var myLimit = 1;
         str += '</select>'
         str += '</td>'
         str += '<td>'
-        str += '<input class="col-md-6 form-control" required="required" name="series[]" type="text">'
+        str += '<input class="col-md-6 form-control series" required="required" name="series[]" type="text">'
         str += '</td>'
         str += '<td>'
         str += '<input class="col-md-6 form-control start_sequence" required="required" name="start_sequence[]" type="text" onkeypress="return numvalidate(event)">'
@@ -226,13 +226,26 @@ $(document).on('change', '#fileupload', function()
     }
 });
 
-$(document).on('blur', '.start_sequence', function(){
+$(document).on('blur', '.start_sequence', function()
+{
     var num = $(this).val();
     if(num == 0)
     {
         $(this).val('');
         return alert('Start Sequence can not be 0.');
     }
+});
+
+$(document).on('blur', '.series', function()
+{
+    var series = $(this).val();
+    if(!series)
+    {
+        $(this).val('');
+        return alert('Please enter seires.');
+    }
+
+    
 });
 </script>
 @endpush
