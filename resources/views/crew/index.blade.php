@@ -16,7 +16,7 @@
                <?php $permission_status = checkPermission('crews','create');
                      $checkVersionOpen = checkVersionOpen();
                     if($permission_status && $checkVersionOpen){?>                     
-                        <a href="<?php echo route('depots.crew.create',$depot_id)?>"><button class="btn btn-primary pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
+                        <a href="<?php echo route('depots.crew.create',$depot_id)?>"><button class="btn btn-afcs pull-right"><i class="fa fa-plus"></i>&nbsp;Add</button></a>
                 <?php }elseif($permission_status)
                         createDisableButton('create','Add');?>
                

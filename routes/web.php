@@ -205,6 +205,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('denominations/store', 'DenominationController@store');
     Route::resource('denominations', 'DenominationController');
    
+    Route::post('etm_details/getfiltereddata', 'EtmDetailController@getfiltereddata')->name('etm_details.getfiltereddata');
     Route::get('etm_details/data', 'EtmDetailController@anyData')->name('etm_details.data');
     Route::get('etm_details/view_detail/{id}', 'EtmDetailController@viewDetail');
     Route::resource('etm_details', 'EtmDetailController');
