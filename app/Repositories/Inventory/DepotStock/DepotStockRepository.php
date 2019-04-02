@@ -24,6 +24,7 @@ class DepotStockRepository implements DepotStockRepositoryContract
                 ->leftjoin('inv_items_master', 'inv_depot_stock.items_id', '=', 'inv_items_master.id')
                 ->leftjoin('denominations', 'inv_depot_stock.denom_id', '=', 'denominations.id')
                 ->leftjoin('depots', 'inv_depot_stock.depot_id', '=', 'depots.id')
+                ->orderBy('inv_depot_stock.created_at', 'DESC')
                 ->get();
     }
 
@@ -31,85 +32,166 @@ class DepotStockRepository implements DepotStockRepositoryContract
     { 
         $input = $requestData->all();
         $input['center_head_id'] = Auth::id();
-        /*if($requestData->items_id == 1)
-        {
-            $input['quantity'] = $requestData->end_sequence - $requestData->start_sequence + 1;
-        }*/
+
+        DB::beginTransaction();
         
-        try{
-            
-            //if paper role
-            if($requestData->items_id == 2)
+        try{            
+
+            if(!checkIfItemHasSeries($requestData->items_id))
             {
                 //deduct the inventory from center stock
                 $assignedStock = $requestData->quantity;
                 if($assignedStock)
                 {
-                    DB::table('inv_itemsquantity_stock')->where('items_id', $requestData->items_id)->decrement('qty', $assignedStock);
+                    DB::table('inv_itemsquantity_stock')
+                        ->where('items_id', $requestData->items_id)
+                        ->decrement('qty', $assignedStock);
                 }
 
                 //update the transaction table
                 $balance_quantity = 0;
-                $transaction = DB::table('inv_centerstock_depotstock')->where([['items_id', $requestData->items_id], ['depot_id', $requestData->depot_id]])->first();
+                $transaction = DB::table('inv_centerstock_depotstock')
+                                ->where([['items_id', $requestData->items_id], ['depot_id', $requestData->depot_id]])
+                                ->first();
+
                 if($transaction)
                 {
-                    DB::table('inv_centerstock_depotstock')->where([['items_id', $requestData->items_id], ['depot_id', $requestData->depot_id]])->update(['qty'=>DB::raw("qty + $assignedStock")]);
+                    DB::table('inv_centerstock_depotstock')
+                        ->where([
+                                    ['items_id', $requestData->items_id], 
+                                    ['depot_id', $requestData->depot_id]
+                                ])
+                        ->update(['qty'=>DB::raw("qty + $assignedStock")]);
+
                     $balance_quantity = $transaction->qty + $assignedStock;
+
                 }else{
-                    DB::table('inv_centerstock_depotstock')->insert(['items_id' => $requestData->items_id, 'depot_id'=>$requestData->depot_id, 'qty'=>$assignedStock]);
+
+                    DB::table('inv_centerstock_depotstock')
+                        ->insert([
+                                    'items_id' => $requestData->items_id, 
+                                    'depot_id'=>$requestData->depot_id, 
+                                    'qty'=>$assignedStock
+                                ]);
+
                     $balance_quantity = $assignedStock;
                 }
 
                 $depostock = DepotStock::create($input);
 
                 //update DepotStockLedger
-                DepotStockLedger::create(['depot_head_id'=>Auth::id(), 'crew_id'=>null, 'depot_id'=>$requestData->depot_id, 'transaction_date'=>date('Y-m-d'), 'item_id'=>$requestData->items_id, 'denom_id'=>null, 'series'=>null, 'start_sequence'=>null, 'end_sequence'=>null, 'item_quantity'=>$assignedStock, 'challan_no'=>$requestData->challan_no, 'balance_quantity'=>$balance_quantity, 'transaction_type'=>'Received']);
-            }
+                DepotStockLedger::create([
+                                            'depot_head_id'=>Auth::id(), 
+                                            'crew_id'=>null, 
+                                            'depot_id'=>$requestData->depot_id, 
+                                            'transaction_date'=>date('Y-m-d'), 
+                                            'item_id'=>$requestData->items_id, 
+                                            'denom_id'=>null, 
+                                            'series'=>null, 
+                                            'start_sequence'=>null, 
+                                            'end_sequence'=>null, 
+                                            'item_quantity'=>$assignedStock, 
+                                            'challan_no'=>$requestData->challan_no, 
+                                            'balance_quantity'=>$balance_quantity, 
+                                            'transaction_type'=>'Received'
+                                        ]);
+            }else{
 
-            //if paper ticket, update the sequence 
-            if($requestData->items_id == 1)
-            {
                 $denominations = $requestData->denom_id;
                 $serieses = $requestData->series;
                 $start_sequences = $requestData->start_sequence;
                 $end_sequences = $requestData->end_sequence;
+                $total_tickets = $requestData->total_tickets;
                 foreach ($denominations as $key => $denomination) 
                 { 
                     $input['denom_id'] = $denomination;
                     $input['series'] = $serieses[$key];
                     $input['start_sequence'] = $start_sequences[$key];
                     $input['end_sequence'] = $end_sequences[$key];                
-                    $input['quantity'] = $end_sequences[$key] - $start_sequences[$key] + 1;
+                    $input['quantity'] = $total_tickets[$key];
+                    unset($input['total_tickets']);
                     //deduct the inventory from center stock
-                    $assignedStock = $input['end_sequence'] - $input['start_sequence'] + 1;
-                    if($assignedStock)
+                    if($input['quantity'])
                     {
-                        DB::table('inv_itemsquantity_stock')->where([['items_id', $requestData->items_id], ['denom_id', $input['denom_id']], ['series', $input['series']]])->decrement('qty', $assignedStock);
+                        DB::table('inv_itemsquantity_stock')
+                            ->where([
+                                        ['items_id', $requestData->items_id], 
+                                        ['denom_id', $input['denom_id']], 
+                                        ['series', $input['series']]
+                                    ])
+                            ->decrement('qty', $input['quantity']);
                     }
 
                     //update the transaction table
                     $balance_quantity = 0;
-                    $transaction = DB::table('inv_centerstock_depotstock')->where([['items_id', $requestData->items_id], ['denom_id', $input['denom_id']], ['series', $input['series']], ['depot_id', $requestData->depot_id]])->first();
+                    $transaction = DB::table('inv_centerstock_depotstock')
+                                    ->where([
+                                                ['items_id', $requestData->items_id], 
+                                                ['denom_id', $input['denom_id']], 
+                                                ['series', $input['series']], 
+                                                ['depot_id', $requestData->depot_id]
+                                            ])
+                                    ->first();
+
                     if($transaction)
                     {
-                        DB::table('inv_centerstock_depotstock')->where([['items_id', $requestData->items_id], ['denom_id', $input['denom_id']], ['series', $input['series']], ['depot_id', $requestData->depot_id]])->update(['qty'=>DB::raw("qty + $assignedStock"), 'end_sequence'=>$input['end_sequence']]);
-                        $balance_quantity = $transaction->qty + $assignedStock;
+                        DB::table('inv_centerstock_depotstock')
+                            ->where([
+                                        ['items_id', $requestData->items_id], 
+                                        ['denom_id', $input['denom_id']], 
+                                        ['series', $input['series']], 
+                                        ['depot_id', $requestData->depot_id]
+                                    ])
+                            ->update([
+                                        'qty'=>DB::raw("qty + $input[quantity]"), 
+                                        'end_sequence'=>$input['end_sequence']
+                                    ]);
+
+                        $balance_quantity = $transaction->qty + $input['quantity'];
+
                     }else{
-                        DB::table('inv_centerstock_depotstock')->insert(['items_id' => $requestData->items_id, 'denom_id'=> $input['denom_id'], 'series'=>$input['series'], 'depot_id'=>$requestData->depot_id, 'qty'=>$assignedStock, 'start_sequence'=>$input['start_sequence'], 'end_sequence'=>$input['end_sequence']]);
-                        $balance_quantity = $assignedStock;
+
+                        DB::table('inv_centerstock_depotstock')
+                            ->insert([
+                                        'items_id' => $requestData->items_id, 
+                                        'denom_id'=> $input['denom_id'], 
+                                        'series'=>$input['series'], 
+                                        'depot_id'=>$requestData->depot_id, 
+                                        'qty'=>$input['quantity'], 
+                                        'start_sequence'=>$input['start_sequence'], 
+                                        'end_sequence'=>$input['end_sequence']
+                                    ]);
+
+                        $balance_quantity = $input['quantity'];
                     }
 
                     $depostock = DepotStock::create($input);
 
                     //update DepotStockLedger
-                    DepotStockLedger::create(['depot_head_id'=>Auth::id(), 'crew_id'=>null, 'depot_id'=>$requestData->depot_id, 'transaction_date'=>date('Y-m-d'), 'item_id'=>$requestData->items_id, 'denom_id'=>$input['denom_id'], 'series'=>$input['series'], 'start_sequence'=>$input['start_sequence'], 'end_sequence'=>$input['end_sequence'], 'item_quantity'=>$assignedStock, 'challan_no'=>$requestData->challan_no, 'balance_quantity'=>$balance_quantity, 'transaction_type'=>'Received']);
+                    DepotStockLedger::create([
+                                                'depot_head_id'=>Auth::id(), 
+                                                'crew_id'=>null, 
+                                                'depot_id'=>$requestData->depot_id, 
+                                                'transaction_date'=>date('Y-m-d'), 
+                                                'item_id'=>$requestData->items_id, 
+                                                'denom_id'=>$input['denom_id'], 
+                                                'series'=>$input['series'], 
+                                                'start_sequence'=>$input['start_sequence'], 
+                                                'end_sequence'=>$input['end_sequence'], 
+                                                'item_quantity'=>$input['quantity'], 
+                                                'challan_no'=>$requestData->challan_no, 
+                                                'balance_quantity'=>$balance_quantity, 
+                                                'transaction_type'=>'Received'
+                                            ]);
                 }
             }            
 
             Session::flash('flash_message', "Stock Created Successfully.");
+            DB::commit();
             return $depostock;
         }catch(Illuminate\Database\QueryException $e){
             Session::flash('flash_message', "Error occured while creating stock.");
+            DB::roleback();
             return;
         }
     }

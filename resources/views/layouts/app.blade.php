@@ -820,7 +820,7 @@ function numvalidate(e)
     else if (!(("1234567890").indexOf(keychar) > -1)) {
       return false;
     }
-  } 
+} 
 </script>
 @stack('scripts')
 @include('partials.table_script_order')

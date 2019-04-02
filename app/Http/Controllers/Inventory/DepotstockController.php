@@ -65,9 +65,16 @@ class DepotstockController extends Controller
      */
     public function store(StoreDepotStockRequest $request)
     {
-        if($request->items_id == 2)
+        if(checkIfItemHasSeries($request->items_id))
         {
-            $centerStock = DB::table('inv_itemsquantity_stock')->where('items_id', $request->items_id)->first();
+            $centerStock = DB::table('inv_itemsquantity_stock')
+                            ->where([
+                                        ['items_id', $request->items_id], 
+                                        ['denom_id', $request->denom_id], 
+                                        ['series', $request->series]
+                                    ])
+                            ->first();
+
             if($centerStock)
             {
                 if($centerStock->qty < $request->quantity)
@@ -76,11 +83,13 @@ class DepotstockController extends Controller
                     return redirect()->back();
                 }
             }
-        }
 
-        if($request->items_id == 1)
-        {
-            $centerStock = DB::table('inv_itemsquantity_stock')->where([['items_id', $request->items_id], ['denom_id', $request->denom_id], ['series', $request->series]])->first();
+        }else{
+
+            $centerStock = DB::table('inv_itemsquantity_stock')
+                            ->where('items_id', $request->items_id)
+                            ->first();
+
             if($centerStock)
             {
                 if($centerStock->qty < $request->quantity)
@@ -91,8 +100,7 @@ class DepotstockController extends Controller
             }
         }
         
-        $stock = $this->depotstock->create($request);
-              
+        $stock = $this->depotstock->create($request);              
 
         return redirect()->route('inventory.depotstock.index');
     }
@@ -210,6 +218,7 @@ class DepotstockController extends Controller
                     }else{  
                         $startSequence = $stock->start_sequence;
                     }
+                    break;
                 }
 
                 if(++$key === $stockCount && $quantity < 0)

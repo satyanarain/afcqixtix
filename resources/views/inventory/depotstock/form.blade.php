@@ -7,7 +7,7 @@
 <div class="form-group" >
   <label class = 'col-md-3 control-label'>Items</label>
   <div class="col-md-7 col-sm-12 required">
-    <select class="form-control" name="items_id" id="items_id" required="" onchange="ShowHideDiv()">
+    <select class="form-control denomination" name="items_id" id="items_id" required="" onchange="ShowHideDiv()">
      <option value="">Please select Items</option>
      @foreach ($items_data as $itemsdata)
      <option value="{{$itemsdata->id}}" @if(isset($stock) && ($itemsdata->id == $stock->items_id)) selected @endif>{{$itemsdata->description}}</option>
@@ -23,7 +23,8 @@
       <td>Denominations</td>
       <td>Series</td>
       <td>Start Sequence</td>
-      <td>End Sequence <button type="button" id="add_more_denomination" class="btn btn-primary pull-right"><span class="fa fa-plus"></span></button></td>
+      <td>End Sequence</td>
+      <td>Total Tickets <button type="button" id="add_more_denomination" class="btn btn-primary pull-right"><span class="fa fa-plus"></span></button></td>
     </tr>
   </thead>
   <tbody>
@@ -48,6 +49,9 @@
         {!! Form::text('end_sequence[]', null, ['class' => 'col-md-6 form-control end_sequence', 'required' => 'required', 'onkeypress'=>'return numvalidate(event)']) !!}
         <label class=".end_sequence_errors label label-warning" style="display: none;word-wrap: break-word;"></label>
       </td>
+      <td>
+        {!! Form::text('total_tickets[]', null, ['class' => 'col-md-6 form-control total_tickets', 'readonly']) !!}
+      </td>
     </tr>
   </tbody>
 </table>
@@ -71,7 +75,7 @@
   <div class="form-group" >
     {!! Form::label('remark', Lang::get('Remark'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12 required">
-      {!! Form::text('remark', null, ['class' => 'col-md-6 form-control','required' => 'required']) !!}
+      {!! Form::textarea('remark', null, ['class' => 'col-md-6 form-control','required' => 'required', 'rows'=>3]) !!}
     </div>
   </div>    
 </div>    
@@ -79,7 +83,7 @@
 
 <div class="form-group">
   <div class="col-md-3" style="margin-right: 15px;"></div>
-  {{ Form::submit('Save', array('class' => 'btn btn-success pull-left','required' => 'required')) }}
+  {{ Form::submit('Save', array('class' => 'btn btn-success pull-left','required' => 'required', 'id'=>'saveInventory')) }}
   <div class="col-md-3" style="margin-right: 15px;">{{ Form::button('Cancel', array('class' => 'btn btn-success pull-left','onclick'=>'window.history.back();')) }}</div>
   <div class="col-md-9">
     <div class="col-md-7 col-sm-12">
@@ -174,26 +178,6 @@
           return false;
       }   
   }
-
-    function numvalidate(e) 
-    {
-        var key;
-        var keychar;
-        if (window.event)
-            key = window.event.keyCode;
-        else if (e)
-            key = e.which;
-        else
-            return true;
-        keychar = String.fromCharCode(key);
-        keychar = keychar.toLowerCase();
-        // control keys
-        if ((key == null) || (key == 0) || (key == 8) || (key == 9) || (key == 13) || (key == 27))
-            return true;
-        else if (!(("1234567890").indexOf(keychar) > -1)) {
-            return false;
-        }
-    }
 </script>
 <script type="text/javascript">
 var myLimit = 1;
@@ -206,7 +190,7 @@ $(document).on('click', '#add_more_denomination', function(){
         var str = "";
         str += '<tr>'
         str += '<td>'
-        str += '<select class="form-control denom_id" name="denom_id[]" id="denom_id" required="">'
+        str += '<select class="form-control denom_id denomination" name="denom_id[]" id="denom_id" required="">'
         str += '<option value="">Select Denominations</option>'
         $.each(JSON.parse(options), function(index, option){
           str += '<option value="'+option.id+'">'+option.description+'</option>'
@@ -220,7 +204,10 @@ $(document).on('click', '#add_more_denomination', function(){
         str += '<input class="col-md-6 form-control start_sequence" required="required" name="start_sequence[]" type="text" onkeypress="return numvalidate(event)"><label class="start_sequence_errors label label-warning" style="display: none;word-wrap: break-word;"></label>'
         str += '</td>'
         str += '<td>'
-        str += '<input class="col-md-6 form-control end_sequence" style="width:75%;" required="required" name="end_sequence[]" type="text" onkeypress="return numvalidate(event)"><label class="end_sequence_errors label label-warning" style="display: none;word-wrap: break-word;"></label><button type="button" class="removeDenominationsRow btn btn-danger pull-right"><span class="fa fa-trash"></span></button>'
+        str += '<input class="col-md-6 form-control end_sequence" required="required" name="end_sequence[]" type="text" onkeypress="return numvalidate(event)"><label class="end_sequence_errors label label-warning" style="display: none;word-wrap: break-word;"></label>'
+        str += '</td>'
+        str += '<td>'
+        str += '<input class="col-md-6 form-control total_tickets" style="width:75%;" readonly name="total_tickets[]" type="text"><button type="button" class="removeDenominationsRow btn btn-danger pull-right"><span class="fa fa-trash"></span></button>'
         str += '</td>'
         str += '</tr>'
 
@@ -253,6 +240,25 @@ $(document).on('click', '.removeDenominationsRow', function(){
             return alert('Please select a denomination');
         }
 
+        var series = $(this).parent('td').next().children('input').val();
+
+        if(series)
+        {
+            var allSeries = $('#denominations_table').find('.series').not(':last');
+            var allDenominations = $('#denominations_table').find('.denomination').not(':last');
+            allSeries.map(function(indexs, inputs){
+                allDenominations.map(function(indexd, inputd){
+                    if(inputs.value === series && inputd.value === denom_id)
+                    {   
+                        $('#saveInventory').attr('disabled', true);
+                        return alert('You can not enter same series twice for a denomination.');
+                    }else{
+                        $('#saveInventory').attr('disabled', false);
+                    }
+                });
+            });
+        }
+
         var data =  {
                         _token: "{{csrf_token()}}",
                         items_id: items_id,
@@ -276,9 +282,10 @@ $(document).on('click', '.removeDenominationsRow', function(){
                       $.each(series, function(index, se){
                         options += '<option>'+se.series+'</option>';
                       });
-
+                      $('#saveInventory').attr('disabled', false);
                       $(selector).parent('td').next('td').children('label').hide();
                     } else {
+                      $('#saveInventory').attr('disabled', true);
                       $(selector).parent('td').next('td').children('label').text('Series not available in the central stock. Please contact to central stock head').show();
                     } 
 
@@ -312,8 +319,31 @@ $(document).on('click', '.removeDenominationsRow', function(){
 
         if(!series)
         {
+            $(this).val('');
             return alert('Please select a valid series');
-        }        
+        }
+
+        var allSeries = $('#denominations_table').find('.series').not(':last');
+        var allDenominations = $('#denominations_table').find('.denom_id').not(':last');
+
+        outerloop:for(var i=0;i<allSeries.length;i++)
+                  {
+                      innerloop:for(var j=0;j<allDenominations.length;j++)
+                                {
+                                    var inputs = allSeries[i];
+                                    var inputd = allDenominations[j];
+                                    if(inputs.value === series && inputd.value === denom_id)
+                                    {     
+                                        $('#saveInventory').attr('disabled', true);
+                                        return alert('You can not have same series twice for a denomination.');
+                                        break outerloop;
+                                    }else{
+                                        $('#saveInventory').attr('disabled', false);
+                                    }
+                                }
+                  }
+
+        console.log('Passed');
 
         var data =  {
                         _token: "{{csrf_token()}}",
@@ -336,13 +366,16 @@ $(document).on('click', '.removeDenominationsRow', function(){
                     {
                       $(selector).parent('td').next('td').children('input').val(data.data.start_sequence);
                       $(selector).parent('td').next('td').children('label').hide();
+                      $('#saveInventory').attr('disabled', false);
                     }else{
                       $(selector).parent('td').next('td').children('input').val('');
+                      $('#saveInventory').attr('disabled', true);
                       $(selector).parent('td').next('td').children('label').text('Inventory not available in stock for this series. Please contact to central stock head').show();
                     }                                 
                 }else{
                     if(data.errorCode == 'NO_STOCK')
                     {
+                      $('#saveInventory').attr('disabled', true);
                       $(selector).parent('td').next('td').children('label').text('Inventory not available in stock for this series. Please contact to central stock head').show();
                     }
                 }
@@ -355,7 +388,7 @@ $(document).on('click', '.removeDenominationsRow', function(){
 
   });
 
-  $(document).on('blur', '.end_sequence', function(){
+  $(document).on('change', '.end_sequence', function(){
         var selector = $(this);
         var items_id = $('#items_id').val();
 
@@ -408,14 +441,20 @@ $(document).on('click', '.removeDenominationsRow', function(){
                 var data = response;
                 if(data.status == 'Ok')
                 {
-                    $(selector).siblings('label').hide();                                 
+                    $('#saveInventory').attr('disabled', false);
+                    $(selector).siblings('label').hide(); 
+                    var start_sequence = $(selector).parent('td').prev().children('input').val();
+                    var end_sequence = $(selector).val(); 
+                    $(selector).parent('td').next().children('input').val(end_sequence-start_sequence+1);                                
                 }else{
                     if(data.errorCode == 'NO_STOCK')
                     {
+                      $('#saveInventory').attr('disabled', true);
                       $(selector).siblings('label').text('Inventory not available in stock for this series. Please contact to central stock head').show();
                     }
                     if(data.errorCode == 'NO_SERIES')
                     {
+                      $('#saveInventory').attr('disabled', true);
                       $(selector).siblings('label').text('End sequence is beyond the stock end sequence. Please contact to admin.').show();
                     }
                 }
@@ -429,7 +468,7 @@ $(document).on('click', '.removeDenominationsRow', function(){
   });
 
 
-  $(document).on('blur', '#quantity', function(){
+  $(document).on('keyup', '#quantity', function(){
         var items_id = $('#items_id').val();
 
         if(!items_id)
@@ -458,14 +497,17 @@ $(document).on('click', '.removeDenominationsRow', function(){
                 var data = response;
                 if(data.status == 'Ok')
                 {
+                    $('#saveInventory').attr('disabled', false);
                     $('#quantyty_errors').hide();                                 
                 }else{
                     if(data.errorCode == 'NO_STOCK')
                     {
-                      $('#quantyty_errors').text('Inventory not available in stock for this series. Please contact to central stock head').show();
+                      $('#saveInventory').attr('disabled', true);
+                      $('#quantyty_errors').text('Inventory not available in stock. Please contact to central stock head').show();
                     }
                     if(data.errorCode == 'NO_SERIES')
                     {
+                      $('#saveInventory').attr('disabled', true);
                       $('#quantyty_errors').text('End sequence is beyond the stock end sequence. Please contact to admin.').show();
                     }
                 }
@@ -477,14 +519,14 @@ $(document).on('click', '.removeDenominationsRow', function(){
         });
 
   });
-  $(document).on('blur', '.start_sequence', function(){
+  $(document).on('keyup', '.start_sequence', function(){
     var num = $(this).val();
     if(num == 0)
     {
         $(this).val('');
         return alert('Start Sequence can not be 0.');
     }
-});
+  });
 </script>
 @endpush
 

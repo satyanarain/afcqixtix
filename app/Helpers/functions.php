@@ -1,8 +1,10 @@
 <?php
+
 error_reporting(0);
+
+use App\Models\Version;
 use App\Models\Permission;
 use App\Models\PermissionDetail;
-use App\Models\Version;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -575,4 +577,24 @@ function calculateLoadFactor(int $actualEPKM, int $targetEPKM)
     }else{
         return 0;
     }
+}
+
+/**
+*checks if items has series
+*
+*@param int $itemId
+*
+*@return boolean
+*/
+function checkIfItemHasSeries(int $itemId)
+{
+    $item = DB::table('inv_items_master')->where('id', $itemId)->first();
+
+    if($item)
+    {
+        if($item->has_series)
+          return true;
+    }
+
+    return false;
 }

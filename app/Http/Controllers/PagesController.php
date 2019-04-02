@@ -27,10 +27,9 @@ class PagesController extends Controller
     }
 
   public function dashboard()
-    {
-        $user = User::findOrFail(Auth::id());
-         return $this->showDashboard();
-
+  {
+      $user = User::findOrFail(Auth::id());
+      return $this->showDashboard();
   }
 
   public function showDashboard(){
