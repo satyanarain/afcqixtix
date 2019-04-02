@@ -161,7 +161,7 @@ class TripSheetController extends Controller
         foreach ($dates as $key => $date) 
         {
             $date = $date->format('Y-m-d');
-            $trips = TripStart::with(['waybill.conductor', 'tickets.toStop', 'fromStop', 'toStop', 'routeMaster'])
+            $trips = TripStart::with(['waybill:abstract_no,conductor_id', 'waybill.conductor:id,crew_id,crew_name', 'tickets.toStop:id,stop', 'fromStop:id,stop', 'toStop:id,stop', 'routeMaster:id,route_name'])
                               //->where([['route_master_id', $route_id]])
                               ->whereDate('start_timestamp', $date)
                               ->get(); 
