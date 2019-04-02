@@ -128,12 +128,16 @@ class TripController extends Controller
      * @return Response
      */
     
-          public function viewDetail($id) {
+    public function viewDetail($id) {
               if(!$this->checkActionPermission('trips','view'))
             return redirect()->route('401');
            $trips=Trip::find($id);
-            $sql = DB::table('trip_details')->where('trip_id',$id)
+            $sql = DB::table('trip_details')
+                    ->select('trip_details.*','route_master.route_name')
+                    ->leftjoin('route_master', 'trip_details.deviated_route', '=', 'route_master.id')
+                    ->where('trip_id',$id)
              ->get();
+            //echo '<pre>';            print_r($sql);die;
                
         ?>
         <div class="modal-dialog">
@@ -190,9 +194,9 @@ class TripController extends Controller
                                             <?php foreach ($sql as $value) { ?>   
                                                 <tr><td class="table_normal"><?php echo $value->trip_no; ?></td>
                                                     <td class="table_normal"><?php echo $value->start_time; ?></td>
-                                                    <td class="table_normal"><?php displayPath('deviated_path[]'); ?></td>
-                                                    <td class="table_normal"><?php echo $value->deviated_route; ?></td>
-                                                    <td class="table_normal"><?php displayPath('deviated_path[]') ?></td>
+                                                    <td class="table_normal"><?php displayPath('path',$value->path_route_id,''); ?></td>
+                                                    <td class="table_normal"><?php echo $value->route_name; ?></td>
+                                                    <td class="table_normal"><?php displayPath('deviated_path',$value->deviated_route,'') ?></td>
                                                 </tr>
                                             <?php } ?> 
                                         </table>
@@ -217,7 +221,7 @@ class TripController extends Controller
     }
     
     
- public function show($id) {
+    public function show($id) {
      if(!$this->checkActionPermission('trips','view'))
             return redirect()->route('401');
  $trips = DB::table('trips')->select('*','trip_details.stop_id','trips.route', 'trips.id', 'stops.stop')
@@ -227,7 +231,7 @@ class TripController extends Controller
         return view('trips.index')->withTrips($trips);
     }
     
- public function getSubCat($id) {
+    public function getSubCat($id) {
 
    $table_name=$_REQUEST['table_name'];
 $duties = DB::table($table_name)->select('*')->where('route_id',$id)->get();

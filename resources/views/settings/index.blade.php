@@ -23,6 +23,8 @@
                          <tr>
                             <th>@lang('Configuration Name')</th>
                             <th>@lang('Configuration Value')</th>
+                            <th>@lang('Configuration Value Unit')</th>
+                            <th>@lang('Remarks')</th>
                             {{  actionHeading('Action', $newaction='') }}
                         </tr>
                     </thead>
@@ -31,6 +33,8 @@
                         <tr class="nor_f    ">
                             <td>{{$value->setting_description}}</td>
                             <td>{{$value->setting_value}}</td>
+                            <td>{{$value->setting_unit}}</td>
+                            <td>{{$value->setting_remarks}}</td>
                             <td>
                                 <?php $permission = getAllModulePermission('settings');
                                 if(in_array('edit',$permission)){?>

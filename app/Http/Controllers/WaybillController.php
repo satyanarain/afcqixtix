@@ -64,7 +64,7 @@ class WaybillController extends Controller
         if(!$this->checkActionPermission('waybills','create'))
             return redirect()->route('401');
         //$depot = Waybill::findOrFail();
-        $unique_number = $this->generateUniqueNumber();
+        
         //echo str_pad(random_int(0, 99999999), 6, '0', STR_PAD_LEFT);die;
         return view('waybills.create', compact('unique_number'));
     }
@@ -84,7 +84,12 @@ class WaybillController extends Controller
     {
         if(!$this->checkActionPermission('waybills','create'))
             return redirect()->route('401');
+        
+        $abstract_no = $this->generateAbstractNumber();
         //echo '<pre>';print_r($waybillRequest->all());die;
+        $waybillRequest->request->add(['abstract_no'=> $abstract_no]);
+        $waybill_no = $this->generateWaybillNumber($waybillRequest);
+        $waybillRequest->request->add(['waybill_no'=> $waybill_no]);
         $getInsertedId = $this->waybills->create($waybillRequest);
         return redirect()->route('waybills.index');         
     }
@@ -348,7 +353,7 @@ class WaybillController extends Controller
                     ->where('id', '=', $_POST['waybill_id'])
                     ->update(['new_driver_id' => $_POST['new_driver_id'],'new_conductor_id' => $_POST['new_conductor_id'],
                         'etm_no' => $_POST['etm_no'],'vehicle_id' => $_POST['vehicle_id'],
-                        'bag_no' => $_POST['bag_no'],'waybill_no' => $_POST['waybill_no'],'portable_ups_issued' => $_POST['portable_ups_issued'],
+                        'waybill_no' => $_POST['waybill_no'],'portable_ups_issued' => $_POST['portable_ups_issued'],
                         'portable_ups_received' => $_POST['portable_ups_received'],'remarks' => $_POST['remarks']]);
         $audited_by = Auth::id();
         foreach($_POST['itemstock'] as $stock_id=>$quantity)
@@ -503,10 +508,10 @@ class WaybillController extends Controller
                 elseif($val->status=="c")
                     {$nestedData[] =  'Audited & Closed';}
                 $action = '';
-                if($this->checkActionPermission('waybills','edit'))
-                {
-                    $action = '<a  href="'.route("waybills.edit",$val->id).'" class="" title="Edit Waybill" ><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
-                }
+//                if($this->checkActionPermission('waybills','edit'))
+//                {
+//                    $action = '<a  href="'.route("waybills.edit",$val->id).'" class="" title="Edit Waybill" ><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
+//                }
                 if($this->checkActionPermission('waybills','view'))
                     $action.= '<a style="cursor: pointer;" title="View" data-toggle="modal" data-target="#'.$val->id.'"  onclick="viewDetails('.$val->id.',\'view_detail\')"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
                 
@@ -550,6 +555,67 @@ class WaybillController extends Controller
     }
     
     public function getabstractdetail(){
+        if(!$this->checkActionPermission('waybills','view'))
+            return redirect()->route('401');
+        $requestData= $_REQUEST;
+        //print_r($requestData);die;
+        $cash_exist = DB::table('cash_collection')
+            ->select('*')
+            ->where('abstract_no','=',$requestData['abstract_no'])
+            ->first();
+        if($cash_exist)
+        {
+            $json_data = array(
+                                "status"            =>  'error',
+                                "message"               => 'Cash is already sbumitted for this abstract number.'
+                                );
+        }else{
+            $waybills = DB::table('shift_start')
+                ->select('*')
+                ->leftjoin('crew','shift_start.conductor_id','crew.id')
+                ->leftjoin('duties','shift_start.duty_id','duties.id')
+                ->where('abstract_no','=',$requestData['abstract_no'])
+                ->first();
+            if($waybills){
+                $amount_payable = DB::table('tickets')
+                    ->where('abstract_id','=',$requestData['abstract_no'])
+                    ->sum('total_amt');
+                //echo '<pre>';        print_r($amount_payable);die;
+                $json_data = array(
+                                "conductor_name"          =>  $waybills->crew_name,  
+                                "conductor_id"            =>  $waybills->crew_id,
+                                "amount_payable"          =>  $amount_payable,
+                                "route_id"                =>  $waybills->route_id,
+                                "duty_id"                 =>  $waybills->duty_id,
+                                "status"                  =>  'success',
+                                "message"                 => ''
+                                );
+                
+            }else{
+                $json_data = array(
+                                "status"            =>  'error',
+                                "message"               => 'Invalid abstract number.'
+                                );
+            }
+        }
+        //echo '<pre>';        print_r($waybills);die;
+        echo $datajson = json_encode($json_data);  // send data as json format
+    }
+    
+    public function generateWaybillNumber($waybillRequest){
+        $shift = DB::table('shifts')->select('shift')
+                    ->where('id',$waybillRequest['shift_id'])
+                    ->first();
+        $route = DB::table('route_master')->select('route_name')
+                    ->where('id',$waybillRequest['route_id'])
+                    ->first();
+        $duty = DB::table('duties')->select('duty_number')
+                    ->where('id',$waybillRequest['duty_id'])
+                    ->first();
+        return $waybill_no = $waybillRequest['depot_id'].'/'.$shift->shift.'/'.$route->route_name.'/'.$duty->duty_number.'/'.$waybillRequest['abstract_no'];
+    }
+    
+    public function getConductorPaperRollIssued(){
         if(!$this->checkActionPermission('waybills','view'))
             return redirect()->route('401');
         $requestData= $_REQUEST;

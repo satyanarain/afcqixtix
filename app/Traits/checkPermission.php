@@ -40,9 +40,9 @@ trait checkPermission {
     }
     
     
-    function generateUniqueNumber()
+    function generateAbstractNumber()
     {
-        return date('dm').str_pad(random_int(0, 99999999), 6, '0', STR_PAD_LEFT);
+        return str_pad(random_int(0, 99999), 5, '0', STR_PAD_LEFT).date('Ydm');
     }
 
 }

@@ -73,6 +73,12 @@ class RouteController extends Controller {
             return redirect()->route('401');
         //$routesRequest->route;
         //echo $route_master_id;die;
+        
+        if($this->arrayContainsDuplicate($routesRequest['stop_id']) || 
+                $this->arrayContainsDuplicate($routesRequest['stage_number']) ||
+                $this->arrayContainsDuplicate($routesRequest['distance']) ||
+                $this->arrayContainsDuplicate($routesRequest['hot_key']))
+            return redirect()->back()->withErrors(['Stop ID, Stage, Distance and Hot Key must be unique.']);
         $sql=  Route::where([['route_master_id',$route_master_id],['route',$routesRequest->route],['source',$routesRequest->source],['destination',$routesRequest->destination],['direction',$routesRequest->direction]]);
         if(count($sql)>0)
         {
@@ -236,4 +242,10 @@ class RouteController extends Controller {
      * @param  int  $id
      * @return Response
      */
+    
+    
+    function arrayContainsDuplicate($array)
+    {
+          return count($array) != count(array_unique($array));  
+    }
 }

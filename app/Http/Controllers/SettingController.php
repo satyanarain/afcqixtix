@@ -150,6 +150,14 @@ class SettingController extends Controller
                                 <td>Setting Value</td>
                                 <td class="table_normal"><?php echo $value->setting_value; ?></td>
                             </tr>
+                            <tr>
+                                <td>Setting Value Unit</td>
+                                <td class="table_normal"><?php echo $value->setting_unit; ?></td>
+                            </tr>
+                            <tr>
+                                <td>Setting Remarks</td>
+                                <td class="table_normal"><?php echo $value->setting_remarks; ?></td>
+                            </tr>
                            
                              <?php } ?>   
                                    

@@ -233,6 +233,7 @@ Route::group(['middleware' => ['auth']], function () {
     //Route::post('stops/store', 'StopController@store');
     Route::get('versions/view_differences/{id}', 'VersionController@viewDifferences');
     Route::post('versions/approve_change/{id}', 'VersionController@approveChange');
+    Route::post('versions/deny_change/{id}', 'VersionController@denyChange');
     Route::get('versions/view_detail/{tablename}/{id}/{logtable}', 'VersionController@viewDetail');
     Route::resource('versions', 'VersionController');
     Route::get('settings/view_detail/{id}', 'SettingController@viewDetail');
@@ -294,6 +295,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('waybills/getabstractdetail', 'WaybillController@getabstractdetail')->name('waybills.getabstractdetail');
     Route::post('waybills/storecash', 'WaybillController@storecash')->name('waybills.storecash');
     Route::post('waybills/getdata/{id}', 'WaybillController@getData');
+    Route::post('waybills/getconductorpaperrollissued', 'WaybillController@getConductorPaperRollIssued');
     Route::post('waybills/getfiltereddata', 'WaybillController@getfiltereddata')->name('waybills/getfiltereddata');
     Route::resource('waybills', 'WaybillController')->except('show');
     

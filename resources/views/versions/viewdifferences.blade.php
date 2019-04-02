@@ -28,6 +28,7 @@
                          <tr>
                             <th>Version</th>
                             <th>Change Type</th>
+                            <th>Added/Change By</th>
                             {{  actionHeading('Action', $newaction='') }}
                         </tr>
                     </thead>
@@ -36,14 +37,15 @@
                         <tr class="nor_f" id="<?php echo $key.$value->id ?>">
                             <td>{{$value->version_id}}</td>
                             <td><?php if($value->flag=='a'){echo 'Added';}elseif($value->flag=='u'){echo 'Changed';}elseif($value->flag=='d'){echo 'Deleted';}?></td>
-                            </td>
+                            <td>{{getCurrentLabel('users','id',$value->user_id,'name')}}</td>
                             <td>
                                 <?php $permission = getAllModulePermission('versions');
                                 if(in_array('edit',$permission) && $value->approval_status=="p"){?>
-                                <a style="cursor: pointer;" title="Approve Change" onclick="approveChange('<?php echo $key?>',<?php echo $value->id ?>)"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a style="cursor: pointer;" title="Approve Changes" onclick="approveChange('<?php echo $key?>',<?php echo $value->id ?>)"><span class="glyphicon glyphicon-ok"></span></a>
+                                <a style="cursor: pointer;" title="Deny Changes" onclick="denyChange('<?php echo $key?>',<?php echo $value->id ?>)"><span class="glyphicon glyphicon-remove"></span></a>&nbsp;&nbsp;
                                 <?php }
                                 if(in_array('view',$permission)){?>
-                                    <a style="cursor: pointer;" title="View" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails('<?php echo $key?>',<?php echo $value->id ?>,'<?php echo $value->log_tablename?>');"><span class="glyphicon glyphicon-search"></span></a>
+                                    <a style="cursor: pointer;" title="View Changes" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails('<?php echo $key?>',<?php echo $value->id ?>,'<?php echo $value->log_tablename?>');"><span class="glyphicon glyphicon-search"></span></a>
                                 <?php }?>
                             </td>
                         </tr>

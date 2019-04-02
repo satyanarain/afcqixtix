@@ -820,4 +820,14 @@ class VersionController extends Controller
                         ->where('id','=',$request->id)
                         ->update(['approval_status' => 'a']);
     }
+    
+    public function denyChange(Request $request) {
+        //echo '<pre>';print_r($request->all());die;
+         if(!$this->checkActionPermission('versions','view'))
+            return redirect()->route('401');
+        //$service = Service::find($id);
+        return $query = DB::table($request->table)
+                        ->where('id','=',$request->id)
+                        ->update(['approval_status' => 'a']);
+    }
 }
