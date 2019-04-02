@@ -239,7 +239,7 @@ $pem=menuDisplayByUser($result, 'centerstocks','view');
     </span>
   </a>
   <ul @if($segments_var[0]=='waybills') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
-    <li @if($segments_var[0]=='waybills' && !$segments_var[1]) class="active" @endif><a href="{{route('waybills.index')}}"><i class="fa fa-key"></i>Abstract</a></li>
+    <li @if($segments_var[0]=='waybills' && !$segments_var[1]) class="active" @endif><a href="{{route('waybills.index')}}"><i class="fa fa-key"></i>Generate Waybill</a></li>
     <li @if($segments_var[0]=='waybills' && $segments_var[1]=='cash_collection') class="active" @endif><a href="{{route('waybills.cash_collection')}}"><i class="fa fa-key"></i>Cash Collection</a></li>
     <!--                            <li @if($segments_var[1]=='auditlist') class="active" @endif><a href="{{route('waybills.auditlist')}}"><i class="fa fa-key"></i>Audit</a></li>-->
   </ul>

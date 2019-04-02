@@ -271,6 +271,7 @@ function displayList($table = '', $fieldname = '', $orderby_fieldname='',$asc_ds
     return $result;
 }
 function displayPath($fieldname = '',$path_id='',$deviated_path='') {
+    //echo '<pre>';print_r(array($fieldname,$path_id,$deviated_path));die;
     if($path_id!='')
     {
      $selected= $path_id;  
@@ -287,7 +288,8 @@ function displayPath($fieldname = '',$path_id='',$deviated_path='') {
         ->leftjoin('stops', 'route_details.stop_id', '=', 'stops.id')->get();
         
 ?>
-<select name="<?php echo htmlentities($fieldname); ?>" class="form-control"><option value="">Select Path</option><?php foreach($routes as $value){ ?><option value="<?php echo $value->id; ?>"<?php if($value->id==$selected){ ?>selected="selected"<?php } ?>><?php echo htmlentities($value->route); ?><?php echo ucfirst(substr($value->direction,0,1));?> : <?php htmlentities(displayIdBaseName('stops',$value->source,'stop')); ?> - <?php htmlentities(displayIdBaseName('stops',$value->destination,'stop')); ?> via- <?php htmlentities(displayIdBaseName('stops',$value->via,'stop')); ?></option> <?php } ?></select><?php   }
+<select name="<?php echo htmlentities($fieldname); ?>" class="form-control"><option value="">Select Path</option><?php foreach($routes as $value){ ?><option value="<?php echo $value->id; ?>"<?php if($value->id==$selected){ ?>selected="selected"<?php } ?>><?php echo htmlentities($value->route); ?><?php echo ucfirst(substr($value->direction,0,1));?> : <?php htmlentities(displayIdBaseName('stops',$value->source,'stop')); ?> - <?php htmlentities(displayIdBaseName('stops',$value->destination,'stop')); ?> via- <?php htmlentities(displayIdBaseName('stops',$value->via,'stop')); ?></option> <?php } ?></select><?php  
+}
 
 function dispalyImage($imagepath = '', $imagename, $class = '', $alt = '', $style = '') {
  if (file_exists($path)) {

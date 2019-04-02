@@ -35,6 +35,8 @@ class SettingRepository implements SettingRepositoryContract {
         $user_id = Auth::id();
         $input['setting_name'] = implode('_', array_map('strtolower', explode(' ', substr($requestData->setting_name, 0, 10))));
         $input['setting_description'] = $requestData->setting_name;
+        $input['setting_unit'] = $requestData->setting_unit;
+        $input['setting_remarks'] = $requestData->setting_remarks;
         $setting = Setting::create($input);
         Session::flash('flash_message', "Setting $depot->id Created Successfully."); //Snippet in Master.blade.php
         return $setting;
@@ -46,6 +48,8 @@ class SettingRepository implements SettingRepositoryContract {
         $input = $requestData->all();
         $input['setting_description'] = $requestData->setting_name; 
         $input['setting_name'] = $setting->setting_name; 
+        $input['setting_unit'] = $requestData->setting_unit;
+        $input['setting_remarks'] = $requestData->setting_remarks;
         $setting_id = $requestData->id;
         $sql_id=Setting::where([['id',$setting_id],['id','!=',$id]])->first();
         $setting->fill($input)->save();

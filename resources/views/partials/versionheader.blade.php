@@ -40,5 +40,28 @@ function approveChange(tablename,id)
 
      })   
 }
+
+function denyChange(tablename,id)
+{
+     jQuery.ajax({
+         url: "/versions/deny_change/"+id,
+         type: "POST",
+         data: {
+             "table"    : tablename,
+             "id"            : id,
+         },
+         headers: {
+             "x-access-token": window.Laravel.csrfToken
+         },
+         contentType: "application/x-www-form-urlencoded",
+         cache: false
+     })
+     .done(function(data, textStatus, jqXHR) {
+         $("#" + tablename+id).fadeOut(300, function(){ $(this).remove();});
+     })
+     .fail(function(jqXHR, textStatus, errorThrown) {
+
+     })   
+}
 </script>
 @endpush

@@ -81,21 +81,21 @@
      {!! Form::label('conductor_id', Lang::get('Conductor'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12">
         {!! Form::select('conductor_id', null,null,
-        ['class' => 'col-md-6 form-control', 'placeholder'=>'Select Conductor','required' => 'required']) !!}
+        ['class' => 'col-md-6 form-control', 'placeholder'=>'Select Conductor','required' => 'required','onchange'=>'getPaperRollIssued()']) !!}
     </div>
 </div> 
-<div class="form-group ">
+<!--<div class="form-group ">
      {!! Form::label('bag_no', Lang::get('Bag No.'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12">
           {!! Form::text('bag_no', null, ['class' => 'col-md-6 form-control']) !!}
     </div>
-</div> 
-<div class="form-group ">
+</div> -->
+<!--<div class="form-group ">
      {!! Form::label('waybill_no', Lang::get('Waybill No.'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12">
           {!! Form::text('waybill_no', null, ['class' => 'col-md-6 form-control']) !!}
     </div>
-</div> 
+</div> -->
 
 <div class="form-group ">
      {!! Form::label('etm_no', Lang::get('ETM No.'), ['class' => 'col-md-3 control-label']) !!}
@@ -104,12 +104,12 @@
     </div>
 </div>
 
-<div class="form-group ">
+<!--<div class="form-group ">
      {!! Form::label('abstract_no', Lang::get('Abstract No.'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12">
           {!! Form::text('abstract_no', $unique_number, ['class' => 'col-md-6 form-control','readonly']) !!}
     </div>
-</div>
+</div>-->
 
 <div class="form-group ">
      {!! Form::label('paper_roll_issued', Lang::get('Paper Roll Issued'), ['class' => 'col-md-3 control-label']) !!}
@@ -117,12 +117,12 @@
           {!! Form::text('paper_roll_issued', null, ['class' => 'col-md-6 form-control']) !!}
     </div>
 </div>
-<div class="form-group ">
+<!--<div class="form-group ">
      {!! Form::label('portable_ups_issued', Lang::get('Portable UPS Issued'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12">
           {!! Form::text('portable_ups_issued', null, ['class' => 'col-md-6 form-control']) !!}
     </div>
-</div>
+</div>-->
 <div class="form-group ">
      {!! Form::label('etm_issue_time', Lang::get('ETM Issued Date and Time'), ['class' => 'col-md-3 control-label','for'=>'etm_issue_time']) !!}
     <div class="col-md-9 col-sm-12">
@@ -151,3 +151,32 @@
         </div>
     </div>
 </div>
+
+
+@push('scripts')
+<script>
+function getPaperRollIssued()
+{
+    var conductor_id = $('#conductor_id').find(":selected").val();
+    //alert(conductor_id);return false;
+     jQuery.ajax({
+         url: "/waybills/getconductorpaperrollissued/",
+         type: "POST",
+         data: {
+             "crew_id"    : conductor_id,
+         },
+         headers: {
+             "x-access-token": window.Laravel.csrfToken
+         },
+         contentType: "application/x-www-form-urlencoded",
+         cache: false
+     })
+     .done(function(data, textStatus, jqXHR) {
+         $("#" + tablename+id).fadeOut(300, function(){ $(this).remove();});
+     })
+     .fail(function(jqXHR, textStatus, errorThrown) {
+
+     })   
+}
+</script>
+@endpush
