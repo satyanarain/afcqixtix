@@ -15,7 +15,7 @@
             </div>
             <div class="box-body">
             	<div class="box-body">
-	                <table id="example1" class="table table-bordered table-striped">
+	                <table id="tableWithFilter" class="table table-bordered table-striped">
 	                    <thead>
 	                         <tr>
 	                            <th>@lang('Items')</th>

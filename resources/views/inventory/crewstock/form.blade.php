@@ -10,6 +10,11 @@
   <div class="col-md-7 col-sm-12 required">
     {!!Form::select('crew_id', [], isset($stock)?$stock->crew_id:null, ['placeholder'=>'Please select a crew', 'class'=>'form-control', 'id'=>'crew_id', 'required'])!!}
  </div>
+ <div class="box-tools pull-right">
+      <button class="slideout-menu-toggle btn btn-box-tool btn-box-tool-lg" data-toggle="tooltip" title="Help">
+          <i class="fa fa-list"></i>
+      </button>
+  </div>
 </div>
 
 <div class="form-group" >
@@ -31,13 +36,14 @@
       <td>Denominations</td>
       <td>Series</td>
       <td>Start Sequence</td>
-      <td>End Sequence <button type="button" id="add_more_denomination" class="btn btn-primary pull-right"><span class="fa fa-plus"></span></button></td>
+      <td>End Sequence</td>
+      <td>Total Tickets <button type="button" id="add_more_denomination" class="btn btn-primary pull-right"><span class="fa fa-plus"></span></button></td>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>
-        <select class="form-control denom_id" name="denom_id[]" id="denom_id" required="">
+        <select class="form-control denom_id" name="denom_id[]" required>
          <option value="">Select Denominations</option>
          @foreach ($paperticket as $ticketdata)
          <option value="{{$ticketdata->id}}" @if(isset($stock) && ($ticketdata->id == $stock->denom_id)) selected @endif>{{$ticketdata->description}}</option>
@@ -55,6 +61,9 @@
       <td>
         {!! Form::text('end_sequence[]', null, ['class' => 'col-md-6 form-control end_sequence', 'required' => 'required', 'onkeypress'=>'return numvalidate(event)']) !!}
         <label class=".end_sequence_errors label label-warning" style="display: none;word-wrap: break-word;"></label>
+      </td>
+      <td>
+        {!! Form::text('total_tickets[]', null, ['class' => 'col-md-6 form-control total_tickets', 'readonly']) !!}
       </td>
     </tr>
   </tbody>
@@ -87,7 +96,7 @@
 
 <div class="form-group">
   <div class="col-md-3" style="margin-right: 15px;"></div>
-  {{ Form::submit('Save', array('class' => 'btn btn-success pull-left','required' => 'required')) }}
+  {{ Form::submit('Save', array('class' => 'btn btn-success pull-left','required' => 'required', 'id'=>'saveInventory')) }}
   <div class="col-md-3" style="margin-right: 15px;">{{ Form::button('Cancel', array('class' => 'btn btn-success pull-left','onclick'=>'window.history.back();')) }}</div>
   <div class="col-md-9">
     <div class="col-md-7 col-sm-12">
@@ -214,7 +223,7 @@ $(document).on('click', '#add_more_denomination', function(){
         var str = "";
         str += '<tr>'
         str += '<td>'
-        str += '<select class="form-control denom_id" name="denom_id[]" id="denom_id" required="">'
+        str += '<select class="form-control denom_id" name="denom_id[]" required>'
         str += '<option value="">Select Denominations</option>'
         $.each(JSON.parse(options), function(index, option){
           str += '<option value="'+option.id+'">'+option.description+'</option>'
@@ -228,7 +237,10 @@ $(document).on('click', '#add_more_denomination', function(){
         str += '<input class="col-md-6 form-control start_sequence" required="required" name="start_sequence[]" type="text" onkeypress="return numvalidate(event)"><label class="start_sequence_errors label label-warning" style="display: none;word-wrap: break-word;"></label>'
         str += '</td>'
         str += '<td>'
-        str += '<input class="col-md-6 form-control end_sequence" style="width:75%;" required="required" name="end_sequence[]" type="text" onkeypress="return numvalidate(event)"><label class="end_sequence_errors label label-warning" style="display: none;word-wrap: break-word;"></label><button type="button" class="removeDenominationsRow btn btn-danger pull-right"><span class="fa fa-trash"></span></button>'
+        str += '<input class="col-md-6 form-control end_sequence" required="required" name="end_sequence[]" type="text" onkeypress="return numvalidate(event)"><label class="end_sequence_errors label label-warning" style="display: none;word-wrap: break-word;"></label>'
+        str += '</td>'
+        str += '<td>'
+        str += '<input class="col-md-6 form-control total_tickets" style="width:75%;" required="required" name="total_tickets[]" type="text"><button type="button" class="removeDenominationsRow btn btn-danger pull-right"><span class="fa fa-trash"></span></button>'
         str += '</td>'
         str += '</tr>'
 
@@ -291,7 +303,9 @@ $(document).on('click', '.removeDenominationsRow', function(){
                       });
 
                       $(selector).parent('td').next('td').children('label').hide();
+                      $('#saveInventory').attr('disabled', false);
                     } else {
+                      $('#saveInventory').attr('disabled', true);
                       $(selector).parent('td').next('td').children('label').text('Series not available in the central stock. Please contact to central stock head').show();
                     } 
 
@@ -308,7 +322,7 @@ $(document).on('click', '.removeDenominationsRow', function(){
 
   });
 
-  /*$(document).on('change', '.series', function(){
+  $(document).on('change', '.series', function(){
         var selector = $(this);
         var items_id = $('#items_id').val();
 
@@ -332,9 +346,29 @@ $(document).on('click', '.removeDenominationsRow', function(){
         if(!depot_id)
         {
             return alert('Please select a depot');
-        }       
+        }  
 
-        var data =  {
+        var allSeries = $('#denominations_table').find('.series').not(':last');
+        var allDenominations = $('#denominations_table').find('.denom_id').not(':last');
+
+        outerloop:for(var i=0;i<allSeries.length;i++)
+                  {
+                      innerloop:for(var j=0;j<allDenominations.length;j++)
+                                {
+                                    var inputs = allSeries[i];
+                                    var inputd = allDenominations[j];
+                                    if(inputs.value === series && inputd.value === denom_id)
+                                    {     
+                                        $('#saveInventory').attr('disabled', true);
+                                        return alert('You can not have same series twice for a denomination.');
+                                        break outerloop;
+                                    }else{
+                                        $('#saveInventory').attr('disabled', false);
+                                    }
+                                }
+                  }     
+
+        /*var data =  {
                         _token: "{{csrf_token()}}",
                         items_id: items_id,
                         denom_id: denom_id,
@@ -371,7 +405,7 @@ $(document).on('click', '.removeDenominationsRow', function(){
             {
                 console.log(data);
             }
-        });
+        });*/
 
   });
 
@@ -395,7 +429,7 @@ $(document).on('click', '.removeDenominationsRow', function(){
             return alert('Please select a valid series');
         } 
 
-        var start_sequence = $(selector).parent('td').prev('td').children('select').val();
+        var start_sequence = $(selector).parent('td').prev('td').children('input').val();
 
         var end_sequence = $(this).val();
 
@@ -406,54 +440,15 @@ $(document).on('click', '.removeDenominationsRow', function(){
 
         if(parseInt(start_sequence) > parseInt(end_sequence))
         {
-          $(this).val('');
-          return alert('End sequence must be greater than start sequence!');
+            $(this).val('');
+            return alert('End sequence must be greater than start sequence!');
         } 
 
-        var depot_id = $('#depot_id').val();
-        if(!depot_id)
-        {
-            return alert('Please select a depot');
-        }    
+        console.log(end_sequence);
+        console.log(start_sequence);
 
-        var data =  {
-                        _token: "{{csrf_token()}}",
-                        items_id: items_id,
-                        denom_id: denom_id,
-                        series: series,
-                        end_sequence: end_sequence,
-                        depot_id: depot_id
-                    };
-
-        $.ajax({
-            url: "{{route('inventory.crewstock.validateendsequence')}}",
-            type: "POST",
-            data: data,
-            dataType: "JSON",
-            success: function(response)
-            {   
-                var data = response;
-                if(data.status == 'Ok')
-                {
-                    $(selector).siblings('label').hide();                                 
-                }else{
-                    if(data.errorCode == 'NO_STOCK')
-                    {
-                      $(selector).siblings('label').text('Inventory not available in stock for this series. Please contact to central stock head').show();
-                    }
-                    if(data.errorCode == 'NO_SERIES')
-                    {
-                      $(selector).siblings('label').text('End sequence is beyond the stock end sequence. Please contact to admin.').show();
-                    }
-                }
-            },
-            error: function(data)
-            {
-                console.log(data);
-            }
-        });
-
-  });*/
+        $(selector).parent('td').next('td').children('input').val(parseInt(end_sequence)-parseInt(start_sequence)+1);
+  });
 
 
   $(document).on('blur', '#quantity', function(){

@@ -62,3 +62,7 @@ body > div.wrapper > aside > section > ul > li > ul > li > ul > li > a
 {
 	color: red;
 }
+
+#tableWithFilter table, thead input {
+        width: 100%;
+    }
