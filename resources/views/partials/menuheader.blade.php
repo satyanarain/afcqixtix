@@ -86,6 +86,17 @@
                         </table> 
                         </div>
                     </div>
+                    
+                    <div   class="formmain" onclick="showHide(this.id)" id="ACC7{{$value->id}}">
+                        <div class="plusminusbutton" id="plusminusbuttonACC7{{$value->id}}">+</div>&nbsp;&nbsp;Manage Notifications
+                    </div>
+                    <div class="row1"  id="formACC7{{$value->id}}" style="display:none;">
+                        <div class="row">  
+                            <table class="table table-responsive.view">
+                                 {{ menuCreate('notifications','create','edit','view',$value->id,$value->notifications)}}
+                        </table> 
+                        </div>
+                    </div>
                     <div   class="formmain" onclick="showHide(this.id)" id="ACC5{{$value->id}}">
                         <div class="plusminusbutton" id="plusminusbuttonACC5{{$value->id}}">+</div>&nbsp;&nbsp;Miscellaneous
                     </div>

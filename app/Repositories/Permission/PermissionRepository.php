@@ -51,6 +51,7 @@ class PermissionRepository implements PermissionRepositoryContract
             $user_id=  Auth::id();
             $input['user_id'] = $user_id;
             $input['users'] = implode(',', $request->users);
+            $input['notifications'] = implode(',', $request->notifications);
             $input['changepasswords'] = implode(',', $request->changepasswords);
             $input['permissions'] = implode(',', $request->permissions);
             $input['depots'] = implode(',', $request->depots);
@@ -72,6 +73,7 @@ class PermissionRepository implements PermissionRepositoryContract
             $input['pass_types'] = implode(',', $request->pass_types);
             $input['crew'] = implode(',', $request->crew);
             $input['etm_details'] = implode(',', $request->etm_details);
+            $input['change_crew_in_audits'] = implode(',', $request->change_crew_in_audits);
            $roles= Role::create($input);
             
              Session::flash('flash_message', "Role Created Successfully."); //Snippet in Master.blade.php

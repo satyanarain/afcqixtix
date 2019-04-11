@@ -41,8 +41,8 @@
                             <td>
                                 <?php $permission = getAllModulePermission('versions');
                                 if(in_array('edit',$permission) && $value->approval_status=="p"){?>
-                                <a style="cursor: pointer;" title="Approve Changes" onclick="approveChange('<?php echo $key?>',<?php echo $value->id ?>)"><span class="glyphicon glyphicon-ok"></span></a>
-                                <a style="cursor: pointer;" title="Deny Changes" onclick="denyChange('<?php echo $key?>',<?php echo $value->id ?>)"><span class="glyphicon glyphicon-remove"></span></a>&nbsp;&nbsp;
+                                    <a style="cursor: pointer;" title="Approve Changes" onclick="approveChange('<?php echo $key?>',<?php echo $value->id ?>)"><span class="glyphicon glyphicon-ok"></span></a>
+                                    <a style="cursor: pointer;" title="Deny Changes" data-toggle="modal" data-target="#<?php echo $value->id ?>" onclick="commentBox('<?php echo $key?>',<?php echo $value->id ?>,'<?php echo $value->version_id?>')"><span class="glyphicon glyphicon-remove"></span></a>&nbsp;&nbsp;
                                 <?php }
                                 if(in_array('view',$permission)){?>
                                     <a style="cursor: pointer;" title="View Changes" data-toggle="modal" data-target="#<?php echo $value->id ?>"  onclick="viewDetails('<?php echo $key?>',<?php echo $value->id ?>,'<?php echo $value->log_tablename?>');"><span class="glyphicon glyphicon-search"></span></a>

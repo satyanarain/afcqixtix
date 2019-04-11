@@ -189,6 +189,11 @@ class AccessServiceProvider extends ServiceProvider
             \App\Repositories\Roaster\RoasterRepository::class
 
         );
+        $this->app->bind(
+            \App\Repositories\Notification\NotificationRepositoryContract::class,
+            \App\Repositories\Notification\NotificationRepository::class
+
+        );
     }
 }
     

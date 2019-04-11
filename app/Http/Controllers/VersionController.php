@@ -5,6 +5,7 @@ use Gate;
 use Carbon;
 use Notifynder;
 use DB;
+use Mail;
 use Schema;
 use Response;
 use App\Models\Version;
@@ -95,6 +96,24 @@ class VersionController extends Controller
         //echo '<pre>';print_r($versionsRequest->all());die;
         $getInsertedId = $this->versions->create($versionsRequest);
         $this->openVersion();
+        $notification_emails = DB::table('notifications')
+            ->select('*')
+            ->leftjoin('notifications_type_master','notifications_type_master.id','notifications.notification_type')
+            ->where('notifications_type_master.notifications_type_name','like','Version Open')
+            ->get();
+        foreach($notification_emails as $notification_email){
+            $user_detail = array(
+            'name'              => $notification_email->name,
+            'email'             => $notification_email->email,
+            'title'             =>  'Master data change request accepted by admin.',
+            'description'       => 'Version '.$id.' has been open.'
+            );
+            $user_single = (object) $user_detail;
+            Mail::send('emails.approval_send_notification',['user' => $user_single], function ($message) use ($user_single) {
+                                $message->from('info@opiant.online', 'AFMS');
+                                $message->to($user_single->email, $user_single->name)->subject($user_single->title);
+                        });
+        }
         return redirect()->route('versions.index');         
     }
     /**
@@ -153,6 +172,24 @@ class VersionController extends Controller
         if($request->version_status=="c" && count($diff)==0)
         {
             $this->closeVersion();
+        }
+        $notification_emails = DB::table('notifications')
+            ->select('*')
+            ->leftjoin('notifications_type_master','notifications_type_master.id','notifications.notification_type')
+            ->where('notifications_type_master.notifications_type_name','like','Version Close')
+            ->get();
+        foreach($notification_emails as $notification_email){
+            $user_detail = array(
+            'name'              => $notification_email->name,
+            'email'             => $notification_email->email,
+            'title'             =>  'Master data change request accepted by admin.',
+            'description'       => 'Version '.$id.' has been closed.'
+            );
+            $user_single = (object) $user_detail;
+            Mail::send('emails.approval_send_notification',['user' => $user_single], function ($message) use ($user_single) {
+                                $message->from('info@opiant.online', 'AFMS');
+                                $message->to($user_single->email, $user_single->name)->subject($user_single->title);
+                        });
         }
         return redirect()->route('versions.index');
     }
@@ -380,7 +417,7 @@ class VersionController extends Controller
         //echo '<pre>';        print_r($differences);die;
         //echo '<pre>';        print_r($differences);die;
         return view('versions.viewdifferences',compact('differences'));
-        echo '<pre>';        print_r($differences);die;
+        //echo '<pre>';        print_r($differences);die;
     }
     
     public function getAllDifferences()
@@ -816,6 +853,24 @@ class VersionController extends Controller
          if(!$this->checkActionPermission('versions','view'))
             return redirect()->route('401');
         //$service = Service::find($id);
+        $notification_emails = DB::table('notifications')
+            ->select('*')
+            ->leftjoin('notifications_type_master','notifications_type_master.id','notifications.notification_type')
+            ->where('notifications_type_master.notifications_type_name','like','Version Change Allow')
+            ->get();
+        foreach($notification_emails as $notification_email){
+            $user_detail = array(
+            'name'              => $notification_email->name,
+            'email'             => $notification_email->email,
+            'title'             =>  'Master data change request accepted by admin.',
+            'description'       => 'Your request to change in master data has been accepted by the administrator.'
+            );
+            $user_single = (object) $user_detail;
+            Mail::send('emails.approval_send_notification',['user' => $user_single], function ($message) use ($user_single) {
+                                $message->from('info@opiant.online', 'AFMS');
+                                $message->to($user_single->email, $user_single->name)->subject($user_single->title);
+                        });
+        }
         return $query = DB::table($request->table)
                         ->where('id','=',$request->id)
                         ->update(['approval_status' => 'a']);
@@ -826,8 +881,71 @@ class VersionController extends Controller
          if(!$this->checkActionPermission('versions','view'))
             return redirect()->route('401');
         //$service = Service::find($id);
-        return $query = DB::table($request->table)
-                        ->where('id','=',$request->id)
-                        ->update(['approval_status' => 'a']);
+         DB::enableQueryLog();
+        $master_log = array('bus_types'=>'bus_type_log','concession_fare_slabs'=>'concession_fare_slab_logs'
+             ,'concessions'=>'concession_logs','concession_fare_slabs'=>'concession_fare_slab_logs','crew'=>'crew_logs',
+             'denominations'=>'denomination_logs','depots'=>'depot_logs','duties'=>'dutie_logs','etm_details'=>'etm_detail_logs'
+             ,'fares'=>'fare_logs','inspector_remarks'=>'inspector_remark_logs','pass_types'=>'pass_type_logs',
+             'payout_reasons'=>'payout_reason_logs','routes'=>'route_logs','route_details'=>'route_detail_logs'
+             ,'route_master'=>'route_master_logs','services'=>'service_logs','shifts'=>'shift_logs','stops'=>'stop_logs',
+             'targets'=>'target_logs','trips'=>'trip_logs','trip_cancellation_reasons'=>'trip_cancellation_reason_logs',
+             'trip_details'=>'trip_detail_logs','vehicles'=>'vehicle_logs');
+        $id = $request->id;
+        $tablename = $request->table;
+        $version_id = $request->version_id;
+        $log_table_name = $master_log[$request->table];
+        $old_values = DB::table($log_table_name)
+                ->select('*')
+                ->where('version_id',$version_id-1)
+                ->where('id',$id)
+                ->first();
+        $current_values = DB::table($tablename)
+                ->select('*')
+                ->join('users', $tablename.'.user_id', '=', 'users.id')
+                ->where($tablename.'.id',$id)
+                ->first();
+        $columns = DB::select("SELECT * FROM information_schema.columns WHERE table_schema = DATABASE() and table_name = '".$tablename."' ORDER BY table_name, ordinal_position");
+        //echo '<pre>';print_r($current_values);//print_r($current_values);
+        
+        foreach($columns as $column){
+            $columnname = $column->COLUMN_NAME;
+            if($columnname!='id' || $columnname!='version_id')
+            {
+                DB::table($tablename)
+                    ->where('id','=',$request->id)
+                    ->update([$columnname => $old_values->$columnname]);
+            }
+        }
+        $notification_emails = DB::table('notifications')
+                ->select('*')
+                ->leftjoin('notifications_type_master','notifications_type_master.id','notifications.notification_type')
+                ->where('notifications_type_master.notifications_type_name','like','Version Change Deny')
+                ->get();
+        foreach($notification_emails as $notification_email){
+            $user_detail = array(
+            'name'              => $notification_email->name,
+            'email'             => $notification_email->email,
+            'title'             =>  'Master data change request rejected by admin.',
+            'description'       => $request->comment
+            );
+            $user_single = (object) $user_detail;
+            Mail::send('emails.rejection_send_notification',['user' => $user_single], function ($message) use ($user_single) {
+                                $message->from('info@opiant.online', 'AFMS');
+                                $message->to($user_single->email, $user_single->name)->subject($user_single->title);
+                        });
+        }
+        $user_detail = array(
+            'name'              => $current_values->name,
+            'email'             => $current_values->email,
+            'title'             =>  'Master data change request rejected by admin.',
+            'description'       => $request->comment
+        );
+        $user_single = (object) $user_detail;
+        Mail::send('emails.rejection_send_notification',['user' => $user_single], function ($message) use ($user_single) {
+                            $message->from('info@opiant.online', 'AFMS');
+                            $message->to($user_single->email, $user_single->name)->subject($user_single->title);
+                        });
+        //echo '<pre>';print_r($columns);
+        echo 'Data change rejected successfully and older version data is restored and notification sent to the user who made that change.';
     }
 }

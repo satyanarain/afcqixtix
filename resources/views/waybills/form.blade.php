@@ -14,7 +14,7 @@
     <div class="col-md-7 col-sm-12">
         @php $depots=displayList('depots','name');@endphp
         {!! Form::select('depot_id', $depots,isset($waybills->depot_id) ? $waybills->depot_id : selected,
-        ['class' => 'col-md-6 form-control', 'placeholder'=>'Select Depot','required' => 'required','onchange'=>'fillDropdown("vehicle_id","vehicles","vehicle_registration_number","depot_id");fillDropdown("driver_id","crew","crew_name","depot_id");fillDropdown("conductor_id","crew","crew_name","depot_id");fillDropdown("etm_no","etm_details","etm_no","depot_id");']) !!}
+        ['class' => 'col-md-6 form-control', 'placeholder'=>'Select Depot','required' => 'required','onchange'=>'fillDropdown("vehicle_id","vehicles","vehicle_registration_number","depot_id");fillCrewDropdown();fillDropdown("etm_no","etm_details","etm_no","depot_id");']) !!}
     </div>
 
 </div> 
@@ -65,7 +65,7 @@
     <div class="col-md-7 col-sm-12">
         @php $shifts=displayList('shifts','shift');@endphp
        {!! Form::select('shift_id', $shifts,null,
-        ['class' => 'col-md-6 form-control', 'placeholder'=>'Select Shift','required' => 'required']) !!}
+        ['class' => 'col-md-6 form-control', 'placeholder'=>'Select Shift','required' => 'required','onchange'=>'fillCrewDropdown();']) !!}
     </div>
 
 </div>
@@ -76,7 +76,6 @@
         ['class' => 'col-md-6 form-control', 'placeholder'=>'Select Driver','required' => 'required']) !!}
     </div>    
 </div>
- 
 <div class="form-group ">
      {!! Form::label('conductor_id', Lang::get('Conductor'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12">
@@ -96,21 +95,18 @@
           {!! Form::text('waybill_no', null, ['class' => 'col-md-6 form-control']) !!}
     </div>
 </div> -->
-
 <div class="form-group ">
      {!! Form::label('etm_no', Lang::get('ETM No.'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12">
           {!! Form::select('etm_no', null, null, ['class' => 'col-md-6 form-control', 'placeholder'=>'Select ETM No.']) !!}
     </div>
 </div>
-
 <!--<div class="form-group ">
      {!! Form::label('abstract_no', Lang::get('Abstract No.'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12">
           {!! Form::text('abstract_no', $unique_number, ['class' => 'col-md-6 form-control','readonly']) !!}
     </div>
 </div>-->
-
 <div class="form-group ">
      {!! Form::label('paper_roll_issued', Lang::get('Paper Roll Issued'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12">
@@ -177,6 +173,59 @@ function getPaperRollIssued()
      .fail(function(jqXHR, textStatus, errorThrown) {
 
      })   
+}
+function fillCrewDropdown()
+{
+    var depot_id = $('#depot_id').val();
+    var selected_date = $('#date').val();
+    var shift_id = $('#shift_id').val();
+    //alert(depot_id);alert(selected_date);alert(shift_id);
+    if(shift_id && selected_date && depot_id)
+    {
+        jQuery.ajax({
+            url: "/waybills/getroastercrew",
+            type: "POST",
+            data: {
+                "depot_id"    : depot_id,
+                "selected_date"   : selected_date,
+                "shift_id"       : shift_id
+            },
+            headers: {
+                "x-access-token": window.Laravel.csrfToken
+            },
+            contentType: "application/x-www-form-urlencoded",
+            cache: false
+        })
+        .done(function(data, textStatus, jqXHR) {
+            $("#conductor_id").empty();
+            $("#conductor_id").append('<option value="">Select Conductor</option>');
+            jQuery.each(data.data.conductors, function( i, val ) {
+                console.log(val);
+                //console.log(column);
+               $("#conductor_id").append(
+                   '<option value="'+val.id+'">'+val.crew_name+'</option>'
+               )
+           });
+           $("#driver_id").empty();
+            $("#driver_id").append('<option value="">Select Driver</option>');
+            jQuery.each(data.data.drivers, function( i, val ) {
+                //console.log(val);
+                //console.log(column);
+               $("#driver_id").append(
+                   '<option value="'+val.id+'">'+val.crew_name+'</option>'
+               )
+           });
+            
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            $("#conductor_id").empty();
+            $("#conductor_id").append('<option value="">No Record Found</option>');
+            $("#driver_id").empty();
+            $("#driver_id").append('<option value="">No Record Found</option>');
+        })
+    }else{
+        return false;
+    }
 }
 </script>
 @endpush

@@ -295,6 +295,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('waybills/getabstractdetail', 'WaybillController@getabstractdetail')->name('waybills.getabstractdetail');
     Route::post('waybills/storecash', 'WaybillController@storecash')->name('waybills.storecash');
     Route::post('waybills/getdata/{id}', 'WaybillController@getData');
+    Route::post('waybills/getroastercrew', 'WaybillController@getroastercrew');
     Route::post('waybills/getconductorpaperrollissued', 'WaybillController@getConductorPaperRollIssued');
     Route::post('waybills/getfiltereddata', 'WaybillController@getfiltereddata')->name('waybills/getfiltereddata');
     Route::resource('waybills', 'WaybillController')->except('show');
@@ -560,7 +561,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('roasters/importroasterform', 'RoasterController@importroasterform')->name('roasters.importroasterform');
     Route::post('roasters/generateroastertemplate', 'RoasterController@generateRoasterTemplate')->name('roasters.generateRoasterTemplate');
     Route::resource('roasters', 'RoasterController');
+    
+    
+    Route::resource('notifications', 'NotificationsController');
 });
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::post('notifications/getAllUsersEmail', 'NotificationsController@getAllUsersEmail')->name('notifications.getAllUsersEmail');

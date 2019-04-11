@@ -207,6 +207,7 @@ class UsersController extends Controller
         $role_id = $requestData->role_id;
         $created_by = $created_by;
         $users = implode(',', $requestData->users);
+        $notification = implode(',', $requestData->notifications);
         $changepasswords = implode(',', $requestData->changepasswords);
         $permissions = implode(',', $requestData->permissions);
         $depots = implode(',', $requestData->depots);
@@ -239,8 +240,9 @@ class UsersController extends Controller
         $audits = implode(',', $requestData->audits);
         $cash_collections = implode(',', $requestData->cash_collections);
         $roasters = implode(',', $requestData->roasters);
+        $change_crew_in_audits = implode(',', $requestData->change_crew_in_audits);
         
-        PermissionDetail::where('user_id',$id)->update(['roasters'=>$roasters,'role_id' => $requestData->role_id,'created_by'=>$created_by,'users'=>$users,'changepasswords'=>$changepasswords,'permissions'=>$permissions,'depots'=>$depots,'bus_types'=>$bus_types,'services'=>$services,'vehicles'=>$vehicles
+        PermissionDetail::where('user_id',$id)->update(['change_crew_in_audits'=>$change_crew_in_audits,'roasters'=>$roasters,'role_id' => $requestData->role_id,'created_by'=>$created_by,'users'=>$users,'notifications'=>$notification,'changepasswords'=>$changepasswords,'permissions'=>$permissions,'depots'=>$depots,'bus_types'=>$bus_types,'services'=>$services,'vehicles'=>$vehicles
             ,'shifts'=>$shifts,'stops'=>$stops,'routes'=>$routes,'duties'=>$duties,'targets'=>$targets,'trips'=>$trips,'fares'=>$fares,'concession_fare_slabs'=>$concession_fare_slabs,'concessions'=>$concessions,'trip_cancellation_reasons'=>$trip_cancellation_reasons
            ,'inspector_remarks'=>$inspector_remarks,'payout_reasons'=>$payout_reasons,'denominations'=>$denominations,'pass_types'=>$pass_types,'crews'=>$crews,'etm_details'=>$etm_details,'versions'=>$versions,'settings'=>$settings,'waybills'=>$waybills,'audits'=>$audits,'cash_collections'=>$cash_collections,'centerstocks'=>$centerstocks,'depotstocks'=>$depotstocks,'crewstocks'=>$crewstocks,'returncrewstocks'=>$returncrewstocks]);     
            //  $permission->fill($input)->save();
@@ -373,7 +375,17 @@ public function roleupdate($id, Request $request)
                         </div>
                     </div>
                     
-                    
+                    <div   class="formmain" onclick="showHide(this.id)" id="ACC7<?php echo $permissions->id?>">
+                        <div class="plusminusbutton" id="plusminusbuttonACC7<?php echo $permissions->id?>">+</div>&nbsp;&nbsp;Manage Notifications
+                    </div>
+                    <div class="row1"  id="formACC7<?php echo $permissions->id?>" style="display:none;">
+                        <div class="row">  
+                            <table class="table table-responsive.view">
+                                 <?php  menuCreate('notifications','create','edit','view',$permissions->id,$permissions->notifications)?>
+                        </table> 
+                        </div>
+                    </div>
+                
                     <div   class="formmain" onclick="showHide(this.id)" id="ACC5<?php echo $permissions->id?>">
                         <div class="plusminusbutton" id="plusminusbuttonACC5<?php echo $permissions->id?>">+</div>&nbsp;&nbsp;Miscellaneous
                     </div>

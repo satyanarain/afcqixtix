@@ -18,6 +18,7 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">
                     </h3>
+                    <div class="col-md-12 col-sm-12 alert-danger cash-collection-error hide"></div>
                     <div class="box-tools pull-right">
                         <button class="slideout-menu-toggle btn btn-box-tool btn-box-tool-lg" data-toggle="tooltip" title="Help"><i class="fa fa-question"></i></button>
                     </div>
