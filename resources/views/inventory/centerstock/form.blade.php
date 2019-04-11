@@ -22,7 +22,7 @@
   <tbody>
     <tr>
       <td>
-        <select class="form-control" name="denom_id[]" id="denom_id" required="">
+        <select class="form-control denomination" name="denom_id[]" class="denom_id" required="">
          <option value="">Select Denominations</option>
          @foreach ($paperticket as $ticketdata)
          <option value="{{$ticketdata->id}}" @if(isset($stock) && ($ticketdata->id == $stock->denom_id)) selected @endif>{{$ticketdata->description}}</option>
@@ -46,7 +46,7 @@
   <div class="form-group" >
     {!! Form::label('quantity', Lang::get('Quantity'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12 required">
-      {!! Form::text('quantity', null, ['class' => 'col-md-6 form-control','required' => 'required']) !!}
+      {!! Form::text('quantity', null, ['class' => 'col-md-6 form-control','required' => 'required', 'onkeypress'=>'return numvalidate(event);']) !!}
     </div>
   </div>
 </div>      
@@ -92,7 +92,7 @@
 
 <div class="form-group">
   <div class="col-md-3" style="margin-right: 15px;"></div>
-  {{ Form::submit('Save', array('class' => 'btn btn-success pull-left','required' => 'required')) }}
+  {{ Form::submit('Save', array('class' => 'btn btn-success pull-left','required' => 'required', 'id'=>'saveInventory')) }}
   <div class="col-md-3" style="margin-right: 15px;">{{ Form::button('Cancel', array('class' => 'btn btn-success pull-left','onclick'=>'window.history.back();')) }}</div>
   <div class="col-md-9">
     <div class="col-md-7 col-sm-12">
@@ -134,26 +134,7 @@
       $('input[name="end_sequence[]"').attr('required', false);
     }
   })
-
-  function numvalidate(e) 
-    {
-        var key;
-        var keychar;
-        if (window.event)
-            key = window.event.keyCode;
-        else if (e)
-            key = e.which;
-        else
-            return true;
-        keychar = String.fromCharCode(key);
-        keychar = keychar.toLowerCase();
-        // control keys
-        if ((key == null) || (key == 0) || (key == 8) || (key == 9) || (key == 13) || (key == 27))
-            return true;
-        else if (!(("1234567890").indexOf(keychar) > -1)) {
-            return false;
-        }
-    }
+  
   function ShowHideDiv(id) {
     var itemsid = document.getElementById("items_id").value;
     if(parseInt(itemsid) == 1)
@@ -186,7 +167,7 @@ var myLimit = 1;
         var str = "";
         str += '<tr>'
         str += '<td>'
-        str += '<select class="form-control" name="denom_id[]" id="denom_id" required="">'
+        str += '<select class="form-control denomination" name="denom_id[]" id="denom_id" required="">'
         str += '<option value="">Select Denominations</option>'
         $.each(JSON.parse(options), function(index, option){
           str += '<option value="'+option.id+'">'+option.description+'</option>'
@@ -226,18 +207,21 @@ $(document).on('change', '#fileupload', function()
     }
 });
 
-$(document).on('blur', '.start_sequence', function()
+$(document).on('keyup', '.start_sequence', function(e)
 {
+    e.preventDefault();
     var num = $(this).val();
     if(num == 0)
     {
         $(this).val('');
+        console.log('This is found.');
         return alert('Start Sequence can not be 0.');
     }
 });
 
-$(document).on('blur', '.series', function()
+$(document).on('keyup', '.series', function(e)
 {
+    e.preventDefault();
     var series = $(this).val();
     if(!series)
     {
@@ -245,6 +229,56 @@ $(document).on('blur', '.series', function()
         return alert('Please enter seires.');
     }
 
+    var denomination = $(this).parent('td').prev().children('select').val();
+    if(!denomination)
+    {
+        $(this).parent('td').prev().children('select').val('');
+        return alert('Please enter valid denomination.');
+    }
+
+    var allSeries = $('#denominations_table').find('.series').not(':last');
+    var allDenominations = $('#denominations_table').find('.denomination').not(':last');
+
+    allSeries.map(function(indexs, inputs){
+        allDenominations.map(function(indexd, inputd){
+            if(inputs.value === series && inputd.value === denomination)
+            {   
+                $('#saveInventory').attr('disabled', true);
+                return alert('You can not enter same series twice for a denomination.');
+            }else{
+                $('#saveInventory').attr('disabled', false);
+            }
+        });
+    });
+    
+});
+
+$(document).on('change', '.denomination', function()
+{
+    var denomination = $(this).val();
+    if(!denomination)
+    {
+        return alert('Please enter valid denomination.');
+    }
+
+    var series = $(this).parent('td').next().children('input').val();
+
+    if(series)
+    {
+        var allSeries = $('#denominations_table').find('.series').not(':last');
+        var allDenominations = $('#denominations_table').find('.denomination').not(':last');
+        allSeries.map(function(indexs, inputs){
+            allDenominations.map(function(indexd, inputd){
+                if(inputs.value === series && inputd.value === denomination)
+                {   
+                    $('#saveInventory').attr('disabled', true);
+                    return alert('You can not enter same series twice for a denomination.');
+                }else{
+                    $('#saveInventory').attr('disabled', false);
+                }
+            });
+        });
+    }
     
 });
 </script>

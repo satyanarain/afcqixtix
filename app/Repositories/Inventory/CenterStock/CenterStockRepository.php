@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Session;
 
 class CenterStockRepository implements CenterStockRepositoryContract {
     use activityLog;
+
     public function getAllCenterStock() 
     {
         return BusType::all();
@@ -23,7 +24,7 @@ class CenterStockRepository implements CenterStockRepositoryContract {
     {        
         $input = $request->all();
 
-        //upload file
+        //upload file if any
         $uploaddirectory = "inventory";
         if ($request->hasFile('fileupload')) 
         {
@@ -31,7 +32,6 @@ class CenterStockRepository implements CenterStockRepositoryContract {
             {
                 mkdir(public_path() . '/images/' . $uploaddirectory, 0777, true);
             }
-            //$settings = Settings::findOrFail(1);
             $file = $request->file('fileupload');
 
             $destinationPath = public_path() . '/images/' . $uploaddirectory;
@@ -40,55 +40,86 @@ class CenterStockRepository implements CenterStockRepositoryContract {
             $input['fileupload'] = $filename;
         }
 
-        if($request->items_id == 2)
+        if(!checkIfItemHasSeries($input['items_id']))
         {
-            //Update quantity in main table
-            $itemsdata = DB::table("inv_itemsquantity_stock")->select('*')->where("items_id", "=", $request->items_id)->first();
-            $numdata = count($itemsdata);
-            if($numdata == 0)
-            {
-                DB::table('inv_itemsquantity_stock')->insert(array('items_id' =>$request->items_id,'qty' => $request->quantity)); 
-            }else{
-                $total = ($itemsdata->qty + $request->quantity);
-                DB::table('inv_itemsquantity_stock')->where('items_id', $request->items_id)->update(['qty' => $total]);
-            }
-            $input['series'] = "";
-            $input['user_id'] = Auth::id();
-            $input['date_received'] = date('Y-m-d H:i:s', strtotime($input['date_received']));
-            $centerstock = CenterStock::create($input);
-        } 
-        if($request->items_id == 1)
-        {
+            DB::transaction(function() use($input) {  
+                //Update quantity in main table
+                $itemsdata = DB::table("inv_itemsquantity_stock")
+                                ->where("items_id", "=", $input['items_id'])
+                                ->first();
+
+                if(!$itemsdata)
+                {
+                    DB::table('inv_itemsquantity_stock')
+                            ->insert(array('items_id' => $input['items_id'],'qty' => $input['quantity'])); 
+                }else{
+
+                    $total = ($itemsdata->qty + $input['quantity']);
+                    DB::table('inv_itemsquantity_stock')
+                        ->where('items_id', $input['items_id'])
+                        ->update(['qty' => $total]);
+                }
+                $input['series'] = "";
+                $input['user_id'] = Auth::id();
+                $input['date_received'] = date('Y-m-d H:i:s', strtotime($input['date_received']));
+                $centerstock = CenterStock::create($input);
+            });
+
+        }else{
+
             $denominations = $request->denom_id;
             $serieses = $request->series;
             $start_sequences = $request->start_sequence;
             $end_sequences = $request->end_sequence;
-            foreach ($denominations as $key => $denomination) 
-            {                
-                $quantity = $end_sequences[$key] - $start_sequences[$key] + 1;
-                $stock = DB::table('inv_itemsquantity_stock')->where([['items_id', $request->items_id], ['denom_id', $denomination], ['series', $serieses[$key]]])->first();
-                //return response()->json($stock);
-                if($stock)
-                {
-                    DB::table('inv_itemsquantity_stock')->where([['items_id', $request->items_id], ['denom_id', $denomination], ['series', $serieses[$key]]])->update(['qty' => DB::raw("qty + $quantity"), 'end_sequence'=>$end_sequences[$key]]);
-                }else{
-                    DB::table('inv_itemsquantity_stock')->insert(['items_id' =>$request->items_id, 'qty' => $quantity, 'series'=>$serieses[$key], 'start_sequence'=>$start_sequences[$key], 'end_sequence'=>$end_sequences[$key], 'denom_id'=>$denomination]); 
-                }
 
+            foreach ($denominations as $key => $denomination) 
+            { 
                 $input['user_id'] = Auth::id();
                 $input['date_received'] = date('Y-m-d H:i:s', strtotime($input['date_received']));
-                if($request->items_id == 1)
-                {
-                    $input['denom_id'] = $denomination;
-                    $input['series'] = $serieses[$key];
-                    $input['start_sequence'] = $start_sequences[$key];
-                    $input['end_sequence'] = $end_sequences[$key];                
-                    $input['quantity'] = $end_sequences[$key] - $start_sequences[$key] + 1;
-                }
-                $centerstock = CenterStock::create($input);
+                $input['denom_id'] = $denomination;
+                $input['series'] = $serieses[$key];
+                $input['start_sequence'] = $start_sequences[$key];
+                $input['end_sequence'] = $end_sequences[$key];                
+                $input['quantity'] = $end_sequences[$key] - $start_sequences[$key] + 1;
+
+                DB::transaction(function() use($input, $key, $denomination) { 
+
+                    $stock = DB::table('inv_itemsquantity_stock')
+                                ->where([
+                                            ['items_id', $input['items_id']], 
+                                            ['denom_id', $denomination], 
+                                            ['series', $input['series']]
+                                        ])
+                                ->first();
+
+                    if($stock)
+                    {
+                        DB::table('inv_itemsquantity_stock')
+                                ->where([
+                                            ['items_id', $input['items_id']], 
+                                            ['denom_id', $denomination], 
+                                            ['series', $input['series']]
+                                        ])
+                                ->update([
+                                            'qty' => DB::raw("qty + $input[quantity]"), 
+                                            'end_sequence'=>$input['end_sequence']
+                                        ]);
+                    }else{
+                        DB::table('inv_itemsquantity_stock')
+                                ->insert([
+                                            'items_id' =>$input['items_id'], 
+                                            'qty' => $input['quantity'], 
+                                            'series'=>$input['series'], 
+                                            'start_sequence'=>$input['start_sequence'], 
+                                            'end_sequence'=>$input['end_sequence'], 
+                                            'denom_id'=>$denomination
+                                        ]); 
+                    }
+
+                    $centerstock = CenterStock::create($input);
+                });
             }
         }
-
         
         Session::flash('flash_message', "Stock Created Successfully."); //Snippet in Master.blade.php
         return $centerstock;

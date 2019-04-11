@@ -333,28 +333,6 @@ function validateForm(depot_id=null, from_date=null, to_date=null, etm_no=null, 
     return true;
 }
 
-function numvalidate(e) 
-{
-    var key;
-    var keychar;
-    if (window.event)
-        key = window.event.keyCode;
-    else if (e)
-        key = e.which;
-    else
-        return true;
-    keychar = String.fromCharCode(key);
-    keychar = keychar.toLowerCase();
-    // control keys
-    if ((key == null) || (key == 0) || (key == 8) || (key == 9)
-    || (key == 13) || (key == 27))
-        return true;
-    else if (!(("1234567890").indexOf(keychar) > -1)) {
-        return false;
-    }
-}
-
-
 function getETMsByDepotId(depotId, idToAppend, type="All", selected)
 {
     var url = "{{route('reports.etm.audit_status.getetmsbydepotid', ':depotId')}}";

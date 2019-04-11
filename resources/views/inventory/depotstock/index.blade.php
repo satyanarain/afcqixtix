@@ -22,7 +22,7 @@
             @include('partials.message')
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="tableWithFilter" class="table table-bordered table-striped">
                     <thead>
                          <tr>
                             <th>@lang('Depot')</th>
@@ -32,9 +32,7 @@
                             <th>@lang('Start Sequence')</th>
                             <th>@lang('End Sequence')</th>
                             <th>@lang('Quantity')</th>
-                            <th>
-                                Created At
-                            </th>
+                            <th>Created At</th>
                         </tr>
                     </thead>
                     <tbody>

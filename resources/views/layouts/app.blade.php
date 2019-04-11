@@ -33,6 +33,7 @@
   <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/clockpicker/0.0.7/bootstrap-clockpicker.css" />
   <link rel="stylesheet" href="{{URL::asset('plugins/datatables/dataTables.bootstrap.css')}}">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.1.5/css/fixedHeader.dataTables.min.css">
   <link rel="stylesheet" href="{{URL::asset('css/AdminLTE.min.css')}}">
   <link rel="stylesheet" href="{{URL::asset('css/custom.css')}}">
   <link rel="stylesheet" href="{{URL::asset('css/style.css')}}">
@@ -709,7 +710,7 @@ $array= array('etm', 'revenue', 'ppt')
 <!--<script src="{{ asset(elixir('js/pages/dashboard2.js')) }}"></script>-->
 
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-
+<script src="https://cdn.datatables.net/fixedheader/3.1.5/js/dataTables.fixedHeader.min.js"></script>
 <script src="{{ asset(elixir('js/demo.js')) }}"></script>
 <script src="{{ asset(elixir('js/jQueryRotate.js')) }}"></script>
 
@@ -823,7 +824,7 @@ function numvalidate(e)
     else if (!(("1234567890").indexOf(keychar) > -1)) {
       return false;
     }
-  } 
+} 
 </script>
 @stack('scripts')
 @include('partials.table_script_order')
