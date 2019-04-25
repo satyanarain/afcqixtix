@@ -5,20 +5,19 @@ namespace App\Http\Controllers\Reports\ETM;
 use DB;
 use Auth;
 use Validator;
-use PdfReport;
-use CSVReport;
-use ExcelReport;
 use App\Models\Ticket;
 use App\Models\Waybill;
 use App\Traits\activityLog;
 use Illuminate\Http\Request;
 use App\Traits\checkPermission;
+use App\Traits\GenerateExcelTrait;
 use App\Http\Controllers\Controller;
 
 class IssueDetailsController extends Controller
 {
     use activityLog;
     use checkPermission;
+    use GenerateExcelTrait;
 
     /**
      * Display a listing of the resource.
@@ -78,9 +77,10 @@ class IssueDetailsController extends Controller
 
         $meta = [ // For displaying filters description on header
             'Depot : ' . $depotName,
-            'From : '.date('d-m-Y', strtotime($from_date)).' To : '.date('d-m-Y', strtotime($to_date)),
-            'ETM No. : '.$etmNo,
-            'Shift : '.$shift
+            'From : ' . date('d-m-Y', strtotime($from_date)),
+            'To : ' . date('d-m-Y', strtotime($to_date)),
+            'ETM No. : ' . $etmNo,
+            'Shift : ' . $shift
         ];   
 
         $reportData = $queryBuilder->get();    
@@ -113,51 +113,33 @@ class IssueDetailsController extends Controller
         */
 
         $meta = [ // For displaying filters description on header
-            'Depot : ' => $depotName,
-            'From : '=> date('d-m-Y', strtotime($from_date)),
-            'To : '=> date('d-m-Y', strtotime($to_date)),
-            'ETM No. : '=>$etmNo,
-            'Shift : '=>$shift
+            'Depot : ' . ucfirst($depotName),
+            'From : ' . date('d-m-Y', strtotime($from_date)),
+            'To : ' . date('d-m-Y', strtotime($to_date)),
+            'ETM No. : ' . $etmNo,
+            'Shift : ' . $shift
         ]; 
 
-      
-        $columns = [
-                        'Abstract Number'=> function($row){
-                            return $row->abstract_no;
-                        },
-                        'Waybill Number'=> function($row){
-                            return $row->waybill_no;
-                        },
-                        'Route'=> function($row){
-                            return $row->route->route_name;
-                        },
-                        'Duty' => function($row){
-                            return $row->duty->duty_number;
-                        }, 
-                        'Shift' => function($row){
-                            return $row->shift->shift;
-                        }, 
-                        'Conductor' => function($row){
-                            return $row->conductor->crew_name;
-                        }, 
-                        'Vehicle Number' => function($row){
-                            return $row->vehicle->vehicle_registration_number;
-                        }, 
-                        'ETM No.' => function($row){
-                            return $row->etm->etm_no;
-                        }, 
-                        'Issued By' => function($row){
-                            return $row->depotHead->name;
-                        }, 
-                        'Received By' => function($row){
-                            return $row->conductor->crew_name;
-                        }, 
-                        'Issuance Timestamp' => function($row){
-                            return date('d-m-Y H:i:s', strtotime($row->etm_issue_time));
-                        }];
 
-        return ExcelReport::of($title, $meta, $queryBuilder, $columns)
-        					->download($title.'.xlsx');        
+        $data = $queryBuilder->get();
+      
+        $reportColumns = ['S. No', 'Abstract Number', 'Waybill Number', 'Route', 'Duty', 'Shift', 'Conductor', 'Vehicle Number', 'ETM No.', 'Issued By', 'Issued To', 'Issuance Timestamp'];
+
+        $reportData = [];
+        array_push($reportData, $reportColumns);
+
+        foreach ($data as $key => $d) 
+        {
+            array_push($reportData, [(string)($key+1), (string)$d->abstract_no, (string)$d->waybill_no, (string)$d->route->route_name, (string)$d->duty->duty_number, (string)$d->shift->shift, (string)$d->conductor->crew_name, (string)$d->vehicle->vehicle_registration_number, (string)$d->etm->etm_no, (string)$d->depotHead->name, (string)$d->conductor->crew_name, (string)date('d-m-Y H:i:s', strtotime($d->etm_issue_time))]);
+        } 
+
+        $fileName = public_path().'/abcd/'.$title.'.xlsx';        
+
+        $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "No");
+
+        $this->downloadExcelFile($fileName); 
+
+        unlink($fileName);      
     }
 
     public function getQueryBuilder($depot_id, $from_date, $to_date, $etm_no, $shift_id)

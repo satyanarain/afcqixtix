@@ -130,7 +130,9 @@ class PassesValidatedDetailsController extends Controller
 
         $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "No");
 
-        $this->downloadExcelFile($fileName);        
+        $this->downloadExcelFile($fileName); 
+
+        unlink($fileName);       
     }
 
     public function getQueryBuilder($depot_id, $from_date, $to_date, $service_id, $pass_id)

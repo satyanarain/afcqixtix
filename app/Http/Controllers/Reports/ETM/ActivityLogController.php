@@ -5,21 +5,20 @@ namespace App\Http\Controllers\Reports\ETM;
 use DB;
 use Auth;
 use Validator;
-use PdfReport;
-use CSVReport;
-use ExcelReport;
 use App\Models\Ticket;
 use App\Models\Waybill;
 use App\Models\ETMLoginLog;
 use App\Traits\activityLog;
 use Illuminate\Http\Request;
 use App\Traits\checkPermission;
+use App\Traits\GenerateExcelTrait;
 use App\Http\Controllers\Controller;
 
 class ActivityLogController extends Controller
 {
     use activityLog;
     use checkPermission;
+    use GenerateExcelTrait;
 
     /**
      * Display a listing of the resource.
@@ -48,7 +47,7 @@ class ActivityLogController extends Controller
             {
                 $logoutSeconds = strtotime($value->logout_timestamp);
             }else {
-                $logoutSeconds = strtotime("now");
+                $logoutSeconds = strtotime($value->login_timestamp) + 8*60*60;
             }
             $loginSeconds = strtotime($value->login_timestamp);
 
@@ -91,9 +90,10 @@ class ActivityLogController extends Controller
         */
 
         $meta = [ // For displaying filters description on header
-            'Depot : ' . $depotName,
-            'From : '.date('d-m-Y', strtotime($from_date)).' To : '.date('d-m-Y', strtotime($to_date)),
-            'ETM No. : '.$etm_no
+            'Depot : ' . ucfirst($depotName),
+            'From : ' . date('d-m-Y', strtotime($from_date)),
+            'To : ' . date('d-m-Y', strtotime($to_date)),
+            'ETM No. : ' . $etm_no
         ];   
 
         $reportData = $queryBuilder->get();  
@@ -104,7 +104,7 @@ class ActivityLogController extends Controller
             {
                 $logoutSeconds = strtotime($value->logout_timestamp);
             }else {
-                $logoutSeconds = strtotime("now");
+                $logoutSeconds = strtotime($value->login_timestamp) + 8*60*60;
             }
             $loginSeconds = strtotime($value->login_timestamp);
 
@@ -137,56 +137,41 @@ class ActivityLogController extends Controller
         */
 
         $meta = [ // For displaying filters description on header
-            'Depot : ' => $depotName,
-            'Date : '=> date('d-m-Y', strtotime($date)),
-            'ETM No. : '=>$etm_no
+            'Depot : ' . ucfirst($depotName),
+            'From : ' . date('d-m-Y', strtotime($from_date)),
+            'To : ' . date('d-m-Y', strtotime($to_date)),
+            'ETM No. : ' . $etm_no
         ]; 
 
+        $data = $queryBuilder->get();
       
-        $columns = [
-                        'Conductor Name'=> function($row){
-                            return $row->conductor->crew_name;
-                        },
-                        'Route'=> function($row){
-                            return $row->wayBill->route->route_name;
-                        },
-                        'Duty' => function($row){
-                            return $row->wayBill->duty->duty_number;
-                        }, 
-                        'Login On' => function($row){
-                            return $row->login_timestamp ? date('d-m-Y H:i:s', strtotime($row->login_timestamp)) : "";
-                        }, 
-                        'Logout On' => function($row){
-                            return $row->logout_timestamp ? date('d-m-Y H:i:s', strtotime($row->logout_timestamp)) : "";
-                        }, 
-                        'Duty Hours' => function($row){
-                            if($row->logout_timestamp)
-                            {
-                                $logoutSeconds = strtotime($row->logout_timestamp);
-                            }else {
-                                $logoutSeconds = strtotime("now");
-                            }
-                            $loginSeconds = strtotime($row->login_timestamp);
+        $reportColumns = ['S. No', 'Conductor Name', 'Route', 'Duty', 'Login On', 'Logout On', 'Duty Hours', 'Tkt + Pass', 'Error Tkt Prntd', 'Battery Percentage On Login', 'Battery Percentage On Logout'];
 
-                            $dutyHours = (int)(($logoutSeconds - $loginSeconds) / 3600);
+        $reportData = [];
+        array_push($reportData, $reportColumns);
 
-                            return $dutyHours;  
-                        }, 
-                        'Tkt + Pass' => function($row){
-                            return $row->wayBill->tickets->count();
-                        }, 
-                        'Error Tkt Prntd' => function($row){
-                            return '';
-                        }, 
-                        'Battery Percentage On Login' => function($row){
-                            return $row->battery_percentage;
-                        }, 
-                        'Battery Percentage On Logout' => function($row){
-                            return $row->battery_percentage;
-                        }];
+        foreach ($data as $key => $d) 
+        {
+            if($d->logout_timestamp)
+            {
+                $logoutSeconds = strtotime($d->logout_timestamp);
+            }else {
+                $logoutSeconds = strtotime($d->login_timestamp) + 8*60*60;
+            }
+            $loginSeconds = strtotime($d->login_timestamp);
 
-        return ExcelReport::of($title, $meta, $queryBuilder, $columns)
-        					->download($title.'.xlsx');        
+            $dutyHours = (int)(($logoutSeconds - $loginSeconds) / 3600);
+
+            array_push($reportData, [(string)($key+1), (string)$d->conductor->crew_name, (string)$d->wayBill->route->route_name, (string)$d->wayBill->duty->duty_number, (string)$d->login_timestamp ? date('d-m-Y H:i:s', strtotime($d->login_timestamp)) : "", (string)$d->logout_timestamp ? date('d-m-Y H:i:s', strtotime($d->logout_timestamp)) : "", (string)$dutyHours, (string)$d->wayBill->tickets->count(), (string)"", (string)$d->battery_percentage, (string)$d->battery_percentage]);
+        } 
+
+        $fileName = public_path().'/abcd/'.$title.'.xlsx';        
+
+        $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "No");
+
+        $this->downloadExcelFile($fileName); 
+
+        unlink($fileName);     
     }
 
 

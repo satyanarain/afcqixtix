@@ -25,4 +25,9 @@ class AuditInventory extends Model
     {
     	return $this->belongsTo(Denomination::class, 'denom_id', 'id');
     }
+
+    public function auditor()
+    {
+        return $this->belongsTo(User::class, 'audited_by', 'id');
+    }
 }

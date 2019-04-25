@@ -59,8 +59,9 @@
                                     <th class="hide_column5">Logout Time</th>
                                     <th class="hide_column6">Conductor</th>
                                     <th class="hide_column7">Vehicle No.</th>
-                                    <th class="hide_column8">Handed Over To</th>
                                     <th class="hide_column9">Audited</th>
+                                    <th class="hide_column8">Audited By</th>
+                                    <th class="hide_column8">Cash Remitted By</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -74,7 +75,6 @@
                                     <td>{{$da->etmLoginDetails->logout_timestamp}}</td>
                                     <td>{{$da->conductor->crew_name}} ({{$da->conductor->crew_id}})</td>
                                     <td>{{$da->vehicle->vehicle_registration_number}}</td>
-                                    <td></td>
                                     <td>
                                         @if($da->status == 'c')
                                             {{'Audited'}}
@@ -82,6 +82,8 @@
                                             {{'Un-audited'}}
                                         @endif
                                     </td>
+                                    <td>{{isset($da->auditInventory)?$da->auditInventory->auditor->name:''}}</td>
+                                    <td>{{isset($da->auditRemittance)?$da->auditRemittance->auditor->name:''}}</td>
                                 </tr>
                             @endforeach
                             @else
@@ -169,9 +171,9 @@ $(document).ready(function(){
                         $.each(data, function(index, d){
                             if(index == 0)
                             {
-                                reportData.push([{'text':d[0], 'style': 'tableHeaderStyle'}, {'text':d[1], 'style': 'tableHeaderStyle'},{'text':d[2], 'style': 'tableHeaderStyle'}, {'text':d[3], 'style': 'tableHeaderStyle'}, {'text':d[4], 'style': 'tableHeaderStyle'}, {'text':d[5], 'style': 'tableHeaderStyle'}, {'text':d[6], 'style': 'tableHeaderStyle'}, {'text':d[7], 'style': 'tableHeaderStyle'}, {'text':d[8], 'style': 'tableHeaderStyle'}])
+                                reportData.push([{'text':d[0], 'style': 'tableHeaderStyle'}, {'text':d[1], 'style': 'tableHeaderStyle'},{'text':d[2], 'style': 'tableHeaderStyle'}, {'text':d[3], 'style': 'tableHeaderStyle'}, {'text':d[4], 'style': 'tableHeaderStyle'}, {'text':d[5], 'style': 'tableHeaderStyle'}, {'text':d[6], 'style': 'tableHeaderStyle'}, {'text':d[7], 'style': 'tableHeaderStyle'}, {'text':d[8], 'style': 'tableHeaderStyle'}, {'text':d[9], 'style': 'tableHeaderStyle'}])
                             }else{
-                                reportData.push([{'text':d[0]}, {'text':d[1]},{'text':d[2]}, {'text':d[3]}, {'text':d[4]}, {'text':d[5]}, {'text':d[6]}, {'text':d[7]}, {'text':d[8]}])
+                                reportData.push([{'text':d[0]}, {'text':d[1]},{'text':d[2]}, {'text':d[3]}, {'text':d[4]}, {'text':d[5]}, {'text':d[6]}, {'text':d[7]}, {'text':d[8]}, {'text':d[9]}])
                             }
                             
                         })

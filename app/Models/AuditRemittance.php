@@ -8,9 +8,9 @@ class AuditRemittance extends Model
 {
     protected $table = 'audit_remittance';
 
-    public function collector()
+    public function auditor()
     {
-    	return $this->belongsTo(User::class, 'collected_by', 'id');
+    	return $this->belongsTo(User::class, 'audited_by', 'id');
     }
 
     public function waybill()

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Reports;
 
+use DB;
 use App\Models\Crew;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -18,5 +19,14 @@ class ReportsController extends Controller
     	}
 
     	return response()->json(['status'=>1, 'data'=>$conductors]);
+    }
+
+    public function getDenominationsByTicketType($ticketTypeId)
+    {
+    	$denominations = DB::table('denominations')
+    						 ->where('denomination_master_id', $ticketTypeId)
+    						 ->get(['id', 'description']);
+
+    	return response()->json($denominations, 200);
     }
 }

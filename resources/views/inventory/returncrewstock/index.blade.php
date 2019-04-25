@@ -16,7 +16,7 @@
                 $permission_status = checkPermission('returncrewstocks','create');
                 if($permission_status)
                 {?>
-                <a class="btn btn-primary pull-right" href="{{route('inventory.returncrewstock.create')}}"><span class="fa fa-plus"></span> Add</a>
+                <a class="btn btn-afcs pull-right" href="{{route('inventory.returncrewstock.create')}}"><span class="fa fa-plus"></span> Return</a>
                 <?php   }?>
         
             @include('partials.message')
