@@ -92,6 +92,17 @@
                         </div>
                     </div>
                     
+                <div   class="formmain" onclick="showHide(this.id)" id="ACC7{{$permissions->id}}">
+                    <div class="plusminusbutton" id="plusminusbuttonACC7{{$permissions->id}}">+</div>&nbsp;&nbsp;Manage Notifications
+                </div>
+                <div class="row1"  id="formACC7{{$permissions->id}}" style="display:none;">
+                    <div class="row">  
+                        <table class="table table-responsive.view">
+                             {{ menuCreate('notifications','create','edit','view',$permissions->id,$permissions->notifications)}}
+                    </table> 
+                    </div>
+                </div>
+                
                     <div   class="formmain" onclick="showHide(this.id)" id="ACC5{{$permissions->id}}">
                         <div class="plusminusbutton" id="plusminusbuttonACC5{{$permissions->id}}">+</div>&nbsp;&nbsp;Miscellaneous
                     </div>
@@ -102,6 +113,7 @@
                                 {{ menuCreate('permissions','create','edit','view',$permissions->id,$permissions->permissions) }}
                                 {{ menuCreate('versions','create','edit','view',$permissions->id,$permissions->versions)}}
                                 {{ menuCreate('settings','create','edit','view',$permissions->id,$permissions->settings)}}
+                                {{ menuCreate('change_crew_in_audits','','','',$permissions->id,$permissions->change_crew_in_audits)}}
                         </table> 
                         </div>
                     </div>

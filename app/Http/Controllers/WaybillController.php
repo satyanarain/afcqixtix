@@ -256,6 +256,49 @@ class WaybillController extends Controller
         }
     }
     
+    public function getroastercrew(Request $request)
+    {
+        try
+        {
+            $roaster = DB::table('roasters')
+                ->select('*')
+                ->where('depot_id', '=', $request->depot_id)
+                ->where('shift_id', '=', $request->shift_id)
+                ->where('dated_on', '=', $request->selected_date)
+                ->first();
+            //echo '<pre>';            print_r($query);die;
+            $conductors = DB::table('roaster_on_duty')
+                ->select('crew.*','crew.id as id')
+                    ->leftjoin('crew','crew.id','roaster_on_duty.crew_id')
+                    ->where('crew.role', '=', 'Conductor')
+                    ->where('crew.crew_type', '=', 'Permanent')
+                    ->where('roaster_on_duty.roaster_id', '=', $roaster->id)
+                    ->get();
+            $drivers = DB::table('roaster_on_duty')
+                ->select('crew.*','crew.id as id')
+                    ->leftjoin('crew','crew.id','roaster_on_duty.crew_id')
+                    ->where('crew.role', '=', 'Driver')
+                    ->where('crew.crew_type', '=', 'Permanent')
+                    ->where('roaster_on_duty.roaster_id', '=', $roaster->id)
+                    ->get();
+            
+            if(count($drivers) < 1 && count($conductors) < 1)
+            {
+              $result = array('code'=>404, "description"=>"No Records Found");
+              return response()->json($result, 404);
+            }
+            else
+            {
+              $result = array('data'=>array('conductors'=>$conductors,'drivers'=>$drivers),'code'=>200);
+              return response()->json($result, 200);
+            }        
+        }
+        catch(Exception $e)
+        {
+          return response()->json(['error' => 'Something is wrong'], 500);
+        }
+    }
+    
     public function auditdetail($id)
     {
         if(!$this->checkActionPermission('waybills','edit'))
@@ -280,6 +323,10 @@ class WaybillController extends Controller
        $amount_payable = DB::table('tickets')
                     ->where('abstract_id','=',$waybills->abstract_no)
                     ->sum('total_amt');
+       $cash_submitted = DB::table('cash_collection')
+                ->select('cash_remitted')
+                ->where('abstract_no','=',$waybills->abstract_no)
+                ->first();
         $crew = DB::table('crew')
             ->where('depot_id', '=',$waybills->depot_id)
             ->orderBy('crew_name','asc')
@@ -343,7 +390,7 @@ class WaybillController extends Controller
                     ->where('shift_start.abstract_no',$waybills->abstract_no)
                     ->first();
         //echo '<pre>';print_r($items);die;
-        return view('waybills.submitform',compact('waybills','vehicles','duties','services','crew','etm_ticket_amount','etm_pass_amount','epurse_amount','pass_amount','items','total_payout','shift_details'));
+        return view('waybills.submitform',compact('waybills','vehicles','duties','services','crew','etm_ticket_amount','etm_pass_amount','epurse_amount','pass_amount','items','total_payout','shift_details','cash_submitted'));
     }
     
     public function saveaudit()
@@ -535,7 +582,8 @@ class WaybillController extends Controller
     public function cash_collection(){
         if(!$this->checkActionPermission('cash_collections','edit'))
             return redirect()->route('401');
-        return view('waybills.cash_collection.create',compact('waybills'));
+        $cash_challan_no = date('Y').DB::table('cash_collection')->count();
+        return view('waybills.cash_collection.create',compact('waybills','cash_challan_no'));
     }
     
     public function storecash(Request $request){
@@ -559,44 +607,56 @@ class WaybillController extends Controller
             return redirect()->route('401');
         $requestData= $_REQUEST;
         //print_r($requestData);die;
-        $cash_exist = DB::table('cash_collection')
-            ->select('*')
+        $abstract_data = DB::table('waybills')
+            ->select('abstract_no')
             ->where('abstract_no','=',$requestData['abstract_no'])
             ->first();
-        if($cash_exist)
+        if($abstract_data)
         {
-            $json_data = array(
-                                "status"            =>  'error',
-                                "message"               => 'Cash is already sbumitted for this abstract number.'
+            $cash_exist = DB::table('cash_collection')
+                ->select('*')
+                ->where('abstract_no','=',$requestData['abstract_no'])
+                ->first();
+            if($cash_exist)
+            {
+                $json_data = array(
+                                "status" =>  'error',
+                                "message" => 'Cash is already sbumitted for this abstract number.'
                                 );
-        }else{
-            $waybills = DB::table('shift_start')
+            }else{
+                $waybills = DB::table('shift_start')
                 ->select('*')
                 ->leftjoin('crew','shift_start.conductor_id','crew.id')
                 ->leftjoin('duties','shift_start.duty_id','duties.id')
                 ->where('abstract_no','=',$requestData['abstract_no'])
                 ->first();
-            if($waybills){
-                $amount_payable = DB::table('tickets')
-                    ->where('abstract_id','=',$requestData['abstract_no'])
-                    ->sum('total_amt');
-                //echo '<pre>';        print_r($amount_payable);die;
-                $json_data = array(
-                                "conductor_name"          =>  $waybills->crew_name,  
-                                "conductor_id"            =>  $waybills->crew_id,
-                                "amount_payable"          =>  $amount_payable,
-                                "route_id"                =>  $waybills->route_id,
-                                "duty_id"                 =>  $waybills->duty_id,
-                                "status"                  =>  'success',
-                                "message"                 => ''
-                                );
-                
-            }else{
-                $json_data = array(
-                                "status"            =>  'error',
-                                "message"               => 'Invalid abstract number.'
-                                );
+                if($waybills){
+                    $amount_payable = DB::table('tickets')
+                        ->where('abstract_id','=',$requestData['abstract_no'])
+                        ->sum('total_amt');
+                    //echo '<pre>';        print_r($amount_payable);die;
+                    $json_data = array(
+                                    "conductor_name"          =>  $waybills->crew_name,  
+                                    "conductor_id"            =>  $waybills->crew_id,
+                                    "amount_payable"          =>  $amount_payable,
+                                    "route_id"                =>  $waybills->route_id,
+                                    "duty_id"                 =>  $waybills->duty_id,
+                                    "status"                  =>  'success',
+                                    "message"                 => ''
+                                    );
+
+                }else{
+                    $json_data = array(
+                                    "status" =>  'error',
+                                    "message" => 'Shift is not started yet for this abstract number.'
+                                    );
+                }
             }
+        }else{
+            $json_data = array(
+                        "status" =>  'error',
+                        "message" => 'Invalid abstract number.'
+                        );
         }
         //echo '<pre>';        print_r($waybills);die;
         echo $datajson = json_encode($json_data);  // send data as json format

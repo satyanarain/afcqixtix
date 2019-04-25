@@ -5,19 +5,26 @@
     <div class="col-md-2 col-sm-12">
         {!! Form::select('conductor_id', $crew,isset($waybills->conductor_id) ? $waybills->conductor_id : selected, ['class' => 'col-md-4 form-control','disabled']) !!}        
     </div>
+      <?php $permission = getAllModulePermission('change_crew_in_audits');
+            if(in_array('change_crew_in_audits',$permission)){$can_change_crew =1;}else{$can_change_crew =0;}?>
     <div class="col-md-2 col-sm-12">
+        <?php if($can_change_crew){?>
          {!! Form::checkbox('actual_conductor_id_checkbox', null,null, ['id'=>'actual_conductor_id_checkbox','class' => 'actual_conductor_id_checkbox']) !!}
         {!! Form::label('actual_conductor_id_checkbox', Lang::get('Change'), ['class' => 'control-label','for'=>'actual_conductor_id_checkbox']) !!}
+    <?php }?>
     </div>
     {!! Form::label('driver', Lang::get('Driver'), ['class' => 'col-md-2 control-label']) !!}
     <div class="col-md-2 col-sm-12">
         {!! Form::select('driver_id', $crew,isset($waybills->driver_id) ? $waybills->driver_id : selected, ['class' => 'col-md-6 form-control','disabled']) !!}
     </div>
     <div class="col-md-2 col-sm-12">
+    <?php if($can_change_crew){?>
          {!! Form::checkbox('actual_driver_id_checkbox', null,null, ['id'=>'actual_driver_id_checkbox','class' => 'actual_driver_id_checkbox']) !!}
         {!! Form::label('actual_driver_id_checkbox', Lang::get('Change'), ['class' => 'control-label','for'=>'actual_driver_id_checkbox']) !!}
+    <?php }?>
     </div>
 </div> 
+<?php if($can_change_crew){?>
 <div class="form-group ">
     <div class="actual_conductor_id" style="display: none;">
     {!! Form::label('new_conductor_id', Lang::get('Actual Conductor'), ['class' => 'col-md-2 control-label']) !!}
@@ -32,6 +39,7 @@
     </div>
     </div>
 </div>
+<?php }?>
 <div class="form-group ">
      {!! Form::label('etm_no', Lang::get('ETM No.'), ['class' => 'col-md-2 control-label']) !!}
     <div class="col-md-4 col-sm-12">
@@ -147,7 +155,7 @@
                 <td>ETM No. / Abstract No.</td>
                 <td>Route / Duty / Shift</td>
                 <td>Vehicle-Bus Type</td>
-                <td>ETM pass / Ticket</td>
+                <td>ETM pass / Ticket / E-Purse</td>
                 <td>Payout (Rs.)</td>
                 <td>Audit</td>
             </tr>
@@ -158,7 +166,7 @@
                 <td><?php echo $shift_details->abstract_no;?></td>
                 <td><?php echo $shift_details->route.'/'.$shift_details->duty_number.'/'.$shift_details->shift;?></td>
                 <td><?php echo $shift_details->vehicle_registration_number.'-'.$shift_details->bus_type;?></td>
-                <td style="text-align: right"><?php echo $etm_pass_amount.'<br>'.$etm_ticket_amount;?></td>
+                <td style="text-align: right"><?php echo $etm_pass_amount.'/'.$etm_ticket_amount.'/'.$epurse_amount;?></td>
                 <td style="text-align: right"><?php echo $total_payout;?></td>
                 <td></td>
             </tr>
@@ -245,6 +253,14 @@
     <input type="hidden" name="total_payout_value" class="total_payout_value" value="<?php echo $total_payout;?>" readonly="readonly">
      
 </div> 
+<div class="form-group ">
+    <div class="col-md-2 col-sm-12 control-label">
+         Total Cash Remitted(Rs.)
+    </div>
+    <div class="col-md-4 col-sm-12 total_cash">
+         <?php echo $cash_submitted->cash_remitted;?>
+    </div>
+</div>
 <div class="form-group ">
      {!! Form::label('batta', Lang::get('Batta (Rs.)'), ['class' => 'col-md-2 control-label']) !!}
     <div class="col-md-4 col-sm-12">

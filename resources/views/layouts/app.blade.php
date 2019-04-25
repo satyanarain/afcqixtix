@@ -275,9 +275,6 @@ $pem=menuDisplayByUser($result, 'centerstocks','view');
 @endif
 
 
-
-@php $pem=menuDisplayByUser($result, 'centerstocks','view'); @endphp
-@if($pem=='true')
 <li  @if($segments_var[0]=='notification') class="treeview active" @else class="treeview" @endif>
   <a href="#">
     <i class="fa fa-bell" aria-hidden="true"></i> <span>Manage Notifications</span>
@@ -286,11 +283,17 @@ $pem=menuDisplayByUser($result, 'centerstocks','view');
     </span>
   </a>
   <ul @if($segments_var[1]=='inventory') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
-    <li @if($segments_var[1]=='inventory') class="active" @endif><a href="{{route('notification.inventory.index')}}"><i class="fa fa-edit"></i>@lang('Inventory')</a>
-    </li>                      
-  </ul>
+    @php $pem=menuDisplayByUser($result, 'centerstocks','view'); @endphp
+    @if($pem=='true')
+        <li @if($segments_var[1]=='inventory') class="active" @endif><a href="{{route('notification.inventory.index')}}"><i class="fa fa-edit"></i>@lang('Inventory')</a></li>
+    @endif
+    @php $pem=menuDisplayByUser($result, 'notifications','view'); @endphp
+    @if($pem=='true')
+    <li @if($segments_var[0]=='notifications') class="active" @endif><a href="{{route('notifications.index')}}"><i class="fa fa-edit"></i>@lang('General')</a></li>
+    @endif
+</ul>
 </li>
-@endif
+
 
 <!--manage reports-->
                     

@@ -132,6 +132,7 @@ class PermissionsController extends Controller
             $user_id=  Auth::id();
             $input['user_id'] = $user_id;
             $input['users'] = implode(',', $request->users);
+            $input['notifications'] = implode(',', $request->notifications);
             $input['changepasswords'] = implode(',', $request->changepasswords);
             $input['permissions'] = implode(',', $request->permissions);
             $input['depots'] = implode(',', $request->depots);
@@ -164,6 +165,7 @@ class PermissionsController extends Controller
             $input['audits'] = implode(',', $request->audits);
             $input['cash_collections'] = implode(',', $request->cash_collections);
             $input['roasters'] = implode(',', $request->roasters);
+            $input['change_crew_in_audits'] = implode(',', $request->change_crew_in_audits);
            $roles= Permission::create($input);
            Session::flash('flash_message', "Role Created Successfully."); //Snippet in Master.blade.php
          return redirect()->route('permissions.index');
@@ -184,6 +186,7 @@ class PermissionsController extends Controller
             $input = $request->all();
             $input['user_id'] = $user_id;
             $input['users'] = implode(',', $request->users);
+            $input['notifications'] = implode(',', $request->notifications);
             $input['changepasswords'] = implode(',', $request->changepasswords);
             $input['permissions'] = implode(',', $request->permissions);
             $input['depots'] = implode(',', $request->depots);
@@ -216,6 +219,7 @@ class PermissionsController extends Controller
             $input['audits'] = implode(',', $request->audits);
             $input['cash_collections'] = implode(',', $request->cash_collections);
             $input['roasters'] = implode(',', $request->roasters);
+            $input['change_crew_in_audits'] = implode(',', $request->change_crew_in_audits);
             $permission->fill($input)->save();
            Session::flash('flash_message', "Role Updated Successfully."); 
         return redirect()->route('permissions.index');

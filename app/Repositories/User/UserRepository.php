@@ -78,6 +78,7 @@ class UserRepository implements UserRepositoryContract {
             $input['role_id'] = $requestData->role_id;
             $input['created_by'] = $created_by;
             $input['users'] = implode(',', $requestData->users);
+            $input['notifications'] = implode(',', $requestData->notifications);
             $input['changepasswords'] = implode(',', $requestData->changepasswords);
             $input['permissions'] = implode(',', $requestData->permissions);
             $input['depots'] = implode(',', $requestData->depots);
@@ -102,6 +103,7 @@ class UserRepository implements UserRepositoryContract {
             $input['versions'] = implode(',', $requestData->versions);
             $input['settings'] = implode(',', $requestData->settings);
             $input['waybills'] = implode(',', $requestData->waybills);
+            $input['change_crew_in_audits'] = implode(',', $requestData->change_crew_in_audits);
             //echo "<pre>";
            // print_r($input);
             //exit();
@@ -131,6 +133,7 @@ class UserRepository implements UserRepositoryContract {
             $input['role_id'] = $requestData->role_id;
             $input['created_by'] = $created_by;
             $input['users'] = implode(',', $requestData->users);
+            $input['notifications'] = implode(',', $requestData->notifications);
             $input['changepasswords'] = implode(',', $requestData->changepasswords);
             $input['permissions'] = implode(',', $requestData->permissions);
             $input['depots'] = implode(',', $requestData->depots);
@@ -155,6 +158,10 @@ class UserRepository implements UserRepositoryContract {
             $input['settings'] = implode(',', $requestData->settings);
             $input['versions'] = implode(',', $requestData->versions);
             $input['waybills'] = implode(',', $requestData->waybills);
+            $input['change_crew_in_audits'] = implode(',', $requestData->change_crew_in_audits);
+            //echo "<pre>";
+           // print_r($input);
+            //exit();
             $permission->fill($input)->save();
          
     

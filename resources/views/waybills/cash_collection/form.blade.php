@@ -41,13 +41,13 @@
 <div class="form-group ">
      {!! Form::label('cash_remitted', Lang::get('Cash Remitted'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12">
-          {!! Form::text('cash_remitted', null, ['class' => 'col-md-6 form-control','required' => 'required']) !!}
+          {!! Form::number('cash_remitted', null, ['min'=>1,'class' => 'col-md-6 form-control','required' => 'required']) !!}
     </div>
 </div>
 <div class="form-group ">
      {!! Form::label('cash_challan_no', Lang::get('Cash Challan No.'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12">
-          {!! Form::text('cash_challan_no', null, ['class' => 'col-md-6 form-control','required' => 'required']) !!}
+          {!! Form::text('cash_challan_no', $cash_challan_no, ['readonly','class' => 'col-md-6 form-control','required' => 'required']) !!}
     </div>
 </div>
 <div class="form-group">

@@ -220,8 +220,8 @@ function fillDropdown(ele,table,column,dropdown)
          $("#"+ele).empty();
          $("#"+ele).append('<option value="">Select</option>');
          jQuery.each(data.data, function( i, val ) {
-             console.log(val);
-             console.log(column);
+             //console.log(val);
+             //console.log(column);
             $("#"+ele).append(
                 '<option value="'+val.id+'">'+val.name+'</option>'
             )
