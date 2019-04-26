@@ -93,7 +93,7 @@ $(document).ready(function(){
     $(document).on('click', '#exportAsPDF', function(){
         var depot_id = $('#depot_id').val();
         var denom_id = $('#denomination_id').val();
-        var report_type = $('#report_type').val();
+        var report_type = 'detail';
         var fromDate = $('#from_date').val();
         if(!fromDate)
         {
@@ -125,7 +125,7 @@ $(document).ready(function(){
             data: {
                 depot_id: depot_id,
                 denomination_id: denom_id,
-                report_type:report_type,
+                report_type: report_type,
                 from_date: fromDate,
                 to_date: toDate
             },
@@ -204,7 +204,7 @@ $(document).ready(function(){
     $(document).on('click', '#exportAsXLS', function(){
         var depot_id = $('#depot_id').val();
         var denom_id = $('#denomination_id').val();
-        var report_type = $('#report_type').val();
+        var report_type = 'detail';
         var orderBy = $('#order_by').val();
         var fromDate = $('#from_date').val();
         if(!fromDate)

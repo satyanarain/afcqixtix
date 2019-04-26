@@ -28,12 +28,6 @@
     </div>
 
     <div class="col-md-3">
-        @php $orders=['detail'=>'Detail', 'summary'=>'Summary']@endphp
-        {!! Form::label('report_type', Lang::get('Report Type'), ['class' => 'control-label']) !!}
-        {!! Form::select('report_type', $orders, 'detail', ['class' => 'form-control']) !!}  
-    </div>
-
-    <div class="col-md-3">
         <label>&nbsp;</label>
         {{ Form::submit('Submit', array('class' => 'btn btn-success pull-left', 'style'=>'margin-top: 26px;')) }}
     </div>
@@ -57,7 +51,7 @@ $(document).ready(function(){
                 dataType: "JSON",
                 success: function(response)
                 {
-                    var str = "";
+                    var str = "<option value=''>All<option>";
                     $.each(response, function(index, denomination){
                         str += "<option value='"+denomination.id+"'>"+denomination.description+"</option>";
                     });

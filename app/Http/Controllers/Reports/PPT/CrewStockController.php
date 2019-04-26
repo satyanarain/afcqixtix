@@ -86,16 +86,6 @@ class CrewStockController extends Controller
             'Series : ' . $series
         ];
 
-        //data should be like below data
-        /*
-        [
-            ['col1', 'col2', '...'],
-            ['val1', 'val2', '...'],
-            ['val1', 'val2', '...'],
-            ...
-        ]
-        */
-
         $reportData = $queryBuilder->get();
 
         return response()->json(['status'=>'Ok', 'title'=>$title, 'meta'=>$meta, 'data'=>$reportData, 'serverDate'=>date('d-m-Y H:i:s'), 'takenBy'=>Auth::user()->name], 200);
@@ -141,6 +131,26 @@ class CrewStockController extends Controller
         
                 
         $data = $data->where('items_id', 1);
+
+        $data = $data->get();
+      
+        $reportColumns = ['S. No', 'Ticket Type', 'Date', 'Denomination', 'Ticket Count', 'Ticket Value'];
+
+        $reportData = [];
+        array_push($reportData, $reportColumns);
+
+        foreach ($data as $key => $d) 
+        {
+            array_push($reportData, [(string)($key+1), (string)'Ticket', (string)date('d-m-Y', strtotime($d->created_at)), (string)$d->denomination->description, (string)$d->quantity, (string)$d->quantity * $d->denomination->price]);
+        } 
+
+        $fileName = public_path().'/abcd/'.$title.'.xlsx';        
+
+        $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "No");
+
+        $this->downloadExcelFile($fileName); 
+
+        unlink($fileName);
 
         $columns = [
                         'Ticket Type'=> function($row){
