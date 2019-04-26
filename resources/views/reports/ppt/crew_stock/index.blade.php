@@ -133,7 +133,7 @@ $(document).ready(function(){
                             console.log(d);
                             totalTicketCount += parseInt(d.qty);
                             totalTicketValue += parseInt(d.qty*d.denomination.price);
-                            reportData.push([{'text':'1'}, {'text':'Ticket'}, {'text':d.conductor.crew_name+' ('+d.conductor.crew_id+')'}, {'text':d.denomination.description}, {'text':d.series}, {'text':d.start_sequence?d.start_sequence:""}, {'text':d.end_sequence?d.end_sequence:""}, {'text':''+d.qty, 'alignment':'right'}, {'text':''+d.qty*d.denomination.price, 'alignment':'right'}, {'text': ''}]);
+                            reportData.push([{'text':'1'}, {'text':'Ticket'}, {'text':d.conductor.crew_name+' ('+d.conductor.crew_id+')'}, {'text':d.denomination.description}, {'text':d.series}, {'text':d.start_sequence?''+d.start_sequence:""}, {'text':d.end_sequence?''+d.end_sequence:""}, {'text':''+d.qty, 'alignment':'right'}, {'text':''+d.qty*d.denomination.price, 'alignment':'right'}, {'text': ''}]);
                     });
                     
                     reportData.push([{'text':'Grand Total', 'bold':true, 'style': 'tableHeaderStyle', 'colSpan':7, 'alignment': 'right'}, {}, {}, {}, {}, {}, {}, {'text':''+totalTicketCount+'', 'bold':true, 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':''+totalTicketValue+'', 'bold':true, 'style': 'tableHeaderStyle', 'alignment':'right'}, {'text':'', 'bold':true, 'style': 'tableHeaderStyle'}]);
@@ -142,6 +142,8 @@ $(document).ready(function(){
                     var title = response.title;
                     var takenBy = response.takenBy;
                     var serverDate = response.serverDate;
+                    /*console.log(metaData);
+                    return;*/
                     Export(metaData, title, reportData, takenBy, serverDate, '*', 'lightHorizontalLines');                    
                 }                
             },

@@ -19,6 +19,9 @@
                     })
 
                     console.log(modifiedMetaData);
+                    console.log(data);
+
+                    //return;
             
                     var docDefinition = {
                         watermark: {text: 'QixTix | Automated Fare Collection System', color: '#367fa9', opacity: 0.05, bold: true, italics: false, fontSize: 8},
@@ -381,7 +384,7 @@ function getConductorsByDepotId(depotId, idToAppend, type="All", selected)
             else
                 var str = "<option value=''>Select Conductor</option>";
 
-            $.each(response, function(index, conductor){
+            $.each(response.data, function(index, conductor){
                 if(conductor.crew_id == selected)
                     str += "<option value='"+conductor.crew_id+"' selected>"+conductor.crew_name+"</option>";
                 else
