@@ -5,12 +5,12 @@
         {!! Form::select('depot_id',$depots_value,isset($depot->depot_id) ? $depot->depot_id : selected,['class' => ' form-control','placeholder'=>"Select Depot"]) !!}
     </div>
     <div class="col-md-3">
-        {!! Form::label('from_date', Lang::get('From Date'), ['class' => 'control-label']) !!}<span class="label-required">*</span>    
+        {!! Form::label('from_date', Lang::get('From'), ['class' => 'control-label']) !!}<span class="label-required">*</span>    
         {!! Form::text('from_date', date('d-m-Y'), ['class' => 'multiple_date','readonly' => 'readonly', 'placeholder'=>'DD-MM-YY']) !!}
     </div>
 
     <div class="col-md-3">
-        {!! Form::label('to_date', Lang::get('To Date'), ['class' => 'control-label']) !!}<span class="label-required">*</span>    
+        {!! Form::label('to_date', Lang::get('To'), ['class' => 'control-label']) !!}<span class="label-required">*</span>    
         {!! Form::text('to_date', date('d-m-Y'), ['class' => 'multiple_date','readonly' => 'readonly', 'placeholder'=>'DD-MM-YY']) !!}
     </div>
      

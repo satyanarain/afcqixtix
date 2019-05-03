@@ -1,9 +1,9 @@
 @extends('layouts.master')
 @section('header')
-<h1>Cash Collection Report</h1>
+<h1>Concession Collection Report</h1>
 <ol class="breadcrumb">
             <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"></i>Cash Collection</a></li>
+            <li><a href="#"></i>Concession Collection</a></li>
             </ol>
 @stop
 @section('content')

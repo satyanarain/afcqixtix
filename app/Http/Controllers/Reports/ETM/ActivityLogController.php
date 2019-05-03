@@ -2,11 +2,7 @@
 
 namespace App\Http\Controllers\Reports\ETM;
 
-use DB;
 use Auth;
-use Validator;
-use App\Models\Ticket;
-use App\Models\Waybill;
 use App\Models\ETMLoginLog;
 use App\Traits\activityLog;
 use Illuminate\Http\Request;

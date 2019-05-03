@@ -307,6 +307,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['prefix'=>'reports', 'namespace'=>'Reports', 'as'=>'reports.'], function(){
 
         Route::get('getconductorsbydepotid/{depotId}', 'ReportsController@getConductorsByDepotId')->name('getconductorsbydepotid');
+        Route::get('getvehiclesbydepotid/{depotId}', 'ReportsController@getVehiclesByDepotId')->name('getvehiclesbydepotid');
         Route::get('getdenominationsbytickettype/{ticketType}', 'ReportsController@getDenominationsByTicketType')->name('getdenominationsbytickettype');
 
         Route::group(['prefix'=>'etm', 'namespace'=>'ETM', 'as'=>'etm.'], function(){

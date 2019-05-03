@@ -5,20 +5,19 @@ namespace App\Http\Controllers\Reports\Revenue;
 use DB;
 use Auth;
 use Validator;
-use PdfReport;
-use CSVReport;
-use ExcelReport;
 use App\Models\Waybill;
-use App\Traits\activityLog;
 use App\Models\CenterStock;
+use App\Traits\activityLog;
 use Illuminate\Http\Request;
 use App\Traits\checkPermission;
+use App\Traits\GenerateExcelTrait;
 use App\Http\Controllers\Controller;
 
 class ConductorWiseEarningController extends Controller
 {
     use activityLog;
     use checkPermission;
+    use GenerateExcelTrait;
 
     /**
      * Display a listing of the resource.
@@ -102,37 +101,42 @@ class ConductorWiseEarningController extends Controller
         */
 
         $meta = [ // For displaying filters description on header
-            'Depot : ' => $depotName,
-            'Conductor ID. : ' => $conductorId,
-            'From : '=> date('d-m-Y', strtotime($from_date)),
-            'To : '=> date('d-m-Y', strtotime($to_date))
+            'Depot : ' . $depotName,
+            'Conductor ID. : ' . $conductorId,
+            'From : ' . date('d-m-Y', strtotime($from_date)),
+            'To : ' . date('d-m-Y', strtotime($to_date))
         ]; 
-      
-        $columns = [
-                        'Conductor Name (ID)'=> function($row){
-                            return $row->conductor->crew_name.' ('.$row->conductor->crew_id.')';
-                        },
-                        'Revenue (Rs)'=> function($row){
-                            return number_format((float)$row->auditRemittance->payable_amount, 2, '.', '');
-                        },
-                        'No. of Trips'=> function($row){
-                            return $row->trips ? $row->trips->count() :'0';
-                        },
-                        'No. of Shifts' => function($row){
-                            return $row->shifts ? $row->shifts->count() :'0';
-                        }, 
-                        'Average Cash Collection (Rs)' => function($row){
-                        	if($row->shifts && $row->shifts->count() > 0)
-                            {
-                                $avg = $row->auditRemittance->payable_amount / $row->shifts->count();
-                            }else{
-                                $avg = 0;
-                            }
-                            return number_format((float)$avg, 2, '.', '');
-                        }];
 
-        return ExcelReport::of($title, $meta, $queryBuilder, $columns)
-        					->download($title.'.xlsx');        
+        $data = $queryBuilder->get();
+      
+        $reportColumns = ['S. No', 'Conductor Name (ID)', 'Revenue (Rs)', 'No. of Trips', 'No. of Shifts', 'Average Cash Collection (Rs)'];
+
+        $reportData = [];
+        array_push($reportData, $reportColumns);
+
+        foreach ($data as $key => $d) 
+        {
+            $tripsCount = $d->trips ? $d->trips->count() :'0';
+            $shiftsCount = $d->shifts ? $d->shifts->count() :'0';
+            if($d->shifts && $d->shifts->count() > 0)
+            {
+                $avg = $d->auditRemittance->payable_amount / $d->shifts->count();
+            }else{
+                $avg = 0;
+            }
+            $conductorDetail = $d->conductor->crew_name.' ('.$d->conductor->crew_id.')';
+            $payableAmount = number_format((float)$d->auditRemittance->payable_amount, 2, '.', '');
+
+            array_push($reportData, [(string)($key+1), (string)$conductorDetail, (string)$payableAmount, (string)$tripsCount, (string)$shiftsCount, (string)$avg]);
+        } 
+
+        $fileName = public_path().'/abcd/'.$title.'.xlsx';        
+
+        $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "No");
+
+        $this->downloadExcelFile($fileName); 
+
+        unlink($fileName);        
     }
 
     public function getQueryBuilder($depot_id, $from_date, $to_date, $conductor_id)

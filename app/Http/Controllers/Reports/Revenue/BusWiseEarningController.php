@@ -5,20 +5,19 @@ namespace App\Http\Controllers\Reports\Revenue;
 use DB;
 use Auth;
 use Validator;
-use PdfReport;
-use CSVReport;
-use ExcelReport;
 use App\Models\Waybill;
-use App\Traits\activityLog;
 use App\Models\CenterStock;
+use App\Traits\activityLog;
 use Illuminate\Http\Request;
 use App\Traits\checkPermission;
+use App\Traits\GenerateExcelTrait;
 use App\Http\Controllers\Controller;
 
 class BusWiseEarningController extends Controller
 {
     use activityLog;
     use checkPermission;
+    use GenerateExcelTrait;
 
     /**
      * Display a listing of the resource.
@@ -101,44 +100,36 @@ class BusWiseEarningController extends Controller
         */
 
         $meta = [ // For displaying filters description on header
-            'Depot : ' => $depotName,
-            'Bus No. : ' => $bus_no,
-            'From : '=> date('d-m-Y', strtotime($from_date)),
-            'To : '=> date('d-m-Y', strtotime($to_date))
+            'Depot : ' . $depotName,
+            'Bus No. : ' . $bus_no,
+            'From : ' . date('d-m-Y', strtotime($from_date)),
+            'To : ' . date('d-m-Y', strtotime($to_date))
         ]; 
-      
-        $columns = [
-                        'Date'=> function($row){
-                            return date('d-m-Y', strtotime($row->created_at));
-                        },
-                        'Bus No.'=> function($row){
-                            return $row->vehicle->vehicle_registration_number;
-                        },
-                        'No. of Shifts'=> function($row){
-                            return number_format((float)$row->shifts->count(), 2, '.', '');
-                        },
-                        'No. of Trips' => function($row){
-                            return number_format((float)$row->trips->count(), 2, '.', '');
-                        }, 
-                        'Total Km.' => function($row){
-                            return number_format((float)$row->trips->pluck('route')->sum('distance'), 2, '.', '');
-                        }, 
-                        'Total Amt. (Rs)' => function($row){
-                            return number_format((float)$row->auditRemittance->payable_amount, 2, '.', '');
-                        }];
 
-        return ExcelReport::of($title, $meta, $queryBuilder, $columns)
-        					->download($title.'.xlsx');        
+        $data = $queryBuilder->get();
+      
+        $reportColumns = ['S. No', 'Date', 'Bus No.', 'No. of Shifts', 'No. of Trips', 'Total Km.', 'Total Amt. (Rs)'];
+
+        $reportData = [];
+        array_push($reportData, $reportColumns);
+
+        foreach ($data as $key => $d) 
+        {
+            array_push($reportData, [(string)($key+1), (string)date('d-m-Y', strtotime($d->created_at)), (string)$d->vehicle->vehicle_registration_number, (string)number_format((float)$d->shifts->count(), 2, '.', ''), (string)number_format((float)$d->trips->count(), 2, '.', ''), (string)number_format((float)$d->trips->pluck('route')->sum('distance'), 2, '.', ''), number_format((float)$d->auditRemittance->payable_amount, 2, '.', '')]);
+        } 
+
+        $fileName = public_path().'/abcd/'.$title.'.xlsx';        
+
+        $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "No");
+
+        $this->downloadExcelFile($fileName); 
+
+        unlink($fileName);        
     }
 
     public function getQueryBuilder($depot_id, $from_date, $to_date, $bus_no)
     {
-        $queryBuilder = Waybill::whereHas('vehicle', function($query) use ($bus_no){
-            if($bus_no)
-            {
-                $query->where('vehicle_registration_number', $bus_no);
-            }
-        })->with(['trips', 'shifts', 'auditRemittance', 'vehicle', 'trips.route']);
+        $queryBuilder = Waybill::with(['trips', 'shifts', 'auditRemittance', 'vehicle', 'trips.route']);
 
         if($from_date && $to_date)
         {
@@ -149,6 +140,11 @@ class BusWiseEarningController extends Controller
         if($depot_id)
         {
             $queryBuilder->where('depot_id', $depot_id);
+        }
+
+        if($bus_no)
+        {
+            $queryBuilder->where('vehicle_id', $bus_no);
         }
                 
         $queryBuilder = $queryBuilder->orderBy('created_at', 'DESC');

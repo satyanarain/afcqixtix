@@ -204,9 +204,9 @@ $(document).ready(function(){
 
         var time_slot = $('#time_slot').val();
         var direction = $('#direction').val();
-        var stop_id = $('#stop_id').val(); 
+        var route_id = $('#route_id').val(); 
 
-        var queryParams = "?stop_id="+stop_id
+        var queryParams = "?route_id="+route_id
                         + "&from_date="+fromDate
                         + "&to_date="+toDate
                         + "&direction="+direction

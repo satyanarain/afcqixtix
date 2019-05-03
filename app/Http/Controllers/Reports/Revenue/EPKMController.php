@@ -4,28 +4,18 @@ namespace App\Http\Controllers\Reports\Revenue;
 
 use DB;
 use Auth;
-use Validator;
-use PdfReport;
-use CSVReport;
-use ExcelReport;
-use App\Models\Fare;
-use App\Models\Trip;
-use App\Models\Route;
-use App\Models\Ticket;
-use App\Models\Target;
-use App\Models\TripStart;
-use App\Models\TripDetail;
 use App\Traits\activityLog;
-use App\Models\CenterStock;
-use App\Models\RouteDetail;
 use Illuminate\Http\Request;
 use App\Traits\checkPermission;
+use App\Traits\GenerateExcelTrait;
 use App\Http\Controllers\Controller;
+use App\Models\{TripStart, Trip, Target, Ticket, Route};
 
 class EPKMController extends Controller
 {
     use activityLog;
     use checkPermission;
+    use GenerateExcelTrait;
 
     /**
      * Display a listing of the resource.
@@ -46,67 +36,9 @@ class EPKMController extends Controller
         $route_id = $input['route_id'];
     
         $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $route_id);
-
         $data = $queryBuilder->paginate(10);
 
-        $data->getCollection()->transform(function($value){
-        	$trip = Trip::where([['route_id', $value->route_master_id], ['duty_id', $value->waybill->duty->id], ['shift_id', $value->waybill->shift->id]])->first();
-        	if($trip)
-        	{
-        		$tripDetails = TripDetail::where([['trip_id', $trip->id], ['trip_no', $value->trip_id]])->first();
-        		if($tripDetails)
-        		{
-        			$value->schedule_time = $tripDetails->start_time;
-        		}
-        	}else{
-        		$value->schedule_time = 'N/A';
-        	}
-
-        	$target = Target::where([['route_id', $value->route_master_id], ['duty_id', $value->waybill->duty->id], ['shift_id', $value->waybill->shift->id], ['trip', $value->trip_id]])->first();
-
-        	if($target)
-        	{
-        		$value->target_epkm = $target->epkm;
-        		$value->target_income = $target->income;
-        	}else{
-        		$value->target_epkm = 0;
-        		$value->target_income = 0;
-        	}
-
-        	$tickets = Ticket::where([['abstract_id', $value->abstract_no], ['trip_id', $value->trip_id]])
-        					   ->select(DB::raw("(SUM(childs)+SUM(adults)) as passenger_count, SUM(total_amt) as actual_income, COUNT(*) as tickets_count"))
-        					   ->get();
-        	$value->tickets = $tickets;
-
-        	$route = Route::where([['route_master_id', $value->route_master_id], ['direction', $value->direction]])->first();
-        	if($route)
-        	{
-        		$stage = RouteDetail::where('route_id', $route->id)->max('stage_number');
-
-        		if($stage)
-        		{
-        			$fare = Fare::where([['service_id', $value->service_id], ['stage', $stage]])->first();
-        			if($fare)
-        			{
-        				$value->actual_epkm = calculateEPKM($fare->adult_ticket_amount, $value->route->distance, $value->waybill->vehicle->seating_capacity);
-        			}else{
-        				$value->actual_epkm = 0;
-        			} 
-        		}else{
-        			$value->actual_epkm = 0;
-        		}
-
-        		$value->routeDetails = $routeDetails;
-        	}else{
-        		$value->actual_epkm = 0;
-        	}
-
-        	$value->load_factor = calculateLoadFactor($value->actual_epkm, $value->target_epkm);
-
-        	return $value;
-        });
-
-        //return $data;
+        $data = $this->getData($data);
 
         return view('reports.revenue.epkm.index', compact('data'));
     }
@@ -123,11 +55,12 @@ class EPKMController extends Controller
         $depot_id = $input['depot_id'];
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
-        $etm_no = $input['etm_no'];
+        $route_id = $input['route_id'];
     
-        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $etm_no);
-        $depotName = $this->findNameById('depots', 'name', $depot_id);
-    
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $route_id);
+        $depotName = $this->findNameById('depots', 'name', $depot_id);  
+        $routeName =  $this->findNameById('route_master', 'route_name', $route_id);
+        $routeName = $routeName ? $routeName : 'All';   
         $title = 'EPKM for Route Trip-wise Report'; // Report title
 
         /*
@@ -137,12 +70,12 @@ class EPKMController extends Controller
 
         $meta = [ // For displaying filters description on header
             'Depot : ' . $depotName,
-            'From : '.date('d-m-Y', strtotime($from_date)),
-            'To : '.date('d-m-Y', strtotime($to_date)),
-            'ETM Number : '.$etm_no
+            'From : ' . date('d-m-Y', strtotime($from_date)),
+            'To : ' . date('d-m-Y', strtotime($to_date)),
+            'Route : ' . $routeName
         ];   
-
-        $reportData = $queryBuilder->get();  
+        $data = $queryBuilder->paginate(100);
+        $reportData = $this->getData($data);  
 
         return response()->json(['status'=>'Ok', 'title'=>$title, 'meta'=>$meta, 'data'=>$reportData, 'serverDate'=>date('d-m-Y H:i:s'), 'takenBy'=>Auth::user()->name], 200);
     }
@@ -153,11 +86,12 @@ class EPKMController extends Controller
         $depot_id = $input['depot_id'];
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
-        $etm_no = $input['etm_no'];
+        $route_id = $input['route_id'];
     
-        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $etm_no);
-
-        $depotName = $this->findNameById('depots', 'name', $depot_id);
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $route_id);
+        $depotName = $this->findNameById('depots', 'name', $depot_id);  
+        $routeName =  $this->findNameById('route_master', 'route_name', $route_id);
+        $routeName = $routeName ?? 'All';   
         $title = 'EPKM for Route Trip-wise Report'; // Report title
 
         /*
@@ -166,51 +100,49 @@ class EPKMController extends Controller
         */
 
         $meta = [ // For displaying filters description on header
-            'Depot : ' => $depotName,
-            'ETM Number : ' => $etm_no,
-            'From : '=> date('d-m-Y', strtotime($from_date)),
-            'To : '=> date('d-m-Y', strtotime($to_date))
-        ]; 
-      
-        $columns = [
-                        'Date'=> function($row){
-                            return date('d-m-Y', strtotime($row->created_at));
-                        },
-                        'ETM Number'=> function($row){
-                            return $row->etm->etm_no;
-                        },
-                        'Route'=> function($row){
-                            return $row->route->route_name;
-                        },
-                        'Duty' => function($row){
-                            return $row->duty->duty_number;
-                        }, 
-                        'Ticket Count' => function($row){
-                            return $row->tickets_count;
-                        }, 
-                        'Pass Count' => function($row){
-                            return $row->pass_count;
-                        }, 
-                        'EPurse Count' => function($row){
-                            return $row->epurse_count;
-                        }, 
-                        'Passenger (Cash)' => function($row){
-                            return $row->cash_passenger_count ? $row->cash_passenger_count : '0';
-                        }, 
-                        'Passenger (Pass)' => function($row){
-                            return $row->card_passenger_count ? $row->card_passenger_count : '0';
-                        }, 
-                        'Passenger (EPurse)' => function($row){
-                            return $row->epurse_passenger_count ? $row->epurse_passenger_count : '0';
-                        }, 
-                        'Concession' => function($row){
-                            return calculateConcession($row->tickets);
-                        }];
+            'Depot : ' . $depotName,
+            'From : ' . date('d-m-Y', strtotime($from_date)),
+            'To : ' . date('d-m-Y', strtotime($to_date)),
+            'Route : ' . $routeName
+        ];   
 
-        return ExcelReport::of($title, $meta, $queryBuilder, $columns)
-        					->editColumns(['Ticket Count', 'Pass Count', 'EPurse Count', 'Passenger (Cash)', 'Passenger (Pass)', 'Passenger (EPurse)', 'Concession'], [
-		                        'class' => 'right',
-		                    ])->download($title.'.xlsx');        
+        $data = $queryBuilder->paginate(100);
+
+        $data = $this->getData($data); 
+
+        $reportColumns = ['S. No', 'Duty', 'Trip No.', 'From Stop', 'To Stop', 'Direction', 'Sch. Trip Time', 'Distance (Kms)', 'Operated', 'Operated Distance', 'Target Income', 'Actual Income', 'Target EPKM', 'Actual EPKM', 'Passengers', 'Tickets', 'Load Factor'];
+
+        $reportData = [];
+        array_push($reportData, $reportColumns);
+        foreach ($data as $key => $rdata) 
+        {
+            $duty_number = $rdata->waybill->duty->duty_number;
+            $trip_id = $rdata->trip_id;
+            $fromStop = $rdata->fromStop->short_name;
+            $toStop = $rdata->toStop->short_name;
+            $direction = $rdata->direction;
+            $schedule_time = $rdata->schedule_time;
+            $distance = number_format((float)$rdata->route->distance, 2, '.', '');
+            $operated = '0';
+            $operatedDistance = '0';
+            $target_income = number_format((float)$rdata->target_income, 2, '.', '');
+            $actual_income = number_format((float)$rdata->tickets[0]->actual_income, 2, '.', '');
+            $target_epkm = number_format((float)$rdata->target_epkm, 2, '.', '');
+            $actual_epkm = number_format((float)$rdata->actual_epkm, 2, '.', '');
+            $passenger_count = $rdata->tickets[0]->passenger_count;
+            $tickets_count = $rdata->tickets[0]->tickets_count;
+            $load_factor = number_format((float)$rdata->load_factor, 2, '.', '');
+
+            array_push($reportData, [(string)($key+1), $duty_number, (string)$trip_id, (string)$fromStop, (string)$toStop, (string)$direction, (string)$schedule_time, (string)$distance, (string)$operated, (string)$operatedDistance, (string)$target_income, (string)$actual_income, (string)$target_epkm, (string)$actual_epkm, (string)$passenger_count, (string)$tickets_count, (string)$load_factor]);
+        }
+
+        $fileName = public_path().'/abcd/'.$title.'.xlsx';        
+
+        $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "No");
+
+        $this->downloadExcelFile($fileName); 
+
+        unlink($fileName);          
     }
 
     public function getQueryBuilder($depot_id, $from_date, $to_date, $route_id)
@@ -233,5 +165,67 @@ class EPKMController extends Controller
 		}
 
         return $queryBuilder;
+    }
+
+    public function getData($data)
+    {
+        $data->getCollection()->transform(function($value){
+                $trip = Trip::where([['route_id', $value->route_master_id], ['duty_id', $value->waybill->duty->id], ['shift_id', $value->waybill->shift->id]])->first();
+                if($trip)
+                {
+                    $tripDetails = TripDetail::where([['trip_id', $trip->id], ['trip_no', $value->trip_id]])->first();
+                    if($tripDetails)
+                    {
+                        $value->schedule_time = $tripDetails->start_time;
+                    }
+                }else{
+                    $value->schedule_time = 'N/A';
+                }
+
+                $target = Target::where([['route_id', $value->route_master_id], ['duty_id', $value->waybill->duty->id], ['shift_id', $value->waybill->shift->id], ['trip', $value->trip_id]])->first();
+
+                if($target)
+                {
+                    $value->target_epkm = $target->epkm;
+                    $value->target_income = $target->income;
+                }else{
+                    $value->target_epkm = 0;
+                    $value->target_income = 0;
+                }
+
+                $tickets = Ticket::where([['abstract_id', $value->abstract_no], ['trip_id', $value->trip_id]])
+                                   ->select(DB::raw("(SUM(childs)+SUM(adults)) as passenger_count, SUM(total_amt) as actual_income, COUNT(*) as tickets_count"))
+                                   ->get();
+                $value->tickets = $tickets;
+
+                $route = Route::where([['route_master_id', $value->route_master_id], ['direction', $value->direction]])->first();
+                if($route)
+                {
+                    $stage = RouteDetail::where('route_id', $route->id)->max('stage_number');
+
+                    if($stage)
+                    {
+                        $fare = Fare::where([['service_id', $value->service_id], ['stage', $stage]])->first();
+                        if($fare)
+                        {
+                            $value->actual_epkm = calculateEPKM($fare->adult_ticket_amount, $value->route->distance, $value->waybill->vehicle->seating_capacity);
+                        }else{
+                            $value->actual_epkm = 0;
+                        } 
+                    }else{
+                        $value->actual_epkm = 0;
+                    }
+
+                    $value->routeDetails = $routeDetails;
+                }else{
+                    $value->actual_epkm = 0;
+                }
+
+                $value->load_factor = calculateLoadFactor($value->actual_epkm, $value->target_epkm);
+
+                return $value;
+            });
+
+        return $data;
     }
 }

@@ -134,7 +134,7 @@ class CrewStockController extends Controller
 
         foreach ($data as $key => $d) 
         {
-            array_push($reportData, [(string)($key+1), (string)'Ticket', (string)$d->conductor->crew_name." (".$d->conductor->crew_id.")", (string)$d->denomination->description, (string)$d->series, (string)$d->start_sequence, $d->end_sequence, $d->qty, $d->qty * $d->denomination->price, ""]);
+            array_push($reportData, [(string)($key+1), (string)'Ticket', (string)$d->conductor->crew_name." (".$d->conductor->crew_id.")", (string)$d->denomination->description, (string)$d->series, (string)$d->start_sequence, (string)$d->end_sequence, (string)$d->qty, (string)($d->qty * $d->denomination->price), ""]);
         } 
 
         $fileName = public_path().'/abcd/'.$title.'.xlsx';        

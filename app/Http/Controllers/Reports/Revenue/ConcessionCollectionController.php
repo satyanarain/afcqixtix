@@ -5,20 +5,19 @@ namespace App\Http\Controllers\Reports\Revenue;
 use DB;
 use Auth;
 use Validator;
-use PdfReport;
-use CSVReport;
-use ExcelReport;
 use App\Models\Ticket;
 use App\Traits\activityLog;
 use Illuminate\Http\Request;
 use App\Models\CashCollection;
 use App\Traits\checkPermission;
+use App\Traits\GenerateExcelTrait;
 use App\Http\Controllers\Controller;
 
 class ConcessionCollectionController extends Controller
 {
     use activityLog;
     use checkPermission;
+    use GenerateExcelTrait;
 
     /**
      * Display a listing of the resource.
@@ -122,32 +121,32 @@ class ConcessionCollectionController extends Controller
         */
 
         $meta = [ // For displaying filters description on header
-            'Depot : ' => $depotName,
-            'From : '=> date('d-m-Y', strtotime($from_date)),
-            'To : '=> date('d-m-Y', strtotime($to_date)),
-            'Service : '=>$serviceName,
-            'Conductor ID : '=>$conductorName
+            'Depot : ' . $depotName,
+            'From : ' . date('d-m-Y', strtotime($from_date)),
+            'To : ' . date('d-m-Y', strtotime($to_date)),
+            'Service : ' . $serviceName,
+            'Conductor ID : ' . $conductorName
         ]; 
-      
-        $columns = [
-                        'Concession Type'=> function($row){
-                            return $row->concession->description;
-                        },
-                        'Passenger Count'=> function($row){
-                            return $row->passenger_count;
-                        },
-                        'Actual Fare'=> function($row){
-                            return $row->actual_fare;
-                        },
-                        'Charged Fare' => function($row){
-                            return $row->charged_fare;
-                        }, 
-                        'Rebate Amount' => function($row){
-                            return $row->concession_amount;
-                        }];
 
-        return ExcelReport::of($title, $meta, $queryBuilder, $columns)
-        					->download($title.'.xlsx');        
+        $data = $queryBuilder->get();
+      
+        $reportColumns = ['S. No', 'Concession Type', 'Passenger Count', 'Actual Fare', 'Charged Fare', 'Rebate Amount'];
+
+        $reportData = [];
+        array_push($reportData, $reportColumns);
+
+        foreach ($data as $key => $d) 
+        {
+            array_push($reportData, [(string)($key+1), (string)$d->concession->description, (string)$d->passenger_count, (string)number_format((float)$d->actual_fare, 2, '.', ''), (string)number_format((float)$d->charged_fare, 2, '.', ''), (string)number_format((float)$d->concession_amount, 2, '.', '')]);
+        } 
+
+        $fileName = public_path().'/abcd/'.$title.'.xlsx';        
+
+        $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "No");
+
+        $this->downloadExcelFile($fileName); 
+
+        unlink($fileName);        
     }
 
     public function getQueryBuilder($depot_id, $from_date, $to_date, $service_id, $concession_id, $conductor_id)

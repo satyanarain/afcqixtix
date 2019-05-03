@@ -4,25 +4,23 @@ namespace App\Http\Controllers\Reports\Revenue;
 
 use DB;
 use Auth;
-use Validator;
-use PdfReport;
-use CSVReport;
-use ExcelReport;
 use App\Models\Crew;
 use App\Models\Ticket;
 use App\Models\Waybill;
 use App\Models\Inspection;
 use App\Models\ETMLoginLog;
 use App\Traits\activityLog;
-use Illuminate\Http\Request;
 use App\Models\Denomination;
+use Illuminate\Http\Request;
 use App\Traits\checkPermission;
+use App\Traits\GenerateExcelTrait;
 use App\Http\Controllers\Controller;
 
 class DepotWiseCollectionController extends Controller
 {
     use activityLog;
     use checkPermission;
+    use GenerateExcelTrait;
 
     /**
      * Display a listing of the resource.
@@ -71,7 +69,8 @@ class DepotWiseCollectionController extends Controller
 
         $meta = [ // For displaying filters description on header
             'Depot : ' . $depotName,
-            'From : '.date('d-m-Y', strtotime($from_date)).' To : '.date('d-m-Y', strtotime($to_date))
+            'From : ' . date('d-m-Y', strtotime($from_date)),
+            'To : ' . date('d-m-Y', strtotime($to_date))
         ];   
 
         $reportData = $this->getCalculatedData($depot_id, $from_date, $to_date);
@@ -86,7 +85,7 @@ class DepotWiseCollectionController extends Controller
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
 
-        $data = $this->getQueryBuilder($depot_id, $from_date, $to_date);
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date);
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
     
@@ -98,46 +97,48 @@ class DepotWiseCollectionController extends Controller
         */
 
         $meta = [ // For displaying filters description on header
-            'Depot : ' => $depotName,
-            'From : '=> date('d-m-Y', strtotime($from_date)),
-            'To : '=> date('d-m-Y', strtotime($to_date))
+            'Depot : ' . $depotName,
+            'From : ' . date('d-m-Y', strtotime($from_date)),
+            'To : ' . date('d-m-Y', strtotime($to_date))
         ]; 
 
+        $data = $queryBuilder->get();
       
-        $columns = [
-                        'Depot'=> function($row){
-                            return $depotName;
-                        },
-                        'No. of Duties'=> function($row){
-                            return $row->count();
-                        }, 
-                        'No. of Trips' => function($row){
-                            return $row->trips->count();
-                        },
-                        'Dist. (Kms)'=> function($row){
-                            return $row->trips->pluck('route')->sum('distance');
-                        },
-                        'PPT Tkt Cnt' => function($row){
-                            return $row->tickets->count();
-                        }, 
-                        'Shift' => function($row){
-                            return $row->shift->shift;
-                        }, 
-                        'Login Timestamp' => function($row){
-                            return $row->etmLoginDetails->login_timestamp ? date('d-m-Y H:i:s', strtotime($row->etmLoginDetails->login_timestamp)) : 'Pending';
-                        }, 
-                        'Logout Timestamp' => function($row){
-                            return $row->etmLoginDetails->logout_timestamp ? date('d-m-Y H:i:s', strtotime($row->etmLoginDetails->logout_timestamp)) : 'Pending';
-                        }, 
-                        'Audit Timestamp' => function($row){
-                            return $row->auditRemittance->created_date?date('d-m-Y H:i:s', strtotime($row->auditRemittance->created_date)):'Pending';
-                        }, 
-                        'Remittance Timestamp' => function($row){
-                            return $row->cashCollection->submitted_at?date('d-m-Y H:i:s', strtotime($row->cashCollection->submitted_at)):'Pending';
-                        }];
+        $reportColumns = ['S. No', 'Depot', 'No. of Duties', 'No. of Trips', 'Dist. (Kms)', 'PPT Ticket Count', 'PPT Ticket Count', 'PPT Ticket Amount (Rs)', 'PPT Pass Sold Amount (Rs)', 'ETM Ticket Count', 'ETM Passenger Count', 'ETM Ticket Amount (Rs)', 'ETM Pass Sold Count', 'ETM Pass Sold Amount (Rs)', 'Payout Amount (Rs)', 'Fine Amount (Rs)', 'Cash (Rs)', 'E-Purse (Rs)', 'Total Amount (Rs)', 'Concession Amount (Rs)'];
 
-        return ExcelReport::of($title, $meta, $data, $columns)
-        					->download($title.'.xlsx');        
+        $reportData = [];
+        array_push($reportData, $reportColumns);
+
+        $depotName = $depotName;
+        $duties = $consolidatedData['duties'] ? $consolidatedData['duties'] : '0';
+        $trips = $consolidatedData['trips'] ? $consolidatedData['trips'] : '0';
+        $distance = number_format((float)$consolidatedData['distance'], 2, '.', '');
+        $totalPaperTkts = $consolidatedData['totalPaperTkts'];
+        $totalPaperTktsSum = number_format((float)$consolidatedData['totalPaperTktsSum'], 2, '.', '');
+        $totalPaperPass = $consolidatedData['totalPaperPass'];
+        $totalPaperPassSum = number_format((float)$consolidatedData['totalPaperPassSum'], 2, '.', '');
+        $totalETMTkts = $consolidatedData['totalETMTkts'];
+        $totalETMTotalPsnger = $consolidatedData['totalETMTotalPsnger'];
+        $totalETMTktsSum = number_format((float)$consolidatedData['totalETMTktsSum'], 2, '.', '');
+        $totalETMPassCnt = $consolidatedData['totalETMPassCnt'];
+        $totalETMPassSum = number_format((float)$consolidatedData['totalETMPassSum'], 2, '.', '');
+        $payout = number_format((float)$consolidatedData['payout'], 2, '.', '');
+        $penalty_amount = number_format((float)$consolidatedData['penalty_amount'], 2, '.', '');
+        $totalCash = number_format((float)$consolidatedData['totalCash'], 2, '.', '');
+        $epurseAmt = number_format((float)$consolidatedData['epurseAmt'], 2, '.', '');
+        $totalAmt = number_format((float)$consolidatedData['totalAmt'], 2, '.', '');
+        $concession = number_format((float)$consolidatedData['concession'], 2, '.', '');
+
+        array_push($reportData, [(string)($key+1), $depotName, (string)$duties, (string)$trips, (string)$distance, (string)$totalPaperTkts, (string)$totalPaperTktsSum, (string)$totalPaperPass, (string)$totalPaperPassSum, (string)$totalETMTkts, (string)$totalETMTotalPsnger, (string)$totalETMTktsSum, (string)$totalETMPassCnt, (string)$totalETMPassSum, (string)$payouts, (string)$penalty_amount, (string)$totalCash, (string)$epurseAmt, (string)$totalAmt, (string)$concession]);
+        
+
+        $fileName = public_path().'/abcd/'.$title.'.xlsx';        
+
+        $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "No");
+
+        $this->downloadExcelFile($fileName); 
+
+        unlink($fileName);    
     }
 
     public function getQueryBuilder($depot_id, $from_date, $to_date)

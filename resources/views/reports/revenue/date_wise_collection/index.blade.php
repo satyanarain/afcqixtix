@@ -1,9 +1,9 @@
 @extends('layouts.master')
 @section('header')
-<h1>Daily Collection Statement Report</h1>
+<h1>Date-wise Collection Statement Report</h1>
 <ol class="breadcrumb">
             <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"></i>Daily Collection Statement</a></li>
+            <li><a href="#"></i>Date-wise Collection Statement</a></li>
             </ol>
 @stop
 @section('content')
@@ -46,51 +46,39 @@
                                     <th></th>
                                     <th></th>
                                     <th></th>
-                                    <!-- <th></th> -->
                                     <th></th>
                                     <th colspan="4" style="text-align: center;">PPT</th>
                                     <th colspan="7" style="text-align: center;">ETM</th>
                                     <th></th>
-                                    <!-- <th></th> -->
                                     <th></th>
                                     <th></th>
                                     <th></th>
                                     <th></th>
                                     <th></th>
-                                    <!-- <th></th>
-                                    <th></th> -->
-                                    <!-- <th></th>
-                                    <th></th> -->
                                 </tr>
                                 <tr>
                                     <th>S. No.</th>
                                     <th>Date</th>
-                                    <!-- <th>Route/Duty/Shift</th>
-                                    <th>Abstract No.</th>
-                                    <th>Crew ID</th> -->
                                     <th class="text-right">No. of Trips</th>
                                     <th class="text-right">Kms</th>
                                     <th class="text-right">EPKM</th>
-                                    <th class="text-right">Tkt Cnt</th>
-                                    <th class="text-right">Tkt Amt (Rs)</th>
-                                    <th class="text-right">Pass Sold Cnt</th>
-                                    <th class="text-right">Pass Sold Amt (Rs)</th>
-                                    <th class="text-right">Passenger Cnt</th>
-                                    <th class="text-right">Tkt Cnt</th>
-                                    <th class="text-right">Tkt Amt (Rs)</th>
-                                    <th class="text-right">Pass Sold Cnt</th>
-                                    <th class="text-right">Pass Sold Amt (Rs)</th>
-                                    <th class="text-right">EPurse Cnt</th>
-                                    <th class="text-right">EPurse Amt (Rs)</th>
-                                    <th class="text-right">Payout Amt (Rs)</th>
-                                    <!-- <th class="text-right">Fine Amt (Rs)</th> -->
-                                    <th class="text-right">Lugg Amt (Rs)</th>
-                                    <th class="text-right">Toll Amt (Rs)</th>
+                                    <th class="text-right">Ticket Count</th>
+                                    <th class="text-right">Ticket Amount (Rs)</th>
+                                    <th class="text-right">Pass Sold Count</th>
+                                    <th class="text-right">Pass Sold Amount (Rs)</th>
+                                    <th class="text-right">Passenger Count</th>
+                                    <th class="text-right">Ticket Count</th>
+                                    <th class="text-right">Ticket Amount (Rs)</th>
+                                    <th class="text-right">Pass Sold Count</th>
+                                    <th class="text-right">Pass Sold Amount (Rs)</th>
+                                    <th class="text-right">EPurse Count</th>
+                                    <th class="text-right">EPurse Amount (Rs)</th>
+                                    <th class="text-right">Payout Amount (Rs)</th>
+                                    <th class="text-right">Lugg Amount (Rs)</th>
+                                    <th class="text-right">Toll Amount (Rs)</th>
                                     <th class="text-right">Bhatta/Tea Allowance (Rs)</th>
                                     <th class="text-right">Incentives (Rs)</th>
-                                    <th class="text-right">Total Amt (Rs)</th>
-                                    <!-- <th class="text-right">Print Error Tkt</th>
-                                    <th class="text-right">Print Error Amt (Rs)</th> --><!-- To be commented for now -->
+                                    <th class="text-right">Total Amount (Rs)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -108,9 +96,10 @@
                                     <td class="text-right">{{$distance}}</td>
                                     @php 
                                     $total = $d->ppt_amount + $d->ppp_amount + $d->tickets_amount + $d->pass_amount + $d->epurse_amount;
-
-                                    $epkm = $total/$distance;
-
+                                    if($distance)
+                                        $epkm = $total/$distance;
+                                    else
+                                        $epkm = 0;
                                     @endphp
                                     <td class="text-right">{{number_format((float)$epkm, 2, '.', '')}}</td>
                                     <td class="text-right">{{$d->ppt_count?$d->ppt_count:0}}</td>
@@ -200,7 +189,7 @@ $(document).ready(function(){
                     if(data)
                     {
                         reportData.push([{'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'PPT', 'style': 'tableHeaderStyle', colSpan: 4, 'alignment':'center'}, {}, {}, {}, {'text':'ETM', 'style': 'tableHeaderStyle', colSpan: 7, 'alignment':'center'}, {}, {}, {}, {}, {}, {}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}]);
-                        reportData.push([{'text':'S. No.', 'style': 'tableHeaderStyle'}, {'text':'Date', 'style': 'tableHeaderStyle'}, {'text':'No of Trips', 'style': 'tableHeaderStyle'}, {'text':'Kms', 'style': 'tableHeaderStyle'}, {'text':'EPKM', 'style': 'tableHeaderStyle'}, {'text':'Tkt Cnt', 'style': 'tableHeaderStyle'}, {'text':'Tkt Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Cnt', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Passenger Cnt', 'style': 'tableHeaderStyle'}, {'text':'Tkt Cnt', 'style': 'tableHeaderStyle'}, {'text':'Tkt Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Cnt', 'style': 'tableHeaderStyle'}, {'text':'Pass Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'EPurse Cnt', 'style': 'tableHeaderStyle'}, {'text':'EPurse Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Payout Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Lugg Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Toll Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Butta/Tea Allowance (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Incentives (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Amt Payable/Adjustment Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Amt Remitted/After Adjustment Amt (Rs)', 'style': 'tableHeaderStyle'}]);
+                        reportData.push([{'text':'S. No.', 'style': 'tableHeaderStyle'}, {'text':'Date', 'style': 'tableHeaderStyle'}, {'text':'No of Trips', 'style': 'tableHeaderStyle'}, {'text':'Kms', 'style': 'tableHeaderStyle'}, {'text':'EPKM', 'style': 'tableHeaderStyle'}, {'text':'Ticket Count', 'style': 'tableHeaderStyle'}, {'text':'Ticket Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Count', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Passenger Count', 'style': 'tableHeaderStyle'}, {'text':'Ticket Count', 'style': 'tableHeaderStyle'}, {'text':'Ticket Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Count', 'style': 'tableHeaderStyle'}, {'text':'Pass Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'EPurse Count', 'style': 'tableHeaderStyle'}, {'text':'EPurse Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Payout Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Lugg Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Toll Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Butta/Tea Allowance (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Incentives (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Amount Payable/Adjustment Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Amount Remitted/After Adjustment Amount (Rs)', 'style': 'tableHeaderStyle'}]);
 
                         var i = 1;
                         data.map(function(d){  
@@ -211,7 +200,10 @@ $(document).ready(function(){
                                 tripsCount = trips.length;
                             }
                             var distance = trips.reduce(function(distance, trip){
-                                return distance + parseInt(trip.route.distance);
+                                if(trip.route)
+                                    return distance + parseInt(trip.route.distance);
+                                else
+                                    return distance + 0;
                             }, 0);
                             var payouts = d.payouts;
                             var payout = payouts.reduce(function(payoutT, payout){
@@ -343,17 +335,23 @@ $(document).ready(function(){
 
     $(document).on('click', '#exportAsXLS', function(){
         var depot_id = $('#depot_id').val();
-        var shift_id = $('#shift_id').val();
-        var date = $('#date').val();
-        if(!date)
+        var from_date = $('#from_date').val();
+        var to_date = $('#to_date').val();
+        if(!from_date)
         {
-            alert('Please enter date.');
+            alert('Please enter from date.');
+            return false;
+        }
+
+        if(!to_date)
+        {
+            alert('Please enter to date.');
             return false;
         }
 
         var queryParams = "?depot_id="+depot_id
-                        + "&shift_id="+shift_id
-                        + "&date="+date;
+                        + "&from_date="+from_date
+                        + "&to_date="+to_date;
 
         var url = "{{route('reports.revenue.date_wise_collection.getexcelreport')}}"+queryParams;
 
