@@ -16,7 +16,7 @@
                 $permission_status = checkPermission('centerstocks','create');
                 if($permission_status)
                 {?>
-                <a class="btn btn-afcs pull-right" href="{{route('inventory.centerstock.create')}}"><span class="fa fa-plus"></span> Add</a>
+                <a class="btn btn-afcs pull-right" href="{{route('inventory.centerstock.create')}}"><span class="fa fa-plus"></span> Add New</a>
                 <?php   }?>
         
             @include('partials.message')

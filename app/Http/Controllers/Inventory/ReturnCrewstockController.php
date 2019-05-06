@@ -8,14 +8,14 @@ use App\Models\Crew;
 use App\Models\Depot;
 use Illuminate\Http\Request;
 use App\Traits\checkPermission;
-use App\Http\Controllers\Controller;
 use App\Models\Inventory\CenterStock;
 use App\Models\Inventory\ReturnCrewStock;
+use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Inventory\ReturnCrewStock\StoreReturnCrewStockRequest;
 use App\Http\Requests\Inventory\ReturnCrewStock\UpdateReturnCrewStockRequest;
 use App\Repositories\Inventory\ReturnCrewStock\ReturnCrewStockRepositoryContract;
 
-class ReturnCrewStockController extends Controller
+class ReturnCrewStockController extends ApiController
 {
     use checkPermission;
 
@@ -260,6 +260,24 @@ class ReturnCrewStockController extends Controller
             }
         }else{
             return response()->json(['status'=>'Error', 'errorCode'=>'NO_STOCK', 'data'=>'No stock available. Please contact to admin.']);
+        }
+    }
+
+
+    public function getRemainingStock($crewId)
+    {
+        $remainings = DB::table('inv_crew_total_stock')
+                          ->join('inv_items_master', 'inv_items_master.id', '=', 'inv_crew_total_stock.items_id')
+                          ->select('inv_crew_total_stock.qty', 'inv_crew_total_stock.series', 'inv_crew_total_stock.start_sequence', 'inv_crew_total_stock.end_sequence', 'inv_items_master.description')
+                          ->where('inv_crew_total_stock.crew_id', $crewId)
+                          ->orderBy('inv_crew_total_stock.items_id')
+                          ->get();
+
+        if(!count($remainings))
+        {
+            return $this->errorResponse('Crew not found.', 404);
+        }else{
+            return $this->showAll($remainings);
         }
     }
 }

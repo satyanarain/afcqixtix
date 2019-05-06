@@ -4,26 +4,28 @@ namespace App\Http\Controllers\Reports\Revenue;
 
 use DB;
 use Auth;
-use Validator;
-use PdfReport;
 use CSVReport;
+use PdfReport;
+use Validator;
 use ExcelReport;
 use App\Models\Crew;
 use App\Models\Ticket;
 use App\Models\Waybill;
 use App\Models\Inspection;
-use App\Models\RouteMaster;
 use App\Models\ETMLoginLog;
+use App\Models\RouteMaster;
 use App\Traits\activityLog;
-use Illuminate\Http\Request;
 use App\Models\Denomination;
+use Illuminate\Http\Request;
 use App\Traits\checkPermission;
+use App\Traits\GenerateExcelTrait;
 use App\Http\Controllers\Controller;
 
 class RouteWiseCollectionController extends Controller
 {
     use activityLog;
     use checkPermission;
+    use GenerateExcelTrait;
 
     /**
      * Display a listing of the resource.
@@ -81,7 +83,8 @@ class RouteWiseCollectionController extends Controller
 
         $meta = [ // For displaying filters description on header
             'Depot : ' . $depotName,
-            'From : '.date('d-m-Y', strtotime($from_date)).' To : '.date('d-m-Y', strtotime($to_date))
+            'From : '.date('d-m-Y', strtotime($from_date)),
+            'To : '.date('d-m-Y', strtotime($to_date))
         ];
 
         return response()->json(['status'=>'Ok', 'title'=>$title, 'meta'=>$meta, 'data'=>$finalData, 'routes'=>$routes, 'serverDate'=>date('d-m-Y H:i:s'), 'takenBy'=>Auth::user()->name, 'depotName'=>$depotName], 200);
@@ -93,12 +96,9 @@ class RouteWiseCollectionController extends Controller
         $depot_id = $input['depot_id'];
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
-        $pending_activity = $input['pending_activity'];
+        $route_id = $input['route_id'];
 
-        $data = $this->getQueryBuilder($depot_id, $from_date, $to_date, $pending_activity);
-
-        $depotName = $this->findNameById('depots', 'name', $depot_id);
-    
+        $depotName = $this->findNameById('depots', 'name', $depot_id);    
         $title = 'Route-wise Revenue Collection Report'; // Report title
 
         /*
@@ -107,47 +107,59 @@ class RouteWiseCollectionController extends Controller
         */
 
         $meta = [ // For displaying filters description on header
-            'Depot : ' => $depotName,
-            'From : '=> date('d-m-Y', strtotime($from_date)),
-            'To : '=> date('d-m-Y', strtotime($to_date)),
-            'Pending Activity : '=>ucfirst($pending_activity)
+            'Depot : ' . $depotName,
+            'From : ' . date('d-m-Y', strtotime($from_date)),
+            'To : ' . date('d-m-Y', strtotime($to_date))
         ]; 
 
-      
-        $columns = [
-                        'Date'=> function($row){
-                            return date('d-m-Y', strtotime($row->date));
-                        },
-                        'ETM No.'=> function($row){
-                            return $row->etm->etm_no;
-                        }, 
-                        'Conductor ID' => function($row){
-                            return $row->conductor->crew_id;
-                        },
-                        'Route'=> function($row){
-                            return $row->route->route_name;
-                        },
-                        'Duty' => function($row){
-                            return $row->duty->duty_number;
-                        }, 
-                        'Shift' => function($row){
-                            return $row->shift->shift;
-                        }, 
-                        'Login Timestamp' => function($row){
-                            return $row->etmLoginDetails->login_timestamp ? date('d-m-Y H:i:s', strtotime($row->etmLoginDetails->login_timestamp)) : 'Pending';
-                        }, 
-                        'Logout Timestamp' => function($row){
-                            return $row->etmLoginDetails->logout_timestamp ? date('d-m-Y H:i:s', strtotime($row->etmLoginDetails->logout_timestamp)) : 'Pending';
-                        }, 
-                        'Audit Timestamp' => function($row){
-                            return $row->auditRemittance->created_date?date('d-m-Y H:i:s', strtotime($row->auditRemittance->created_date)):'Pending';
-                        }, 
-                        'Remittance Timestamp' => function($row){
-                            return $row->cashCollection->submitted_at?date('d-m-Y H:i:s', strtotime($row->cashCollection->submitted_at)):'Pending';
-                        }];
+        $data = $this->getCalculatedData($depot_id, $from_date, $to_date, $route_id);
 
-        return ExcelReport::of($title, $meta, $data, $columns)
-        					->download($title.'.xlsx');        
+        $finalData = $data['finalData'];
+        $routes = $data['routes'];
+      
+        $reportColumns = ['S. No', 'Route', 'Date', 'Duty No.', 'No. of Trips', 'Crew ID', 'PPT Ticket Count', 'PPT Ticket Amount (Rs)', 'PPT Pass Sold Count', 'PPT Pass Sold Amount (Rs)', 'ETM Ticket Count', 'ETM Ticket Amount (Rs)', 'ETM Pass Sold Count', 'ETM Pass Sold Amount (Rs)', 'Payout Amount (Rs)', 'Fine Amount (Rs)', 'Dist. (Kms)', 'Cash (Rs)', 'E-Purse (Rs)', 'Total Amount (Rs)', 'Concession Amount (Rs)'];
+
+        $reportData = [];
+        array_push($reportData, $reportColumns);
+
+        foreach($routes as $key=>$route)
+        {
+            $routeData = $finalData[$route];
+            foreach($routeData as $keyi=> $rdata)
+            {   
+                $route = $rdata['route'];
+                $date = $rdata['date'];
+                $duty = $rdata['duty'];
+                $trips = $rdata['trips'];
+                $crew_id = $rdata['crew_id'];
+                $TPT = $rdata['TPT'];
+                $TPTS = number_format((float)$rdata['TPTS'], 2, '.', '');
+                $TPP = $rdata['TPP'];
+                $TPPS = number_format((float)$rdata['TPPS'], 2, '.', '');
+                $totalETMTkts = $rdata['totalETMTkts'];
+                $totalETMTktsSum = number_format((float)$rdata['totalETMTktsSum'], 2, '.', '');
+                $totalETMPassCnt = $rdata['totalETMPassCnt'];
+                $totalETMPassSum = number_format((float)$rdata['totalETMPassSum'], 2, '.', '');
+                $payout = number_format((float)$rdata['payout'], 2, '.', '');
+                $penalty_amount = number_format((float)$rdata['penalty_amount'], 2, '.', '');
+                $distance = number_format((float)$rdata['distance'], 2, '.', '');
+                $totalCash = number_format((float)$rdata['totalCash'], 2, '.', '');
+                $EP = number_format((float)$rdata['EP'], 2, '.', '');
+                $totalAmt = number_format((float)$rdata['totalAmt'], 2, '.', '');
+                $cnci = number_format((float)$rdata['cnci'], 2, '.', '');
+
+                array_push($reportData, [(string)($key+1), (string)$route, (string)$date, (string)$duty, (string)$trips, (string)$crew_id, (string)$TPT, (string)$TPTS, (string)$TPP, (string)$TPPS, (string)$totalETMTkts, (string)$totalETMTktsSum, (string)$totalETMPassCnt, (string)$totalETMPassSum, (string)$payout, (string)$penalty_amount, (string)$distance, (string)$totalCash, (string)$EP, (string)$totalAmt, (string)$cnci]);
+            }
+        } 
+
+        $fileName = public_path().'/abcd/'.$title.'.xlsx';        
+
+        $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "No");
+
+        $this->downloadExcelFile($fileName); 
+
+        unlink($fileName);
+        
     }
 
     public function getQueryBuilder($depot_id, $from_date, $to_date, $route_id)
@@ -243,9 +255,7 @@ class RouteWiseCollectionController extends Controller
 
 		                if($tkt->concession->flat_fare == 'No')
 		                {
-		                    $concesPercentage = (int)$tkt->concession->percentage;
-		                    //return $concesPercentage;
-		                    $conces = ($concesPercentage/(100 -$concesPercentage))*$tkt->total_amt;
+		                    $conces = $tkt->concession_amt;
 		                }else{
 		                    $conces = (int)$tkt->concession->flat_fare_amount;
 		                }

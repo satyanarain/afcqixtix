@@ -33,8 +33,8 @@
 
     <div class="col-md-3">
         @php $duties=displayList('duties','duty_number')@endphp
-        {!! Form::label('direction', Lang::get('Duty'), ['class' => 'control-label']) !!}
-        {!! Form::select('direction', $directions, "up", ['class' => ' form-control', 'placeholder'=>'All']) !!}
+        {!! Form::label('duty_id', Lang::get('Duty'), ['class' => 'control-label']) !!}
+        {!! Form::select('duty_id', $duties, null, ['class' => ' form-control', 'placeholder'=>'All']) !!}
     </div>
 
     <div class="col-md-3">

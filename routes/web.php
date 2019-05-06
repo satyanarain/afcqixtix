@@ -242,6 +242,7 @@ Route::group(['middleware' => ['auth']], function () {
     //Manage inventory route
     //@Auther Subhash Chandra, {email: subash_chandra@opiant.in}
     Route::group(['prefix'=>'inventory', 'namespace'=>'Inventory', 'as'=>'inventory.'], function(){
+
         Route::resource('centerstock', 'CenterstockController')->except('show');
         Route::group(['prefix'=>'centerstock', 'as'=>'centerstock.'], function(){
             Route::get('summary', 'CenterstockController@summary')->name('summary');
@@ -272,15 +273,16 @@ Route::group(['middleware' => ['auth']], function () {
             Route::post('getstartsequence', 'ReturnCrewstockController@getStartSequence')->name('getstartsequence');
             Route::post('validateendsequence', 'ReturnCrewstockController@validateEndSequence')->name('validateendsequence');
             Route::post('validatequantity', 'ReturnCrewstockController@validateQuantity')->name('validatequantity');
+            Route::get('getremainingstockbycrew/{conductorId}', 'ReturnCrewstockController@getRemainingStock')->name('getremainingstockbycrew');
         });
     });
 
     Route::group(['prefix'=>'notification', 'namespace'=>'Notification', 'as'=>'notification.'], function(){
         Route::group(['prefix'=>'inventory', 'as'=>'inventory.', 'namespace'=>'Inventory'], function(){
-            Route::get('/', 'IndexController@index')->name('index');
             Route::resource('centerstock', 'CenterStockController')->only(['index', 'store', 'edit', 'update']);
             Route::resource('depotstock', 'DepotStockController')->only(['index', 'store', 'edit', 'update']);
             Route::get('getitemsandadmins', 'CenterStockController@getItemsandAdmins')->name('getitemsandadmins');
+            Route::get('checkifitemhasseries/{itemId}', 'CenterStockController@checkIfItemHasSeries')->name('checkifitemhasseries');
         });
     });
     

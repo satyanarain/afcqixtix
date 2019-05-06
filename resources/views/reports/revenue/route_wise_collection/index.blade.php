@@ -33,13 +33,16 @@
 
                 <div class="row" style="margin-top: 50px;" id="reportDataBox">
                     <div class="col-md-12">
+                        @if(count($finalData))
                         <h4>
                             <button class="btn btn-primary pull-right" id="exportAsPDF">Export as PDF</button> 
                             <button class="btn btn-primary pull-right" style="margin-right: 10px;margin-bottom: 10px;" id="exportAsXLS">Export as XLS</button>
                         </h4>
+                        @endif
                         <table class="table table-bordered" id="afcsReportTable">
                             <thead>
                                 <tr>
+                                    <th></th>
                                     <th></th>
                                     <th></th>
                                     <th></th>
@@ -56,56 +59,63 @@
                                     <th></th>
                                 </tr>
                                 <tr>
+                                    <th>S. No.</th>
                                     <th>Route</th>
                                     <th>Date</th>
                                     <th>Duty No.</th>
                                     <th>No. of Trips</th>
                                     <th>Crew ID</th>
-                                    <th>Tkt Cnt</th>
-                                    <th>Tkt Amt (Rs)</th>
-                                    <th>Pass Sold Cnt</th>
-                                    <th>Pass Sold Amt (Rs)</th>
-                                    <th>Tkt Cnt</th>
-                                    <th>Tkt Amt (Rs)</th>
-                                    <th>Pass Sold Cnt</th>
-                                    <th>Pass Sold Amt (Rs)</th>
-                                    <th>Payout Amt (Rs)</th>
-                                    <th>Fine Amt (Rs)</th>
+                                    <th>Ticket Count</th>
+                                    <th>Ticket Amount (Rs)</th>
+                                    <th>Pass Sold Count</th>
+                                    <th>Pass Sold Amount (Rs)</th>
+                                    <th>Ticket Count</th>
+                                    <th>Ticket Amount (Rs)</th>
+                                    <th>Pass Sold Count</th>
+                                    <th>Pass Sold Amount (Rs)</th>
+                                    <th>Payout Amount (Rs)</th>
+                                    <th>Fine Amount (Rs)</th>
                                     <th>Dist. (Kms)</th>
                                     <th>Cash (Rs)</th>
                                     <th>E-Purse (Rs)</th>
-                                    <th>Tot Amt (Rs)</th>
-                                    <th>Conc Amt (Rs)</th>
+                                    <th>Total Amount (Rs)</th>
+                                    <th>Concession Amount (Rs)</th>
                                 </tr>
                             </thead>
                             <tbody>
                             @foreach($routes as $key=>$route)
                             @php $routeData = $finalData[$route];@endphp
-                            @foreach($routeData as $rdata)
+                            @foreach($routeData as $keyi=> $rdata)
                                 <tr>
+                                    <td>{{$keyi+1}}</td>
                                     <td>{{$rdata['route']}}</td>
                                     <td>{{$rdata['date']}}</td>
                                     <td>{{$rdata['duty']}}</td>
-                                    <td>{{$rdata['trips']}}</td>
+                                    <td class="text-right">{{$rdata['trips']}}</td>
                                     <td>{{$rdata['crew_id']}}</td>
-                                    <td>{{$rdata['TPT']}}</td>
-                                    <td>{{number_format((float)$rdata['TPTS'], 2, '.', '')}}</td>
-                                    <td>{{$rdata['TPP']}}</td>
-                                    <td>{{number_format((float)$rdata['TPPS'], 2, '.', '')}}</td>
-                                    <td>{{$rdata['totalETMTkts']}}</td>
-                                    <td>{{number_format((float)$rdata['totalETMTktsSum'], 2, '.', '')}}</td>
-                                    <td>{{$rdata['totalETMPassCnt']}}</td>
-                                    <td>{{number_format((float)$rdata['totalETMPassSum'], 2, '.', '')}}</td>
-                                    <td>{{number_format((float)$rdata['payout'], 2, '.', '')}}</td>
-                                    <td>{{number_format((float)$rdata['penalty_amount'], 2, '.', '')}}</td>
-                                    <td>{{number_format((float)$rdata['distance'], 2, '.', '')}}</td>
-                                    <td>{{number_format((float)$rdata['totalCash'], 2, '.', '')}}</td>
-                                    <td>{{number_format((float)$rdata['EP'], 2, '.', '')}}</td>
-                                    <td>{{number_format((float)$rdata['totalAmt'], 2, '.', '')}}</td>
-                                    <td>{{number_format((float)$rdata['cnci'], 2, '.', '')}}</td>
+                                    <td class="text-right">{{$rdata['TPT']}}</td>
+                                    <td class="text-right">{{number_format((float)$rdata['TPTS'], 2, '.', '')}}</td>
+                                    <td class="text-right">{{$rdata['TPP']}}</td>
+                                    <td class="text-right">{{number_format((float)$rdata['TPPS'], 2, '.', '')}}</td>
+                                    <td class="text-right">{{$rdata['totalETMTkts']}}</td>
+                                    <td class="text-right">{{number_format((float)$rdata['totalETMTktsSum'], 2, '.', '')}}</td>
+                                    <td class="text-right">{{$rdata['totalETMPassCnt']}}</td>
+                                    <td class="text-right">{{number_format((float)$rdata['totalETMPassSum'], 2, '.', '')}}</td>
+                                    <td class="text-right">{{number_format((float)$rdata['payout'], 2, '.', '')}}</td>
+                                    <td class="text-right">{{number_format((float)$rdata['penalty_amount'], 2, '.', '')}}</td>
+                                    <td class="text-right">{{number_format((float)$rdata['distance'], 2, '.', '')}}</td>
+                                    <td class="text-right">{{number_format((float)$rdata['totalCash'], 2, '.', '')}}</td>
+                                    <td class="text-right">{{number_format((float)$rdata['EP'], 2, '.', '')}}</td>
+                                    <td class="text-right">{{number_format((float)$rdata['totalAmt'], 2, '.', '')}}</td>
+                                    <td class="text-right">{{number_format((float)$rdata['cnci'], 2, '.', '')}}</td>
                                 </tr>
                             @endforeach
                             @endforeach
+                            @if(!count($finalData))
+                                <tr>
+                                    <td colspan="20" class="text-center">No Records Found!</td>
+                                </tr>
+                            @endif
                             </tbody>
                         </table>
                     </div>
@@ -160,7 +170,7 @@ $(document).ready(function(){
                     console.log(d[1])
                     var reportData = [];
                     reportData.push([{'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'PPT', 'style': 'tableHeaderStyle', colSpan: 4, 'alignment':'center'}, {}, {}, {}, {'text':'ETM', 'style': 'tableHeaderStyle', colSpan: 4, 'alignment':'center'}, {}, {}, {}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}]);
-                    reportData.push([{'text':'Route', 'style': 'tableHeaderStyle'}, {'text':'Date', 'style': 'tableHeaderStyle'}, {'text':'Duty No.', 'style': 'tableHeaderStyle'}, {'text':'No. of Trips', 'style': 'tableHeaderStyle'}, {'text':'Crew ID', 'style': 'tableHeaderStyle'}, {'text':'Tkt Cnt', 'style': 'tableHeaderStyle'}, {'text':'Tkt Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Cnt', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Tkt Cnt', 'style': 'tableHeaderStyle'}, {'text':'Ticket Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Cnt', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Payout Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Fine Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Dist. (Kms)', 'style': 'tableHeaderStyle'}, {'text':'Cash (Rs)', 'style': 'tableHeaderStyle'}, {'text':'EPurse (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Total Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Conc Amt (Rs)', 'style': 'tableHeaderStyle'}]);
+                    reportData.push([{'text':'Route', 'style': 'tableHeaderStyle'}, {'text':'Date', 'style': 'tableHeaderStyle'}, {'text':'Duty No.', 'style': 'tableHeaderStyle'}, {'text':'No. of Trips', 'style': 'tableHeaderStyle'}, {'text':'Crew ID', 'style': 'tableHeaderStyle'}, {'text':'Ticket Count', 'style': 'tableHeaderStyle'}, {'text':'Ticket Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Count', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Ticket Count', 'style': 'tableHeaderStyle'}, {'text':'Ticket Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Count', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Payout Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Fine Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Dist. (Kms)', 'style': 'tableHeaderStyle'}, {'text':'Cash (Rs)', 'style': 'tableHeaderStyle'}, {'text':'EPurse (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Total Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Concession Amount (Rs)', 'style': 'tableHeaderStyle'}]);
                     $.each(routes, function(index, route){
                         var routeData = d[route];
                         console.log(route);
@@ -189,12 +199,14 @@ $(document).ready(function(){
 
     $(document).on('click', '#exportAsXLS', function(){
         var depot_id = $('#depot_id').val();
-        var date = $('#date').val();
-        var etm_no = $('#etm_no').val();
+        var from_date = $('#from_date').val();
+        var to_date = $('#to_date').val();
+        var route_id = $('#route_id').val();
 
         var queryParams = "?depot_id="+depot_id
-                        + "&date="+date
-                        + "&etm_no="+etm_no;
+                        + "&from_date="+from_date
+                        + "&to_date="+to_date
+                        + "&route_id="+route_id;
 
         var url = "{{route('reports.revenue.route_wise_collection.getexcelreport')}}"+queryParams;
 

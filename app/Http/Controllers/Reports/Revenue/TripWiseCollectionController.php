@@ -4,28 +4,18 @@ namespace App\Http\Controllers\Reports\Revenue;
 
 use DB;
 use Auth;
-use Validator;
-use PdfReport;
-use CSVReport;
-use ExcelReport;
-use App\Models\Trip;
-use App\Models\Duty;
-use App\Models\Route;
-use App\Models\Ticket;
-use App\Models\Waybill;
-use App\Models\TripDetail;
-use App\Models\RouteMaster;
-use App\Models\RouteDetail;
 use App\Traits\activityLog;
-use App\Models\CenterStock;
 use Illuminate\Http\Request;
 use App\Traits\checkPermission;
+use App\Traits\GenerateExcelTrait;
 use App\Http\Controllers\Controller;
+use App\Models\{RouteMaster, Duty, Waybill, Ticket, Route, Trip};
 
 class TripWiseCollectionController extends Controller
 {
     use activityLog;
     use checkPermission;
+    use GenerateExcelTrait;
 
     /**
      * Display a listing of the resource.
@@ -66,6 +56,7 @@ class TripWiseCollectionController extends Controller
         $route_id = $input['route_id'];
         $duty_id = $input['duty_id'];   
 
+        $depotName = $this->findNameById('depots', 'name', $depot_id);
         $routeName = $this->findNameById('route_master', 'route_name', $route_id);     
         $routeName = $routeName ? $routeName : 'All';
         $dutyName = $this->findNameById('duties', 'duty_number', $duty_id);     
@@ -80,6 +71,7 @@ class TripWiseCollectionController extends Controller
         */
 
         $meta = [ // For displaying filters description on header
+            'Depot : ' . $depotName,
             'Route : ' . $routeName,
             'From : '.date('d-m-Y H:i:s', strtotime($from_date)),
             'To : '.date('d-m-Y H:i:s', strtotime($to_date)),
@@ -92,32 +84,19 @@ class TripWiseCollectionController extends Controller
     public function getExcelReport(Request $request)
     {
         $input = $request->all();
+        $depot_id = $input['depot_id'];
         $from_date = date('Y-m-d H:i:s', strtotime($input['from_date']));
         $to_date = date('Y-m-d H:i:s', strtotime($input['to_date']));
-        $time_slot = $input['time_slot'];
-        $stop_id = $input['stop_id'];
-        $direction = $input['direction'];
+        $route_id = $input['route_id'];
+        $duty_id = $input['duty_id'];   
 
-        $stopName = $this->findNameById('stops', 'short_name', $stop_id);
-
-        $stopName = $stopName ? $stopName : 'All';
-
-        $data = [];
-        $stops = [];
-
-        if(!$stop_id)
-        {
-        	$stops = Stop;
-        }else{
-        	$stops = Stop::where('id', $stop_id);
-        }
-
-        $incrementSeconds = (int)$time_slot*60;
-
-        for ($i=strtotime($from_date); $i < strtotime($to_date); $i+=$incrementSeconds) 
-        { 
-        	$slots[] = date('Y-m-d H:i:s', $i); 
-        }
+        $depotName = $this->findNameById('depots', 'name', $depot_id);
+        $routeName = $this->findNameById('route_master', 'route_name', $route_id);     
+        $routeName = $routeName ? $routeName : 'All';
+        $dutyName = $this->findNameById('duties', 'duty_number', $duty_id);     
+        $dutyName = $dutyName ? $dutyName : 'All';
+        $data = $this->getCalculatedData($depot_id, $from_date, $to_date, $route_id, $duty_id, 'pdf');
+    
         $title = 'Trip-wise Collection Report'; // Report title
 
         /*
@@ -126,37 +105,89 @@ class TripWiseCollectionController extends Controller
         */
 
         $meta = [ // For displaying filters description on header
-            'Stop : ' => $stopName,
-            'From : '=> date('d-m-Y', strtotime($from_date)),
-            'To : '=> date('d-m-Y', strtotime($to_date)),
-            'Direction : '=>$direction
+            'Depot : ' . $depotName,
+            'Route : ' . $routeName,
+            'From : '.date('d-m-Y H:i:s', strtotime($from_date)),
+            'To : '.date('d-m-Y H:i:s', strtotime($to_date)),
+            'Duty : '.$dutyName
         ]; 
 
-        $stops->map(function($value, $key) use($slots, $incrementSeconds, $direction){
-        	foreach ($slots as $key => $slot) 
-        	{
-        		$slotStart = date('Y-m-d H:i:s', strtotime($slot));
-        		$slotEnd = date('Y-m-d H:i:s', (strtotime($slot)+$incrementSeconds));
-        		$queryBuilder = $this->getQueryBuilder($slotStart, $slotEnd, $value->id, $direction);
-        		$count = $queryBuilder->first();
-        		$value->$slot = $count->passenger_count ? $count->passenger_count : 0;
-        	}
+        $reportColumns = ['S. No', 'Trip No.', 'From Stop', 'To Stop', 'Schld. Time', 'Trip Start Time', 'Trip End Time', 'Psngr Count', 'Total Amount', 'Ticket Count', 'Ticket Amount', 'Pass Count', 'Pass Amount', 'EPurse Count', 'EPurse Amount', 'Conc', 'Kms'];
 
-        	return $value;
-        });
-      
-        $columns = [
-                        'Stop'=> function($row){
-                            return $row->short_name;
-                        }];
-        foreach ($slots as $key => $slot) 
+        $reportData = [];
+        array_push($reportData, $reportColumns);
+
+        foreach ($data as $key => $d) 
         {
-        	array_push($columns, $slot);
-        }
+            $reportColumns = [$d->route->route_name, "Duty - ".$d->duty->duty_number, "Crew - ".$d->conductor->crew_name.' ('.$d->conductor->crew_id.')', "ETM - ".$d->etm->etm_no, "Vehicle No. - ".$d->vehicle->vehicle_registration_number, "Driver - ".$d->driver->crew_name.' ('.$d->driver->crew_id.')', ''];
+            array_push($reportData, $reportColumns);
 
-        //return $columns;
-        return ExcelReport::of($title, $meta, $stops, $columns)
-        					->download($title.'.xlsx');        
+            $trips = $d->trips;
+            foreach($trips as $keyi=>$trip)
+            {                                  
+                $trip_id = $trip->trip_id;
+                $fromStop = $trip->fromStop->short_name;
+                $toStop = $trip->toStop->short_name;
+                $schedule_time = $trip->schedule_time;
+                $start_timestamp = date('d-m-Y H:i:s', strtotime($trip->start_timestamp));
+                $end_timestamp = date('d-m-Y H:i:s', strtotime($trip->end_timestamp));   
+                                    
+                $counts = $trip->counts;
+                $passengersCount = 0;
+                $totalAmount = 0;
+                $concessionAmount = 0;
+                $ticketCount = 0;
+                $ticketAmount = 0;
+                $passCount = 0;
+                $passAmount = 0;
+                $epurseCount = 0;
+                $epurseAmount = 0;
+
+                foreach($counts as $keyc=>$count)
+                {
+                    $passengersCount += $count->passenger_count;
+                    $totalAmount += $count->ticket_amount;
+                    $concessionAmount += $count->concession_amount;
+                    if($count->ticket_type == 'Ticket')
+                    {
+                        $ticketCount += $count->passenger_count;
+                        $ticketAmount += $count->ticket_amount;
+                    }
+                                            
+
+                    if($count->ticket_type == 'Pass' || $count->ticket_type == 'ETMPass')
+                    {
+                        $passCount += $count->passenger_count;
+                        $passAmount += $count->ticket_amount;
+                    }
+
+                    if($count->ticket_type == 'EPurse')
+                    {
+                        $epurseCount += $count->passenger_count;
+                        $epurseAmount += $count->ticket_amount;
+                    }
+                }
+
+                $totalAmount = number_format((float)$totalAmount, 2, '.', '');
+                $ticketAmount = number_format((float)$ticketAmount, 2, '.', '');
+                $passAmount = number_format((float)$passAmount, 2, '.', '');
+                $epurseAmount = number_format((float)$epurseAmount, 2, '.', '');
+                $concessionAmount = number_format((float)$concessionAmount, 2, '.', '');
+                $distance = number_format((float)$trip->distance, 2, '.', '');
+        
+                array_push($reportData, [(string)($key+1), (string)$trip_id, (string)$fromStop, (string)$toStop, (string)$schedule_time, (string)$start_timestamp, (string)$end_timestamp, (string)$passengersCount, (string)$totalAmount, (string)$ticketCount, (string)$ticketAmount, (string)$passCount, (string)$epurseCount, (string)$epurseAmount, (string)$concessionAmount, (string)$distance]);
+            }
+        } 
+
+        //return $reportData;
+
+        $fileName = public_path().'/abcd/'.$title.'.xlsx';        
+
+        $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "No");
+
+        $this->downloadExcelFile($fileName); 
+
+        unlink($fileName);      
     }
 
     public function getQueryBuilder($depot_id, $from_date, $to_date, $route_id, $duty_id)

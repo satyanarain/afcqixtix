@@ -11,19 +11,35 @@ class DepotStockController extends Controller
 {
     public function index()
     {
-    	$settings = DB::table('inv_notification_centerstock')
-    					->select('id', 'item_id', 'min_stock', 'notify_to')
-    					->get();
-    	foreach ($settings as $key => $value) {
-    		$value->item_id = DB::table('inv_items_master')->where('id', $value->item_id)->first()->name;
-    		$value->notify_to = DB::table('users')
+        $centerStockSettings = DB::table('inv_notification_centerstock')
+                        ->select('id', 'item_id', 'min_stock', 'notify_to', 'denom_id')
+                        ->get();
+        foreach ($centerStockSettings as $key => $value) 
+        {
+            $value->item_id = DB::table('inv_items_master')->where('id', $value->item_id)->first()->name;
+            $value->denom = DB::table('denominations')->where('id', $value->denom_id)->first()->description;
+            $value->notify_to = DB::table('users')
                 ->whereIn('id', json_decode($value->notify_to))
-                ->select('email')
+                ->select('email', 'name')
                 ->get();
-    	}
+        }
 
-    	//return response()->json($settings);
-    	return view('notification.inventory.index', compact('settings'));
+        $depotStockSettings = DB::table('inv_notification_depotstock')
+                        ->select('id', 'depot_id', 'item_id', 'min_stock', 'notify_to', 'denom_id')
+                        ->get();
+
+        foreach ($depotStockSettings as $key => $value) 
+        {
+            $value->item_id = DB::table('inv_items_master')->where('id', $value->item_id)->first()->name;
+            $value->denom = DB::table('denominations')->where('id', $value->denom_id)->first()->description;
+            $value->depot_id = DB::table('depots')->where('id', $value->depot_id)->first()->name;
+            $value->notify_to = DB::table('users')
+                ->whereIn('id', json_decode($value->notify_to))
+                ->select('email', 'name')
+                ->get();
+        }
+        
+        return view('notification.inventory.depotstock', compact('depotStockSettings'));
     }
 
     /*--------------------------------------------------------------
@@ -70,7 +86,7 @@ class DepotStockController extends Controller
     		return response()->json(['status'=>'Error', 'data'=>$validator->errors()]);
     	}
 
-        $notification = DB::table('inv_notification_depotstock')->where([['item_id', $request->item], ['depot_id', $request->depot]])->first();
+        $notification = DB::table('inv_notification_depotstock')->where([['item_id', $request->item], ['depot_id', $request->depot], ['denom_id', $request->denoms]])->first();
 
         if($notification)
         {
@@ -78,7 +94,7 @@ class DepotStockController extends Controller
         }
 
     	try{
-    		$notification = DB::table('inv_notification_depotstock')->insert(['item_id'=>$request->item, 'depot_id'=>$request->depot, 'min_stock'=>$request->minlevel, 'notify_to'=>json_encode($request->notifyto)]);
+    		$notification = DB::table('inv_notification_depotstock')->insert(['item_id'=>$request->item, 'denom_id'=>$request->denoms, 'depot_id'=>$request->depot, 'min_stock'=>$request->minlevel, 'notify_to'=>json_encode($request->notifyto)]);
     	}catch(Illuminate\Database\QueryException $e){
     		return response()->json(['status'=>'Error', 'data'=>$e]);
     	}catch(PDOException $e){
@@ -112,11 +128,15 @@ class DepotStockController extends Controller
                     ->orderBy('name', 'asc')
                     ->get();
 
+        $denoms = DB::table('denominations')
+                    ->select('description', 'id')
+                    ->get();
+
         $settings = DB::table('inv_notification_depotstock')->where('id', $id)->first();
 
         $selectedOptions = json_decode($settings->notify_to);
 
-        return response()->json(['status'=>'Ok', 'settings'=>$settings, 'items'=>$items, 'admins'=>$admins, 'depots'=>$depots, 'selectedOptions'=>$selectedOptions]);
+        return response()->json(['status'=>'Ok', 'settings'=>$settings, 'items'=>$items, 'denoms'=>$denoms, 'admins'=>$admins, 'depots'=>$depots, 'selectedOptions'=>$selectedOptions]);
     }
 
     public function update($id, Request $request)
