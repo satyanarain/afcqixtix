@@ -51,7 +51,9 @@
                                     <th class="text-right">Amt. Payable (Rs)</th>
                                     <th class="text-right">Adjustment Amt. (Rs)</th>
                                     <th class="text-right">Amt. Collected (Rs)</th>
+                                    <th class="text-right">Payout Amt. (Rs)</th>
                                     <th>Collected On</th>
+                                    <th>Remark</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -67,8 +69,10 @@
                                     <td class="text-right">{{number_format((float)$rdata->amount_payable, 2, '.', '')}}</td>
                                     @php $diff = $rdata->amount_payable - $rdata->waybill->auditRemittance->payable_amount; @endphp
                                     <td class="text-right">{{number_format((float)$diff, 2, '.', '')}}</td>
-                                    <td class="text-right">{{number_format((float)$rdata->waybill->auditRemittance->payable_amount, 2, '.', '')}}</td>
+                                    <td class="text-right">{{number_format((float)$rdata->cash_remitted, 2, '.', '')}}</td>
+                                    <td class="text-right">{{number_format((float)$rdata->manual_payout, 2, '.', '')}}</td>
                                     <td>{{date('d-m-Y H:i:s', strtotime($rdata->submitted_at))}}</td>
+                                    <td>{{$rdata->remark}}</td>
                                 </tr>
                             @endforeach
                             @else
@@ -132,24 +136,21 @@ $(document).ready(function(){
                     var data = response.data;
                     console.log(data)
                     var reportData = [];
-                    var widths = [22, "*", "*", "*", "*", "*", "*", "*", "*", "*"];
-                    reportData.push([{'text':'S. No.', 'style': 'tableHeaderStyle'}, {'text':'Collected By', 'style': 'tableHeaderStyle'}, {'text':'Route - Duty - Shift', 'style': 'tableHeaderStyle'}, {'text':'Abstract No.', 'style': 'tableHeaderStyle'}, {'text':'Challan No.', 'style': 'tableHeaderStyle'}, {'text':'Conductor Name (ID)', 'style': 'tableHeaderStyle'}, {'text':'Amt. Payable (Rs)', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Adjustment Amt. (Rs)', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Amt. Collected (Rs)', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Collected On', 'style': 'tableHeaderStyle'}]);
+                    var widths = [22, "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*"];
+                    reportData.push([{'text':'S. No.', 'style': 'tableHeaderStyle'}, {'text':'Collected By', 'style': 'tableHeaderStyle'}, {'text':'Route - Duty - Shift', 'style': 'tableHeaderStyle'}, {'text':'Abstract No.', 'style': 'tableHeaderStyle'}, {'text':'Challan No.', 'style': 'tableHeaderStyle'}, {'text':'Conductor Name (ID)', 'style': 'tableHeaderStyle'}, {'text':'Amt. Payable (Rs)', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Adjustment Amt. (Rs)', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Amt. Collected (Rs)', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Payout Amt. (Rs)', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Collected On', 'style': 'tableHeaderStyle'}, {'text':'Remark', 'style': 'tableHeaderStyle'}]);
                     var i = 1;
                     $.each(data, function(ind, d){  
                         var route_duty_shift = d.waybill.route.route_name +' - '+d.waybill.duty.duty_number +' - '+d.waybill.shift.shift;
                         
                         var amount_collected = 0;
-                        if(d.waybill.audit_remittance)
-                        {
-                            amount_collected = d.waybill.audit_remittance.payable_amount;
-                        }
+                        amount_collected = d.cash_remitted;
                         var adjust_amount = parseInt(d.amount_payable) - parseInt(amount_collected);
                     
                         if(i%2 == 0)
                         {
-                            reportData.push([{'text':''+i, style:'oddRowStyle'}, {'text':''+d.collector.name, style:'oddRowStyle'}, {'text':''+route_duty_shift, style:'oddRowStyle'}, {'text':''+d.abstract_no, style:'oddRowStyle'}, {'text':''+d.cash_challan_no, style:'oddRowStyle'}, {'text':''+d.waybill.conductor.crew_name+' ('+d.waybill.conductor.crew_name+')', style:'oddRowStyle'}, {'text':''+parseFloat(d.amount_payable).toFixed(2), style:'oddRowStyle', alignment:'right'}, {'text':''+parseFloat(adjust_amount).toFixed(2), style:'oddRowStyle', alignment:'right'}, {'text':''+parseFloat(amount_collected).toFixed(2), style:'oddRowStyle', alignment:'right'}, {'text':''+d.submitted_at, style:'oddRowStyle'}]);
+                            reportData.push([{'text':''+i, style:'oddRowStyle'}, {'text':''+d.collector.name, style:'oddRowStyle'}, {'text':''+route_duty_shift, style:'oddRowStyle'}, {'text':''+d.abstract_no, style:'oddRowStyle'}, {'text':''+d.cash_challan_no, style:'oddRowStyle'}, {'text':''+d.waybill.conductor.crew_name+' ('+d.waybill.conductor.crew_id+')', style:'oddRowStyle'}, {'text':''+parseFloat(d.amount_payable).toFixed(2), style:'oddRowStyle', alignment:'right'}, {'text':''+parseFloat(adjust_amount).toFixed(2), style:'oddRowStyle', alignment:'right'}, {'text':''+parseFloat(amount_collected).toFixed(2), style:'oddRowStyle', alignment:'right'}, {'text':''+d.manual_payout, style:'oddRowStyle'}, {'text':''+d.submitted_at, style:'oddRowStyle'}, {'text':''+d.remark, style:'oddRowStyle'}]);
                         }else{
-                            reportData.push([{'text':''+i}, {'text':''+d.collector.name}, {'text':''+route_duty_shift}, {'text':''+d.abstract_no}, {'text':''+d.cash_challan_no}, {'text':''+d.waybill.conductor.crew_name+' ('+d.waybill.conductor.crew_name+')'}, {'text':''+parseFloat(d.amount_payable).toFixed(2), alignment:'right'}, {'text':''+parseFloat(adjust_amount).toFixed(2), alignment:'right'}, {'text':''+parseFloat(amount_collected).toFixed(2), alignment:'right'}, {'text':''+d.submitted_at}]);   
+                            reportData.push([{'text':''+i}, {'text':''+d.collector.name}, {'text':''+route_duty_shift}, {'text':''+d.abstract_no}, {'text':''+d.cash_challan_no}, {'text':''+d.waybill.conductor.crew_name+' ('+d.waybill.conductor.crew_id+')'}, {'text':''+parseFloat(d.amount_payable).toFixed(2), alignment:'right'}, {'text':''+parseFloat(adjust_amount).toFixed(2), alignment:'right'}, {'text':''+parseFloat(amount_collected).toFixed(2), alignment:'right'}, {'text':''+d.manual_payout, alignment:'right'}, {'text':''+d.submitted_at}, {'text':''+d.remark}]);   
                         }
                         i++;
                     })

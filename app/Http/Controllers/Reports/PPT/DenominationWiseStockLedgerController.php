@@ -5,9 +5,6 @@ namespace App\Http\Controllers\Reports\PPT;
 use DB;
 use Auth;
 use Validator;
-use PdfReport;
-use CSVReport;
-use ExcelReport;
 use App\Models\Crew;
 use App\Models\Shift;
 use App\Models\Depot;
@@ -16,6 +13,7 @@ use App\Traits\activityLog;
 use App\Models\CenterStock;
 use Illuminate\Http\Request;
 use App\Traits\checkPermission;
+use App\Traits\GenerateExcelTrait;
 use App\Http\Controllers\Controller;
 use App\Models\Inventory\DepotStockLedger;
 
@@ -23,6 +21,7 @@ class DenominationWiseStockLedgerController extends Controller
 {
     use activityLog;
     use checkPermission;
+    use GenerateExcelTrait;
 
     /**
      * Display a listing of the resource.
@@ -115,55 +114,31 @@ class DenominationWiseStockLedgerController extends Controller
         */
 
         $meta = [ // For displaying filters description on header
-            'Depot : ' => $depotName, 
-            'Denomination : ' => $denomination,
-            'From : '=> date('d-m-Y', strtotime($from_date)),
-            'To : '=> date('d-m-Y', strtotime($to_date))
+            'Depot : ' . $depotName, 
+            'Denomination : ' . $denomination,
+            'From : ' . date('d-m-Y', strtotime($from_date)),
+            'To : ' . date('d-m-Y', strtotime($to_date))
         ]; 
 
-        $columns = [
-                        'Ticket Type'=> function($row){
-                            return 'Ticket';
-                        },
-                        'Denomination' => function($row){
-                            return $row->denomination->description;
-                        },
-                        'Date'=> function($row){
-                            return date('d-m-Y', strtotime($row->transaction_date));
-                        },
-                        'Challan No. / Receipt No.' => function($row){
-                            return $row->challan_no;
-                        },
-                        'Series' => function($row){
-                            return $row->series;
-                        },
-                        'Opening Ticket No.' => function($row){
-                            return $row->start_sequence;
-                        },
-                        'Closing Ticket No.' => function($row){
-                            return $row->end_sequence;
-                        }, 
-                        'Ticket Count' => function($row){
-                            return $row->item_quantity;
-                        }, 
-                        'Ticket Value' => function($row){
-                            return $row->item_quantity * $row->denomination->price;
-                        },
-                        'Transaction Type' => function($row){
-                            return $row->transaction_type;
-                        }, 
-                        'Balance Count' => function($row){
-                            return $row->balance_quantity;
-                        }, 
-                        'Balance Value' => function($row){
-                            return $row->balance_quantity * $row->denomination->price;
-                        }];
+        $data = $queryBuilder->get();
+      
+        $reportColumns = ['S. No', 'Ticket Type', 'Denomination', 'Date', 'Challan No. / Receipt No.', 'Series', 'Opening Ticket No.', 'Closing Ticket No.', 'Ticket Count', 'Ticket Value', 'Transaction Type', 'Balance Count', 'Balance Value'];
 
-        	return ExcelReport::of($title, $meta, $queryBuilder, $columns)
-                    ->editColumns(['Ticket Count', 'Ticket Value', 'Balance Count', 'Balance Value'], [
-                        'class' => 'right bold',
-                    ])
-                    ->download($title.'.xlsx');
+        $reportData = [];
+        array_push($reportData, $reportColumns);
+
+        foreach ($data as $key => $d) 
+        {
+            array_push($reportData, [(string)($key+1), (string)'Ticket', (string)$d->denomination->description, (string)date('d-m-Y', strtotime($d->transaction_date)), (string)$d->challan_no, (string)$d->series, (string)$d->start_sequence, (string)$d->end_sequence, (string)$d->item_quantity, (string)($d->item_quantity * $d->denomination->price), (string)$d->transaction_type, (string)$d->balance_quantity, (string)($d->balance_quantity * $d->denomination->price)]);
+        } 
+
+        $fileName = public_path().'/abcd/'.$title.'.xlsx';        
+
+        $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "No");
+
+        $this->downloadExcelFile($fileName); 
+
+        unlink($fileName);
     }
 
     public function getQueryBuilder($depot_id, $from_date, $to_date, $denom_id, $ledger, $conductor_id)

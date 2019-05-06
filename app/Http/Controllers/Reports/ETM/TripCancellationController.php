@@ -5,9 +5,6 @@ namespace App\Http\Controllers\Reports\ETM;
 use DB;
 use Auth;
 use Validator;
-use PdfReport;
-use CSVReport;
-use ExcelReport;
 use App\Models\Crew;
 use App\Models\Shift;
 use App\Models\Depot;
@@ -18,6 +15,7 @@ use Illuminate\Http\Request;
 use App\Models\AuditInventory;
 use App\Traits\checkPermission;
 use App\Models\TripCancellation;
+use App\Traits\GenerateExcelTrait;
 use App\Http\Controllers\Controller;
 
 
@@ -25,6 +23,7 @@ class TripCancellationController extends Controller
 {
     use activityLog;
     use checkPermission;
+    use GenerateExcelTrait;
 
     /**
      * Display a listing of the resource.
@@ -114,43 +113,31 @@ class TripCancellationController extends Controller
         */
 
         $meta = [ // For displaying filters description on header
-            'Depot : ' => $depotName,
-            'Route : ' => $routeName,
-            'From : '=> date('d-m-Y', strtotime($from_date)),
-            'To : '=> date('d-m-Y', strtotime($to_date))
+            'Depot : ' . ucfirst($depotName),
+            'Route : ' . $routeName,
+            'From : ' . date('d-m-Y', strtotime($from_date)),
+            'To : ' . date('d-m-Y', strtotime($to_date))
         ]; 
-      
-        $columns = [
-                        'Time'=> function($row){
-                            return date('H:i:s', strtotime($row->cancellation_timestamp));
-                        },
-                        'Route'=> function($row){
-                            return $row->wayBill->route->route_name;
-                        },
-                        'Duty' => function($row){
-                            return $row->wayBill->duty->duty_number;
-                        }, 
-                        'Shift' => function($row){
-                            return $row->wayBill->shift->shift;
-                        }, 
-                        'Bus No.' => function($row){
-                            return $row->wayBill->vehicle->vehicle_registration_number;
-                        }, 
-                        'Conductor' => function($row){
-                            return $row->wayBill->conductor->crew_name.' ('.$row->wayBill->conductor->crew_name.')';
-                        }, 
-                        'Trip No.' => function($row){
-                            return $row->trip_no;
-                        }, 
-                        'Stop' => function($row){
-                            return $row->stop ? $row->stop->stop : 'N/A';
-                        }, 
-                        'Reason' => function($row){
-                            return $row->reason->reason_description;
-                        }];
 
-        return ExcelReport::of($title, $meta, $queryBuilder, $columns)
-        					->download($title.'.xlsx');        
+        $data = $queryBuilder->get();
+      
+        $reportColumns = ['S. No', 'Time', 'Route', 'Duty', 'Shift', 'Bus No.', 'Conductor', 'Trip No.', 'Stop', 'Reason'];
+
+        $reportData = [];
+        array_push($reportData, $reportColumns);
+
+        foreach ($data as $key => $d) 
+        {
+            array_push($reportData, [(string)($key+1), (string)date('H:i:s', strtotime($d->cancellation_timestamp)), (string)$d->wayBill->route->route_name, (string)$d->wayBill->duty->duty_number, (string)$d->wayBill->shift->shift, (string)$d->wayBill->vehicle->vehicle_registration_number, (string)$d->wayBill->conductor->crew_name.' ('.$d->wayBill->conductor->crew_name.')', (string)$d->trip_no, (string)$d->stop ? $d->stop->stop : 'N/A', (string)$d->reason->reason_description]);
+        } 
+
+        $fileName = public_path().'/abcd/'.$title.'.xlsx';        
+
+        $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "No");
+
+        $this->downloadExcelFile($fileName); 
+
+        unlink($fileName);     
     }
 
     public function getQueryBuilder($depot_id, $from_date, $to_date, $route_id)

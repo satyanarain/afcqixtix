@@ -36,9 +36,9 @@ class AuditStatusController extends Controller
 
 
     /**
-     * Store a newly created report.
-     * Created By satya
-     * Date 12-12-2018
+     * Get records to dispaly on index page
+     * @auther Subhash Chandra
+     * 
      */
     public function displaydata(Request $request)
     {       
@@ -123,7 +123,7 @@ class AuditStatusController extends Controller
         ]
         */
         $reportData = [
-                        ['S. No.', 'ETM No.', 'Login Time', 'Route-Duty-Shift', 'Logout Time', 'Conductor', 'Vehicle No.', 'Handed Over To', 'Audited']
+                        ['S. No.', 'ETM No.', 'Login Time', 'Route-Duty-Shift', 'Logout Time', 'Conductor', 'Vehicle No.', 'Audited', 'Audited By', 'Cash Remitted By']
                     ];
         foreach ($data as $key => $value) 
         {
@@ -133,7 +133,11 @@ class AuditStatusController extends Controller
             }else{
                 $audited = "Un-audited";
             }
-            $row = [(string)($key+1), (string)$value->etm->etm_no, (string)($value->etmLoginDetails->login_timestamp), (string)($value->route->route_name." / ".$value->duty->duty_number." / ".$value->shift->shift), (string)($value->etmLoginDetails->logout_timestamp), (string)($value->conductor->crew_name), (string)($value->vehicle->vehicle_registration_number), '', (string)($audited)];
+
+            $auditedBy = isset($value->auditInventory) ? $value->auditInventory->auditor->name : ''; 
+            $remittedBy = isset($value->auditRemittance) ? $value->auditRemittance->auditor->name : ''; 
+
+            $row = [(string)($key+1), (string)$value->etm->etm_no, (string)($value->etmLoginDetails->login_timestamp), (string)($value->route->route_name." / ".$value->duty->duty_number." / ".$value->shift->shift), (string)($value->etmLoginDetails->logout_timestamp), (string)($value->conductor->crew_name), (string)($value->vehicle->vehicle_registration_number), (string)($audited), (string)$auditedBy, (string)$remittedBy];
 
             array_push($reportData, $row);
         }
@@ -193,7 +197,7 @@ class AuditStatusController extends Controller
 
         $data = $queryBuilder->get();
       
-        $reportColumns = ['S. No', 'ETM No.', 'Login Time', 'Route-Duty-Shift', 'Logout Time', 'Conductor', 'Vehicle No.', 'Handed Over To', 'Audited'];
+        $reportColumns = ['S. No', 'ETM No.', 'Login Time', 'Route-Duty-Shift', 'Logout Time', 'Conductor', 'Vehicle No.', 'Audited', 'Audited By', 'Cash Remitted By'];
 
         $reportData = [];
         array_push($reportData, $reportColumns);
@@ -204,12 +208,15 @@ class AuditStatusController extends Controller
             $login_timestamp = $d->etmLoginDetails->login_timestamp ? date('d-m-Y H:i:s', strtotime($d->etmLoginDetails->login_timestamp)):"";
             $logout_timestamp = $d->etmLoginDetails->logout_timestamp ? date('d-m-Y H:i:s', strtotime($d->etmLoginDetails->logout_timestamp)):"";
             $conductor = $d->conductor->crew_name.'('.$d->conductor->crew_id.')';
-            if($da->status == 'c')
-                $status = 'Audited';
+            if($d->status == 'c')
+                $st = 'Audited';
             else
-                $status = 'Un-audited';
+                $st = 'Un-audited';
 
-            array_push($reportData, [(string)($key+1), (string)$d->etm->etm_no, (string)$login_timestamp, (string)$route_duty_shift, (string)$logout_timestamp, (string)$conductor, (string)$d->vehicle->vehicle_registration_number, (string)"", (string)$status]);
+            $auditedBy = isset($d->auditInventory) ? $d->auditInventory->auditor->name : "";
+            $remittedBy = isset($d->auditRemittance) ? $d->auditRemittance->auditor->name : "";
+
+            array_push($reportData, [(string)($key+1), (string)$d->etm->etm_no, (string)$login_timestamp, (string)$route_duty_shift, (string)$logout_timestamp, (string)$conductor, (string)$d->vehicle->vehicle_registration_number, (string)$st, (string)$auditedBy, (string)$remittedBy]);
         } 
 
         $fileName = public_path().'/abcd/'.$title.'.xlsx';        
@@ -217,6 +224,8 @@ class AuditStatusController extends Controller
         $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "No");
 
         $this->downloadExcelFile($fileName);
+
+        unlink($fileName);
     }   
 
     public function getQueryBuilder($depot_id, $from_date, $to_date, $shift_id, $status_type, $etm_no)
@@ -227,7 +236,7 @@ class AuditStatusController extends Controller
                                             $query->where('etm_no', $etm_no);
                                         }
                                     })
-                                    ->with(['etm:id,etm_no', 'route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'conductor:id,crew_name,crew_id', 'vehicle:id,vehicle_registration_number', 'etmLoginDetails:abstract_no,login_timestamp,logout_timestamp']);
+                                    ->with(['etm:id,etm_no', 'route:id,route_name', 'duty:id,duty_number', 'shift:id,shift', 'conductor:id,crew_name,crew_id', 'vehicle:id,vehicle_registration_number', 'etmLoginDetails:abstract_no,login_timestamp,logout_timestamp', 'auditInventory:waybill_number,audited_by', 'auditInventory.auditor:id,name', 'auditRemittance:waybill_number,audited_by', 'auditRemittance.auditor:id,name']);
 
         if($depot_id)
         {

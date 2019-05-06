@@ -73,8 +73,8 @@
                                     <td>{{$rdata->direction}}</td>
                                     <td>{{$rdata->schedule_time}}</td>
                                     <td class="text-right">{{number_format((float)$rdata->route->distance, 2, '.', '')}}</td>
-                                    <td>{{'0'}}</td>
-                                    <td>{{'0'}}</td>
+                                    <td class="text-right">{{'0'}}</td>
+                                    <td class="text-right">{{'0'}}</td>
                                     <td class="text-right">{{number_format((float)$rdata->target_income, 2, '.', '')}}</td>
                                     <td class="text-right">{{number_format((float)$rdata->tickets[0]->actual_income, 2, '.', '')}}</td>
                                     <td class="text-right">{{number_format((float)$rdata->target_epkm, 2, '.', '')}}</td>
@@ -142,52 +142,36 @@ $(document).ready(function(){
             {
                 if(response.status == 'Ok')
                 {
-                    var data = response.data;
+                    var data = response.data.data;
                     console.log(data)
                     var reportData = [];
-                    //var widths = [22, "*", "*", "*", "*", "*", "*", "*", "*", "*"];
-                    reportData.push([{'text':'S. No.', 'style': 'tableHeaderStyle'}, {'text':'Date', 'style': 'tableHeaderStyle'}, {'text':'ETM Number', 'style': 'tableHeaderStyle'}, {'text':'Route', 'style': 'tableHeaderStyle'}, {'text':'Duty', 'style': 'tableHeaderStyle'}, {'text':'Ticket Count', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Pass Count', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'EPurse Count', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Passenger (Cash)', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Passenger (Card)', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Passenger (EPurse)', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Concession', 'style': 'tableHeaderStyle', alignment:'right'}]);
+                    var widths = [22, 20, 25, "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*"];
+                    reportData.push([{'text':'S. No.', 'style': 'tableHeaderStyle'}, {'text':'Duty', 'style': 'tableHeaderStyle'}, {'text':'Trip No.', 'style': 'tableHeaderStyle'}, {'text':'From Stop', 'style': 'tableHeaderStyle'}, {'text':'To Stop', 'style': 'tableHeaderStyle'}, {'text':'Direction', 'style': 'tableHeaderStyle'}, {'text':'Sch. Trip Time', 'style': 'tableHeaderStyle'}, {'text':'Distance (Kms)', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Operated', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Operated Distance', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Target Income', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Actual Income', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Target EPKM', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Actual EPKM', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Passengers', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Tickets', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Load Factor', 'style': 'tableHeaderStyle', alignment:'right'}]);
                     var i = 1;
                     $.each(data, function(ind, d){  
                         
-                        var tickets = d.tickets;
-                        var concession = tickets.reduce(function(concessionAmt, ticket){
-                            var conc = ticket.concession;
-                            var concAmt = 0;
-                            if(conc)
-                            {
-                                if(conc.flat_fare == "Yes")
-                                {
-                                    concAmt += parseInt(conc.flat_fare_amount);
-                                }else{
-                                    concAmt += parseInt(conc.percentage)/(100-parseInt(conc.percentage))*parseInt(ticket.total_amt);
-                                }
-                            }
-                            return concessionAmt + concAmt;
-                        }, 0);
+                        var duty_number = d.waybill ? d.waybill.duty.duty_number : "";
+                        var trip_id = d.trip_id;
+                        var fromStop = d.from_stop ? d.from_stop.short_name : "";
+                        var toStop = d.to_stop ? d.to_stop.short_name : "";
+                        var direction = d.direction;
+                        var schedule_time = d.schedule_time;
+                        var distance = d.route ? d.route.distance : "";
+                        var operated = 0;
+                        var operatedDistance = 0;
+                        var target_income = d.target_income;
+                        var actual_income = d.tickets[0] ? d.tickets[0].actual_income : "";
+                        var target_epkm = d.target_epkm;
+                        var actual_epkm = d.actual_epkm;
+                        var passenger_count = d.tickets[0] ? d.tickets[0].passenger_count : "";
+                        var tickets_count = d.tickets[0] ? d.tickets[0].tickets_count : "";
+                        var load_factor = d.load_factor;
 
-                        var cash_passenger_count = 0;
-                        if(d.cash_passenger_count)
-                        {
-                            cash_passenger_count = d.cash_passenger_count;
-                        }
-                        var card_passenger_count = 0;
-                        if(d.card_passenger_count)
-                        {
-                            card_passenger_count = d.card_passenger_count;
-                        }
-                            var epurse_passenger_count = 0;
-                        if(d.epurse_passenger_count)
-                        {
-                            epurse_passenger_count = d.epurse_passenger_count;
-                        }
-
-                    
                         if(i%2 == 0)
                         {
-                            reportData.push([{'text':''+i, style:'oddRowStyle'}, {'text':''+(d.created_at).substr(0,10), style:'oddRowStyle'}, {'text':''+d.etm.etm_no, style:'oddRowStyle'}, {'text':''+d.route.route_name, style:'oddRowStyle'}, {'text':''+d.duty.duty_number, style:'oddRowStyle'}, {'text':''+d.tickets_count, style:'oddRowStyle', alignment:'right'}, {'text':''+d.pass_count, style:'oddRowStyle', alignment:'right'}, {'text':''+d.epurse_count, style:'oddRowStyle', alignment:'right'}, {'text':''+cash_passenger_count, style:'oddRowStyle', alignment:'right'}, {'text':''+card_passenger_count, style:'oddRowStyle', alignment:'right'}, {'text':''+epurse_passenger_count, style:'oddRowStyle', alignment:'right'}, {'text':''+concession, style:'oddRowStyle', alignment:'right'}]);
+                            reportData.push([{'text':''+i, style:'oddRowStyle'}, {'text':''+duty_number, style:'oddRowStyle'}, {'text':''+trip_id, style:'oddRowStyle'}, {'text':''+fromStop, style:'oddRowStyle'}, {'text':''+toStop, style:'oddRowStyle'}, {'text':''+direction, style:'oddRowStyle'}, {'text':''+schedule_time, style:'oddRowStyle'}, {'text':''+distance, style:'oddRowStyle', alignment:'right'}, {'text':''+operated, style:'oddRowStyle', alignment:'right'}, {'text':''+operatedDistance, style:'oddRowStyle', alignment:'right'}, {'text':''+target_income, style:'oddRowStyle', alignment:'right'}, {'text':''+actual_income, style:'oddRowStyle', alignment:'right'}, {'text':''+target_epkm, style:'oddRowStyle', alignment:'right'}, {'text':''+actual_epkm, style:'oddRowStyle', alignment:'right'}, {'text':''+passenger_count, style:'oddRowStyle', alignment:'right'}, {'text':''+tickets_count, style:'oddRowStyle', alignment:'right'}, {'text':''+load_factor, style:'oddRowStyle', alignment:'right'}]);
                         }else{
-                            reportData.push([{'text':''+i}, {'text':''+(d.created_at).substr(0,10)}, {'text':''+d.etm.etm_no}, {'text':''+d.route.route_name}, {'text':''+d.duty.duty_number}, {'text':''+d.tickets_count, alignment:'right'}, {'text':''+d.pass_count, alignment:'right'}, {'text':''+d.epurse_count, alignment:'right'}, {'text':''+cash_passenger_count, alignment:'right'}, {'text':''+card_passenger_count, alignment:'right'}, {'text':''+epurse_passenger_count, alignment:'right'}, {'text':''+concession, alignment:'right'}]);
+                            reportData.push([{'text':''+i}, {'text':''+duty_number}, {'text':''+trip_id}, {'text':''+fromStop}, {'text':''+toStop}, {'text':''+direction}, {'text':''+schedule_time}, {'text':''+distance, alignment:'right'}, {'text':''+operated, alignment:'right'}, {'text':''+operatedDistance, alignment:'right'}, {'text':''+target_income, alignment:'right'}, {'text':''+actual_income, alignment:'right'}, {'text':''+target_epkm, alignment:'right'}, {'text':''+actual_epkm, alignment:'right'}, {'text':''+passenger_count, alignment:'right'}, {'text':''+tickets_count, alignment:'right'}, {'text':''+load_factor, alignment:'right'}]);
                         }
                         i++;
                     })
@@ -196,7 +180,7 @@ $(document).ready(function(){
                     var title = response.title;
                     var takenBy = response.takenBy;
                     var serverDate = response.serverDate;
-                    Export(metaData, title, reportData, takenBy, serverDate, '*', 'noBorders');  
+                    Export(metaData, title, reportData, takenBy, serverDate, widths, 'noBorders');  
                                     
                 }                
             },
@@ -209,7 +193,7 @@ $(document).ready(function(){
 
     $(document).on('click', '#exportAsXLS', function(){
         var depot_id = $('#depot_id').val();
-        var etm_no = $('#etm_no').val();
+        var route_id = $('#route_id').val();
         var fromDate = $('#from_date').val();
         if(!fromDate)
         {
@@ -227,7 +211,7 @@ $(document).ready(function(){
         var queryParams = "?depot_id="+depot_id
                         + "&from_date="+fromDate
                         + "&to_date="+toDate
-                        + "&etm_no="+etm_no;
+                        + "&route_id="+route_id;
 
         var url = "{{route('reports.revenue.epkm.getexcelreport')}}"+queryParams;
 

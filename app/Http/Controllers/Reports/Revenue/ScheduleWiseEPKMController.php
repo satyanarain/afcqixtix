@@ -4,29 +4,21 @@ namespace App\Http\Controllers\Reports\Revenue;
 
 use DB;
 use Auth;
-use Validator;
-use PdfReport;
-use CSVReport;
-use ExcelReport;
-use App\Models\Duty;
 use App\Models\Trip;
-use App\Models\Route;
-use App\Models\Ticket;
+use App\Models\Duty;
 use App\Models\Target;
 use App\Models\Waybill;
-use App\Models\TripStart;
-use App\Models\TripDetail;
 use App\Traits\activityLog;
-use App\Models\CenterStock;
-use App\Models\RouteDetail;
 use Illuminate\Http\Request;
 use App\Traits\checkPermission;
+use App\Traits\GenerateExcelTrait;
 use App\Http\Controllers\Controller;
 
 class ScheduleWiseEPKMController extends Controller
 {
     use activityLog;
     use checkPermission;
+    use GenerateExcelTrait;
 
     /**
      * Display a listing of the resource.
@@ -112,10 +104,9 @@ class ScheduleWiseEPKMController extends Controller
         $depot_id = $input['depot_id'];
         $from_date = date('Y-m-d', strtotime($input['from_date']));
         $to_date = date('Y-m-d', strtotime($input['to_date']));
-        $etm_no = $input['etm_no'];
-    
-        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $etm_no);
+        $route_id = $input['route_id'];
 
+        $routeName = $this->findNameById('route_master', 'route_name', $route_id);
         $depotName = $this->findNameById('depots', 'name', $depot_id);
         $title = 'Schedule-wise EPKM Report'; // Report title
 
@@ -125,51 +116,52 @@ class ScheduleWiseEPKMController extends Controller
         */
 
         $meta = [ // For displaying filters description on header
-            'Depot : ' => $depotName,
-            'ETM Number : ' => $etm_no,
-            'From : '=> date('d-m-Y', strtotime($from_date)),
-            'To : '=> date('d-m-Y', strtotime($to_date))
+            'Depot : ' . ucfirst($depotName),
+            'Route : ' . $routeName,
+            'From : ' . date('d-m-Y', strtotime($from_date)),
+            'To : ' . date('d-m-Y', strtotime($to_date))
         ]; 
-      
-        $columns = [
-                        'Date'=> function($row){
-                            return date('d-m-Y', strtotime($row->created_at));
-                        },
-                        'ETM Number'=> function($row){
-                            return $row->etm->etm_no;
-                        },
-                        'Route'=> function($row){
-                            return $row->route->route_name;
-                        },
-                        'Duty' => function($row){
-                            return $row->duty->duty_number;
-                        }, 
-                        'Ticket Count' => function($row){
-                            return $row->tickets_count;
-                        }, 
-                        'Pass Count' => function($row){
-                            return $row->pass_count;
-                        }, 
-                        'EPurse Count' => function($row){
-                            return $row->epurse_count;
-                        }, 
-                        'Passenger (Cash)' => function($row){
-                            return $row->cash_passenger_count ? $row->cash_passenger_count : '0';
-                        }, 
-                        'Passenger (Pass)' => function($row){
-                            return $row->card_passenger_count ? $row->card_passenger_count : '0';
-                        }, 
-                        'Passenger (EPurse)' => function($row){
-                            return $row->epurse_passenger_count ? $row->epurse_passenger_count : '0';
-                        }, 
-                        'Concession' => function($row){
-                            return calculateConcession($row->tickets);
-                        }];
 
-        return ExcelReport::of($title, $meta, $queryBuilder, $columns)
-        					->editColumns(['Ticket Count', 'Pass Count', 'EPurse Count', 'Passenger (Cash)', 'Passenger (Pass)', 'Passenger (EPurse)', 'Concession'], [
-		                        'class' => 'right',
-		                    ])->download($title.'.xlsx');        
+
+        $data = [];
+        $duties = Duty::where('route_id', $route_id)->get(['id', 'duty_number', 'start_time']);
+
+        if($duties)
+        {
+            foreach ($duties as $key => $duty) 
+            {
+                $data[$route_id][$duty->duty_number] = $this->getData($routeName, $depot_id, $from_date, $to_date, $route_id, $duty->id);
+            }
+        }
+      
+        $reportColumns = ['S. No', 'Route', 'Sch Time', 'Sch Trips', 'Oper Trips', 'Income', 'Target EPKM', 'Actual EPKM', 'Variance', 'PPT Ticket/Pass Count', 'ETM Passenger Count'];
+
+        $reportData = [];
+        array_push($reportData, $reportColumns);
+
+        foreach ($duties as $key => $duty) 
+        {
+            $route_name = $data[$route_id][$duty->duty_number][0]['route'].'-'.$duty->duty_number;
+            $start_time = $duty->start_time;
+            $scheduledTrips = $data[$route_id][$duty->duty_number][0]['scheduledTrips'];
+            $tripsCount = $data[$route_id][$duty->duty_number][0]['tripsCount'];
+            $totalAmount = number_format((float)$data[$route_id][$duty->duty_number][0]['totalAmount'], 2, '.', '');
+            $targetEPKM = number_format((float)$data[$route_id][$duty->duty_number][0]['targetEPKM'], 2, '.', '');
+            $actualEPKM = number_format((float)$data[$route_id][$duty->duty_number][0]['actualEPKM'], 2, '.', '');
+            $variance = number_format((float)$data[$route_id][$duty->duty_number][0]['variance'], 2, '.', '');
+            $ticketsCount = $data[$route_id][$duty->duty_number][0]['ticketsCount'];
+            $passengersCount = $data[$route_id][$duty->duty_number][0]['passengersCount'];
+
+            array_push($reportData, [(string)($key+1), $route_name, (string)$start_time, (string)$scheduledTrips, (string)$tripsCount, (string)$totalAmount, (string)$targetEPKM, (string)$actualEPKM, (string)$variance, (string)$ticketsCount, (string)$passengersCount]);
+        } 
+
+        $fileName = public_path().'/abcd/'.$title.'.xlsx';        
+
+        $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "No");
+
+        $this->downloadExcelFile($fileName); 
+
+        unlink($fileName);       
     }
 
     public function getWaybillDetail($waybill_no)
@@ -253,6 +245,7 @@ class ScheduleWiseEPKMController extends Controller
         }else{
             $actualEPKM = 0;
         }
+
 
         $variance = $actualEPKM - $targetEPKM;
          

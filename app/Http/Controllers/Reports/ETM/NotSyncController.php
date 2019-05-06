@@ -5,21 +5,20 @@ namespace App\Http\Controllers\Reports\ETM;
 use DB;
 use Auth;
 use Validator;
-use PdfReport;
-use CSVReport;
-use ExcelReport;
 use App\Models\Ticket;
 use App\Models\Waybill;
 use App\Models\ETMLoginLog;
 use App\Traits\activityLog;
 use Illuminate\Http\Request;
 use App\Traits\checkPermission;
+use App\Traits\GenerateExcelTrait;
 use App\Http\Controllers\Controller;
 
 class NotSyncController extends Controller
 {
     use activityLog;
     use checkPermission;
+    use GenerateExcelTrait;
 
     /**
      * Display a listing of the resource.
@@ -131,7 +130,7 @@ class NotSyncController extends Controller
         $to_date = date('Y-m-d', strtotime($input['to_date']));
         $etm_no = $input['etm_no'];
 
-        $getQueryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $etm_no);
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $etm_no);
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
         $etmNo = $this->findNameById('etm_details', 'etm_no', $etm_no);
@@ -144,51 +143,45 @@ class NotSyncController extends Controller
         */
 
         $meta = [ // For displaying filters description on header
-            'Depot : ' => $depotName,
-            'Till Date : '=> date('d-m-Y', strtotime($to_date)),
-            'ETM No. : '=>$etmNo
+            'Depot : ' . $depotName,
+            'Till Date : ' . date('d-m-Y', strtotime($to_date)),
+            'ETM No. : ' . $etmNo
         ]; 
 
+        $data = $queryBuilder->get();
       
-        $columns = [
-                        'ETM No. ' => function($row){
-                            return $row->etm->etm_no;
-                        }, 
-                        'Last Manual Sync On' => function($row){
-                        	$latestTicket = Ticket::where('abstract_id', $row->abstract_no)
-        							->orderBy('id', 'DESC')
-        							->first();
-				        	if($latestTicket)
-				        	{
-				        		$last_manual_sync = date('d-m-Y h:i A', strtotime($latestTicket->created_at));
-				        	}else{
-				        		$last_manual_sync = '';
-				        	}
-                        	return $last_manual_sync;
-                        },
-                        'Login Crew Name (Crew ID)' => function($row){
-                            return $row->conductor->crew_name.' ('.$row->conductor->crew_id.')';
-                        },
-                        'Login Timestamp' => function($row){
-                            return date('d-m-Y h:i A', strtotime($row->login_timestamp));
-                        },
-                        'Logout Timestamp' => function($row){
-                            return date('d-m-Y h:i A', strtotime($row->logout_timestamp));
-                        }, 
-                        'No. of Days' => function($row) use($to_date){
-                            $login_timestamp_seconds = strtotime($row->login_timestamp);
-				        	$to_date_seconds = strtotime($to_date);
-				        	$diff = $to_date_seconds - $login_timestamp_seconds;
-				        	$no_of_days = round($diff/(60*60*24));
-				        	return $no_of_days;
-                        }];
+        $reportColumns = ['S. No', 'ETM No.', 'Last Manual Sync On', 'Login Crew Name (Crew ID)', 'Login Timestamp', 'Logout Timestamp', 'No. of Days'];
 
-        //return $columns;
+        $reportData = [];
+        array_push($reportData, $reportColumns);
 
-        return ExcelReport::of($title, $meta, $getQueryBuilder, $columns)
-        					->editColumns(['No. of Days'], [
-                        		'class' => 'right',
-                    		])->download($title.'.xlsx');        
+        foreach ($data as $key => $d) 
+        {
+            $latestTicket = Ticket::where('abstract_id', $d->abstract_no)
+                                    ->orderBy('id', 'DESC')
+                                    ->first();
+            if($latestTicket)
+            {
+                $last_manual_sync = date('d-m-Y h:i A', strtotime($latestTicket->created_at));
+            }else{
+                $last_manual_sync = '';
+            }
+
+            $login_timestamp_seconds = strtotime($d->login_timestamp);
+            $to_date_seconds = strtotime($to_date);
+            $diff = $to_date_seconds - $login_timestamp_seconds;
+            $no_of_days = round($diff/(60*60*24));
+
+            array_push($reportData, [(string)($key+1), (string)$d->etm->etm_no, (string)$last_manual_sync, (string)$d->conductor->crew_name.' ('.$d->conductor->crew_id.')', (string)date('d-m-Y h:i A', strtotime($d->login_timestamp)), (string)date('d-m-Y h:i A', strtotime($d->logout_timestamp)), (string)$no_of_days]);
+        } 
+
+        $fileName = public_path().'/abcd/'.$title.'.xlsx';        
+
+        $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "No");
+
+        $this->downloadExcelFile($fileName); 
+
+        unlink($fileName);        
     }
 
     public function getQueryBuilder($depot_id, $from_date, $to_date, $etm_no)

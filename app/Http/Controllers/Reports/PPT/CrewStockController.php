@@ -5,9 +5,6 @@ namespace App\Http\Controllers\Reports\PPT;
 use DB;
 use Auth;
 use Validator;
-use PdfReport;
-use CSVReport;
-use ExcelReport;
 use App\Models\Crew;
 use App\Models\Shift;
 use App\Models\Depot;
@@ -17,6 +14,7 @@ use App\Models\CenterStock;
 use Illuminate\Http\Request;
 use App\Models\ReturnCrewStock;
 use App\Traits\checkPermission;
+use App\Traits\GenerateExcelTrait;
 use App\Http\Controllers\Controller;
 use App\Models\Inventory\CrewSummary;
 
@@ -24,6 +22,7 @@ class CrewStockController extends Controller
 {
     use activityLog;
     use checkPermission;
+    use GenerateExcelTrait;
 
     /**
      * Display a listing of the resource.
@@ -71,8 +70,14 @@ class CrewStockController extends Controller
         $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $conductor_id, $denom_id, $series);
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
-        $conductorName = $this->findNameById('crew', 'crew_name', $conductor_id) ? $this->findNameById('crew', 'crew_name', $conductor_id) : 'All';
-        $denomination = $this->findNameById('denominations', 'description', $denom_id) ? $this->findNameById('denominations', 'description', $denom_id) : 'All';
+        $conductorName = $this->findNameById('crew', 'crew_name', $conductor_id);
+        $denomination = $this->findNameById('denominations', 'description', $denom_id);
+
+        $depotName = $depotName ? $depotName : "All";
+        $conductorName = $conductorName ? $conductorName : "All";
+        $denomination = $denomination ? $denomination : "All";
+
+        $title = 'Crew Stock Report'; // Report title
 
         /*
         *meta data shoul be an array as below
@@ -81,20 +86,11 @@ class CrewStockController extends Controller
         $series = $series ? $series : 'All';
         $meta = [ // For displaying filters description on header
             'Depot : ' . $depotName,
-            'Conductor : ' . $conductorName, 
+            'From : ' . date('d-m-Y', strtotime($from_date)),
+            'To : ' . date('d-m-Y', strtotime($to_date)), 
             'Denomination : ' . $denomination,
             'Series : ' . $series
         ];
-
-        //data should be like below data
-        /*
-        [
-            ['col1', 'col2', '...'],
-            ['val1', 'val2', '...'],
-            ['val1', 'val2', '...'],
-            ...
-        ]
-        */
 
         $reportData = $queryBuilder->get();
 
@@ -105,82 +101,49 @@ class CrewStockController extends Controller
     {
         $input = $request->all();
         $depot_id = $input['depot_id'];
+        $from_date = date('Y-m-d', strtotime($input['from_date']));
+        $to_date = date('Y-m-d', strtotime($input['to_date']));
         $conductor_id = $input['conductor_id'];
         $denom_id = $input['denomination_id'];
         $series = $input['series'];
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
-        $denomination = $this->findNameById('denominations', 'description', $denom_id);
-    
-        $title = 'ETM Audit Status Report'; // Report title
-  
-    
-        $data = CrewSummary::with(['conductor:id,crew_name,crew_id', 'denomination:id,description,price']);
+        $denomination = $this->findNameById('denominations', 'description', $denom_id);    
+        $title = 'Crew Stock Report'; // Report title
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $conductor_id, $denom_id, $series);
 
-        if($conductor_id)
-        {
-            $data = $data->where('crew_id', $conductor_id);
-        }
-
-        if($series)
-        {
-            $data = $data->where('series', $series);
-        }
-
-        
         /*
         *meta data shoul be an array as below
         *['Depot : Balewadi', 'ETM No. : 1222', 'ETC.']
         */
         $series = $series ? $series : 'All';
         $meta = [ // For displaying filters description on header
-            'Depot : ' => $depotName,
-            'Denomination : ' => $denomination,
-            'Series : ' => $series
+            'Depot : ' . ucfirst($depotName),
+            'From : ' . date('d-m-Y', strtotime($from_date)),
+            'To : ' . date('d-m-Y', strtotime($to_date)),
+            'Denomination : ' . $denomination,
+            'Series : ' . $series
         ]; 
-        
-                
-        $data = $data->where('items_id', 1);
 
-        $columns = [
-                        'Ticket Type'=> function($row){
-                            return 'Ticket';
-                        }, 
-                        'Conductor Name (ID)'=> function($row){
-                            return $row->conductor->crew_name." (".$row->conductor->crew_id.")";
-                        },
-                        'Denomination' => function($row){
-                            return $row->denomination->description;
-                        }, 
-                        'Series' => function($row){
-                            return $row->series;
-                        }, 
-                        'Opening Ticket No.' => function($row){
-                            return $row->start_sequence;
-                        }, 
-                        'Closing Ticket No.' => function($row){
-                            return $row->end_sequence;
-                        }, 
-                        'Ticket Count' => function($row){
-                            return $row->qty;
-                        }, 
-                        'Ticket Value' => function($row){
-                            return $row->qty * $row->denomination->price;
-                        }, 
-                        'Remark' => function($row){
-                            return '';
-                        }];
+        $data = $queryBuilder->get();
+      
+        $reportColumns = ['S. No', 'Ticket Type', 'Conductor Name (ID)', 'Denomination', 'Series', 'Opening Ticket No.', 'Closing Ticket No.', 'Ticket Count', 'Ticket Value', 'Remark'];
 
-        $title = 'Crew Stock Report'; // Report title
+        $reportData = [];
+        array_push($reportData, $reportColumns);
 
-        return ExcelReport::of($title, $meta, $data, $columns)
-                    ->editColumns(['Ticket Count', 'Ticket Value'], [
-                        'class' => 'right bold',
-                    ])->showTotal([
-                        'Ticket Count' => 'point',
-                        'Ticket Value' => 'point',
-                    ])
-                    ->download($title.'.xlsx');
+        foreach ($data as $key => $d) 
+        {
+            array_push($reportData, [(string)($key+1), (string)'Ticket', (string)$d->conductor->crew_name." (".$d->conductor->crew_id.")", (string)$d->denomination->description, (string)$d->series, (string)$d->start_sequence, (string)$d->end_sequence, (string)$d->qty, (string)($d->qty * $d->denomination->price), ""]);
+        } 
+
+        $fileName = public_path().'/abcd/'.$title.'.xlsx';        
+
+        $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "No");
+
+        $this->downloadExcelFile($fileName); 
+
+        unlink($fileName);
     }
 
     public function getQueryBuilder($depot_id, $from_date, $to_date, $conductor_id, $denom_id, $series)

@@ -5,20 +5,19 @@ namespace App\Http\Controllers\Reports\Revenue;
 use DB;
 use Auth;
 use Validator;
-use PdfReport;
-use CSVReport;
-use ExcelReport;
-use App\Traits\activityLog;
 use App\Models\CenterStock;
+use App\Traits\activityLog;
 use Illuminate\Http\Request;
 use App\Models\CashCollection;
 use App\Traits\checkPermission;
+use App\Traits\GenerateExcelTrait;
 use App\Http\Controllers\Controller;
 
 class ConductorLedgerController extends Controller
 {
     use activityLog;
     use checkPermission;
+    use GenerateExcelTrait;
 
     /**
      * Display a listing of the resource.
@@ -110,6 +109,26 @@ class ConductorLedgerController extends Controller
             'From : '=> date('d-m-Y', strtotime($from_date)),
             'To : '=> date('d-m-Y', strtotime($to_date))
         ]; 
+
+        $data = $this->getData($depot_id, $from_date, $to_date);  
+
+        $reportColumns = ['S. No', 'Date', 'L. Year', 'Actual', 'Variance', 'Percentage', 'L. Year', 'Actual', 'Variance', 'Percentage', 'L. Year', 'Actual', 'Variance', 'Percentage'];
+
+        $reportData = [];
+        array_push($reportData, $reportColumns);
+
+        foreach ($data as $key => $d) 
+        {
+            array_push($reportData, [(string)($key+1), (string)$d['date'], (string)$d['lastYear']['distance'], (string)$d['currentYear']['distance'], (string)$d['kms']['variance'], (string)$d['kms']['percentage'], (string)$d['lastYear']['totalAmount'], (string)$d['currentYear']['totalAmount'], (string)$d['income']['variance'], (string)$d['income']['percentage'], (string)$d['lastYear']['epkm'], (string)$d['currentYear']['epkm'], (string)$d['epkm']['variance'], (string)$d['epkm']['percentage']]);
+        } 
+
+        //return $reportData;
+
+        $fileName = public_path().'/abcd/'.$title.'.xlsx';        
+
+        $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "Yes");
+
+        $this->downloadExcelFile($fileName);
       
         $columns = [
                         'Collected By'=> function($row){

@@ -92,7 +92,7 @@ class Waybill extends Model
 
     public function auditInventory()
     {
-        return $this->hasMany(AuditInventory::class, 'waybill_number', 'abstract_no');
+        return $this->hasOne(AuditInventory::class, 'waybill_number', 'abstract_no');
     }
 
     public function tickets()

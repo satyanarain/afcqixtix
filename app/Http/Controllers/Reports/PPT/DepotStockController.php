@@ -5,18 +5,16 @@ namespace App\Http\Controllers\Reports\PPT;
 use DB;
 use Auth;
 use Validator;
-use PdfReport;
-use CSVReport;
-use ExcelReport;
 use App\Models\Crew;
-use App\Models\Shift;
 use App\Models\Depot;
+use App\Models\Shift;
 use App\Models\Waybill;
 use App\Models\CenterStock;
 use App\Traits\activityLog;
 use Illuminate\Http\Request;
-use App\Traits\checkPermission;
 use App\Models\ReturnCrewStock;
+use App\Traits\checkPermission;
+use App\Traits\GenerateExcelTrait;
 use App\Http\Controllers\Controller;
 use App\Models\Inventory\DepotSummary;
 
@@ -24,6 +22,7 @@ class DepotStockController extends Controller
 {
     use activityLog;
     use checkPermission;
+    use GenerateExcelTrait;
 
     /**
      * Display a listing of the resource.
@@ -85,7 +84,9 @@ class DepotStockController extends Controller
         $meta = [ // For displaying filters description on header
             'Depot : ' . $depotName,
             'Denomination : ' . $denomination,
-            'Series : ' . $series
+            'Series : ' . $series,
+            'From : ' . date('d-m-Y', strtotime($from_date)),
+            'To : ' . date('d-m-Y', strtotime($to_date))
         ]; 
 
         //data should be like below data
@@ -136,12 +137,32 @@ class DepotStockController extends Controller
         */
         $series = $series ? $series : 'All';
         $meta = [ // For displaying filters description on header
-            'Depot : ' => $depotName,
-            'Denomination : ' => $denomination,
-            'Series : ' => $series
+            'Depot : ' . $depotName,
+            'Denomination : ' . $denomination,
+            'Series : ' . $series,
+            'From : ' . date('d-m-Y', strtotime($from_date)),
+            'To : ' . date('d-m-Y', strtotime($to_date))
         ];
 
-        $columns = [
+        $data = $queryBuilder->get();
+      
+        $reportColumns = ['S. No', 'Ticket Type', 'Denomination', 'Series', 'Opening Ticket No.', 'Closing Ticket No.', 'Ticket Count', 'Ticket Value', 'Remark'];
+
+        $reportData = [];
+        array_push($reportData, $reportColumns);
+
+        foreach ($data as $key => $d) 
+        {
+            array_push($reportData, [(string)($key+1), (string)'Ticket', (string)$d->denomination->description, (string)$d->series, (string)$d->start_sequence, (string)$d->end_sequence, (string)$d->qty, (string)($d->qty * $d->denomination->price), (string)""]);
+        } 
+
+        $fileName = public_path().'/abcd/'.$title.'.xlsx';        
+
+        $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "No");
+
+        $this->downloadExcelFile($fileName);
+
+        /*$columns = [
                         'Ticket Type'=> function($row){
                             return 'Ticket';
                         }, 
@@ -176,7 +197,7 @@ class DepotStockController extends Controller
                         'Ticket Count' => 'point',
                         'Ticket Value' => 'point',
                     ])
-                    ->download($title.'.xlsx');
+                    ->download($title.'.xlsx');*/
     }
 
     public function getQueryBuilder($depot_id, $from_date, $to_date, $denom_id, $series)

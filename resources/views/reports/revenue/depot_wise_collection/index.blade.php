@@ -61,21 +61,21 @@
                                     <th>No. of Duties</th>
                                     <th>No. of Trips</th>
                                     <th>Dist. (Kms)</th>
-                                    <th>Tkt Cnt</th>
-                                    <th>Tkt Amt (Rs)</th>
-                                    <th>Pass Sold Cnt</th>
-                                    <th>Pass Sold Amt (Rs)</th>
-                                    <th>Tkt Cnt</th>
-                                    <th>Passenger Cnt</th>
-                                    <th>Tkt Amt (Rs)</th>
-                                    <th>Pass Sold Cnt</th>
-                                    <th>Pass Sold Amt (Rs)</th>
-                                    <th>Payout Amt (Rs)</th>
-                                    <th>Fine Amt (Rs)</th>
+                                    <th>Ticket Count</th>
+                                    <th>Ticket Amount (Rs)</th>
+                                    <th>Pass Sold Count</th>
+                                    <th>Pass Sold Amount (Rs)</th>
+                                    <th>Ticket Count</th>
+                                    <th>Passenger Count</th>
+                                    <th>Ticket Amount (Rs)</th>
+                                    <th>Pass Sold Count</th>
+                                    <th>Pass Sold Amount (Rs)</th>
+                                    <th>Payout Amount (Rs)</th>
+                                    <th>Fine Amount (Rs)</th>
                                     <th>Cash (Rs)</th>
                                     <th>E-Purse (Rs)</th>
-                                    <th>Tot Amt (Rs)</th>
-                                    <th>Conc Amt (Rs)</th>
+                                    <th>Total Amount (Rs)</th>
+                                    <th>Concession Amount (Rs)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -177,7 +177,7 @@ $(document).ready(function(){
                     if(d)
                     {
                         reportData.push([{'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'PPT', 'style': 'tableHeaderStyle', colSpan: 4, 'alignment':'center'}, {}, {}, {}, {'text':'ETM', 'style': 'tableHeaderStyle', colSpan: 5, 'alignment':'center'}, {}, {}, {}, {}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}]);
-                        reportData.push([{'text':'Depot', 'style': 'tableHeaderStyle'}, {'text':'No. of Duties', 'style': 'tableHeaderStyle'}, {'text':'No. of Trips', 'style': 'tableHeaderStyle'}, {'text':'Dist. (Kms)', 'style': 'tableHeaderStyle'}, {'text':'Tkt Cnt', 'style': 'tableHeaderStyle'}, {'text':'Tkt Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Cnt', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Tkt Cnt', 'style': 'tableHeaderStyle'}, {'text':'Passenger Cnt', 'style': 'tableHeaderStyle'}, {'text':'Ticket Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Cnt', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Payout Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Fine Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Cash (Rs)', 'style': 'tableHeaderStyle'}, {'text':'EPurse (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Total Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Conc Amt (Rs)', 'style': 'tableHeaderStyle'}]);
+                        reportData.push([{'text':'Depot', 'style': 'tableHeaderStyle'}, {'text':'No. of Duties', 'style': 'tableHeaderStyle'}, {'text':'No. of Trips', 'style': 'tableHeaderStyle'}, {'text':'Dist. (Kms)', 'style': 'tableHeaderStyle'}, {'text':'Ticket Count', 'style': 'tableHeaderStyle'}, {'text':'Ticket Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Count', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Ticket Count', 'style': 'tableHeaderStyle'}, {'text':'Passenger Count', 'style': 'tableHeaderStyle'}, {'text':'Ticket Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Count', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Payout Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Fine Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Cash (Rs)', 'style': 'tableHeaderStyle'}, {'text':'EPurse (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Total Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Concession Amount (Rs)', 'style': 'tableHeaderStyle'}]);
                         
                         reportData.push([{'text':response.depotName}, {'text':''+d.duties}, {'text':''+d.trips}, {'text':''+parseFloat(d.distance).toFixed(2)}, {'text':''+d.totalPaperTkts}, {'text':''+parseFloat(d.totalPaperTktsSum).toFixed(2)}, {'text':''+d.totalPaperPass}, {'text':''+parseFloat(d.totalPaperPassSum).toFixed(2)}, {'text':''+d.totalETMTkts}, {'text':''+d.totalETMTotalPsnger}, {'text':''+parseFloat(d.totalETMTktsSum).toFixed(2)}, {'text':''+d.totalETMPassCnt}, {'text':''+parseFloat(d.totalETMPassSum).toFixed(2)}, {'text':''+parseFloat(d.payout).toFixed(2)}, {'text':''+parseFloat(d.penalty_amount).toFixed(2)}, {'text':''+parseFloat(d.totalCash).toFixed(2)}, {'text':''+parseFloat(d.epurseAmt).toFixed(2)}, {'text':''+parseFloat(d.totalAmt).toFixed(2)}, {'text':''+parseFloat(d.concession).toFixed(2)}]);
 

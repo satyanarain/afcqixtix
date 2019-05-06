@@ -19,6 +19,9 @@
                     })
 
                     console.log(modifiedMetaData);
+                    console.log(data);
+
+                    //return;
             
                     var docDefinition = {
                         watermark: {text: 'QixTix | Automated Fare Collection System', color: '#367fa9', opacity: 0.05, bold: true, italics: false, fontSize: 8},
@@ -381,11 +384,43 @@ function getConductorsByDepotId(depotId, idToAppend, type="All", selected)
             else
                 var str = "<option value=''>Select Conductor</option>";
 
-            $.each(response, function(index, conductor){
-                if(conductor.crew_id == selected)
-                    str += "<option value='"+conductor.crew_id+"' selected>"+conductor.crew_name+"</option>";
+            $.each(response.data, function(index, conductor){
+                if(conductor.id == selected)
+                    str += "<option value='"+conductor.id+"' selected>"+conductor.crew_name+"</option>";
                 else
-                    str += "<option value='"+conductor.crew_id+"'>"+conductor.crew_name+"</option>";
+                    str += "<option value='"+conductor.id+"'>"+conductor.crew_name+"</option>";
+            });
+
+            $('#'+idToAppend).html(str);
+        },
+        error: function(error)
+        {
+            console.log(error);
+        }
+    });
+}
+
+function getVehiclesByDepotId(depotId, idToAppend, type="All", selected)
+{
+    var url = "{{route('reports.getvehiclesbydepotid', ':placeholder')}}";
+    url = url.replace(":placeholder", depotId); 
+    console.log(url);
+    $.ajax({
+        url:url,
+        type:"GET",
+        dataType: "JSON",
+        success: function(response)
+        {
+            if(type=="All")
+                var str = "<option value=''>All</option>";
+            else
+                var str = "<option value=''>Select Vehicle</option>";
+
+            $.each(response, function(index, vehicle){
+                if(vehicle.id == selected)
+                    str += "<option value='"+vehicle.id+"' selected>"+vehicle.vehicle_registration_number+"</option>";
+                else
+                    str += "<option value='"+vehicle.id+"'>"+vehicle.vehicle_registration_number+"</option>";
             });
 
             $('#'+idToAppend).html(str);

@@ -51,15 +51,12 @@
                                     <th colspan="4" style="text-align: center;">PPT</th>
                                     <th colspan="7" style="text-align: center;">ETM</th>
                                     <th></th>
-                                    <!-- <th></th> -->
                                     <th></th>
                                     <th></th>
                                     <th></th>
                                     <th></th>
                                     <th></th>
                                     <th></th>
-                                    <!-- <th></th>
-                                    <th></th> -->
                                 </tr>
                                 <tr>
                                     <th>S. No.</th>
@@ -68,27 +65,24 @@
                                     <th>Crew ID</th>
                                     <th class="text-right">No. of Trips</th>
                                     <th class="text-right">Kms</th>
-                                    <th class="text-right">Tkt Cnt</th>
-                                    <th class="text-right">Tkt Amt (Rs)</th>
-                                    <th class="text-right">Pass Sold Cnt</th>
-                                    <th class="text-right">Pass Sold Amt (Rs)</th>
-                                    <th class="text-right">Passenger Cnt</th>
-                                    <th class="text-right">Tkt Cnt</th>
-                                    <th class="text-right">Tkt Amt (Rs)</th>
-                                    <th class="text-right">Pass Sold Cnt</th>
-                                    <th class="text-right">Pass Sold Amt (Rs)</th>
-                                    <th class="text-right">EPurse Cnt</th>
-                                    <th class="text-right">EPurse Amt (Rs)</th>
-                                    <th class="text-right">Payout Amt (Rs)</th>
-                                    <!-- <th class="text-right">Fine Amt (Rs)</th> -->
-                                    <th class="text-right">Lugg Amt (Rs)</th>
-                                    <th class="text-right">Toll Amt (Rs)</th>
+                                    <th class="text-right">Ticket Count</th>
+                                    <th class="text-right">Ticket Amount (Rs)</th>
+                                    <th class="text-right">Pass Sold Count</th>
+                                    <th class="text-right">Pass Sold Amount (Rs)</th>
+                                    <th class="text-right">Passenger Count</th>
+                                    <th class="text-right">Ticket Count</th>
+                                    <th class="text-right">Ticket Amount (Rs)</th>
+                                    <th class="text-right">Pass Sold Count</th>
+                                    <th class="text-right">Pass Sold Amount (Rs)</th>
+                                    <th class="text-right">EPurse Count</th>
+                                    <th class="text-right">EPurse Amount (Rs)</th>
+                                    <th class="text-right">Payout Amount (Rs)</th>
+                                    <th class="text-right">Lugg Amount (Rs)</th>
+                                    <th class="text-right">Toll Amount (Rs)</th>
                                     <th class="text-right">Batta/Tea Allowance (Rs)</th>
                                     <th class="text-right">Incentives (Rs)</th>
-                                    <th class="text-right">Amt Payable/Adjustment Amt (Rs)</th>
-                                    <th class="text-right">Amt Remitted/After Adjustment Amt (Rs)</th>
-                                    <!-- <th class="text-right">Print Error Tkt</th>
-                                    <th class="text-right">Print Error Amt (Rs)</th> --><!-- To be commented for now -->
+                                    <th class="text-right">Amount Payable/Adjustment Amount (Rs)</th>
+                                    <th class="text-right">Amount Remitted/After Adjustment Amount (Rs)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -112,15 +106,12 @@
                                     <td class="text-right">{{$d->epurse_count}}</td>
                                     <td class="text-right">{{number_format((float)$d->epurse_amount, 2, '.', '')}}</td>
                                     <td class="text-right">{{$d->payouts->pluck('amount')->sum()}}</td>
-                                    <!-- <td class="text-right">{{$d->passenger_count}}</td> -->
                                     <td class="text-right">{{number_format((float)$d->baggage_amount, 2, '.', '')}}</td>
                                     <td class="text-right">{{number_format((float)$d->toll_amount, 2, '.', '')}}</td>
                                     <td class="text-right">{{number_format((float)$d->incentives, 2, '.', '')}}</td>
                                     <td class="text-right">{{number_format((float)$d->batta_tea_allowance, 2, '.', '')}}</td>
                                     <td class="text-right">{{number_format((float)$d->cashCollection->amount_payable, 2, '.', '')}}</td>
                                     <td class="text-right">{{number_format((float)$d->cashCollection->cash_remitted, 2, '.', '')}}</td>
-                                    <!-- <td class="text-right">{{number_format((float)$d->incentives, 2, '.', '')}}</td>
-                                    <td class="text-right">{{number_format((float)$d->batta_tea_allowance, 2, '.', '')}}</td> -->
                                 </tr>
                             @empty
                                 <tr>
@@ -171,7 +162,7 @@ $(document).ready(function(){
                     if(data)
                     {
                         reportData.push([{'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'PPT', 'style': 'tableHeaderStyle', colSpan: 4, 'alignment':'center'}, {}, {}, {}, {'text':'ETM', 'style': 'tableHeaderStyle', colSpan: 7, 'alignment':'center'}, {}, {}, {}, {}, {}, {}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}, {'text':'', 'style': 'tableHeaderStyle'}]);
-                        reportData.push([{'text':'S. No.', 'style': 'tableHeaderStyle'}, {'text':'Route/Duty/Shift', 'style': 'tableHeaderStyle'}, {'text':'Abstract No.', 'style': 'tableHeaderStyle'}, {'text':'Crew ID', 'style': 'tableHeaderStyle'}, {'text':'No of Trips', 'style': 'tableHeaderStyle'}, {'text':'Kms', 'style': 'tableHeaderStyle'}, {'text':'Tkt Cnt', 'style': 'tableHeaderStyle'}, {'text':'Tkt Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Cnt', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Passenger Cnt', 'style': 'tableHeaderStyle'}, {'text':'Tkt Cnt', 'style': 'tableHeaderStyle'}, {'text':'Tkt Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Cnt', 'style': 'tableHeaderStyle'}, {'text':'Pass Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'EPurse Cnt', 'style': 'tableHeaderStyle'}, {'text':'EPurse Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Payout Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Lugg Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Toll Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Butta/Tea Allowance (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Incentives (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Amt Payable/Adjustment Amt (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Amt Remitted/After Adjustment Amt (Rs)', 'style': 'tableHeaderStyle'}]);
+                        reportData.push([{'text':'S. No.', 'style': 'tableHeaderStyle'}, {'text':'Route/Duty/Shift', 'style': 'tableHeaderStyle'}, {'text':'Abstract No.', 'style': 'tableHeaderStyle'}, {'text':'Crew ID', 'style': 'tableHeaderStyle'}, {'text':'No of Trips', 'style': 'tableHeaderStyle'}, {'text':'Kms', 'style': 'tableHeaderStyle'}, {'text':'Ticket Count', 'style': 'tableHeaderStyle'}, {'text':'Ticket Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Count', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Passenger Count', 'style': 'tableHeaderStyle'}, {'text':'Ticket Count', 'style': 'tableHeaderStyle'}, {'text':'Ticket Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Pass Sold Count', 'style': 'tableHeaderStyle'}, {'text':'Pass Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'EPurse Count', 'style': 'tableHeaderStyle'}, {'text':'EPurse Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Payout Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Lugg Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Toll Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Butta/Tea Allowance (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Incentives (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Amount Payable/Adjustment Amount (Rs)', 'style': 'tableHeaderStyle'}, {'text':'Amount Remitted/After Adjustment Amount (Rs)', 'style': 'tableHeaderStyle'}]);
 
                         var i = 1;
                         data.map(function(d){  

@@ -5,9 +5,6 @@ namespace App\Http\Controllers\Reports\PPT;
 use DB;
 use Auth;
 use Validator;
-use PdfReport;
-use CSVReport;
-use ExcelReport;
 use App\Models\Crew;
 use App\Models\Shift;
 use App\Models\Depot;
@@ -16,6 +13,7 @@ use App\Traits\activityLog;
 use App\Models\CenterStock;
 use Illuminate\Http\Request;
 use App\Traits\checkPermission;
+use App\Traits\GenerateExcelTrait;
 use App\Http\Controllers\Controller;
 use App\Models\Inventory\ReturnCrewStock;
 
@@ -23,6 +21,7 @@ class ReturnedByConductorController extends Controller
 {
     use activityLog;
     use checkPermission;
+    use GenerateExcelTrait;
 
     /**
      * Display a listing of the resource.
@@ -44,7 +43,7 @@ class ReturnedByConductorController extends Controller
         $denom_id = $input['denomination_id'];
         $orderBy = $input['order_by'];
     
-        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $denom_id, $conductor_id);
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $denom_id, $conductor_id, $orderBy);
 
         $data = $queryBuilder->orderBy($orderBy, 'asc')
                     ->paginate(10);
@@ -68,7 +67,7 @@ class ReturnedByConductorController extends Controller
         $denom_id = $input['denomination_id'];
         $orderBy = $input['order_by'];
     
-        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $denom_id, $conductor_id);
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $denom_id, $conductor_id, $orderBy);
 
         $data = $queryBuilder;
 
@@ -138,13 +137,16 @@ class ReturnedByConductorController extends Controller
         $denom_id = $input['denomination_id'];
         $orderBy = $input['order_by'];
     
-        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $denom_id, $conductor_id);
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $denom_id, $conductor_id, $orderBy);
 
-        $data = $queryBuilder->orderBy($orderBy, 'ASC');
+        $queryBuilder = $queryBuilder->orderBy($orderBy, 'ASC');
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
-        $conductorName = $this->findNameById('crew', 'crew_name', $conductor_id) ? $this->findNameById('crew', 'crew_name', $conductor_id) : 'All';
-        $denomination = $this->findNameById('denominations', 'description', $denom_id) ? $this->findNameById('denominations', 'description', $denom_id) : 'All';
+        $conductorName = $this->findNameById('crew', 'crew_name', $conductor_id);
+        $denomination = $this->findNameById('denominations', 'description', $denom_id);
+
+        $conductorName = $conductorName ? $conductorName : "All"; 
+        $denomination = $denomination ? $denomination : "All"; 
     
         $title = 'Returned By Conductor'; // Report title
 
@@ -154,63 +156,33 @@ class ReturnedByConductorController extends Controller
         */
 
         $meta = [ // For displaying filters description on header
-            'Depot : ' => $depotName, 
-            'Denomination : ' => $denomination,
-            'From : '=> date('d-m-Y', strtotime($from_date)),
-            'To : '=> date('d-m-Y', strtotime($to_date))
-        ];   
+            'Depot : ' . ucfirst($depotName), 
+            'Denomination : ' . $denomination,
+            'From : ' . date('d-m-Y', strtotime($from_date)),
+            'To : ' . date('d-m-Y', strtotime($to_date))
+        ];  
 
-        $columns = [
-                        'Ticket Type'=> function($row){
-                            return 'Ticket';
-                        },
-                        'Date'=> function($row){
-                            return date('d-m-Y', strtotime($row->created_at));
-                        },
-                        'Denomination' => function($row){
-                            return $row->denomination->description;
-                        }, 
-                        'Series' => function($row){
-                            return $row->series;
-                        }, 
-                        'Opening Ticket No.' => function($row){
-                            return $row->start_sequence;
-                        }, 
-                        'Closing Ticket No.' => function($row){
-                            return $row->end_sequence;
-                        }, 
-                        'Ticket Count' => function($row){
-                            return $row->quantity;
-                        }, 
-                        'Ticket Value' => function($row){
-                            return $row->quantity * $row->denomination->price;
-                        }, 
-                        'Returned To' => function($row){
-                            return $row->returnedTo->name;
-                        }, 
-                        'Returned By' => function($row){
-                            return $row->conductor->crew_name;
-                        }];
+        $data = $queryBuilder->get();
+      
+        $reportColumns = ['S. No', 'Ticket Type', 'Date', 'Denomination', 'Series', 'Opening Ticket No.', 'Closing Ticket No.', 'Ticket Count', 'Ticket Value', 'Returned To', 'Returned By'];
 
-        if($orderBy == 'created_at')
+        $reportData = [];
+        array_push($reportData, $reportColumns);
+
+        foreach ($data as $key => $d) 
         {
-        	$groupBy = 'Date';
-        }else{
-        	$groupBy = 'Denomination';
-        }
+            array_push($reportData, [(string)($key+1), (string)'Ticket', (string)date('d-m-Y', strtotime($d->created_at)), (string)$d->denomination->description, (string)$d->series, (string)$d->start_sequence, (string)$d->end_sequence, (string)$d->quantity, (string)($d->quantity * $d->denomination->price), (string)$d->returnedTo->name, (string)$d->conductor->crew_name]);
+        } 
 
-        return ExcelReport::of($title, $meta, $data, $columns)
-                    ->editColumns(['Ticket Count', 'Ticket Value'], [
-                        'class' => 'right bold',
-                    ])->showTotal([
-                        'Ticket Count' => 'point',
-                        'Ticket Value' => 'point',
-                    ])->groupBy($groupBy)
-                    ->download($title.'.xlsx');
+        $fileName = public_path().'/abcd/'.$title.'.xlsx';        
+
+        $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "No");
+
+        $this->downloadExcelFile($fileName); 
     }
 
 
-    public function getQueryBuilder($depot_id, $from_date, $to_date, $denom_id, $conductor_id)
+    public function getQueryBuilder($depot_id, $from_date, $to_date, $denom_id, $conductor_id, $orderBy)
     {
         $queryBuilder = ReturnCrewStock::with(['depot:id,name', 'item:id,name', 'conductor:id,crew_name,crew_id', 'denomination:id,description,price', 'returnedTo:id,name']);
 
@@ -236,6 +208,7 @@ class ReturnedByConductorController extends Controller
         }
                 
         $queryBuilder = $queryBuilder->where('items_id', 1);
+        $queryBuilder = $queryBuilder->orderBy('items_id', $orderBy);
 
         return $queryBuilder;
     }

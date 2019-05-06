@@ -5,9 +5,6 @@ namespace App\Http\Controllers\Reports\PPT;
 use DB;
 use Auth;
 use Validator;
-use PdfReport;
-use CSVReport;
-use ExcelReport;
 use App\Models\Crew;
 use App\Models\Shift;
 use App\Models\Depot;
@@ -17,6 +14,7 @@ use App\Models\CenterStock;
 use Illuminate\Http\Request;
 use App\Models\AuditInventory;
 use App\Traits\checkPermission;
+use App\Traits\GenerateExcelTrait;
 use App\Http\Controllers\Controller;
 
 
@@ -24,6 +22,7 @@ class ConsumptionController extends Controller
 {
     use activityLog;
     use checkPermission;
+    use GenerateExcelTrait;
 
     /**
      * Display a listing of the resource.
@@ -100,7 +99,8 @@ class ConsumptionController extends Controller
         $meta = [ // For displaying filters description on header
             'Depot : ' . $depotName, 
             'Denomination : ' . $denomination,
-            'From : '.date('d-m-Y', strtotime($from_date)).' To : '.date('d-m-Y', strtotime($to_date))
+            'From : ' . date('d-m-Y', strtotime($from_date)),
+            'To : ' . date('d-m-Y', strtotime($to_date))
         ];   
 
         $reportData = [];
@@ -174,70 +174,31 @@ class ConsumptionController extends Controller
         */
 
         $meta = [ // For displaying filters description on header
-            'Depot : ' => $depotName, 
-            'Denomination : ' => $denomination,
-            'From : '=> date('d-m-Y', strtotime($from_date)),
-            'To : '=> date('d-m-Y', strtotime($to_date))
+            'Depot : ' . $depotName, 
+            'Denomination : ' . $denomination,
+            'From : ' . date('d-m-Y', strtotime($from_date)),
+            'To : ' . date('d-m-Y', strtotime($to_date))
         ]; 
 
-        if($report_type == 'detail')
+        $data = $data->get();
+      
+        $reportColumns = ['S. No', 'Ticket Type', 'Date', 'Denomination', 'Ticket Count', 'Ticket Value'];
+
+        $reportData = [];
+        array_push($reportData, $reportColumns);
+
+        foreach ($data as $key => $d) 
         {
-        	$columns = [
-                        'Ticket Type'=> function($row){
-                            return 'Ticket';
-                        },
-                        'Date'=> function($row){
-                            return date('d-m-Y', strtotime($row->created_at));
-                        },
-                        'Denomination' => function($row){
-                            return $row->denomination->description;
-                        }, 
-                        'Ticket Count' => function($row){
-                            return $row->quantity;
-                        }, 
-                        'Ticket Value' => function($row){
-                            return $row->quantity * $row->denomination->price;
-                        }];
+            array_push($reportData, [(string)($key+1), (string)'Ticket', (string)date('d-m-Y', strtotime($d->created_at)), (string)$d->denomination->description, (string)$d->quantity, (string)$d->quantity * $d->denomination->price]);
+        } 
 
-        	return ExcelReport::of($title, $meta, $data, $columns)
-                    ->editColumns(['Ticket Count', 'Ticket Value'], [
-                        'class' => 'right bold',
-                    ])->showTotal([
-                        'Ticket Count' => 'point',
-                        'Ticket Value' => 'point',
-                    ])->groupBy('Date')
-                    ->download($title.'.xlsx');
-        }else{
-        	$columns = [
-                        'Ticket Type'=> function($row){
-                            return 'Ticket';
-                        },
-                        'Denomination' => function($row){
-                            return $row->denomination->description;
-                        }, 
-                        'Ticket Count' => function($row){
-                            return $row->quantity;
-                        }, 
-                        'Ticket Value' => function($row){
-                            return $row->quantity * $row->denomination->price;
-                        }];
+        $fileName = public_path().'/abcd/'.$title.'.xlsx';        
 
-            $data = AuditInventory::with(['denomination:id,description,price'])
-								->whereDate('created_at', '>=', $from_date)
-	        				 	->whereDate('created_at', '<=', $to_date)
-	        				 	->groupBy('denom_id')
-   								->selectRaw('*, sum(quantity) as quantity');
+        $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "No");
 
-        	return ExcelReport::of($title, $meta, $data, $columns)
-                    ->editColumns(['Ticket Count', 'Ticket Value'], [
-                        'class' => 'right bold',
-                    ])->showTotal([
-                        'Ticket Count' => 'point',
-                        'Ticket Value' => 'point',
-                    ])
-                    ->download($title.'.xlsx');
-        }
+        $this->downloadExcelFile($fileName); 
 
+        unlink($fileName);
         
     }
 

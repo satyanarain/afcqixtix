@@ -5,20 +5,19 @@ namespace App\Http\Controllers\Reports\Revenue;
 use DB;
 use Auth;
 use Validator;
-use PdfReport;
-use CSVReport;
-use ExcelReport;
-use App\Traits\activityLog;
 use App\Models\CenterStock;
+use App\Traits\activityLog;
 use Illuminate\Http\Request;
 use App\Models\CashCollection;
 use App\Traits\checkPermission;
+use App\Traits\GenerateExcelTrait;
 use App\Http\Controllers\Controller;
 
 class CashCollectionController extends Controller
 {
     use activityLog;
     use checkPermission;
+    use GenerateExcelTrait;
 
     /**
      * Display a listing of the resource.
@@ -105,13 +104,36 @@ class CashCollectionController extends Controller
         */
 
         $meta = [ // For displaying filters description on header
-            'Depot : ' => $depotName,
-            'Collected By. : ' => $collectedBy,
-            'From : '=> date('d-m-Y', strtotime($from_date)),
-            'To : '=> date('d-m-Y', strtotime($to_date))
+            'Depot : ' . ucfirst($depotName),
+            'Collected By. : ' . $collectedBy,
+            'From : ' . date('d-m-Y', strtotime($from_date)),
+            'To : ' . date('d-m-Y', strtotime($to_date))
         ]; 
+
+
+        $data = $queryBuilder->get();
       
-        $columns = [
+        $reportColumns = ['S. No', 'Collected By', 'Route - Duty - Shift', 'Abstract No.', 'Challan No.', 'Conductor Name (ID)', 'Amt. Payable (Rs)', 'Adjustment Amt. (Rs)', 'Amt. Collected (Rs)', 'Payout Amt. (Rs)', 'Collected On', 'Remark'];
+
+        $reportData = [];
+        array_push($reportData, $reportColumns);
+
+        foreach ($data as $key => $d) 
+        {
+            $diff = $d->cash_remitted;
+                
+            array_push($reportData, [(string)($key+1), (string)$d->collector->name, (string)$d->waybill->route->route_name.' - '.$d->waybill->duty->duty_number.' - '.$d->waybill->shift->shift, (string)$d->abstract_no, (string)$d->cash_challan_no, (string)$d->waybill->conductor->crew_name.' ('.$d->waybill->conductor->crew_id.')', (string)number_format((float)$d->amount_payable, 2, '.', ''), (string)number_format((float)$d->amount_payable, 2, '.', ''), (string)number_format((float)$diff, 2, '.', ''), (string)number_format((float)$d->waybill->auditRemittance->manual_payout, 2, '.', ''), (string)date('d-m-Y H:i:s', strtotime($d->submitted_at)), $d->remark]);
+        } 
+
+        $fileName = public_path().'/abcd/'.$title.'.xlsx';        
+
+        $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "No");
+
+        $this->downloadExcelFile($fileName); 
+
+        unlink($fileName); 
+      
+        /*$columns = [
                         'Collected By'=> function($row){
                             return $row->collector->name;
                         },
@@ -145,7 +167,7 @@ class CashCollectionController extends Controller
                         }];
 
         return ExcelReport::of($title, $meta, $queryBuilder, $columns)
-        					->download($title.'.xlsx');        
+        					->download($title.'.xlsx');*/        
     }
 
     public function getQueryBuilder($depot_id, $from_date, $to_date, $collected_by)

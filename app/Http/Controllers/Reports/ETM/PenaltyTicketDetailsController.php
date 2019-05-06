@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Reports\ETM;
 
 use DB;
 use Auth;
+use App\Models\Crew;
 use App\Models\Inspection;
 use App\Traits\activityLog;
 use Illuminate\Http\Request;
@@ -133,7 +134,9 @@ class PenaltyTicketDetailsController extends Controller
 
         $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "No");
 
-        $this->downloadExcelFile($fileName);        
+        $this->downloadExcelFile($fileName);   
+
+        unlink($fileName);     
     }
 
 

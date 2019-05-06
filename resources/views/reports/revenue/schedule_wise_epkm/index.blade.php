@@ -48,11 +48,11 @@
                                     <th class="text-right">Sch Trips</th>
                                     <th class="text-right">Oper Trips</th>
                                     <th class="text-right">Income</th>
-                                    <th class="text-right">Traget EPKM</th>
+                                    <th class="text-right">Target EPKM</th>
                                     <th class="text-right">Actual EPKM</th>
                                     <th class="text-right">Variance</th>
-                                    <th class="text-right">PPT Tkt/Pass Cnt</th>
-                                    <th class="text-right">ETM Passenger Cnt</th>
+                                    <th class="text-right">PPT Ticket/Pass Count</th>
+                                    <th class="text-right">ETM Passenger Count</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -62,7 +62,8 @@
                                     <td>{{$key+1}}</td>
                                     <td>{{$data[$route_id][$duty->duty_number][0]['route'].'-'.$duty->duty_number}}</td>
                                     <td>{{$duty->start_time}}</td>
-                                    <td class="text-right">{{$data[$route_id][$duty->duty_number][0]['scheduledTrips']}}</td><td class="text-right">{{$data[$route_id][$duty->duty_number][0]['tripsCount']}}</td>
+                                    <td class="text-right">{{$data[$route_id][$duty->duty_number][0]['scheduledTrips']}}</td>
+                                    <td class="text-right">{{$data[$route_id][$duty->duty_number][0]['tripsCount']}}</td>
                                     <td class="text-right">{{number_format((float)$data[$route_id][$duty->duty_number][0]['totalAmount'], 2, '.', '')}}</td>
                                     <td class="text-right">{{number_format((float)$data[$route_id][$duty->duty_number][0]['targetEPKM'], 2, '.', '')}}</td>
                                     <td class="text-right">{{number_format((float)$data[$route_id][$duty->duty_number][0]['actualEPKM'], 2, '.', '')}}</td>
@@ -132,7 +133,7 @@ $(document).ready(function(){
                     console.log(duties)
                     var reportData = [];
                     //var widths = [22, "*", "*", "*", "*", "*", "*", "*", "*", "*"];
-                    reportData.push([{'text':'S. No.', 'style': 'tableHeaderStyle'}, {'text':'Route', 'style': 'tableHeaderStyle'}, {'text':'Sch Time', 'style': 'tableHeaderStyle'}, {'text':'Sch Trips', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Oper Trips', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Income', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Traget EPKM', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Actual EPKM', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Variance', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'PPT Tkt/Pass Cnt', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'ETM Passenger Cnt', 'style': 'tableHeaderStyle', alignment:'right'}]);
+                    reportData.push([{'text':'S. No.', 'style': 'tableHeaderStyle'}, {'text':'Route', 'style': 'tableHeaderStyle'}, {'text':'Sch Time', 'style': 'tableHeaderStyle'}, {'text':'Sch Trips', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Oper Trips', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Income', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Target EPKM', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Actual EPKM', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'Variance', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'PPT Ticket/Pass Count', 'style': 'tableHeaderStyle', alignment:'right'}, {'text':'ETM Passenger Count', 'style': 'tableHeaderStyle', alignment:'right'}]);
                     var i = 1;
                     $.each(duties, function(ind, d){   
                         var route = data[route_id][d.duty_number][0]['route']+'-'+d.duty_number;
@@ -170,7 +171,7 @@ $(document).ready(function(){
 
     $(document).on('click', '#exportAsXLS', function(){
         var depot_id = $('#depot_id').val();
-        var etm_no = $('#etm_no').val();
+        var route_id = $('#route_id').val();
         var fromDate = $('#from_date').val();
         if(!fromDate)
         {
@@ -188,7 +189,7 @@ $(document).ready(function(){
         var queryParams = "?depot_id="+depot_id
                         + "&from_date="+fromDate
                         + "&to_date="+toDate
-                        + "&etm_no="+etm_no;
+                        + "&route_id="+route_id;
 
         var url = "{{route('reports.revenue.schedule_wise_epkm.getexcelreport')}}"+queryParams;
 

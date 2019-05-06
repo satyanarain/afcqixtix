@@ -5,21 +5,20 @@ namespace App\Http\Controllers\Reports\ETM;
 use DB;
 use Auth;
 use Validator;
-use PdfReport;
-use CSVReport;
-use ExcelReport;
 use App\Models\Ticket;
 use App\Models\Waybill;
 use App\Models\ETMLoginLog;
 use App\Traits\activityLog;
 use Illuminate\Http\Request;
 use App\Traits\checkPermission;
+use App\Traits\GenerateExcelTrait;
 use App\Http\Controllers\Controller;
 
 class PendingActivityLogController extends Controller
 {
     use activityLog;
     use checkPermission;
+    use GenerateExcelTrait;
 
     /**
      * Display a listing of the resource.
@@ -74,8 +73,9 @@ class PendingActivityLogController extends Controller
         */
         $pending_activity_text = $pending_activity ? ucfirst($pending_activity_text) : 'All';
         $meta = [ // For displaying filters description on header
-            'Depot : ' . $depotName,
-            'From : '.date('d-m-Y', strtotime($from_date)).' To : '.date('d-m-Y', strtotime($to_date)),
+            'Depot : ' . ucfirst($depotName),
+            'From : '.date('d-m-Y', strtotime($from_date)),
+            'To : '.date('d-m-Y', strtotime($to_date)),
             'Pending Activity : '.$pending_activity_text
         ];   
 
@@ -92,7 +92,7 @@ class PendingActivityLogController extends Controller
         $to_date = date('Y-m-d', strtotime($input['to_date']));
         $pending_activity = $input['pending_activity'];
 
-        $data = $this->getQueryBuilder($depot_id, $from_date, $to_date, $pending_activity);
+        $queryBuilder = $this->getQueryBuilder($depot_id, $from_date, $to_date, $pending_activity);
 
         $depotName = $this->findNameById('depots', 'name', $depot_id);
     
@@ -103,48 +103,39 @@ class PendingActivityLogController extends Controller
         *['Depot : Balewadi', 'ETM No. : 1222', 'ETC.']
         */
         $pending_activity_text = $pending_activity ? ucfirst($pending_activity_text) : 'All';
+
         $meta = [ // For displaying filters description on header
-            'Depot : ' => $depotName,
-            'From : '=> date('d-m-Y', strtotime($from_date)),
-            'To : '=> date('d-m-Y', strtotime($to_date)),
-            'Pending Activity : '=> $pending_activity_text
+            'Depot : ' . ucfirst($depotName),
+            'From : ' . date('d-m-Y', strtotime($from_date)),
+            'To : ' . date('d-m-Y', strtotime($to_date)),
+            'Pending Activity : ' . $pending_activity_text
         ]; 
 
+        $data = $queryBuilder->get();
       
-        $columns = [
-                        'Date'=> function($row){
-                            return date('d-m-Y', strtotime($row->date));
-                        },
-                        'ETM No.'=> function($row){
-                            return $row->etm->etm_no;
-                        }, 
-                        'Conductor ID' => function($row){
-                            return $row->conductor->crew_id;
-                        },
-                        'Route'=> function($row){
-                            return $row->route->route_name;
-                        },
-                        'Duty' => function($row){
-                            return $row->duty->duty_number;
-                        }, 
-                        'Shift' => function($row){
-                            return $row->shift->shift;
-                        }, 
-                        'Login Timestamp' => function($row){
-                            return $row->etmLoginDetails->login_timestamp ? date('d-m-Y H:i:s', strtotime($row->etmLoginDetails->login_timestamp)) : 'Pending';
-                        }, 
-                        'Logout Timestamp' => function($row){
-                            return $row->etmLoginDetails->logout_timestamp ? date('d-m-Y H:i:s', strtotime($row->etmLoginDetails->logout_timestamp)) : 'Pending';
-                        }, 
-                        'Audit Timestamp' => function($row){
-                            return $row->auditRemittance->created_date?date('d-m-Y H:i:s', strtotime($row->auditRemittance->created_date)):'Pending';
-                        }, 
-                        'Remittance Timestamp' => function($row){
-                            return $row->cashCollection->submitted_at?date('d-m-Y H:i:s', strtotime($row->cashCollection->submitted_at)):'Pending';
-                        }];
+        $reportColumns = ['S. No', 'Date', 'ETM No.', 'Conductor ID', 'Route', 'Duty', 'Shift', 'Login Timestamp', 'Logout Timestamp', 'Audit Timestamp', 'Remittance Timestamp'];
 
-        return ExcelReport::of($title, $meta, $data, $columns)
-        					->download($title.'.xlsx');        
+        $reportData = [];
+        array_push($reportData, $reportColumns);
+
+        foreach ($data as $key => $d) 
+        {
+            $login_timestamp = $d->etmLoginDetails->login_timestamp ? date('d-m-Y H:i:s', strtotime($d->etmLoginDetails->login_timestamp)) : 'Pending';
+            $logout_timestamp = $d->etmLoginDetails->logout_timestamp ? date('d-m-Y H:i:s', strtotime($d->etmLoginDetails->logout_timestamp)) : 'Pending';
+            $audit_timestamp = $d->auditRemittance->created_date?date('d-m-Y H:i:s', strtotime($d->auditRemittance->created_date)):'Pending';
+            $remittance_timestamp = $d->cashCollection->submitted_at?date('d-m-Y H:i:s', strtotime($d->cashCollection->submitted_at)):'Pending';
+
+
+            array_push($reportData, [(string)($key+1), (string)date('d-m-Y', strtotime($d->date)), (string)$d->etm->etm_no, (string)$d->conductor->crew_id, (string)$d->route->route_name, (string)$d->duty->duty_number, (string)$d->shift->shift, (string)$login_timestamp, (string)$logout_timestamp, (string)$audit_timestamp, (string)$remittance_timestamp]);
+        } 
+
+        $fileName = public_path().'/abcd/'.$title.'.xlsx';        
+
+        $this->generateExcelFile($title, $fileName, $reportColumns, $reportData, $meta, "No");
+
+        $this->downloadExcelFile($fileName); 
+
+        unlink($fileName);       
     }
 
     public function getQueryBuilder($depot_id, $from_date, $to_date, $pending_activity)
