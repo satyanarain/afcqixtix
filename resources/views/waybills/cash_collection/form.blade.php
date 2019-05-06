@@ -45,6 +45,12 @@
     </div>
 </div>
 <div class="form-group ">
+     {!! Form::label('manual_payout', Lang::get('Manual Payout'), ['class' => 'col-md-3 control-label']) !!}
+    <div class="col-md-7 col-sm-12">
+          {!! Form::number('manual_payout', null, ['min'=>1,'class' => 'col-md-6 form-control']) !!}
+    </div>
+</div>
+<div class="form-group ">
      {!! Form::label('cash_challan_no', Lang::get('Cash Challan No.'), ['class' => 'col-md-3 control-label']) !!}
     <div class="col-md-7 col-sm-12">
           {!! Form::text('cash_challan_no', $cash_challan_no, ['readonly','class' => 'col-md-6 form-control','required' => 'required']) !!}

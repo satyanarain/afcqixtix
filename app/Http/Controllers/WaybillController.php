@@ -324,7 +324,7 @@ class WaybillController extends Controller
                     ->where('abstract_id','=',$waybills->abstract_no)
                     ->sum('total_amt');
        $cash_submitted = DB::table('cash_collection')
-                ->select('cash_remitted')
+                ->select('cash_remitted','manual_payout')
                 ->where('abstract_no','=',$waybills->abstract_no)
                 ->first();
         $crew = DB::table('crew')
@@ -377,6 +377,7 @@ class WaybillController extends Controller
         $total_payout = DB::table('payouts')
                     ->where('abstract_no','=',$waybills->abstract_no)
                     ->sum('amount');
+        $total_payout+=$cash_submitted->manual_payout;
         $shift_details = DB::table('shift_start')
                     ->select('shift_start.*','crew.crew_name as conductor_name','crew1.crew_name as driver_name',
                             'vehicles.vehicle_registration_number','bus_types.bus_type','routes.route','duties.duty_number','shifts.shift')
@@ -579,7 +580,145 @@ class WaybillController extends Controller
         echo $datajson = json_encode($json_data);  // send data as json format
     }
     
-    public function cash_collection(){
+    public function cash_collection()
+    {
+        if(!$this->checkActionPermission('waybills','view'))
+            return redirect()->route('401');
+        $waybills = DB::table('waybills')
+                ->select('waybills.*','waybills.id as id','depots.name as depot_name','shifts.shift','route_master.route_name',
+                        'duties.duty_number','services.name as service_name','bus_types.bus_type','vehicles.vehicle_registration_number')
+                ->leftjoin('depots','depots.id','waybills.depot_id')
+                ->leftjoin('shifts','shifts.id','waybills.shift_id')
+                ->leftjoin('route_master','route_master.id','waybills.route_id')
+                ->leftjoin('duties','duties.id','waybills.duty_id')
+                ->leftjoin('services','services.id','waybills.service_id')
+                ->leftjoin('bus_types','bus_types.id','waybills.bus_type_id')
+                ->leftjoin('vehicles','vehicles.id','waybills.vehicle_id')
+                ->where('status','=','g')
+                ->orderBy('waybills.id','desc')->count();
+        //echo '<pre>';        print_r($waybills);die;
+        return view('waybills.cash_collection.index',compact('waybills'));
+   
+    }
+    
+    public function getfilteredcashcollection() {
+
+        $requestData= $_REQUEST;
+        $columns = array( 
+                0 =>'cash_collection.cash_collection_id',
+                1=>'cash_collection.abstract_no',
+                2=>'cash_collection.amount_payable',
+                3=>'cash_collection.manual_payout',
+                4=>'cash_collection.cash_remitted',
+                5=>'cash_collection.cash_challan_no',
+                6=>'cash_collection.submitted_at',
+        );
+        $sql = "SELECT cash_collection.*";
+        $sql.=" FROM cash_collection "
+                . "LEFT JOIN waybills on waybills.abstract_no=cash_collection.abstract_no "
+                . "LEFT JOIN shifts on shifts.id=waybills.shift_id "
+                . "LEFT JOIN route_master on route_master.id=waybills.route_id "
+                . "LEFT JOIN duties on duties.id=waybills.duty_id "
+                . "LEFT JOIN services on services.id=waybills.service_id "
+                . "LEFT JOIN bus_types on bus_types.id=waybills.bus_type_id "
+                . "LEFT JOIN vehicles on vehicles.id=waybills.vehicle_id "
+                . "LEFT JOIN depots on waybills.depot_id=depots.id "
+                . "WHERE waybills.status='s'";
+        //echo '<pre>';print_r($sql);die;
+        if(!empty($requestData['search']['value']) || 
+                !empty($requestData['columns'][0]['search']['value']) || 
+                !empty($requestData['columns'][1]['search']['value']) || 
+                !empty($requestData['columns'][2]['search']['value']) || 
+                !empty($requestData['columns'][3]['search']['value']) || 
+                !empty($requestData['columns'][4]['search']['value']) || 
+                !empty($requestData['columns'][5]['search']['value']) || 
+                !empty($requestData['columns'][6]['search']['value']) ) {   
+                $sql.=" AND ( ";    
+        }
+        if( !empty($requestData['search']['value']) ) {
+                $sql.="shifts.shift LIKE '%".$requestData['search']['value']."%' and ";    
+        }
+        if( !empty($requestData['columns'][0]['search']['value']) ) {
+                $sql.="depots.id= '".$requestData['columns'][0]['search']['value']."' and ";    
+        }
+        if( !empty($requestData['columns'][1]['search']['value']) ) {
+                $sql.="vehicles.id= ".$requestData['columns'][1]['search']['value']." and ";    
+        }
+        if( !empty($requestData['columns'][2]['search']['value']) ) {
+                $sql.="route_master.id= ".$requestData['columns'][2]['search']['value']." and ";    
+        }
+        if( !empty($requestData['columns'][3]['search']['value']) ) {
+                $sql.="duties.id= ".$requestData['columns'][3]['search']['value']." and ";    
+        }
+        if( !empty($requestData['columns'][4]['search']['value']) ) {
+                $sql.="bus_types.id= ".$requestData['columns'][4]['search']['value']." and ";    
+        }
+        if( !empty($requestData['columns'][5]['search']['value']) ) {
+                $sql.="services.id= ".$requestData['columns'][5]['search']['value']." and ";    
+        }
+        if( !empty($requestData['columns'][6]['search']['value']) ) {
+                $sql.="shifts.id= ".$requestData['columns'][6]['search']['value']." and ";    
+        }
+        
+        
+        if(!empty($requestData['search']['value']) || 
+                !empty($requestData['columns'][0]['search']['value']) || 
+                !empty($requestData['columns'][1]['search']['value']) || 
+                !empty($requestData['columns'][2]['search']['value']) || 
+                !empty($requestData['columns'][3]['search']['value']) || 
+                !empty($requestData['columns'][4]['search']['value']) || 
+                !empty($requestData['columns'][5]['search']['value']) || 
+                !empty($requestData['columns'][6]['search']['value']) ) { 
+                $sql = substr($sql, 0, -4);
+                $sql.=")";
+        }
+        //echo $sql;die;
+        $query=DB::select(DB::raw($sql) ); 
+//        print_r($query);
+//        die;
+        $totalFiltered = count($query); // when there is a search parameter then we have to modify total number filtered rows as per search result. 
+        $totalData = count($query);
+        $sql.=" ORDER BY ". $columns[$requestData['order'][0]['column']]."   ".$requestData['order'][0]['dir']."  LIMIT ".$requestData['start']." ,".$requestData['length']."   ";
+//        print_r($sql);
+//        die;
+        $query = DB::select( DB::raw($sql) ); 
+        $data = array();
+        foreach($query as $val){
+                $id = $val->cash_collection_id;
+                $nestedData=array(); 
+                $nestedData[] = $val->cash_collection_id;
+                $nestedData[] = $val->abstract_no;
+                $nestedData[] = $val->amount_payable;
+                $nestedData[] = $val->manual_payout;
+                $nestedData[] = $val->cash_remitted;
+                $nestedData[] = $val->cash_challan_no;
+                $nestedData[] = $val->submitted_at;
+                $action = '';
+//                if($this->checkActionPermission('waybills','edit'))
+//                {
+//                    $action = '<a  href="'.route("waybills.edit",$val->id).'" class="" title="Edit Waybill" ><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
+//                }
+                if($this->checkActionPermission('cash_collections','view'))
+                    $action.= '<a style="cursor: pointer;" title="View" data-toggle="modal" data-target="#'.$val->cash_collection_id.'"  onclick="viewDetails('.$val->cash_collection_id.',\'view_detail\')"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
+                
+//                if($this->checkActionPermission('audits','create') && $val->status=="s")
+//                {
+//                    $action.='<a  href="'.route("waybills.auditdetail",$val->id).'" class="" title="Audit Waybill" ><span class="fa fa-briefcase"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
+//                }
+                $nestedData[] = $action;
+                $nestedData[] = ' ';
+                $data[] = $nestedData;
+        }
+        $json_data = array(
+                            "draw"            => intval( $requestData['draw'] ),   // for every request/draw by clientside , they send a number as a parameter, when they recieve a response/data they first check the draw number, so we are sending same number in draw. 
+                            "recordsTotal"    => intval( $totalData ),  // total number of records
+                            "recordsFiltered" => intval( $totalFiltered ), // total number of records after searching, if there is no searching then totalFiltered = totalData
+                            "data"            => $data   // total data array
+                            );
+        echo $datajson = json_encode($json_data);  // send data as json format
+    }
+    
+    public function new_cash_collection(){
         if(!$this->checkActionPermission('cash_collections','edit'))
             return redirect()->route('401');
         $cash_challan_no = date('Y').DB::table('cash_collection')->count();
@@ -593,7 +732,7 @@ class WaybillController extends Controller
         //echo '<pre>';print_r($request->all());die;
         if ($request->input('cash_remitted')){
             $query = DB::table('cash_collection')
-                    ->insertGetId(['collected_by'=>$collected_by,'abstract_no'=>$request['abstract_no'],'amount_payable'=>$request['amount_payable'],'cash_remitted'=>$request['cash_remitted'],'cash_challan_no'=>$request['cash_challan_no']]);
+                    ->insertGetId(['manual_payout'=>$request['manual_payout'],'collected_by'=>$collected_by,'abstract_no'=>$request['abstract_no'],'amount_payable'=>$request['amount_payable'],'cash_remitted'=>$request['cash_remitted'],'cash_challan_no'=>$request['cash_challan_no']]);
         
             $query = DB::table('waybills')
             ->where('abstract_no', '=', $request['abstract_no'])
