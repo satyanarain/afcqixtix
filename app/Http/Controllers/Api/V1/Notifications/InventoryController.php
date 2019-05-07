@@ -67,12 +67,12 @@ class InventoryController extends Controller
 		{
 			foreach ($remaningInDepotStock as $key => $rvalue) 
 			{
-				echo $svalue->item_id ."==". $rvalue->items_id ."==". $svalue->depot_id ."==". $rvalue->depot_id  ."==". $svalue->denom_id ."==". $rvalue->denom_id . "<br>";
+				//echo $svalue->item_id ."==". $rvalue->items_id ."==". $svalue->depot_id ."==". $rvalue->depot_id  ."==". $svalue->denom_id ."==". $rvalue->denom_id . "<br>";
 				if($svalue->item_id == $rvalue->items_id && $svalue->depot_id == $rvalue->depot_id  && $svalue->denom_id == $rvalue->denom_id)
 				{
 					if($rvalue->item_qty <= $svalue->min_stock)
 					{
-						echo "In";
+						//echo "In";
 						$notifyTos = User::whereIn('id', json_decode($svalue->notify_to))->select('email', 'name')->get();
 						$item = DB::table('inv_items_master')->where('id', $svalue->item_id)->select('name')->first();
 						$depot = DB::table('depots')->where('id', $svalue->depot_id)->select('name')->first();

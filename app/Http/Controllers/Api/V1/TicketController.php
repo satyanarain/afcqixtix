@@ -92,7 +92,7 @@ class TicketController extends Controller
             $statusData = $statusData->where('etm_details.depot_id', session('depotId'));
         }
 
-        $statusData = $statusData->select('etm_login_log.gprs_level', 'etm_login_log.battery_percentage', 'etm_login_log.etm_id', 'etm_login_log.abstract_no', 'conductor.crew_name as conductor_name', 'conductor.crew_id as conductor_id', 'conductor.mobile', 'driver.crew_name as driver_name', 'driver.crew_id as driver_id', 'route_master.route_name', 'duties.duty_number', 'shifts.shift', 'vehicles.vehicle_registration_number', 'etm_login_log.login_timestamp', 'etm_login_log.logout_timestamp', 'shift_start.route_id', 'shift_start.duty_id', 'shift_start.shift_id', 'shift_start.vehicle_id', 'conductor.id as conductorId', 'driver.id as driverId')
+        $statusData = $statusData->select('etm_login_log.gprs_level', 'etm_login_log.battery_percentage', 'etm_login_log.etm_id', 'etm_details.etm_no', 'etm_login_log.abstract_no', 'conductor.crew_name as conductor_name', 'conductor.crew_id as conductor_id', 'conductor.mobile', 'driver.crew_name as driver_name', 'driver.crew_id as driver_id', 'route_master.route_name', 'duties.duty_number', 'shifts.shift', 'vehicles.vehicle_registration_number', 'etm_login_log.login_timestamp', 'etm_login_log.logout_timestamp', 'shift_start.route_id', 'shift_start.duty_id', 'shift_start.shift_id', 'shift_start.vehicle_id', 'conductor.id as conductorId', 'driver.id as driverId')
                             ->where('etm_login_log.abstract_no', $abstract_no)
                             ->first();
 
@@ -209,7 +209,7 @@ class TicketController extends Controller
             }
 
             $statusData->abstract_number = $abstract_no;
-            $statusData->etm_abstract = $statusData->etm_id." / ". $abstract_no;
+            $statusData->etm_abstract = $statusData->etm_no." / ". $abstract_no;
             $statusData->conductor_driver = $statusData->conductor_name." (".$statusData->conductor_id.")"." / ". $statusData->driver_name." (".$statusData->driver_id.")";
             $statusData->login_logout = $statusData->login_timestamp." / ". $statusData->logout_timestamp;
             $statusData->route_duty_shift = $statusData->route_name."-".$statusData->duty_number."-".$statusData->shift;
