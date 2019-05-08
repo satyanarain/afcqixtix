@@ -67,7 +67,7 @@ class CrewStockController extends Controller
      */
     public function store(StoreCrewStockRequest $request)
     {
-        if($request->items_id == 2)
+        if(!checkIfItemHasSeries($request->items_id))
         {
             $centerStock = DB::table('inv_centerstock_depotstock')->where('items_id', $request->items_id)->first();
             if($centerStock)
@@ -78,10 +78,7 @@ class CrewStockController extends Controller
                     return redirect()->back();
                 }
             }
-        }
-
-        if($request->items_id == 1)
-        {
+        }else{
             //return $request->quantity;
             //return response()->json($request->all());
             $denominations = $request->denom_id;

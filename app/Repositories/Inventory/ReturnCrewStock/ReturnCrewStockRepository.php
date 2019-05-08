@@ -32,7 +32,7 @@ class ReturnCrewStockRepository implements ReturnCrewStockRepositoryContract
         $input['returned_to'] = Auth::id();
         $input['date_received'] = date('Y-m-d H:i:s', strtotime($input['date_received']));
         //update the depot inventory
-        if($requestData->items_id == 1)
+        if(checkIfItemHasSeries($input['items_id']))
         {
             $denominations = $requestData->denom_id;
             $serieses = $requestData->series;
@@ -47,31 +47,32 @@ class ReturnCrewStockRepository implements ReturnCrewStockRepositoryContract
                 $input['quantity'] = $end_sequences[$key] - $start_sequences[$key] + 1;
                 $qty = $input['quantity'];
                 //update depot stock
-                DB::table('inv_centerstock_depotstock')
-                    ->where([['depot_id', $requestData->depot_id], ['denom_id', $requestData->denom_id], ['series', $requestData->series], ['items_id', $requestData->items_id]])
-                    ->update(['qty' => DB::raw("qty + $qty")]);
+                DB::transaction(function() use($input, $requestData, $qty) {  
+                    DB::table('inv_centerstock_depotstock')
+                        ->where([['depot_id', $requestData->depot_id], ['denom_id', $requestData->denom_id], ['series', $requestData->series], ['items_id', $requestData->items_id]])
+                        ->update(['qty' => DB::raw("qty + $qty")]);
 
-                //update crew total stock
-                DB::table('inv_crew_total_stock')
-                    ->where([['denom_id', $requestData->denom_id], ['series', $requestData->series], ['items_id', $requestData->items_id], ['crew_id', $requestData->crew_id]])
-                    ->update(['qty' => DB::raw("qty - $qty")]);
-                $centerstock = ReturnCrewStock::create($input);
+                    //update crew total stock
+                    DB::table('inv_crew_total_stock')
+                        ->where([['denom_id', $requestData->denom_id], ['series', $requestData->series], ['items_id', $requestData->items_id], ['crew_id', $requestData->crew_id]])
+                        ->update(['qty' => DB::raw("qty - $qty")]);
+                    $centerstock = ReturnCrewStock::create($input);
+                });
             }
-        } 
-
-        if($requestData->items_id == 2)
-        {
+        }else{
             $qty = $requestData->quantity;
             $input['quantity'] = $qty;
-            //update depo stock
-            DB::table('inv_centerstock_depotstock')
-                ->where([['items_id', $requestData->items_id], ['depot_id', $requestData->depot_id]])
-                ->update(['qty' => DB::raw("qty + $qty")]);
-            //update crew total stock
-            DB::table('inv_crew_total_stock')
-                ->where([['items_id', $requestData->items_id], ['crew_id', $requestData->crew_id]])
-                ->update(['qty' => DB::raw("qty - $qty")]);
-            $centerstock = ReturnCrewStock::create($input);
+            DB::transaction(function() use($input, $requestData, $qty) {  
+                //update depo stock
+                DB::table('inv_centerstock_depotstock')
+                    ->where([['items_id', $requestData->items_id], ['depot_id', $requestData->depot_id]])
+                    ->update(['qty' => DB::raw("qty + $qty")]);
+                //update crew total stock
+                DB::table('inv_crew_total_stock')
+                    ->where([['items_id', $requestData->items_id], ['crew_id', $requestData->crew_id]])
+                    ->update(['qty' => DB::raw("qty - $qty")]);
+                $centerstock = ReturnCrewStock::create($input);
+            });
         } 
 
         

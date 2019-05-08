@@ -412,6 +412,24 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('denomination_wise_stock_ledger/getexcelreport', 'DenominationWiseStockLedgerController@getExcelReport')->name('denomination_wise_stock_ledger.getexcelreport');
             Route::get('denomination_wise_stock_ledger/displayData', 'DenominationWiseStockLedgerController@displayData')->name('denomination_wise_stock_ledger.displaydata');
 
+            /*main_office_summary*/
+            Route::resource('main_office_summary', 'MainOfficeSummaryController')->only('index'); 
+            Route::post('main_office_summary/getpdfreport', 'MainOfficeSummaryController@getPdfReport')->name('main_office_summary.getpdfreport');
+            Route::get('main_office_summary/getexcelreport', 'MainOfficeSummaryController@getExcelReport')->name('main_office_summary.getexcelreport');
+            Route::get('main_office_summary/displayData', 'MainOfficeSummaryController@displayData')->name('main_office_summary.displaydata');
+
+            /*depot_summary*/
+            Route::resource('depot_summary', 'DepotSummaryController')->only('index'); 
+            Route::post('depot_summary/getpdfreport', 'DepotSummaryController@getPdfReport')->name('depot_summary.getpdfreport');
+            Route::get('depot_summary/getexcelreport', 'DepotSummaryController@getExcelReport')->name('depot_summary.getexcelreport');
+            Route::get('depot_summary/displayData', 'DepotSummaryController@displayData')->name('depot_summary.displaydata');
+
+            /*crew_summary*/
+            Route::resource('crew_summary', 'CrewSummaryController')->only('index'); 
+            Route::post('crew_summary/getpdfreport', 'CrewSummaryController@getPdfReport')->name('crew_summary.getpdfreport');
+            Route::get('crew_summary/getexcelreport', 'CrewSummaryController@getExcelReport')->name('crew_summary.getexcelreport');
+            Route::get('crew_summary/displayData', 'CrewSummaryController@displayData')->name('crew_summary.displaydata');
+
         });
 
         Route::group(['prefix'=>'revenue', 'namespace'=>'Revenue', 'as'=>'revenue.'], function(){

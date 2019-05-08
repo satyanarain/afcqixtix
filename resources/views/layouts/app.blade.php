@@ -207,26 +207,51 @@ $pem=menuDisplayByUser($result, 'centerstocks','view');
       <i class="fa fa-angle-left pull-right"></i>
     </span>
   </a>
-  <ul @if($segments_var[1]=='centerstock' || $segments_var[1]=='depotstock' || $segments_var[1]=='crewstock') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
-    <li @if($segments_var[1]=='returncrewstock') class="active treeview" @endif>
-      <a href="#"><i class="fa fa-edit"></i>Assign Inventory</a>
-      <ul @if(($segments_var[1]=='centerstock' || $segments_var[1]=='depotstock' || $segments_var[1]=='crewstock') && $segments_var[2]!='summary') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
-        <li @if($segments_var[1]=='centerstock') class="active" @endif><a href="{{route('inventory.centerstock.index')}}"><i class="fa fa-edit"></i>Central Stock</a></li>
-        <li @if($segments_var[1]=='depotstock') class="active" @endif><a href="{{route('inventory.depotstock.index')}}"><i class="fa fa-edit"></i>Depot Stock</a></li>
-        <li @if($segments_var[1]=='crewstock') class="active" @endif><a href="{{route('inventory.crewstock.index')}}"><i class="fa fa-edit"></i>Crew Stock</a></li>
-        <li @if($segments_var[1]=='returncrewstock') class="active" @endif><a href="{{route('inventory.returncrewstock.index')}}"><i class="fa fa-edit"></i>Return Crew Stock</a></li>
-      </ul>
-    </li>
+  
+  <ul @if(($segments_var[1]=='centerstock' || $segments_var[1]=='depotstock' || $segments_var[1]=='crewstock') && $segments_var[2]!='summary') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
 
-    <li @if($segments_var[2]=='summary') class="active treeview" @endif>
-      <a href="#"><i class="fa fa-list"></i>Inventory Summary</a>
-      <ul @if(($segments_var[1]=='centerstock' || $segments_var[1]=='depotstock' || $segments_var[1]=='crewstock') && $segments_var[2]=='summary') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
-        <li @if($segments_var[1]=='centerstock' && $segments_var[2]=='summary') class="active" @endif><a href="{{route('inventory.centerstock.summary')}}"><i class="fa fa-edit"></i>Central Stock</a></li>
-        <li @if($segments_var[1]=='depotstock') class="active" @endif><a href="{{route('inventory.depotstock.summary')}}"><i class="fa fa-edit"></i>Depot Stock</a></li>
-        <li @if($segments_var[1]=='crewstock') class="active" @endif><a href="{{route('inventory.crewstock.summary')}}"><i class="fa fa-edit"></i>Crew Stock</a></li>
-      </ul>
-    </li>
-  </ul>
+        <li @if($segments_var[0]=='inventory' && ($segments_var[1]=='centerstock' || $segments_var[1]=='depotstock') && $segments_var[2]!='summary') class="active treeview" @endif>
+            <a href="#"><i class="fa fa-list"></i>Center Stock</a>
+            <ul @if(($segments_var[1]=='centerstock' || $segments_var[1]=='depotstock') && $segments_var[0]=='inventory' && $segments_var[2]!='summary') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
+                <li @if($segments_var[1]=='centerstock' && $segments_var[0]=='inventory' && $segments_var[2]!='summary') class="active" @endif>
+                    <a href="{{route('inventory.centerstock.index')}}">
+                        <i class="fa fa-edit"></i>Add
+                    </a>
+                </li>
+                <li @if($segments_var[1]=='depotstock' && $segments_var[0]=='inventory') class="active" @endif>
+                    <a href="{{route('inventory.depotstock.index')}}">
+                        <i class="fa fa-edit"></i>Assign
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li @if($segments_var[0]=='inventory' && ($segments_var[1]=='crewstock' || $segments_var[1]=='returncrewstock') && $segments_var[2]!='summary') class="active treeview" @endif>
+            <a href="#"><i class="fa fa-list"></i>Depot Stock</a>
+            <ul @if(($segments_var[1]=='crewstock' || $segments_var[1]=='returncrewstock') && $segments_var[0]=='inventory' && $segments_var[2]!='summary') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
+                <li @if($segments_var[1]=='crewstock' && $segments_var[0]=='inventory') class="active" @endif>
+                    <a href="{{route('inventory.crewstock.index')}}">
+                        <i class="fa fa-edit"></i>Assign
+                    </a>
+                </li>
+                <li @if($segments_var[1]=='returncrewstock' && $segments_var[0]=='inventory') class="active" @endif>
+                    <a href="{{route('inventory.returncrewstock.index')}}">
+                        <i class="fa fa-edit"></i>Return
+                    </a>
+                </li>
+            </ul>
+        </li>
+  
+
+        <li @if($segments_var[2]=='summary') class="active treeview" @endif>
+            <a href="#"><i class="fa fa-list"></i>Summary</a>
+            <ul @if(($segments_var[1]=='centerstock' || $segments_var[1]=='depotstock' || $segments_var[1]=='crewstock') && $segments_var[2]=='summary') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
+              <li @if($segments_var[1]=='centerstock' && $segments_var[2]=='summary') class="active" @endif><a href="{{route('inventory.centerstock.summary')}}"><i class="fa fa-edit"></i>Central Stock</a></li>
+              <li @if($segments_var[1]=='depotstock') class="active" @endif><a href="{{route('inventory.depotstock.summary')}}"><i class="fa fa-edit"></i>Depot Stock</a></li>
+              <li @if($segments_var[1]=='crewstock') class="active" @endif><a href="{{route('inventory.crewstock.summary')}}"><i class="fa fa-edit"></i>Crew Stock</a></li>
+            </ul>
+        </li>
+    </ul>
 </li>
 @endif
 <!-- End Inventories menu details -->
@@ -396,7 +421,12 @@ $array= array('etm', 'revenue', 'ppt')
                     <a href="{{route('reports.ppt.crew_stock.index')}}">
                         <i class="far fa-dot-circle text-yellow"></i> Crew Stock
                     </a>
-                </li>                
+                </li> 
+                <li @if($segments_var[2]=='crew_summary') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.ppt.crew_summary.index')}}">
+                        <i class="far fa-dot-circle text-yellow"></i> Crew Summary
+                    </a>
+                </li>               
                 <li @if($segments_var[2]=='denomination_wise_stock_ledger') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.ppt.denomination_wise_stock_ledger.index')}}">
                         <i class="far fa-dot-circle text-yellow"></i> Denom-wise Stock Ledger
@@ -407,9 +437,19 @@ $array= array('etm', 'revenue', 'ppt')
                         <i class="far fa-dot-circle text-yellow"></i> Depot Stock
                     </a>
                 </li>
+                <li @if($segments_var[2]=='depot_summary') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.ppt.depot_summary.index')}}">
+                        <i class="far fa-dot-circle text-yellow"></i> Depot Summary
+                    </a>
+                </li>
                 <li @if($segments_var[2]=='issues_to_crew') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.ppt.issues_to_crew.index')}}">
                         <i class="far fa-dot-circle text-yellow"></i> Issues To Crew
+                    </a>
+                </li>                
+                <li @if($segments_var[2]=='main_office_summary') class="treeview active" @else class="treeview" @endif>
+                    <a href="{{route('reports.ppt.main_office_summary.index')}}">
+                        <i class="far fa-dot-circle text-yellow"></i> Main Office Summary
                     </a>
                 </li>
                 <li @if($segments_var[2]=='receipt_from_main_office') class="treeview active" @else class="treeview" @endif>

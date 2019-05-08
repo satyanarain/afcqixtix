@@ -27,4 +27,9 @@ class CrewSummary extends Model
     {
     	return $this->belongsTo(Denomination::class, 'denom_id', 'id');
     }
+
+    public function item()
+    {
+        return $this->belongsTo(Item::class, 'items_id', 'id');
+    }
 }
