@@ -215,7 +215,7 @@ $pem=menuDisplayByUser($result, 'centerstocks','view');
             <ul @if(($segments_var[1]=='centerstock' || $segments_var[1]=='depotstock') && $segments_var[0]=='inventory' && $segments_var[2]!='summary') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
                 <li @if($segments_var[1]=='centerstock' && $segments_var[0]=='inventory' && $segments_var[2]!='summary') class="active" @endif>
                     <a href="{{route('inventory.centerstock.index')}}">
-                        <i class="fa fa-edit"></i>Add
+                        <i class="fa fa-edit"></i>Add New
                     </a>
                 </li>
                 <li @if($segments_var[1]=='depotstock' && $segments_var[0]=='inventory') class="active" @endif>
