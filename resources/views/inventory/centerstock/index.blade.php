@@ -3,7 +3,7 @@
 <h1>Manage Center Stock</h1>
 <ol class="breadcrumb">
   <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-  <li><a href="#" class="active">Inventories</a></li>
+  <li><a href="#" class="active">Inventory</a></li>
 </ol>
 @stop
 @section('content')
@@ -11,7 +11,7 @@
     <div class="col-xs-12">
       <div class="box">
             <div class="box-header">
-               <h3 class="box-title">Center Stock Inventories Details </h3>
+               <h3 class="box-title">Center Stock Inventory Details </h3>
                 <?php 
                 $permission_status = checkPermission('centerstocks','create');
                 if($permission_status)

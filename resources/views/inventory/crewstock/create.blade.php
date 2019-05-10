@@ -3,7 +3,7 @@
 <h1>Manage Crew Stock</h1>
 <ol class="breadcrumb">
   <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-  <li><a href="#">Inventories</a></li>
+  <li><a href="#">Inventory</a></li>
   <li><a href="{{route('inventory.crewstock.index')}}" >Crew Stock</a></li>
   <li><a href="#" class="active">Create</a></li>
 </ol>
