@@ -49,14 +49,14 @@
                                     <th>Schld. Time</th>
                                     <th>Trip Start Time</th>
                                     <th>Trip End Time</th>
-                                    <th class="text-right">Psngr Cnt</th>
-                                    <th class="text-right">Total Amt</th>
-                                    <th class="text-right">Tkt Cnt</th>
-                                    <th class="text-right">Tkt Amt</th>
-                                    <th class="text-right">Pass Cnt</th>
-                                    <th class="text-right">Pass Amt</th>
-                                    <th class="text-right">EPurse Cnt</th>
-                                    <th class="text-right">EPurse Amt</th>
+                                    <th class="text-right">Psngr Count</th>
+                                    <th class="text-right">Total Amount</th>
+                                    <th class="text-right">Ticket Count</th>
+                                    <th class="text-right">Ticket Amount</th>
+                                    <th class="text-right">Pass Count</th>
+                                    <th class="text-right">Pass Amount</th>
+                                    <th class="text-right">EPurse Count</th>
+                                    <th class="text-right">EPurse Amount</th>
                                     <th class="text-right">Conc</th>
                                     <th class="text-right">Kms</th>
                                 </tr>
@@ -191,7 +191,7 @@ $(document).ready(function(){
                     var data = response.data;
                     console.log(data)
                     var reportData = [];
-                    reportData.push([{'text':'S. No.', 'style': 'tableHeaderStyle'}, {'text':'Trip No.', 'style': 'tableHeaderStyle'}, {'text':'From Stop', 'style': 'tableHeaderStyle'}, {'text':'To Stop', 'style': 'tableHeaderStyle'}, {'text':'Schld Time', 'style': 'tableHeaderStyle'}, {'text':'Trip Start Time', 'style': 'tableHeaderStyle'}, {'text':'Trip End Time', 'style': 'tableHeaderStyle'}, {'text':'Psngr Cnt', 'style': 'tableHeaderStyle'}, {'text':'Total Amt', 'style': 'tableHeaderStyle'}, {'text':'Tkt Cnt', 'style': 'tableHeaderStyle'}, {'text':'Tkt Amt', 'style': 'tableHeaderStyle'}, {'text':'Pass Cnt', 'style': 'tableHeaderStyle'}, {'text':'Pass Amt', 'style': 'tableHeaderStyle'}, {'text':'EPurse Cnt', 'style': 'tableHeaderStyle'}, {'text':'EPurse Amt', 'style': 'tableHeaderStyle'}, {'text':'Conc', 'style': 'tableHeaderStyle'}, {'text':'Kms', 'style': 'tableHeaderStyle'}]);
+                    reportData.push([{'text':'S. No.', 'style': 'tableHeaderStyle'}, {'text':'Trip No.', 'style': 'tableHeaderStyle'}, {'text':'From Stop', 'style': 'tableHeaderStyle'}, {'text':'To Stop', 'style': 'tableHeaderStyle'}, {'text':'Schld Time', 'style': 'tableHeaderStyle'}, {'text':'Trip Start Time', 'style': 'tableHeaderStyle'}, {'text':'Trip End Time', 'style': 'tableHeaderStyle'}, {'text':'Psngr Count', 'style': 'tableHeaderStyle'}, {'text':'Total Amount', 'style': 'tableHeaderStyle'}, {'text':'Ticket Count', 'style': 'tableHeaderStyle'}, {'text':'Ticket Amount', 'style': 'tableHeaderStyle'}, {'text':'Pass Count', 'style': 'tableHeaderStyle'}, {'text':'Pass Amount', 'style': 'tableHeaderStyle'}, {'text':'EPurse Count', 'style': 'tableHeaderStyle'}, {'text':'EPurse Amount', 'style': 'tableHeaderStyle'}, {'text':'Conc', 'style': 'tableHeaderStyle'}, {'text':'Kms', 'style': 'tableHeaderStyle'}]);
 
                     $.each(data, function(ind, waybill){  
                         console.log(waybill);
@@ -271,15 +271,15 @@ $(document).ready(function(){
             return false;
         }
 
-        var time_slot = $('#time_slot').val();
-        var direction = $('#direction').val();
-        var stop_id = $('#stop_id').val(); 
+        var depot_id = $('#depot_id').val();
+        var route_id = $('#route_id').val();
+        var duty_id = $('#duty_id').val(); 
 
-        var queryParams = "?stop_id="+stop_id
+        var queryParams = "?depot_id="+depot_id
                         + "&from_date="+fromDate
                         + "&to_date="+toDate
-                        + "&direction="+direction
-                        + "&time_slot="+time_slot;
+                        + "&route_id="+route_id
+                        + "&duty_id="+duty_id;
 
         var url = "{{route('reports.revenue.trip_wise_collection.getexcelreport')}}"+queryParams;
 

@@ -242,6 +242,7 @@ Route::group(['middleware' => ['auth']], function () {
     //Manage inventory route
     //@Auther Subhash Chandra, {email: subash_chandra@opiant.in}
     Route::group(['prefix'=>'inventory', 'namespace'=>'Inventory', 'as'=>'inventory.'], function(){
+
         Route::resource('centerstock', 'CenterstockController')->except('show');
         Route::group(['prefix'=>'centerstock', 'as'=>'centerstock.'], function(){
             Route::get('summary', 'CenterstockController@summary')->name('summary');
@@ -272,15 +273,16 @@ Route::group(['middleware' => ['auth']], function () {
             Route::post('getstartsequence', 'ReturnCrewstockController@getStartSequence')->name('getstartsequence');
             Route::post('validateendsequence', 'ReturnCrewstockController@validateEndSequence')->name('validateendsequence');
             Route::post('validatequantity', 'ReturnCrewstockController@validateQuantity')->name('validatequantity');
+            Route::get('getremainingstockbycrew/{conductorId}', 'ReturnCrewstockController@getRemainingStock')->name('getremainingstockbycrew');
         });
     });
 
     Route::group(['prefix'=>'notification', 'namespace'=>'Notification', 'as'=>'notification.'], function(){
         Route::group(['prefix'=>'inventory', 'as'=>'inventory.', 'namespace'=>'Inventory'], function(){
-            Route::get('/', 'IndexController@index')->name('index');
             Route::resource('centerstock', 'CenterStockController')->only(['index', 'store', 'edit', 'update']);
             Route::resource('depotstock', 'DepotStockController')->only(['index', 'store', 'edit', 'update']);
             Route::get('getitemsandadmins', 'CenterStockController@getItemsandAdmins')->name('getitemsandadmins');
+            Route::get('checkifitemhasseries/{itemId}', 'CenterStockController@checkIfItemHasSeries')->name('checkifitemhasseries');
         });
     });
     
@@ -412,6 +414,24 @@ Route::group(['middleware' => ['auth']], function () {
             Route::post('denomination_wise_stock_ledger/getpdfreport', 'DenominationWiseStockLedgerController@getPdfReport')->name('denomination_wise_stock_ledger.getpdfreport');
             Route::get('denomination_wise_stock_ledger/getexcelreport', 'DenominationWiseStockLedgerController@getExcelReport')->name('denomination_wise_stock_ledger.getexcelreport');
             Route::get('denomination_wise_stock_ledger/displayData', 'DenominationWiseStockLedgerController@displayData')->name('denomination_wise_stock_ledger.displaydata');
+
+            /*main_office_summary*/
+            Route::resource('main_office_summary', 'MainOfficeSummaryController')->only('index'); 
+            Route::post('main_office_summary/getpdfreport', 'MainOfficeSummaryController@getPdfReport')->name('main_office_summary.getpdfreport');
+            Route::get('main_office_summary/getexcelreport', 'MainOfficeSummaryController@getExcelReport')->name('main_office_summary.getexcelreport');
+            Route::get('main_office_summary/displayData', 'MainOfficeSummaryController@displayData')->name('main_office_summary.displaydata');
+
+            /*depot_summary*/
+            Route::resource('depot_summary', 'DepotSummaryController')->only('index'); 
+            Route::post('depot_summary/getpdfreport', 'DepotSummaryController@getPdfReport')->name('depot_summary.getpdfreport');
+            Route::get('depot_summary/getexcelreport', 'DepotSummaryController@getExcelReport')->name('depot_summary.getexcelreport');
+            Route::get('depot_summary/displayData', 'DepotSummaryController@displayData')->name('depot_summary.displaydata');
+
+            /*crew_summary*/
+            Route::resource('crew_summary', 'CrewSummaryController')->only('index'); 
+            Route::post('crew_summary/getpdfreport', 'CrewSummaryController@getPdfReport')->name('crew_summary.getpdfreport');
+            Route::get('crew_summary/getexcelreport', 'CrewSummaryController@getExcelReport')->name('crew_summary.getexcelreport');
+            Route::get('crew_summary/displayData', 'CrewSummaryController@displayData')->name('crew_summary.displaydata');
 
         });
 

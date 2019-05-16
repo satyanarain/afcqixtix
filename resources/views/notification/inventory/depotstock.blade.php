@@ -11,52 +11,14 @@
 	<div class="col-xs-12">
 		<div class="box">
 			<div class="box-body">
-				<h4>Central stock <button class="btn btn-primary pull-right" id="manageCenterStock"><span class="fa fa-plus"></span> Add</button></h4>
+				<h3>Depot stock <button class="btn btn-afcs pull-right" id="manageDepotStock"><span class="fa fa-plus"></span> Add</button></h3>
 
-				<table class="table">
-					<thead>
-						<tr>
-							<th>Invenory Type</th>
-							<th>Min Stock</th>
-							<th>Notify to</th>
-							<th>Action</th>
-						</tr>
-					</thead>
-					<tbody>
-						@foreach($centerStockSettings as $setting)
-						<tr>
-							<td>{{$setting->item_id}}</td>
-							<td>{{$setting->min_stock}}</td>
-							<td>
-								@foreach($setting->notify_to as $key=>$admin)
-								@if($key == 0)
-								{{$admin->name.' ('.$admin->email.')'}}
-								@else
-								{{', '.$admin->name.' ('.$admin->email.')'}}
-								@endif
-								@endforeach
-							</td>
-							<td><a href="" onclick="openEditModal(event, {{$setting->id}});"><span class="fa fa-edit"></span></a></td>
-						</tr>
-						@endforeach
-					</tbody>
-				</table>
-			</div>
-		</div>  
-	</div>
-</div>  
-<hr>
-<div class="row">
-	<div class="col-xs-12">
-		<div class="box">
-			<div class="box-body">
-				<h4>Depot stock <button class="btn btn-primary pull-right" id="manageDepotStock"><span class="fa fa-plus"></span> Add</button></h4>
-
-				<table class="table">
+				<table class="table" id="example1">
 					<thead>
 						<tr>
 							<th>Depot</th>
 							<th>Invenory Type</th>
+							<th>Denomination</th>
 							<th>Min Stock</th>
 							<th>Notify to</th>
 							<th>Action</th>
@@ -67,6 +29,7 @@
 						<tr>
 							<td>{{$setting->depot_id}}</td>
 							<td>{{$setting->item_id}}</td>
+							<td>{{$setting->denom}}</td>
 							<td>{{$setting->min_stock}}</td>
 							<td>
 								@foreach($setting->notify_to as $key=>$admin)
@@ -84,50 +47,6 @@
 				</table>
 			</div>
 		</div>
-		<!-- Add center stock settings modal -->
-		<div class="modal fade" id="centerStockNotificationModal" role="dialog">
-			<div class="modal-dialog modal-lg">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Center stock notification details</h4>
-					</div>
-					<div class="modal-body">
-						<div class="row">
-							<div class="col-md-12">
-								<div class="form-group">
-									<label for="inventorytype" class="label-control">Inventory Type</label>
-									<select id="inventorytype" class="form-control">
-										<option>Paper Ticket</option>
-										<option>Paper Roll</option>
-									</select>
-								</div>
-
-								<div class="form-group">
-									<label for="minlevel">Min Stock</label>
-									<input type="text" id="minlevel" name="minlevel" onkeypress="return numvalidate(event)" class="form-control">
-								</div>
-
-								<div class="form-group">
-									<label for="notifyto">Notify to</label>
-									<select id="notifyto" multiple class="form-control">
-										<option>Admin 1</option>
-										<option>Admin 2</option>
-									</select>
-								</div>
-								<div class="form-group">
-									<span id="error" class="label label-danger"></span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-success" id="saveSetting" data-id="">Save</button>
-					</div>
-				</div>
-			</div>
-		</div>
 
 		<!-- Add depot stock settings modal -->
 		<div class="modal fade" id="depotStockNotificationModal" role="dialog">
@@ -143,16 +62,18 @@
 								<div class="form-group">
 									<label for="depots" class="label-control">Depot</label>
 									<select id="depots" class="form-control">
-										<option>Paper Ticket</option>
-										<option>Paper Roll</option>
 									</select>
 								</div>
 
 								<div class="form-group">
 									<label for="depotinventorytype" class="label-control">Inventory Type</label>
 									<select id="depotinventorytype" class="form-control">
-										<option>Paper Ticket</option>
-										<option>Paper Roll</option>
+									</select>
+								</div>
+
+								<div class="form-group" id="depotdenomsBox">
+									<label for="depotdenoms" class="label-control">Denomination</label>
+									<select id="depotdenoms" class="form-control">
 									</select>
 								</div>
 
@@ -164,8 +85,6 @@
 								<div class="form-group">
 									<label for="depotnotifyto">Notify to</label>
 									<select id="depotnotifyto" multiple class="form-control">
-										<option>Admin 1</option>
-										<option>Admin 2</option>
 									</select>
 								</div>
 								<div class="form-group">
@@ -189,180 +108,38 @@
 
 @push('scripts')
 <script type="text/javascript">
-	//center stock js
-	$(document).on('click', '#manageCenterStock', function(){
-		$.ajax({
-			url: "{{route('notification.inventory.getitemsandadmins')}}",
-			type:"GET",
-			dataType: "JSON",
-			success: function(response)
-			{
-				var items = response.items;
-				var admins = response.admins;
-				if(items.length > 0)
+$(document).ready(function(){
+
+	$(document).on('change', '#depotinventorytype', function(){
+		var itemId = $(this).val();
+
+		if(itemId)
+		{
+			var url = "{{route('notification.inventory.checkifitemhasseries', ':itemId')}}";
+			url = url.replace(':itemId', itemId);
+			$.ajax({
+				url: url,
+				type:"GET",
+				dataType: "JSON",
+				success: function(response, statusText, xhr)
 				{
-					var itemsString = "<option value=''>Please select an item</option>";
-					$.each(items, function(index, item){
-						itemsString += '<option value='+item.id+'>'+item.name+'</option>';
-					});
-
-					$('#inventorytype').html(itemsString);
-				}
-
-				if(admins.length > 0)
+					var check = response.data;
+					if(check)
+						$('#depotdenomsBox').show();
+					else
+						$('#depotdenomsBox').hide();
+				},
+				error: function(xhr, statusText, errorThrown)
 				{
-					var adminsString = "";//"<option value=''>Please select who to notify</option>";
-					$.each(admins, function(index, admin){
-						adminsString += '<option value='+admin.id+'>'+admin.name+" ("+admin.email+")"+'</option>';
-					});
-
-					$('#notifyto').html(adminsString);
+					console.log(statusText);
+					console.log(errorThrown);
 				}
-
-				$('#centerStockNotificationModal').modal('show');
-			},
-			error: function(error)
-			{
-				console.log(error);
-			}
-		});
+			});
+		}else{
+			return alert('Please select an item.');
+		}
 	});
-
-	$(document).on('click', '#saveSetting', function(){
-		var item = $('#inventorytype').val();
-		if(!item)
-		{
-			return alert('Please select an item');
-		}
-
-		var minlevel = $('#minlevel').val();
-		if(!minlevel)
-		{
-			return alert('Please enter min stock');
-		}
-
-		var notifyto = $('#notifyto').val();
-		console.log(notifyto);
-		if(!notifyto)
-		{
-			return alert('Please select who to notify');
-		}
-
-		var dataId = $('#saveSetting').data('id');
-		var url = "";
-		if(!dataId)
-		{
-			var data = {
-				item: item,
-				minlevel: minlevel,
-				notifyto: notifyto
-			};
-			url = "{{route('notification.inventory.centerstock.store')}}";
-		}else {
-			var data = {
-				item: item,
-				minlevel: minlevel,
-				notifyto: notifyto,
-				dataId: dataId,
-				_method: 'PATCH'
-			};
-
-			url = "{{route('notification.inventory.centerstock.update', ':id')}}";
-			url = url.replace(':id', dataId);
-		}
-
-		
-
-		$.ajax({
-			url: url,
-			type:"POST",
-			dataType: "JSON",
-			data:data,
-			success: function(response)
-			{
-				if(response.errorCode == 'ALREADY_ADDED')
-				{
-					$('#error').html('Item settings already added.').show();
-				}
-				if(response.status == 'Ok')
-				{
-					window.location.reload();
-				}
-			},
-			error: function(error)
-			{
-				console.log(error);
-			}
-		});
-
-	});
-
-	function openEditModal(event, itemId)
-	{
-		event.preventDefault();
-		var id = itemId;
-		if(!id)
-		{
-			return alert('Invalid item ID.');
-		}
-		var data = {
-			id: id
-		};
-		var url = "{{route('notification.inventory.centerstock.edit', ':id')}}";
-		console.log(url);
-		url = url.replace(':id', id);
-		$.ajax({
-			url: url,
-			type:"GET",
-			dataType: "JSON",
-			data:data,
-			success: function(response)
-			{
-				if(response.status == 'Ok')
-				{
-					var settings = response.settings;
-					var items = response.items;
-					var admins = response.admins;
-					if(items.length > 0)
-					{
-						var itemsString = "<option value=''>Please select an item</option>";
-						$.each(items, function(index, item){
-							itemsString += '<option value='+item.id+'>'+item.name+'</option>';
-						});
-
-						$('#inventorytype').html(itemsString);
-					}
-
-					if(admins.length > 0)
-					{
-						var adminsString = "";//"<option value=''>Please select who to notify</option>";
-						$.each(admins, function(index, admin){
-							if($.inArray(admin.id, selectedOptions) !== -1)
-							{
-								adminsString += '<option value='+admin.id+' selected>'+admin.name+" ("+admin.email+")"+'</option>';
-							}else{
-								adminsString += '<option value='+admin.id+'>'+admin.name+" ("+admin.email+")"+'</option>';
-							}
-							
-						});
-
-						$('#notifyto').html(adminsString);
-					}
-					var selectedOptions = response.selectedOptions;
-					console.log(settings.notify_to);
-					$('#inventorytype').val(settings.item_id).attr('disabled', true);
-					$('#minlevel').val(settings.min_stock);
-					$('#notifyto').val(selectedOptions);
-					$('#saveSetting').attr('data-id', settings.id);
-					$('#centerStockNotificationModal').modal('show');
-				}
-			},
-			error: function(error)
-			{
-				console.log(error);
-			}
-		});
-	}
+	
 
 	//depot stock js
 	$(document).on('click', '#manageDepotStock', function(){
@@ -374,7 +151,8 @@
 			{
 				var items = response.items;
 				var admins = response.admins;
-				var depots = response.depots;
+				var depots = response.depots;				
+				var denoms = response.denoms;
 				if(items.length > 0)
 				{
 					var itemsString = "<option value=''>Please select an item</option>";
@@ -382,7 +160,7 @@
 						itemsString += '<option value='+item.id+'>'+item.name+'</option>';
 					});
 
-					$('#depotinventorytype').html(itemsString);
+					$('#depotinventorytype').html(itemsString).attr('disabled', false);
 				}
 
 				if(admins.length > 0)
@@ -402,7 +180,17 @@
 						depotsString += '<option value='+depot.id+'>'+depot.name+'</option>';
 					});
 
-					$('#depots').html(depotsString);
+					$('#depots').html(depotsString).attr('disabled', false);
+				}
+
+				if(denoms.length > 0)
+				{
+					var denomsString = "<option value=''>Please select a denomination</option>";
+					$.each(denoms, function(index, denom){
+						denomsString += '<option value='+denom.id+'>'+denom.description+'</option>';
+					});
+
+					$('#depotdenoms').html(denomsString).attr('disabled', false);
 				}
 
 				$('#depotStockNotificationModal').modal('show');
@@ -440,6 +228,8 @@
 			return alert('Please select who to notify');
 		}
 
+		var denoms = $('#depotdenoms').val();
+
 		var dataId = $('#depotSaveSetting').data('id');
 		var url = "";
 		if(!dataId)
@@ -447,6 +237,7 @@
 			var data = {
 				depot: depot,
 				item: item,
+				denoms: denoms,
 				minlevel: minlevel,
 				notifyto: notifyto
 			};
@@ -455,6 +246,7 @@
 			var data = {
 				depot: depot,
 				item: item,
+				denoms: denoms,
 				minlevel: minlevel,
 				notifyto: notifyto,
 				dataId: dataId,
@@ -490,6 +282,7 @@
 		});
 
 	});
+});
 
 	function openDepotStockEditModal(event, itemId)
 	{
@@ -518,6 +311,7 @@
 					var items = response.items;
 					var admins = response.admins;
 					var depots = response.depots;
+					var denoms = response.denoms;
 					if(items.length > 0)
 					{
 						var itemsString = "<option value=''>Please select an item</option>";
@@ -554,12 +348,23 @@
 						$('#depots').html(depotsString);
 					}
 
+					if(denoms.length > 0)
+					{
+						var denomsString = "<option value=''>Please select a denomination</option>";
+						$.each(denoms, function(index, denom){
+							denomsString += '<option value='+denom.id+'>'+denom.description+'</option>';
+						});
+
+						$('#depotdenoms').html(denomsString).attr('disabled', true);
+					}
+
 					var selectedOptions = response.selectedOptions;
 					console.log(settings.notify_to);
 					$('#depotinventorytype').val(settings.item_id).attr('disabled', true);
 					$('#depotminlevel').val(settings.min_stock);
 					$('#depotnotifyto').val(selectedOptions);
 					$('#depots').val(settings.depot_id).attr('disabled', true);
+					$('#depotdenoms').val(settings.denom_id);
 					$('#depotSaveSetting').attr('data-id', settings.id);
 					$('#depotStockNotificationModal').modal('show');
 				}

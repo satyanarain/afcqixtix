@@ -3,7 +3,7 @@
 <h1>Manage Depot Stock</h1>
 <ol class="breadcrumb">
   <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-  <li><a href="#">Inventories</a></li>
+  <li><a href="#">Inventory</a></li>
   <li><a href="{{route('inventory.depotstock.index')}}" >Depot Stock</a></li>
   <li><a href="#" class="active">Edit</a></li>
 </ol>

@@ -17,24 +17,26 @@ class InventoryController extends Controller
 	public function index()
 	{
 		$settingsCenterStock = DB::table('inv_notification_centerstock')
-								->select('item_id', 'min_stock', 'notify_to')
+								->select('item_id', 'min_stock', 'notify_to', 'denom_id')
 								->get();
 
 		$remaningInCenterStock = DB::table('inv_itemsquantity_stock')
-									->select(DB::raw("SUM(qty) as item_qty, items_id"))
-									->groupBy('items_id')
+									->select(DB::raw("SUM(qty) as item_qty, items_id, denom_id"))
+									->groupBy('items_id', 'denom_id')
 									->get();
 
-		//return response()->json($settingsCenterStock);
+		//return response()->json($remaningInCenterStock);
 
 		foreach ($settingsCenterStock as $key => $svalue) 
 		{
 			foreach ($remaningInCenterStock as $key => $rvalue) 
 			{
-				if($svalue->item_id == $rvalue->items_id)
+				//echo $svalue->item_id."=>".$rvalue->items_id."=>".$svalue->denom_id."=>".$rvalue->denom_id."</br>";
+				if($svalue->item_id == $rvalue->items_id && $svalue->denom_id == $rvalue->denom_id)
 				{
 					if($rvalue->item_qty <= $svalue->min_stock)
 					{
+						//echo "In";
 						$notifyTos = User::whereIn('id', json_decode($svalue->notify_to))->select('email', 'name')->get();
 						$item = DB::table('inv_items_master')->where('id', $svalue->item_id)->select('name')->first();
 						if(count($notifyTos) > 0)
@@ -51,24 +53,26 @@ class InventoryController extends Controller
 
 
 		$settingsDepotStock = DB::table('inv_notification_depotstock')
-								->select('item_id', 'min_stock', 'notify_to', 'depot_id')
+								->select('item_id', 'min_stock', 'notify_to', 'depot_id', 'denom_id')
 								->get();
 
 		$remaningInDepotStock = DB::table('inv_centerstock_depotstock')
-									->select(DB::raw("SUM(qty) as item_qty, items_id, depot_id"))
-									->groupBy('items_id', 'depot_id')
+									->select(DB::raw("SUM(qty) as item_qty, items_id, depot_id, denom_id"))
+									->groupBy('depot_id', 'items_id', 'denom_id')
 									->get();
 
-		//return response()->json($settingsDepotStock);
+		//return response()->json($remaningInDepotStock);
 
 		foreach ($settingsDepotStock as $key => $svalue) 
 		{
 			foreach ($remaningInDepotStock as $key => $rvalue) 
 			{
-				if($svalue->item_id == $rvalue->items_id && $svalue->depot_id == $rvalue->depot_id)
+				//echo $svalue->item_id ."==". $rvalue->items_id ."==". $svalue->depot_id ."==". $rvalue->depot_id  ."==". $svalue->denom_id ."==". $rvalue->denom_id . "<br>";
+				if($svalue->item_id == $rvalue->items_id && $svalue->depot_id == $rvalue->depot_id  && $svalue->denom_id == $rvalue->denom_id)
 				{
 					if($rvalue->item_qty <= $svalue->min_stock)
 					{
+						//echo "In";
 						$notifyTos = User::whereIn('id', json_decode($svalue->notify_to))->select('email', 'name')->get();
 						$item = DB::table('inv_items_master')->where('id', $svalue->item_id)->select('name')->first();
 						$depot = DB::table('depots')->where('id', $svalue->depot_id)->select('name')->first();

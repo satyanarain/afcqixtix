@@ -33,7 +33,7 @@ class CrewStockRepository implements CrewStockRepositoryContract
         $input['user_id'] = Auth::id();
         $input['date_received'] = date('Y-m-d H:i:s', strtotime($input['date_received']));
         //update the depot inventory
-        if($requestData->items_id == 1)
+        if(checkIfItemHasSeries($input['items_id']))
         {
             $denominations = $requestData->denom_id;
             $serieses = $requestData->series;
@@ -61,29 +61,30 @@ class CrewStockRepository implements CrewStockRepositoryContract
                 }else {
                     $balance_quantity = $qty;
                 }
-                $centerstock = CrewStock::create($input); 
 
-                //update DepotStockLedger 
-                DepotStockLedger::create(['depot_head_id'=>Auth::id(), 'crew_id'=>$requestData->crew_id, 'depot_id'=>$requestData->depot_id, 'transaction_date'=>date('Y-m-d'), 'item_id'=>$requestData->items_id, 'denom_id'=>$input['denom_id'], 'series'=>$input['series'], 'start_sequence'=>$input['start_sequence'], 'end_sequence'=>$input['end_sequence'], 'item_quantity'=>$qty, 'challan_no'=>$requestData->challan_no, 'balance_quantity'=>$balance_quantity, 'transaction_type'=>'Issued']);
+                DB::transaction(function() use($input, $requestData, $qty, $balance_quantity) {  
+                    $centerstock = CrewStock::create($input); 
 
-                //update total stock crewwise
-                $total = DB::table('inv_crew_total_stock')
-                    ->where([['items_id', $requestData->items_id], ['crew_id', $requestData->crew_id], ['denom_id', $input['denom_id']], ['series', $input['series']], ['start_sequence', $input['start_sequence']], ['end_sequence', $input['end_sequence']]])
-                    ->first();
-                if($total)
-                {
-                    DB::table('inv_crew_total_stock')
-                    ->where([['items_id', $requestData->items_id], ['crew_id', $requestData->crew_id], ['denom_id', $input['denom_id']], ['series', $input['series']]])
-                    ->update(['qty' => DB::raw("qty + $qty"), 'start_sequence'=>$input['start_sequence'], 'end_sequence'=>$input['end_sequence']]);
-                }else{
-                    DB::table('inv_crew_total_stock')
-                    ->insert(['items_id' => $requestData->items_id, 'crew_id'=> $requestData->crew_id, 'qty'=>$qty, 'denom_id'=> $input['denom_id'], 'series'=> $input['series'], 'start_sequence'=>$input['start_sequence'], 'end_sequence'=>$input['end_sequence']]);
-                } 
+                    //update DepotStockLedger 
+                    DepotStockLedger::create(['depot_head_id'=>Auth::id(), 'crew_id'=>$requestData->crew_id, 'depot_id'=>$requestData->depot_id, 'transaction_date'=>date('Y-m-d'), 'item_id'=>$requestData->items_id, 'denom_id'=>$input['denom_id'], 'series'=>$input['series'], 'start_sequence'=>$input['start_sequence'], 'end_sequence'=>$input['end_sequence'], 'item_quantity'=>$qty, 'challan_no'=>$requestData->challan_no, 'balance_quantity'=>$balance_quantity, 'transaction_type'=>'Issued']);
+
+                    //update total stock crewwise
+                    $total = DB::table('inv_crew_total_stock')
+                        ->where([['items_id', $requestData->items_id], ['crew_id', $requestData->crew_id], ['denom_id', $input['denom_id']], ['series', $input['series']], ['start_sequence', $input['start_sequence']], ['end_sequence', $input['end_sequence']]])
+                        ->first();
+                    if($total)
+                    {
+                        $qt = $total->qty + $qty;
+                        DB::table('inv_crew_total_stock')
+                        ->where([['items_id', $requestData->items_id], ['crew_id', $requestData->crew_id], ['denom_id', $input['denom_id']], ['series', $input['series']]])
+                        ->update(['qty' => $qt, 'start_sequence'=>$input['start_sequence'], 'end_sequence'=>$input['end_sequence']]);
+                    }else{
+                        DB::table('inv_crew_total_stock')
+                        ->insert(['items_id' => $requestData->items_id, 'crew_id'=> $requestData->crew_id, 'qty'=>$qty, 'denom_id'=> $input['denom_id'], 'series'=> $input['series'], 'start_sequence'=>$input['start_sequence'], 'end_sequence'=>$input['end_sequence']]);
+                    } 
+                });
             }
-        } 
-
-        if($requestData->items_id == 2)
-        {
+        }else{
             $qty = $requestData->quantity;
             $input['quantity'] = $qty;
             $transaction = DB::table('inv_centerstock_depotstock')
@@ -98,24 +99,28 @@ class CrewStockRepository implements CrewStockRepositoryContract
             }else{
                 $balance_quantity = $qty;
             }
-            $centerstock = CrewStock::create($input);
 
-            //update DepotStockLedger
-            DepotStockLedger::create(['depot_head_id'=>Auth::id(), 'crew_id'=>null, 'depot_id'=>$requestData->depot_id, 'transaction_date'=>date('Y-m-d'), 'item_id'=>$requestData->items_id, 'denom_id'=>null, 'series'=>null, 'start_sequence'=>null, 'end_sequence'=>null, 'item_quantity'=>$qty, 'challan_no'=>$requestData->challan_no, 'balance_quantity'=>$balance_quantity, 'transaction_type'=>'Issued']);
+            DB::transaction(function() use($input, $requestData, $qty, $balance_quantity) {  
+                $centerstock = CrewStock::create($input);
 
-            //update total stock crewwise
-            $total = DB::table('inv_crew_total_stock')
-                ->where([['items_id', $requestData->items_id], ['crew_id', $requestData->crew_id]])
-                ->first();
-            if($total)
-            {
-                DB::table('inv_crew_total_stock')
-                ->where([['items_id', $requestData->items_id], ['crew_id', $requestData->crew_id]])
-                ->update(['qty' => DB::raw("qty + $qty")]);
-            }else{
-                DB::table('inv_crew_total_stock')
-                ->insert(['items_id' => $requestData->items_id, 'crew_id'=> $requestData->crew_id, 'qty'=>$qty]);
-            }
+                //update DepotStockLedger
+                DepotStockLedger::create(['depot_head_id'=>Auth::id(), 'crew_id'=>null, 'depot_id'=>$requestData->depot_id, 'transaction_date'=>date('Y-m-d'), 'item_id'=>$requestData->items_id, 'denom_id'=>null, 'series'=>null, 'start_sequence'=>null, 'end_sequence'=>null, 'item_quantity'=>$qty, 'challan_no'=>$requestData->challan_no, 'balance_quantity'=>$balance_quantity, 'transaction_type'=>'Issued']);
+
+                //update total stock crewwise
+                $total = DB::table('inv_crew_total_stock')
+                    ->where([['items_id', $requestData->items_id], ['crew_id', $requestData->crew_id]])
+                    ->first();
+                if($total)
+                {
+                    $qt = $total->qty + $qty;
+                    DB::table('inv_crew_total_stock')
+                    ->where([['items_id', $requestData->items_id], ['crew_id', $requestData->crew_id]])
+                    ->update(['qty' => $qt]);
+                }else{
+                    DB::table('inv_crew_total_stock')
+                    ->insert(['items_id' => $requestData->items_id, 'crew_id'=> $requestData->crew_id, 'qty'=>$qty]);
+                }
+            });
         } 
 
         

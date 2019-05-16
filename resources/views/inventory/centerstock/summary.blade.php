@@ -21,7 +21,7 @@
 	                            <th>@lang('Items')</th>
 	                            <th>@lang('Denomination')</th>
 	                            <th>@lang('Series')</th>
-	                            <th>Quantity</th>
+	                            <th class="text-right">Quantity</th>
 	                        </tr>
 	                    </thead>
 	                    <tbody>
@@ -42,7 +42,7 @@
 	                            	{{'N/A'}}
 	                            	@endif
 	                            </td>
-	                            <td>{{$value->qty}}</td>
+	                            <td class="text-right">{{$value->qty}}</td>
 	                        </tr>
 	                        @endforeach
 	                    </tbody>

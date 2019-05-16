@@ -12,11 +12,12 @@ class IndexController extends Controller
     public function index()
     {
     	$centerStockSettings = DB::table('inv_notification_centerstock')
-                        ->select('id', 'item_id', 'min_stock', 'notify_to')
+                        ->select('id', 'item_id', 'min_stock', 'notify_to', 'denom_id')
                         ->get();
         foreach ($centerStockSettings as $key => $value) 
         {
             $value->item_id = DB::table('inv_items_master')->where('id', $value->item_id)->first()->name;
+            $value->denom = DB::table('denominations')->where('id', $value->denom_id)->first()->description;
             $value->notify_to = DB::table('users')
                 ->whereIn('id', json_decode($value->notify_to))
                 ->select('email', 'name')
@@ -24,12 +25,13 @@ class IndexController extends Controller
         }
 
         $depotStockSettings = DB::table('inv_notification_depotstock')
-                        ->select('id', 'depot_id', 'item_id', 'min_stock', 'notify_to')
+                        ->select('id', 'depot_id', 'item_id', 'min_stock', 'notify_to', 'denom_id')
                         ->get();
 
         foreach ($depotStockSettings as $key => $value) 
         {
             $value->item_id = DB::table('inv_items_master')->where('id', $value->item_id)->first()->name;
+            $value->denom = DB::table('denominations')->where('id', $value->denom_id)->first()->description;
             $value->depot_id = DB::table('depots')->where('id', $value->depot_id)->first()->name;
             $value->notify_to = DB::table('users')
                 ->whereIn('id', json_decode($value->notify_to))

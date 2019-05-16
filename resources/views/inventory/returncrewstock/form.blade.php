@@ -9,7 +9,9 @@
   <label class ='col-md-3 control-label'>Crews</label>
   <div class="col-md-7 col-sm-12 required">
     {!!Form::select('crew_id', [], isset($stock)?$stock->crew_id:null, ['placeholder'=>'Please select a crew', 'class'=>'form-control', 'id'=>'crew_id', 'required'])!!}
- </div>
+  </div>
+
+  <button type="button" style="margin-left: 10px;" class="btn btn-info" id="viewRemainingDetails">View Remaining Stock</button>
 </div>
 
 <div class="form-group" >
@@ -96,6 +98,31 @@
     </div>
   </div>
 </div>
+
+<!-- show remaining inventory modal -->
+  <div class="modal fade" id="remainingInventoryModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Remaining Inventory for <span id="remainingInventoryCrewName"></span></h4>
+        </div>
+        <div class="modal-body">
+          <table class="table table-bordered" id="remainingInventoryTableBody">
+            
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+
 @push('scripts')
 <script type="text/javascript">
   $(document).ready(function(){
@@ -182,26 +209,6 @@
           return false;
       }   
   }
-
-    function numvalidate(e) 
-    {
-        var key;
-        var keychar;
-        if (window.event)
-            key = window.event.keyCode;
-        else if (e)
-            key = e.which;
-        else
-            return true;
-        keychar = String.fromCharCode(key);
-        keychar = keychar.toLowerCase();
-        // control keys
-        if ((key == null) || (key == 0) || (key == 8) || (key == 9) || (key == 13) || (key == 27))
-            return true;
-        else if (!(("1234567890").indexOf(keychar) > -1)) {
-            return false;
-        }
-    }
 </script>
 <script type="text/javascript">
 var myLimit = 1;
@@ -308,73 +315,6 @@ $(document).on('click', '.removeDenominationsRow', function(){
 
   });
 
-  /*$(document).on('change', '.series', function(){
-        var selector = $(this);
-        var items_id = $('#items_id').val();
-
-        if(!items_id)
-        {
-            return alert('Please select an item');
-        }
-        var denom_id = $(selector).parent('td').prev('td').children('select').val();
-        if(!denom_id)
-        {
-            return alert('Please select a denomination');
-        }
-        var series = $(this).val();
-
-        if(!series)
-        {
-            return alert('Please select a valid series');
-        } 
-
-        var depot_id = $('#depot_id').val();
-        if(!depot_id)
-        {
-            return alert('Please select a depot');
-        }       
-
-        var data =  {
-                        _token: "{{csrf_token()}}",
-                        items_id: items_id,
-                        denom_id: denom_id,
-                        series: series,
-                        depot_id: depot_id
-                    };
-
-        $.ajax({
-            url: "{{route('inventory.crewstock.getstartsequence')}}",
-            type: "POST",
-            data: data,
-            dataType: "JSON",
-            success: function(response)
-            {   
-                var data = response;
-                if(data.status == 'Ok')
-                {
-                    if(data.data.start_sequence)
-                    {
-                      $(selector).parent('td').next('td').children('input').val(data.data.start_sequence);
-                      $(selector).parent('td').next('td').children('label').hide();
-                    }else{
-                      $(selector).parent('td').next('td').children('input').val('');
-                      $(selector).parent('td').next('td').children('label').text('Inventory not available in stock for this series. Please contact to central stock head').show();
-                    }                                 
-                }else{
-                    if(data.errorCode == 'NO_STOCK')
-                    {
-                      $(selector).parent('td').next('td').children('label').text('Inventory not available in stock for this series. Please contact to central stock head').show();
-                    }
-                }
-            },
-            error: function(data)
-            {
-                console.log(data);
-            }
-        });
-
-  });*/
-
   $(document).on('blur', '.end_sequence', function(){
         var selector = $(this);
         var items_id = $('#items_id').val();
@@ -416,101 +356,7 @@ $(document).on('click', '.removeDenominationsRow', function(){
             return alert('Please select a depot');
         }    
 
-        /*var data =  {
-                        _token: "{{csrf_token()}}",
-                        items_id: items_id,
-                        denom_id: denom_id,
-                        series: series,
-                        end_sequence: end_sequence,
-                        depot_id: depot_id
-                    };
-
-        $.ajax({
-            url: "{{route('inventory.crewstock.validateendsequence')}}",
-            type: "POST",
-            data: data,
-            dataType: "JSON",
-            success: function(response)
-            {   
-                var data = response;
-                if(data.status == 'Ok')
-                {
-                    $(selector).siblings('label').hide();                                 
-                }else{
-                    if(data.errorCode == 'NO_STOCK')
-                    {
-                      $(selector).siblings('label').text('Inventory not available in stock for this series. Please contact to central stock head').show();
-                    }
-                    if(data.errorCode == 'NO_SERIES')
-                    {
-                      $(selector).siblings('label').text('End sequence is beyond the stock end sequence. Please contact to admin.').show();
-                    }
-                }
-            },
-            error: function(data)
-            {
-                console.log(data);
-            }
-        });*/
-
   });
-
-
-  /*$(document).on('blur', '#quantity', function(){
-        var items_id = $('#items_id').val();
-
-        if(!items_id)
-        {
-            return alert('Please select an item');
-        }
-        var quantity = $('#quantity').val();
-        if(!quantity)
-        {
-            return alert('Please enter quantity!');
-        } 
-
-        var depot_id = $('#depot_id').val();
-        if(!depot_id)
-        {
-            return alert('Please select a depot');
-        }
-
-        var data =  {
-                        _token: "{{csrf_token()}}",
-                        items_id: items_id,
-                        quantity: quantity,
-                        depot_id: depot_id
-                    };
-
-        $.ajax({
-            url: "{{route('inventory.crewstock.validatequantity')}}",
-            type: "POST",
-            data: data,
-            dataType: "JSON",
-            success: function(response)
-            {   
-                var data = response;
-                if(data.status == 'Ok')
-                {
-                    $('#quantyty_errors').hide();                                 
-                }else{
-                    if(data.errorCode == 'NO_STOCK')
-                    {
-                      $('#quantyty_errors').text('Inventory not available in stock. Please contact to central stock head').show();
-                    }
-                    if(data.errorCode == 'NO_SERIES')
-                    {
-                      $('#quantyty_errors').text('End sequence is beyond the stock end sequence. Please contact to admin.').show();
-                    }
-                }
-            },
-            error: function(data)
-            {
-                console.log(data);
-            }
-        });
-
-  });*/
 
 
   $(document).on('change', '#depot_id', function(){
@@ -560,6 +406,61 @@ $(document).on('click', '.removeDenominationsRow', function(){
         $(this).val('');
         return alert('Start Sequence can not be 0.');
     }
-});
+  });
+
+
+  $(document).on('click', '#viewRemainingDetails', function(){
+      var conductorId = $('#crew_id').val();
+      var conductorName = $('#crew_id option:selected').text();
+      //alert(conductorName);
+      if(!conductorId)
+      {
+        return alert('Please select a crew.');
+      }
+
+      var url = "{{route('inventory.return.getremainingstockbycrew', ':conductorId')}}";
+      url = url.replace(':conductorId', conductorId);
+
+      $.ajax({
+        url: url,
+        type: "GET",
+        dataType: "JSON",
+        success: function(response, textStatus, xhr)
+        {
+          console.log(response);
+          console.log(textStatus);
+          console.log(xhr);
+          var data = response.data;
+          var str = '<tr><th>S. No.</th><th>Type</th><th>Quantity</th><th>Series</th><th>Start Sequence</th><th>Start Sequence</th></tr>';
+          $.each(data, function(index, d){
+            str += '<tr>'
+            str += '<td>'+(index+1)+'</td>'
+            str += '<td>'+d.description+'</td>'
+            str += '<td>'+d.qty+'</td>'
+            str += '<td>'+d.series+'</td>'
+            str += '<td>'+d.start_sequence+'</td>'
+            str += '<td>'+d.end_sequence+'</td>'
+            str += '</tr>';
+          });
+          
+
+          $('#remainingInventoryCrewName').text(conductorName);
+          $('#remainingInventoryTableBody').html(str);
+          $('#remainingInventoryModal').modal('show');
+        },
+        error: function(xmlHttpRequest, textStatus, errorThrown)
+        {
+          console.log(xmlHttpRequest);
+          console.log(textStatus);
+
+          if(errorThrown == 'Not Found')
+          {
+            $('#remainingInventoryCrewName').text(conductorName);
+            $('#remainingInventoryTableBody').html('<p>No Inventory Found.</p>');
+            $('#remainingInventoryModal').modal('show');
+          }
+        }
+      })
+  });
 </script>
 @endpush

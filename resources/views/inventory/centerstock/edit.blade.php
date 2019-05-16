@@ -3,7 +3,7 @@
 <h1>Manage Center Stock</h1>
 <ol class="breadcrumb">
   <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-  <li><a href="#">Inventories</a></li>
+  <li><a href="#">Inventory</a></li>
   <li><a href="/centerstock" >Center Stock</a></li>
   <li><a href="/centerstock.create" class="active">Edit</a></li>
 </ol>

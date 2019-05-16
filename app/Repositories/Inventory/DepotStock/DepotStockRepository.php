@@ -76,7 +76,7 @@ class DepotStockRepository implements DepotStockRepositoryContract
 
                     $balance_quantity = $assignedStock;
                 }
-
+                unset($input['total_tickets']);
                 $depostock = DepotStock::create($input);
 
                 //update DepotStockLedger
