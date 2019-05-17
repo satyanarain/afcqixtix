@@ -57,6 +57,16 @@
 
  <?php $segments_var = Request::segments();?>  
   <div class="wrapper" >
+    <section class="top-head" >
+        <div class="container-fluid">
+           <div class="row">
+               <div class="col-lg-2 col-sm-3 col-xs-12 logo1" style=" z-index: 999 !important;"><img width="50px" src="<?php echo \URL::to('')?>/images/qt-logo.png" alt="" /></div>
+               <div class="col-lg-8 col-sm-6 col-xs-12 custom-head"><h1 style=" color: #FFF !important;">Automated Fare Collection System</h1></div>
+               <div class="col-lg-2 col-sm-3 col-xs-12 logo2"><img width="50px" src="<?php echo \URL::to('')?>/images/qt-logo.png" alt=""  /></div>
+           </div>
+       </div>
+    </section>
+    <div class="se-pre-con"></div>  
   <header class="main-header">   
     <!-- Logo -->
     <a href="/dashboard" class="logo" style="text-align: left;">
@@ -666,6 +676,9 @@ $array= array('etm', 'revenue', 'ppt')
 </ul>
 </section>
 <!-- /.sidebar -->
+<div style=" background-color:#3c8dbc;padding:15px 5px;width: 100%; position: fixed;bottom:0;left: 0;">
+    <span style=" font-weight: bold; color: #FFF; font-size: 14px;">MI-Card Portal v1.0</span>
+</div>
 </aside>
 <!-- Page Content -->
 <div class="content-wrapper">
@@ -717,12 +730,24 @@ $array= array('etm', 'revenue', 'ppt')
  @include('partials.depot_addnew')
 </section>
 </div>
-<footer class="main-footer">
+<!--<footer class="main-footer">
   <div class="pull-right hidden-xs">
     <b>Version</b> 2.3.7
   </div>
   <strong>Copyright &copy; 2014-2018 <a href="http://opiant.in">Opiant Tech Solutions Pvt. Ltd.</a>.</strong> All rights
   reserved.
+</footer>-->
+<footer class="main-footer" style=" position: fixed ; bottom:0px; z-index: 999; width: 100%;">
+   <strong>Copyright &copy; <?php echo date('Y');?> Powered by CBOI. </strong>
+   <span style="float: right;margin-right:220px;">
+       <?php
+       @$lastlogindata = lastLogin(Auth::id());
+       if(@$lastlogindata !="")
+       {
+        echo "<b> Last Login - ". $lastlogindata."</b>";
+       }
+       ?>
+   </span>
 </footer>
 </div>
 

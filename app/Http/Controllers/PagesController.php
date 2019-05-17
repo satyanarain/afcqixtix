@@ -29,6 +29,7 @@ class PagesController extends Controller
   public function dashboard()
   {
       $user = User::findOrFail(Auth::id());
+      $dt = manageLoginLog(Auth::id());
       return $this->showDashboard();
   }
 

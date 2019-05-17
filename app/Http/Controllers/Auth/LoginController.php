@@ -55,5 +55,13 @@ class LoginController extends Controller
         }
 
    }
+   
+   public function Logout()
+   {
+       $logoutdata = manageLogoutLog(Auth::id());
+       Auth::logout();
+       $this->guard()->logout();
+       return redirect('/');
+   }
     
 }
