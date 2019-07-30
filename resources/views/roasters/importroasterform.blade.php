@@ -1,14 +1,18 @@
 @extends('layouts.master')
 @section('header')
-<h1>{{headingBold()}}</h1>
-{{BreadCrumb()}}
+<h1>Import Roster</h1>
+<ol class="breadcrumb">
+    <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li><a href="{{route('roasters.index')}}">Rosters</a></li>
+    <li class="active">Import Roster</li>
+</ol>
 @stop
 @section('content')
 <div class="row">
     <div class="col-xs-12">
       <div class="box">
             <div class="box-header">
-               <h3 class="box-title">Create New Roasters</h3>
+               <h3 class="box-title">Create New Rosters</h3>
             </div>
         <?php $permission_status = checkPermission('roasters','create');
             if($permission_status){?>
@@ -21,7 +25,7 @@
           <div class="box-body">
             <div class="col-xs-12">
                 <div class="form-group ">
-                    
+
                     <div class="col-md-3">
                         {!! Form::label('from_date', Lang::get('From*'), ['class' => 'control-label']) !!}
                         {!! Form::text('from_date', '', ['class' => 'form-control multiple_date1','required' => 'required']) !!}
@@ -45,9 +49,9 @@
                  'method' => 'post',
                  'enctype'=>'multipart/form-data'
                 ]) !!}
-          
+
                 <div class="box-body">
-                    <?php 
+                    <?php
                     if($error){?>
                     <div class="col-xs-12"><div class="col-sm-12 no-padding"><?=$error?></div></div>
             <?php   }
@@ -67,15 +71,15 @@
                         <input type="hidden" readonly="readonly" name="form_name" value="upload_template">
                         <div class="col-sm-3" style="margin-top: 28px;">
                             {!! Form::label('', Lang::get(''), ['class' => 'control-label']) !!}
-                            {!! Form::submit('Upload Roaster');!!}
+                            {!! Form::submit('Upload Roster');!!}
                         </div>
                       </div>
                   </div>
                 </div>
           {{ Form::close() }}
         <?php }?>
-          
-                
+
+
             </div>
             <!-- /.box-body -->
         </div>
@@ -94,9 +98,9 @@ $(document).ready(function() {
     //alert(token);
     //var dat = $("#filter-waybill").serialize();
     //alert(dat);
-    
-    
-    
+
+
+
 });
 </script>
 @endpush

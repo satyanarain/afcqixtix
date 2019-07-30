@@ -1,14 +1,17 @@
 @extends('layouts.master')
 @section('header')
-<h1>{{headingBold()}}</h1>
-{{BreadCrumb()}}
+<h1>Manage Roster</h1>
+<ol class="breadcrumb">
+    <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li class="active"><a href="{{route('roasters.index')}}">Rosters</a></li>
+</ol>
 @stop
 @section('content')
 <div class="row">
     <div class="col-xs-12">
       <div class="box">
             <div class="box-header">
-               <h3 class="box-title">Create New Roaster</h3>
+               <h3 class="box-title">Create New Roster</h3>
             </div>
         <?php $permission_status = checkPermission('roasters','create');
             if($permission_status){?>
@@ -42,9 +45,9 @@
                     </div>
                     <div class="col-sm-4" style="margin-top: 28px;">
                         {!! Form::label('', Lang::get(''), ['class' => 'control-label']) !!}
-                        {!! Form::submit('View Roaster');!!}
+                        {!! Form::submit('View Roster');!!}
                     </div>
-                    
+
                 </div>
             </div>
           </div>
@@ -52,7 +55,7 @@
         <?php }?>
           <div class="box-body"></div>
             <!-- /.box-header -->
-            
+
             <!-- /.box-body -->
         </div>
         <!-- /.box -->
@@ -70,9 +73,9 @@ $(document).ready(function() {
     //alert(token);
     //var dat = $("#filter-waybill").serialize();
     //alert(dat);
-    
-    
-    
+
+
+
 });
 </script>
 @endpush

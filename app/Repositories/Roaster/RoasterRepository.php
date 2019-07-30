@@ -49,7 +49,7 @@ class RoasterRepository implements RoasterRepositoryContract {
                 foreach($crews as $crew){
                     RoasterOnDuty::create(array('roaster_id'=>$roaster->id,'crew_id'=>$crew));
                 }
-                
+
             }
             foreach($row['off-duty'] as $crew){
                 $input = array();
@@ -61,11 +61,11 @@ class RoasterRepository implements RoasterRepositoryContract {
                 $input['crew_id'] = $crew;
                 RoasterOffDuty::create($input);
             }
-            
+
             //echo '<pre>';print_r($input);
-            
+
        }
-       Session::flash('flash_message', "Roaster Created Successfully.");
+       Session::flash('flash_message', "Roster Created Successfully.");
        return $crew_detail;
     }
 
@@ -75,7 +75,7 @@ class RoasterRepository implements RoasterRepositoryContract {
        foreach($requestData['roaster'] as $crew){
             RoasterOnDuty::create(array('roaster_id'=>$id,'crew_id'=>$crew));
         }
-       Session::flash('flash_message', "Roaster Updated Successfully.");
+       Session::flash('flash_message', "Roster Updated Successfully.");
        return $crew_detail;
     }
 

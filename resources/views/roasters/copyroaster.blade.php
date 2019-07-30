@@ -1,7 +1,11 @@
 @extends('layouts.master')
 @section('header')
-<h1>{{headingBold()}}</h1>
-{{BreadCrumb()}}
+<h1>Copy Roster</h1>
+<ol class="breadcrumb">
+    <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li><a href="{{route('roasters.index')}}">Roasters</a></li>
+    <li class="active">Copy Roster</li>
+</ol>
 @stop
 @section('content')
 <div class="col-md-12 no-padding">
@@ -11,7 +15,7 @@
 </div>
 <div class="col-md-12">
 <div class="row">
-    
+
         <div class="box box-default" style="min-height:0px;">
             <div class="box-header with-border">
                 <div class="col-md-12 col-sm-12 alert-danger cash-collection-error hide"></div>
@@ -33,7 +37,7 @@
             </div>
             <!-- /.box-body -->
         </div>
-        
+
 </div>
 </div>        <!-- /.box -->
 
@@ -41,4 +45,3 @@
 
 
 @stop
-

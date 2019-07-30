@@ -37,8 +37,8 @@
   <link rel="stylesheet" href="{{URL::asset('css/AdminLTE.min.css')}}">
   <link rel="stylesheet" href="{{URL::asset('css/custom.css')}}">
   <link rel="stylesheet" href="{{URL::asset('css/style.css')}}">
-  
-  <script>    
+
+  <script>
     window.Laravel = <?php
     echo json_encode([
       'csrfToken' => csrf_token(),
@@ -51,11 +51,11 @@
     <div id="map">
       <div class="loading_bar">
        {{ HTML::image('images/bus_loader.gif', 'alt text', array('class' => 'css-class')) }}
-     </div>    
+     </div>
    </div>
   </div>
 
- <?php $segments_var = Request::segments();?>  
+ <?php $segments_var = Request::segments();?>
   <div class="wrapper" >
     <section class="top-head" >
         <div class="container-fluid">
@@ -66,8 +66,8 @@
            </div>
        </div>
     </section>
-    <div class="se-pre-con"></div>  
-  <header class="main-header">   
+    <div class="se-pre-con"></div>
+  <header class="main-header">
     <!-- Logo -->
     <a href="/dashboard" class="logo" style="text-align: left;">
       <img src="<?php echo \URL::to('')?>/images/qt-logo.png" style="height: 30px; float: left;margin-top: 10px;">
@@ -152,7 +152,7 @@
     @endif
     @if(menuPermission('bus_types')==1)
     <li @if($segments_var[0]=='bus_types') class="active" @endif><a href="{{route('bus_types.index')}}">
-      <i class="fa fa-bus"></i> @lang('menu.bus_types.title') 
+      <i class="fa fa-bus"></i> @lang('menu.bus_types.title')
     </a>
   </li>
   @endif
@@ -160,19 +160,19 @@
 
   @if(menuPermission('shifts')==1)
   <li @if($segments_var[0]=='shifts') class="active" @endif><a href="{{route('shifts.index')}}">
-    <i class="fa fa-calendar"></i> @lang('menu.shifts.title') 
+    <i class="fa fa-calendar"></i> @lang('menu.shifts.title')
   </a>
 </li>
 @endif
 @if(menuPermission('stops')==1)
 <li @if($segments_var[0]=='stops') class="active" @endif><a href="{{route('stops.index')}}">
-  <i class="fa stop-icon"></i> @lang('menu.stops.title') 
+  <i class="fa stop-icon"></i> @lang('menu.stops.title')
 </a>
 </li>
 @endif
 @if(menuPermission('routes')==1)
 <li @if($segments_var[0]=='route_master') class="active" @endif><a href="{{route('route_master.index')}}">
-  <i class="fa fa-map-marker"></i> @lang('menu.routes.title') 
+  <i class="fa fa-map-marker"></i> @lang('menu.routes.title')
 </a>
 </li>
 @endif
@@ -205,9 +205,9 @@
 </ul>
 </li>
 
-<!--Start Inventory left menu details-->  
-@php 
-$pem=menuDisplayByUser($result, 'centerstocks','view'); 
+<!--Start Inventory left menu details-->
+@php
+$pem=menuDisplayByUser($result, 'centerstocks','view');
 @endphp
 @if($pem=='true')
 <li @if($segments_var[1]=='centerstock' || $segments_var[1]=='depotstock' || $segments_var[1]=='crewstock' || $segments_var[1]=='returncrewstock') class="treeview active" @else class="treeview" @endif>
@@ -217,7 +217,7 @@ $pem=menuDisplayByUser($result, 'centerstocks','view');
       <i class="fa fa-angle-left pull-right"></i>
     </span>
   </a>
-  
+
   <ul @if(($segments_var[1]=='centerstock' || $segments_var[1]=='depotstock' || $segments_var[1]=='crewstock') && $segments_var[2]!='summary') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
 
         <li @if($segments_var[0]=='inventory' && ($segments_var[1]=='centerstock' || $segments_var[1]=='depotstock') && $segments_var[2]!='summary') class="active treeview" @endif>
@@ -251,7 +251,7 @@ $pem=menuDisplayByUser($result, 'centerstocks','view');
                 </li>
             </ul>
         </li>
-  
+
 
         <li @if($segments_var[2]=='summary') class="active treeview" @endif>
             <a href="#"><i class="fa fa-list"></i>Inventory Summary</a>
@@ -280,22 +280,22 @@ $pem=menuDisplayByUser($result, 'centerstocks','view');
     <!--<li @if($segments_var[1]=='auditlist') class="active" @endif><a href="{{route('waybills.auditlist')}}"><i class="fa fa-key"></i>Audit</a></li>-->
   </ul>
 </li>
-@endif   
+@endif
 
 @php $pem=menuDisplayByUser($result, 'roasters','view'); @endphp
 @if($pem=='true')
 <li @if($segments_var[0]=='roasters') class="treeview active" @else class="treeview" @endif>
   <a href="#">
-    <i class="fa fa-users"></i> <span>Manage Roaster</span>
+    <i class="fa fa-users"></i> <span>Manage Roster</span>
     <span class="pull-right-container">
       <i class="fa fa-angle-left pull-right"></i>
     </span>
   </a>
     <ul @if($segments_var[0]=='roasters') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
-        <li @if($segments_var[0]=='roasters' && !$segments_var[1]) class="active" @endif><a href="{{route('roasters.index')}}"><i class="fa fa-key"></i>View Roaster</a></li>
-        <li @if($segments_var[0]=='roasters' && $segments_var[1]=='addroasterform') class="active" @endif><a href="{{route('roasters.addroasterform')}}"><i class="fa fa-key"></i>Generate Roaster</a></li>
-        <li @if($segments_var[1]=='roasters' && $segments_var[1]=='copyroasterform') class="active" @endif><a href="{{route('roasters.copyroasterform')}}"><i class="fa fa-key"></i>Copy Roaster</a></li>
-        <li @if($segments_var[1]=='roasters' && $segments_var[1]=='importroasterform') class="active" @endif><a href="{{route('roasters.importroasterform')}}"><i class="fa fa-key"></i>Import Roaster</a></li>
+        <li @if($segments_var[0]=='roasters' && !$segments_var[1]) class="active" @endif><a href="{{route('roasters.index')}}"><i class="fa fa-key"></i>View Roster</a></li>
+        <li @if($segments_var[0]=='roasters' && $segments_var[1]=='addroasterform') class="active" @endif><a href="{{route('roasters.addroasterform')}}"><i class="fa fa-key"></i>Generate Roster</a></li>
+        <li @if($segments_var[1]=='roasters' && $segments_var[1]=='copyroasterform') class="active" @endif><a href="{{route('roasters.copyroasterform')}}"><i class="fa fa-key"></i>Copy Roster</a></li>
+        <li @if($segments_var[1]=='roasters' && $segments_var[1]=='importroasterform') class="active" @endif><a href="{{route('roasters.importroasterform')}}"><i class="fa fa-key"></i>Import Roster</a></li>
     </ul>
 </li>
 @endif
@@ -337,7 +337,7 @@ $pem=menuDisplayByUser($result, 'centerstocks','view');
 
 
 <!--manage reports-->
-                    
+
 <li @if($segments_var[0]=='etm_reports' || $segments_var[0]=='ppt_reports' || $segments_var[0]=='revenue_reports') class="treeview active" @else class="treeview" @endif>
   <a href="#">
       <i class="fa fa-book"></i> <span>Manage Reports</span>
@@ -431,12 +431,12 @@ $array= array('etm', 'revenue', 'ppt')
                     <a href="{{route('reports.ppt.crew_stock.index')}}">
                         <i class="far fa-dot-circle text-yellow"></i> Crew Stock
                     </a>
-                </li> 
+                </li>
                 <li @if($segments_var[2]=='crew_summary') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.ppt.crew_summary.index')}}">
                         <i class="far fa-dot-circle text-yellow"></i> Crew Summary
                     </a>
-                </li>               
+                </li>
                 <li @if($segments_var[2]=='denomination_wise_stock_ledger') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.ppt.denomination_wise_stock_ledger.index')}}">
                         <i class="far fa-dot-circle text-yellow"></i> Denom-wise Stock Ledger
@@ -456,7 +456,7 @@ $array= array('etm', 'revenue', 'ppt')
                     <a href="{{route('reports.ppt.issues_to_crew.index')}}">
                         <i class="far fa-dot-circle text-yellow"></i> Issues To Crew
                     </a>
-                </li>                
+                </li>
                 <li @if($segments_var[2]=='main_office_summary') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.ppt.main_office_summary.index')}}">
                         <i class="far fa-dot-circle text-yellow"></i> Main Office Summary
@@ -484,7 +484,7 @@ $array= array('etm', 'revenue', 'ppt')
               </span>
             </a>
             <ul @if(in_array($segments_var[0],$array)) class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
-                
+
                 <li @if($segments_var[2]=='bus_wise_earning') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.revenue.bus_wise_earning.index')}}">
                         <i class="far fa-dot-circle color-cyan"></i> Bus-wise Earning
@@ -552,7 +552,7 @@ $array= array('etm', 'revenue', 'ppt')
                 </li>
                 <li @if($segments_var[2]=='etm_wise_txn_count') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.revenue.etm_wise_txn_count.index')}}">
-                        <i class="far fa-dot-circle color-cyan"></i> ETM-wise Transaction Count 
+                        <i class="far fa-dot-circle color-cyan"></i> ETM-wise Transaction Count
                     </a>
                 </li>
                 <li @if($segments_var[2]=='pass_sold') class="treeview active" @else class="treeview" @endif>
@@ -614,7 +614,7 @@ $array= array('etm', 'revenue', 'ppt')
                     <a href="#">
                         <i class="far fa-dot-circle color-cyan"></i> Shift Details Earning
                     </a>
-                </li><!-- 
+                </li><!--
                 <li @if($segments_var[2]=='trip_sheet') class="treeview active" @else class="treeview" @endif>
                     <a href="{{route('reports.revenue.trip_sheet.index')}}">
                         <i class="far fa-dot-circle color-cyan"></i> Trip Sheet
@@ -630,7 +630,7 @@ $array= array('etm', 'revenue', 'ppt')
     @endif
 </ul>
 </li>
-                
+
 @php $pem=menuDisplayByUser($result, 'centerstocks','view'); @endphp
 @if($pem=='true')
 <li  @if($segments_var[1]=='health_status' || $segments_var[0]=='tripsheet') class="treeview active" @else class="treeview" @endif>
@@ -642,9 +642,9 @@ $array= array('etm', 'revenue', 'ppt')
   </a>
   <ul @if($segments_var[1]=='health_status') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
     <li @if($segments_var[1]=='health_status') class="active" @endif><a href="{{url('etm/health_status')}}"><i class="fa fa-medkit"></i>Health Status</a>
-    </li>   
+    </li>
     <li @if($segments_var[0]=='tripsheet') class="active" @endif><a href="{{route('tripsheet')}}"><i class="fa fab fa-tripadvisor"></i>Trip Sheet</a>
-    </li>                    
+    </li>
   </ul>
 </li>
 @endif
@@ -665,14 +665,14 @@ $array= array('etm', 'revenue', 'ppt')
   </a>
   <ul @if($segments_var[0]=='changepasswords' || $segments_var[0]=='permissions' || $segments_var[0]=='settings') class="treeview-menu active" style="display:block" @else class="treeview-menu" @endif>
    <li @if($segments_var[0]=='roles' || $segments_var[0]=='permissions') class="active" @endif><a href="{{route('permissions.index')}}"><i class="fa fa-key"></i>Roles and Permissions</a></li>
-   <li @if($segments_var[0]=='settings') class="active" @endif><a href="{{route('settings.index')}}"><i class="fa fa-cog"></i>Configuration Settings</a></li>     
-   <li @if($segments_var[0]=='changepasswords') class="active" @endif><a href="{{route('changepasswords.create')}}"><i class="fa fa-key"></i>Change Password</a></li>   
+   <li @if($segments_var[0]=='settings') class="active" @endif><a href="{{route('settings.index')}}"><i class="fa fa-cog"></i>Configuration Settings</a></li>
+   <li @if($segments_var[0]=='changepasswords') class="active" @endif><a href="{{route('changepasswords.create')}}"><i class="fa fa-key"></i>Change Password</a></li>
 
 
 
  </ul>
 </li>
-@endif  
+@endif
 </ul>
 </section>
 <!-- /.sidebar -->
@@ -689,7 +689,7 @@ $array= array('etm', 'revenue', 'ppt')
   <section class="content">
 
     @if($errors->any())
-    <ul class="list-group" id='error_message_red'> 
+    <ul class="list-group" id='error_message_red'>
       @foreach($errors->all() as $error)
       <li class="list-group-item alert alert-danger">{{ $error }}</li>
       @endforeach
@@ -708,7 +708,7 @@ $array= array('etm', 'revenue', 'ppt')
            <div class="alert-new-success" id="add_new_data" style="display:none;"></div>
            <div class="list-group-item alert alert-danger" id="add_new_data_danger" style="display:none;"></div>
            <table class="table table-responsive.view">
-            <tr>       
+            <tr>
               <td>Name</td>
               <td class="table_normal">
                 <input name="name" id="name" class="form-control">
@@ -717,7 +717,7 @@ $array= array('etm', 'revenue', 'ppt')
                 <input name="placeholder" id="placeholder" class="form-control" type="hidden">
               </td>
             </tr>
-          </table>  
+          </table>
           <div class="modal-footer">
            <div  class="btn btn-success pull-left" onclick="AddNew()">Add New</div><button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
          </div>
@@ -811,23 +811,23 @@ $array= array('etm', 'revenue', 'ppt')
   $('body').on('focus',".multiple_date", function(){
    $(this).datepicker({
     dateFormat: 'dd-mm-yy',
-    startView: "year", 
+    startView: "year",
     changeYear: true,
     yearRange: "-80Y:-0Y",
     minDate: "-80Y",
     maxDate: "-0Y"
   });
- }); 
+ });
   $('body').on('focus',".multiple_date1", function(){
    $(this).datepicker({
     dateFormat: 'dd-mm-yy',
-    startView: "year", 
+    startView: "year",
     changeYear: true,
 
     minDate: 0,
 
   });
- }); 
+ });
 
  //$(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii', minDate:new Date()});
  $('.form_datetime').datetimepicker({
@@ -872,11 +872,11 @@ $array= array('etm', 'revenue', 'ppt')
  function removeLoader(){
   $( "#map" ).fadeOut(100, function() {
       // fadeOut complete. Remove the loading div
-      $( "#map" ).remove(); //makes page more lightweight 
-      $( "#map1" ).hide(); //makes page more lightweight 
-    });  
-} 
-function numvalidate(e) 
+      $( "#map" ).remove(); //makes page more lightweight
+      $( "#map1" ).hide(); //makes page more lightweight
+    });
+}
+function numvalidate(e)
 {
   var key;
   var keychar;
@@ -895,7 +895,7 @@ function numvalidate(e)
     else if (!(("1234567890").indexOf(keychar) > -1)) {
       return false;
     }
-} 
+}
 </script>
 @stack('scripts')
 @include('partials.table_script_order')

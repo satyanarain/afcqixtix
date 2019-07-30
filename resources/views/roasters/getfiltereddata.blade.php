@@ -4,7 +4,7 @@
 <ol class="breadcrumb">
     <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
     <li><a href="{{route('roasters.index')}}">Filter Roaster</a></li>
-    <li class="active">Roaster</li>
+    <li class="active">Roster</li>
 </ol>
 @stop
 @section('content')
@@ -12,9 +12,9 @@
     <div class="col-xs-12">
       <div class="box">
             <div class="box-header">
-               <h3 class="box-title">View Roasters</h3>
+               <h3 class="box-title">View Rosters</h3>
             </div>
-        
+
           <div class="box-body"></div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -26,7 +26,7 @@
                             <th>@lang('Depot Name')</th>
                             <th>@lang('Date')</th>
                             <th>@lang('Shift')</th>
-                           
+
                               {{  actionHeading('Action', $newaction='') }}
                         </tr>
                     </thead>
@@ -42,18 +42,18 @@
                                 if(in_array('edit',$permission)){?>
                                     <a href="<?php echo route('roasters.edit',$value->id)?>" title="Edit Roaster"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
                                 <?php }else{?>
-                                    <a class="disabled"><span class="glyphicon glyphicon-pencil "></span></a>&nbsp;&nbsp;&nbsp;&nbsp;   
+                                    <a class="disabled"><span class="glyphicon glyphicon-pencil "></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
                                 <?php }
                                 if(in_array('view',$permission)){?>
                                     <a href="<?php echo route('roasters.show',$value->id)?>" title="View Roaster"><span class="glyphicon glyphicon-search"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
                                 <?php }?>
-                                 
+
                             </td>
                            </tr>
                         @endforeach
                         </tbody>
                     </table>
-                
+
             </div>
             <!-- /.box-body -->
         </div>
@@ -72,9 +72,9 @@ $(document).ready(function() {
     //alert(token);
     //var dat = $("#filter-waybill").serialize();
     //alert(dat);
-    
-    
-    
+
+
+
 });
 </script>
 @endpush
